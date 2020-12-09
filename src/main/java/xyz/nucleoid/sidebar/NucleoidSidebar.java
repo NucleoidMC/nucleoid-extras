@@ -23,7 +23,7 @@ public final class NucleoidSidebar implements ModInitializer {
     // TODO: make this configurable
     public static final RegistryKey<World> DIMENSION = World.OVERWORLD;
 
-    private static final Text TITLE = new LiteralText("Nucleoid").formatted(Formatting.AQUA);
+    private static final Text TITLE = new LiteralText("Nucleoid").formatted(Formatting.AQUA, Formatting.BOLD);
 
     private static SidebarWidget widget;
 
@@ -50,11 +50,11 @@ public final class NucleoidSidebar implements ModInitializer {
     }
 
     private static void writeSidebar(SidebarWidget.Content content) {
-        content.writeLine(Formatting.GOLD + "Welcome!");
-        content.writeLine("");
+        content.writeLine(Formatting.GOLD + "Welcome to Nucleoid!");
 
         Collection<ManagedGameSpace> openGames = ManagedGameSpace.getOpen();
         if (!openGames.isEmpty()) {
+            content.writeLine("");
             writeGamesToSidebar(content, openGames);
         }
     }
@@ -69,12 +69,12 @@ public final class NucleoidSidebar implements ModInitializer {
         games.forEach(game -> {
             String name = game.getGameConfig().getName();
             int players = game.getPlayerCount();
-            content.writeLine(Formatting.GREEN + name + ": " + Formatting.GOLD + players + " players");
+            content.writeLine(Formatting.GREEN + name + ": " + Formatting.AQUA + players + " players");
         });
 
         content.writeLine("");
-        content.writeLine(Formatting.GRAY + "/game join");
-        content.writeLine(Formatting.GRAY + "or use your compass");
+        content.writeLine(Formatting.GRAY + "...run /game join");
+        content.writeLine(Formatting.GRAY + "or use the compass!");
     }
 
     public static void addPlayer(ServerPlayerEntity player) {
