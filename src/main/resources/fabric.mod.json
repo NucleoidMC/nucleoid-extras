@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "nucleoid_sidebar",
+  "version": "${version}",
+  "name": "Nucleoid: Sidebar",
+  "description": "",
+  "authors": ["Gegy"],
+  "license": "LGPLv3",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["xyz.nucleoid.sidebar.NucleoidSidebar"]
+  },
+  "mixins": ["sidebar.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.9.1",
+    "fabric": "*",
+    "minecraft": "1.16.x",
+    "plasmid": "0.4.x"
+  }
+}
