@@ -68,6 +68,10 @@ public final class NucleoidSidebar implements ModInitializer {
 
         games.forEach(game -> {
             String name = game.getGameConfig().getName();
+            if (name.length() > 12) {
+                name = name.substring(0, 11) + "..";
+            }
+
             int players = game.getPlayerCount();
             content.writeLine(Formatting.GREEN + name + ": " + Formatting.AQUA + players + " players");
         });
