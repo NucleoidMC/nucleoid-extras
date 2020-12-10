@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "id": "nucleoid_sidebar",
+  "id": "nucleoid_extras",
   "version": "${version}",
-  "name": "Nucleoid: Sidebar",
-  "description": "",
+  "name": "Nucleoid: Extras",
+  "description": "Nucleoid-specific features",
   "authors": ["Gegy"],
   "license": "LGPLv3",
   "environment": "*",
   "entrypoints": {
-    "main": ["xyz.nucleoid.sidebar.NucleoidSidebar"]
+    "main": ["xyz.nucleoid.extras.NucleoidExtras"]
   },
-  "mixins": ["sidebar.mixins.json"],
+  "mixins": ["extras.mixins.json"],
   "depends": {
     "fabricloader": ">=0.9.1",
     "fabric": "*",

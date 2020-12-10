@@ -1,7 +1,5 @@
-package xyz.nucleoid.sidebar;
+package xyz.nucleoid.extras;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -17,49 +15,42 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-public final class NucleoidSidebar implements ModInitializer {
-    public static final String ID = "nucleoid_sidebar";
+public final class NucleoidSidebar {
+    private static NucleoidSidebar instance;
 
-    // TODO: make this configurable
     public static final RegistryKey<World> DIMENSION = World.OVERWORLD;
 
     private static final Text TITLE = new LiteralText("Nucleoid").formatted(Formatting.AQUA, Formatting.BOLD);
 
-    private static SidebarWidget widget;
+    private final SidebarWidget widget;
 
-    @Override
-    public void onInitialize() {
-        ServerTickEvents.END_SERVER_TICK.register(NucleoidSidebar::onServerTick);
+    private NucleoidSidebar(MinecraftServer server) {
+        this.widget = new SidebarWidget(server, TITLE);
     }
 
-    private static SidebarWidget getWidget(MinecraftServer server) {
-        if (widget == null) {
-            widget = new SidebarWidget(server, TITLE);
+    public static NucleoidSidebar get(MinecraftServer server) {
+        if (instance == null) {
+            instance = new NucleoidSidebar(server);
         }
-        return widget;
+        return instance;
     }
 
-    private static void onServerTick(MinecraftServer server) {
-        int ticks = server.getTicks();
-        if (ticks % 20 != 0) {
-            return;
-        }
-
-        SidebarWidget widget = getWidget(server);
-        widget.set(NucleoidSidebar::writeSidebar);
+    public void update() {
+        this.widget.set(this::writeSidebar);
     }
 
-    private static void writeSidebar(SidebarWidget.Content content) {
+    private void writeSidebar(SidebarWidget.Content content) {
         content.writeLine(Formatting.GOLD + "Welcome to Nucleoid!");
+        content.writeLine(Formatting.AQUA + "nucleoid.xyz/discord");
 
         Collection<ManagedGameSpace> openGames = ManagedGameSpace.getOpen();
         if (!openGames.isEmpty()) {
             content.writeLine("");
-            writeGamesToSidebar(content, openGames);
+            this.writeGamesToSidebar(content, openGames);
         }
     }
 
-    private static void writeGamesToSidebar(SidebarWidget.Content content, Collection<ManagedGameSpace> openGames) {
+    private void writeGamesToSidebar(SidebarWidget.Content content, Collection<ManagedGameSpace> openGames) {
         content.writeLine(Formatting.GOLD + "Open games:");
 
         Stream<ManagedGameSpace> games = openGames.stream()
@@ -81,13 +72,11 @@ public final class NucleoidSidebar implements ModInitializer {
         content.writeLine(Formatting.GRAY + "or use the compass!");
     }
 
-    public static void addPlayer(ServerPlayerEntity player) {
-        SidebarWidget widget = getWidget(player.server);
-        widget.addPlayer(player);
+    public void addPlayer(ServerPlayerEntity player) {
+        this.widget.addPlayer(player);
     }
 
-    public static void removePlayer(ServerPlayerEntity player) {
-        SidebarWidget widget = getWidget(player.server);
-        widget.removePlayer(player);
+    public void removePlayer(ServerPlayerEntity player) {
+        this.widget.removePlayer(player);
     }
 }
