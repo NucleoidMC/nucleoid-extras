@@ -4,6 +4,7 @@
   "package": "xyz.nucleoid.extras.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "relay.ServerPlayNetworkHandlerMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
   ],
