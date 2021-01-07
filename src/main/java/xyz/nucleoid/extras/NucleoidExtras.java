@@ -12,6 +12,8 @@ public final class NucleoidExtras implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        NucleoidIntegrations.get();
+
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }
 
