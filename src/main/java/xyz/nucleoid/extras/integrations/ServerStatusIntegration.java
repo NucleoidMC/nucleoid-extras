@@ -15,7 +15,6 @@ import xyz.nucleoid.plasmid.game.ManagedGameSpace;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 public final class ServerStatusIntegration {
     private static final long CHECK_INTERVAL_MS = 10 * 1000;
@@ -55,7 +54,7 @@ public final class ServerStatusIntegration {
 
             Status status = this.checkStatus(server);
             if (status != null) {
-                this.statusSender.accept(status.serialize());
+                this.statusSender.send(status.serialize());
             }
         }
     }
