@@ -11,6 +11,8 @@ import xyz.nucleoid.extras.integrations.connection.IntegrationsConnection;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsProxy;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -26,6 +28,7 @@ public final class NucleoidIntegrations {
 
     private final Map<String, Consumer<JsonObject>> messageReceivers = new Object2ObjectOpenHashMap<>();
     private final Set<String> registeredSenders = new ObjectOpenHashSet<>();
+    private final List<Runnable> connectionOpenListeners = new ArrayList<>();
 
     private NucleoidIntegrations(IntegrationsConfig config) {
         this.config = config;
@@ -58,6 +61,7 @@ public final class NucleoidIntegrations {
     private static void bindIntegrations(NucleoidIntegrations integrations, IntegrationsConfig config) {
         ChatRelayIntegration.bind(integrations, config);
         ServerStatusIntegration.bind(integrations, config);
+        ServerLifecycleIntegration.bind(integrations, config);
     }
 
     @Nullable
@@ -76,7 +80,11 @@ public final class NucleoidIntegrations {
         }
     }
 
-    public Consumer<JsonObject> openSender(String type) {
+    public void bindConnectionOpen(Runnable runnable) {
+        this.connectionOpenListeners.add(runnable);
+    }
+
+    public IntegrationSender openSender(String type) {
         if (this.registeredSenders.add(type)) {
             return body -> this.proxy.send(type, body);
         } else {
@@ -92,6 +100,10 @@ public final class NucleoidIntegrations {
         JsonObject body = new JsonObject();
         body.addProperty("channel", this.config.getChannel());
         this.proxy.send("handshake", body);
+
+        for (Runnable listener : this.connectionOpenListeners) {
+            listener.run();
+        }
     }
 
     void handleMessage(String type, JsonObject body) {

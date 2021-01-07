@@ -11,7 +11,8 @@ public final class IntegrationsConfig {
                 Codec.INT.fieldOf("port").forGetter(config -> config.port),
                 Codec.BOOL.optionalFieldOf("send_players", true).forGetter(config -> config.sendPlayers),
                 Codec.BOOL.optionalFieldOf("send_games", true).forGetter(config -> config.sendGames),
-                Codec.BOOL.optionalFieldOf("send_chat", true).forGetter(config -> config.sendChat)
+                Codec.BOOL.optionalFieldOf("send_chat", true).forGetter(config -> config.sendChat),
+                Codec.BOOL.optionalFieldOf("send_lifecycle", true).forGetter(config -> config.sendLifecycle)
         ).apply(instance, IntegrationsConfig::new);
     });
 
@@ -22,14 +23,16 @@ public final class IntegrationsConfig {
     private final boolean sendPlayers;
     private final boolean sendGames;
     private final boolean sendChat;
+    private final boolean sendLifecycle;
 
-    private IntegrationsConfig(String channel, String host, int port, boolean sendPlayers, boolean sendGames, boolean sendChat) {
+    private IntegrationsConfig(String channel, String host, int port, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle) {
         this.channel = channel;
         this.host = host;
         this.port = port;
         this.sendPlayers = sendPlayers;
         this.sendGames = sendGames;
         this.sendChat = sendChat;
+        this.sendLifecycle = sendLifecycle;
     }
 
     public String getChannel() {
@@ -54,5 +57,9 @@ public final class IntegrationsConfig {
 
     public boolean shouldSendChat() {
         return this.sendChat;
+    }
+
+    public boolean shouldSendLifecycle() {
+        return this.sendLifecycle;
     }
 }

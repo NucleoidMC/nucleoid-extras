@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 public final class ServerStatusIntegration {
     private static final long CHECK_INTERVAL_MS = 10 * 1000;
 
-    private final Consumer<JsonObject> statusSender;
+    private final IntegrationSender statusSender;
     private final boolean players;
     private final boolean games;
 
@@ -29,7 +29,7 @@ public final class ServerStatusIntegration {
     private Status currentStatus = new Status();
     private Status lastStatus = new Status();
 
-    private ServerStatusIntegration(Consumer<JsonObject> statusSender, boolean players, boolean games) {
+    private ServerStatusIntegration(IntegrationSender statusSender, boolean players, boolean games) {
         this.statusSender = statusSender;
         this.players = players;
         this.games = games;
@@ -42,7 +42,7 @@ public final class ServerStatusIntegration {
             return;
         }
 
-        Consumer<JsonObject> statusSender = integrations.openSender("status");
+        IntegrationSender statusSender = integrations.openSender("status");
 
         ServerStatusIntegration integration = new ServerStatusIntegration(statusSender, players, games);
         ServerTickEvents.END_SERVER_TICK.register(integration::tick);

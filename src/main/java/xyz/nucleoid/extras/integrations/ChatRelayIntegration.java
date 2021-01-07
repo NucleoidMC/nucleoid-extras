@@ -16,20 +16,19 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.PlayerSendChatEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
 public final class ChatRelayIntegration {
     private final ConcurrentLinkedQueue<ChatMessage> messageQueue = new ConcurrentLinkedQueue<>();
 
-    private final Consumer<JsonObject> chatSender;
+    private final IntegrationSender chatSender;
 
-    private ChatRelayIntegration(Consumer<JsonObject> chatSender) {
+    private ChatRelayIntegration(IntegrationSender chatSender) {
         this.chatSender = chatSender;
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
         if (config.shouldSendChat()) {
-            Consumer<JsonObject> chatSender = integrations.openSender("chat");
+            IntegrationSender chatSender = integrations.openSender("chat");
 
             ChatRelayIntegration integration = new ChatRelayIntegration(chatSender);
 
@@ -69,7 +68,7 @@ public final class ChatRelayIntegration {
         body.add("sender", senderRoot);
         body.addProperty("content", content);
 
-        this.chatSender.accept(body);
+        this.chatSender.send(body);
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
