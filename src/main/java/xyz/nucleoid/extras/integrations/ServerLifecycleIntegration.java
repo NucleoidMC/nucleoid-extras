@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.integrations;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.SharedConstants;
 import net.minecraft.server.MinecraftServer;
 
 public final class ServerLifecycleIntegration {
@@ -48,9 +47,7 @@ public final class ServerLifecycleIntegration {
     }
 
     private boolean trySendStart() {
-        JsonObject body = new JsonObject();
-        body.addProperty("game_version", SharedConstants.getGameVersion().getName());
-        return this.lifecycleStartSender.send(body);
+        return this.lifecycleStartSender.send(new JsonObject());
     }
 
     private boolean trySendStop() {

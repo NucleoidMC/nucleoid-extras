@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.integrations;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.SharedConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -99,6 +100,7 @@ public final class NucleoidIntegrations {
     void handleConnection() {
         JsonObject body = new JsonObject();
         body.addProperty("channel", this.config.getChannel());
+        body.addProperty("game_version", SharedConstants.getGameVersion().getName());
         this.proxy.send("handshake", body);
 
         for (Runnable listener : this.connectionOpenListeners) {
