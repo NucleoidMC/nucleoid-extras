@@ -113,7 +113,7 @@ public final class ChatRelayIntegration {
             if (message.attachments != null) {
                 for (Attachment attachment : message.attachments) {
                     text = text.append(new LiteralText("\n[Attachment: " + attachment.name + "]").styled(style -> {
-                        return style.withColor(Formatting.BLUE).withUnderline(true)
+                        return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")));
                     }));
