@@ -101,6 +101,12 @@ public final class NucleoidIntegrations {
         JsonObject body = new JsonObject();
         body.addProperty("channel", this.config.getChannel());
         body.addProperty("game_version", SharedConstants.getGameVersion().getName());
+
+        String serverIp = this.config.getServerIp();
+        if (serverIp != null) {
+            body.addProperty("server_ip", serverIp);
+        }
+
         this.proxy.send("handshake", body);
 
         for (Runnable listener : this.connectionOpenListeners) {
