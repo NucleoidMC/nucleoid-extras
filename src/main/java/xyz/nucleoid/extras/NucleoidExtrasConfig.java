@@ -9,6 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import command.CommandAliasConfig;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,8 @@ public final class NucleoidExtrasConfig {
     private static final Codec<NucleoidExtrasConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(config -> config.sidebar),
-                IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations))
+                IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations)),
+                CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases))
         ).apply(instance, NucleoidExtrasConfig::new);
     });
 
@@ -41,20 +43,28 @@ public final class NucleoidExtrasConfig {
 
     private final boolean sidebar;
     private final IntegrationsConfig integrations;
+    private final CommandAliasConfig aliases;
 
-    private NucleoidExtrasConfig(boolean sidebar, Optional<IntegrationsConfig> integrations) {
+    private NucleoidExtrasConfig(boolean sidebar, Optional<IntegrationsConfig> integrations, Optional<CommandAliasConfig> aliases) {
         this.sidebar = sidebar;
         this.integrations = integrations.orElse(null);
+        this.aliases = aliases.orElse(null);
     }
 
     private NucleoidExtrasConfig() {
         this.sidebar = false;
         this.integrations = null;
+        this.aliases = null;
     }
 
     @Nullable
     public IntegrationsConfig getIntegrations() {
         return this.integrations;
+    }
+
+    @Nullable
+    public CommandAliasConfig getAliases() {
+        return this.aliases;
     }
 
     public boolean isSidebarEnabled() {

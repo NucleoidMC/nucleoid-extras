@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras;
 
+import command.NucleoidCommandAliases;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
@@ -14,6 +15,7 @@ public final class NucleoidExtras implements ModInitializer {
     public void onInitialize() {
         NucleoidIntegrations.get();
 
+        NucleoidCommandAliases.register();
         ScheduledStop.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
