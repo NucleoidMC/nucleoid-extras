@@ -1,4 +1,4 @@
-package command;
+package xyz.nucleoid.extras.command;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

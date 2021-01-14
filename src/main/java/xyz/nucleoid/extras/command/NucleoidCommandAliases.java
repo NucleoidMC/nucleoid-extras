@@ -1,4 +1,4 @@
-package command;
+package xyz.nucleoid.extras.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

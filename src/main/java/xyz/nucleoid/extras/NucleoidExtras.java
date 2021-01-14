@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras;
 
-import command.NucleoidCommandAliases;
+import xyz.nucleoid.extras.command.NucleoidCommandAliases;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
