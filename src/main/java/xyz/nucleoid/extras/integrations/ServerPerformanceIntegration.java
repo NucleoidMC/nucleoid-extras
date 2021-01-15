@@ -32,11 +32,11 @@ public final class ServerPerformanceIntegration {
 
     private void tick(MinecraftServer server) {
         long time = System.currentTimeMillis();
-        if (time - this.lastSendTime > SEND_INTERVAL_MS) {
+        if (time - this.lastSendTime > 1000) {
             this.lastSendTime = time;
 
             long averageTickMs = getAverageTickMs(((MinecraftServerAccessor) server).nucleoid$getMetricsData());
-            int tps = (int) Math.min(1000 / averageTickMs, 20);
+            int tps = averageTickMs != 0 ? (int) Math.min(1000 / averageTickMs, 20) : 20;
 
             int dimensions = 0;
             int entities = 0;
