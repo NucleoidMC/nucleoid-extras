@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MetricsDataAccessor",
+    "MinecraftServerAccessor",
     "ServerWorldAccessor",
     "relay.ServerPlayNetworkHandlerMixin",
     "sidebar.PlayerManagerMixin",

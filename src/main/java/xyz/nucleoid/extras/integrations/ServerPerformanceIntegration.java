@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.MetricsData;
 import xyz.nucleoid.extras.mixin.MetricsDataAccessor;
+import xyz.nucleoid.extras.mixin.MinecraftServerAccessor;
 import xyz.nucleoid.extras.mixin.ServerWorldAccessor;
 
 public final class ServerPerformanceIntegration {
@@ -34,7 +35,7 @@ public final class ServerPerformanceIntegration {
         if (time - this.lastSendTime > SEND_INTERVAL_MS) {
             this.lastSendTime = time;
 
-            long averageTickMs = getAverageTickMs(server.getMetricsData());
+            long averageTickMs = getAverageTickMs(((MinecraftServerAccessor) server).nucleoid$getMetricsData());
             int tps = (int) Math.min(1000 / averageTickMs, 20);
 
             int dimensions = 0;
