@@ -4,6 +4,8 @@
   "package": "xyz.nucleoid.extras.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MetricsDataAccessor",
+    "ServerWorldAccessor",
     "relay.ServerPlayNetworkHandlerMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"

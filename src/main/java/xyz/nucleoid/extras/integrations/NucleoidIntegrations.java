@@ -63,6 +63,7 @@ public final class NucleoidIntegrations {
         ChatRelayIntegration.bind(integrations, config);
         ServerStatusIntegration.bind(integrations, config);
         ServerLifecycleIntegration.bind(integrations, config);
+        ServerPerformanceIntegration.bind(integrations, config);
     }
 
     @Nullable
