@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MetricsData.class)
 public interface MetricsDataAccessor {
-    @Accessor
+    @Accessor("samples")
     long[] nucleoid$getSamples();
 }
