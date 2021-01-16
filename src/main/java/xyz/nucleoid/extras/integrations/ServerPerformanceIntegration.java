@@ -35,8 +35,8 @@ public final class ServerPerformanceIntegration {
         if (time - this.lastSendTime > SEND_INTERVAL_MS) {
             this.lastSendTime = time;
 
-            long averageTickMs = getAverageTickMs(((MinecraftServerAccessor) server).nucleoid$getMetricsData());
-            int tps = averageTickMs != 0 ? (int) Math.min(1000 / averageTickMs, 20) : 20;
+            float averageTickMs = getAverageTickMs(((MinecraftServerAccessor) server).nucleoid$getMetricsData());
+            int tps = averageTickMs != 0 ? (int) Math.min(1000.0F / averageTickMs, 20) : 20;
 
             int dimensions = 0;
             int entities = 0;
@@ -45,7 +45,7 @@ public final class ServerPerformanceIntegration {
             for (ServerWorld world : server.getWorlds()) {
                 dimensions += 1;
                 entities += ((ServerWorldAccessor) world).nucleoid$getEntitiesById().size();
-                chunks += world.getChunkManager().getTotalChunksLoadedCount();
+                chunks += world.getChunkManager().getLoadedChunkCount();
             }
 
             Runtime runtime = Runtime.getRuntime();
@@ -65,12 +65,13 @@ public final class ServerPerformanceIntegration {
         }
     }
 
-    private static long getAverageTickMs(MetricsData data) {
+    private static float getAverageTickMs(MetricsData data) {
         long[] samples = ((MetricsDataAccessor) data).nucleoid$getSamples();
         long total = 0;
         for (long sample : samples) {
             total += sample;
         }
-        return (total / samples.length) / 1000000;
+        double averageTickNs = (double) total / samples.length;
+        return (float) (averageTickNs / 1000000.0);
     }
 }
