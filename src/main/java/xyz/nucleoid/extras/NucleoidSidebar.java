@@ -40,8 +40,9 @@ public final class NucleoidSidebar {
     }
 
     private void writeSidebar(SidebarWidget.Content content) {
-        content.writeLine(Formatting.GOLD + "Welcome to Nucleoid!");
-        content.writeLine(Formatting.AQUA + "nucleoid.xyz/discord");
+        content.writeFormattedTranslated(Formatting.GOLD, "nucleoid.sidebar.welcome");
+
+        content.writeFormattedTranslated(Formatting.AQUA, "nucleoid.discord");
 
         Collection<ManagedGameSpace> openGames = ManagedGameSpace.getOpen();
         if (!openGames.isEmpty()) {
@@ -51,7 +52,7 @@ public final class NucleoidSidebar {
     }
 
     private void writeGamesToSidebar(SidebarWidget.Content content, Collection<ManagedGameSpace> openGames) {
-        content.writeLine(Formatting.GOLD + "Open games:");
+        content.writeFormattedTranslated(Formatting.GOLD, "nucleoid.sidebar.games");
 
         Stream<ManagedGameSpace> games = openGames.stream()
                 .sorted(Comparator.comparingInt(GameSpace::getPlayerCount).reversed())
@@ -68,8 +69,8 @@ public final class NucleoidSidebar {
         });
 
         content.writeLine("");
-        content.writeLine(Formatting.GRAY + "...run /game join");
-        content.writeLine(Formatting.GRAY + "or use the compass!");
+        content.writeFormattedTranslated(Formatting.GRAY, "nucleoid.sidebar.join");
+        content.writeFormattedTranslated(Formatting.GRAY, "nucleoid.sidebar.compass");
     }
 
     public void addPlayer(ServerPlayerEntity player) {
