@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 
 public final class ServerLifecycleIntegration {
+    private static boolean crashed;
+
     private final IntegrationSender lifecycleStartSender;
     private final IntegrationSender lifecycleStopSender;
 
@@ -29,6 +31,10 @@ public final class ServerLifecycleIntegration {
         }
     }
 
+    public static void setCrashed() {
+        crashed = true;
+    }
+
     private void onConnectionOpen() {
         if (this.queuedStarted && this.trySendStart()) {
             this.queuedStarted = false;
@@ -42,7 +48,10 @@ public final class ServerLifecycleIntegration {
     }
 
     private void onServerStopping(MinecraftServer server) {
-        this.trySendStop();
+        boolean crashed = ServerLifecycleIntegration.crashed;
+        ServerLifecycleIntegration.crashed = false;
+
+        this.trySendStop(crashed);
         this.queuedStarted = false;
     }
 
@@ -50,7 +59,9 @@ public final class ServerLifecycleIntegration {
         return this.lifecycleStartSender.send(new JsonObject());
     }
 
-    private boolean trySendStop() {
-        return this.lifecycleStopSender.send(new JsonObject());
+    private boolean trySendStop(boolean crash) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("crash", crash);
+        return this.lifecycleStopSender.send(payload);
     }
 }

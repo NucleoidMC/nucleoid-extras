@@ -6,6 +6,7 @@
   "mixins": [
     "MetricsDataAccessor",
     "MinecraftServerAccessor",
+    "MinecraftServerMixin",
     "ServerWorldAccessor",
     "relay.ServerPlayNetworkHandlerMixin",
     "sidebar.PlayerManagerMixin",
