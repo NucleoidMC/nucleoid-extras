@@ -1,11 +1,11 @@
 package xyz.nucleoid.extras;
 
-import xyz.nucleoid.extras.command.NucleoidCommandAliases;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.nucleoid.extras.command.NucleoidCommandAliases;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 public final class NucleoidExtras implements ModInitializer {

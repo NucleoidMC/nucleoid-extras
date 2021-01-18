@@ -11,8 +11,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
-import xyz.nucleoid.plasmid.game.GameCloseReason;
-import xyz.nucleoid.plasmid.game.ManagedGameSpace;
+import xyz.nucleoid.plasmid.event.GameEvents;
+import xyz.nucleoid.plasmid.game.*;
 
 import java.util.Collection;
 
@@ -34,6 +34,8 @@ public final class ScheduledStop {
         });
 
         ServerTickEvents.END_SERVER_TICK.register(ScheduledStop::tick);
+
+        GameEvents.OPENED.register(ScheduledStop::openGame);
     }
 
     private static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -97,5 +99,11 @@ public final class ScheduledStop {
         }
 
         return true;
+    }
+
+    private static void openGame(ConfiguredGame<?> config, GameSpace gameSpace) {
+        if (stopScheduled) {
+            throw new GameOpenException(new LiteralText("Server stop has been scheduled!"));
+        }
     }
 }
