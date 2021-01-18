@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import xyz.nucleoid.plasmid.event.GameEvents;
@@ -60,13 +60,13 @@ public final class ScheduledStop {
             stopTime = time + FORCE_STOP_TIME;
 
             server.getPlayerManager().broadcastChatMessage(
-                    new LiteralText("Server restart has been scheduled! The server will restart in " + FORCE_STOP_MINUTES + " minutes, or when all games exit.")
+                    new TranslatableText("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
                             .formatted(Formatting.BOLD, Formatting.RED),
                     MessageType.SYSTEM,
                     Util.NIL_UUID
             );
         } else {
-            source.sendError(new LiteralText("Server restart has already been scheduled"));
+            source.sendError(new TranslatableText("nucleoid.stop.scheduled.already"));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -103,7 +103,7 @@ public final class ScheduledStop {
 
     private static void openGame(ConfiguredGame<?> config, GameSpace gameSpace) {
         if (stopScheduled) {
-            throw new GameOpenException(new LiteralText("Server stop has been scheduled!"));
+            throw new GameOpenException(new TranslatableText("nucleoid.stop.game.open"));
         }
     }
 }
