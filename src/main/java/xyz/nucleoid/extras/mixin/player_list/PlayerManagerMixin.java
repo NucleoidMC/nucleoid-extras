@@ -31,9 +31,10 @@ public abstract class PlayerManagerMixin {
 
         PlayerListS2CPacket grayPacket = PlayerListHelper.getAddPlayerPacket(player, true);
 
-        for (ServerPlayerEntity target : this.playerMap.values()) {
+        ManagedGameSpace gameSpace = ManagedGameSpace.forWorld(player.world);
 
-            if (ManagedGameSpace.forWorld(player.world) == ManagedGameSpace.forWorld(target.world)) {
+        for (ServerPlayerEntity target : this.playerMap.values()) {
+            if (gameSpace == ManagedGameSpace.forWorld(target.world)) {
                 target.networkHandler.sendPacket(whitePacket);
             } else {
                 target.networkHandler.sendPacket(grayPacket);

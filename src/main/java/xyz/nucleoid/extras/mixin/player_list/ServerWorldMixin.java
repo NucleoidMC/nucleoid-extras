@@ -28,12 +28,12 @@ public class ServerWorldMixin {
         ManagedGameSpace playerGameSpace = ManagedGameSpace.forWorld(player.world);
 
         for (ServerPlayerEntity playerOther : this.server.getPlayerManager().getPlayerList()) {
-            ManagedGameSpace playerOtherGameSpace = ManagedGameSpace.forWorld(playerOther.world);
+           boolean isSameGameSpace = ManagedGameSpace.forWorld(playerOther.world) == playerGameSpace;
 
-            playerOther.networkHandler.sendPacket(playerGameSpace == playerOtherGameSpace ? packetNormal : packetGray);
+            playerOther.networkHandler.sendPacket(isSameGameSpace ? packetNormal : packetGray);
             ((PlayerListS2CPacketAccessor) packetUpdatePlayer).nucleoid$getEntries().add(
                     packetUpdatePlayer.new Entry(playerOther.getGameProfile(), 0, playerOther.interactionManager.getGameMode(),
-                            PlayerListHelper.getDisplayName(playerOther, playerGameSpace != playerOtherGameSpace))
+                            PlayerListHelper.getDisplayName(playerOther, !isSameGameSpace))
             );
         }
 
