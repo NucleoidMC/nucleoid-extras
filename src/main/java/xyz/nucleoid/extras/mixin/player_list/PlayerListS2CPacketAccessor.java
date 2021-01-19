@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.mixin;
+package xyz.nucleoid.extras.mixin.player_list;
 
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;

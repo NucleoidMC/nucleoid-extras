@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.mixin;
+package xyz.nucleoid.extras.mixin.player_list;
 
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.MinecraftServer;
@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.nucleoid.extras.PlayerListHelper;
+import xyz.nucleoid.plasmid.game.ManagedGameSpace;
 
 @Mixin(ServerWorld.class)
 public class ServerWorldMixin {
@@ -24,11 +25,15 @@ public class ServerWorldMixin {
         PlayerListS2CPacket packetUpdatePlayer = new PlayerListS2CPacket();
         ((PlayerListS2CPacketAccessor) packetUpdatePlayer).nucleoid$setAction(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
 
+        ManagedGameSpace playerGameSpace = ManagedGameSpace.forWorld(player.world);
+
         for (ServerPlayerEntity playerOther : this.server.getPlayerManager().getPlayerList()) {
-            playerOther.networkHandler.sendPacket(player.world == playerOther.world ? packetNormal : packetGray);
+            ManagedGameSpace playerOtherGameSpace = ManagedGameSpace.forWorld(playerOther.world);
+
+            playerOther.networkHandler.sendPacket(playerGameSpace == playerOtherGameSpace ? packetNormal : packetGray);
             ((PlayerListS2CPacketAccessor) packetUpdatePlayer).nucleoid$getEntries().add(
                     packetUpdatePlayer.new Entry(playerOther.getGameProfile(), 0, playerOther.interactionManager.getGameMode(),
-                            PlayerListHelper.getDisplayName(playerOther, player.world != playerOther.world))
+                            PlayerListHelper.getDisplayName(playerOther, playerGameSpace != playerOtherGameSpace))
             );
         }
 
