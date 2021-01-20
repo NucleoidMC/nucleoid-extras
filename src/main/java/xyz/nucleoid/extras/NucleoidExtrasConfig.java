@@ -9,10 +9,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import xyz.nucleoid.extras.command.CommandAliasConfig;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.command.CommandAliasConfig;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 
 import java.io.IOException;
