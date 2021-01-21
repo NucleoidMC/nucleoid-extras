@@ -11,6 +11,7 @@
     "player_list.PlayerListS2CPacketAccessor",
     "player_list.PlayerManagerMixin",
     "player_list.ServerWorldMixin",
+    "player_list.ServerScoreboardMixin",
     "relay.ServerPlayNetworkHandlerMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"

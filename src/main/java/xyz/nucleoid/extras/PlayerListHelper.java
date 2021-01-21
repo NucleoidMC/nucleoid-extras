@@ -36,4 +36,27 @@ public class PlayerListHelper {
     public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
         return ManagedGameSpace.forWorld(left.world) != ManagedGameSpace.forWorld(right.world);
     }
+
+    public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
+        PlayerListS2CPacket normalPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, false);
+        PlayerListS2CPacket grayPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, true);
+
+        PlayerListS2CPacket updateJoined = new PlayerListS2CPacket();
+        ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$setAction(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
+
+        for (ServerPlayerEntity player : updatedPlayer.server.getPlayerManager().getPlayerList()) {
+            boolean gray = PlayerListHelper.shouldGray(player, updatedPlayer);
+
+            player.networkHandler.sendPacket(gray ? grayPacket : normalPacket);
+            PlayerListS2CPacket.Entry entry = updateJoined.new Entry(
+                    player.getGameProfile(),
+                    0,
+                    player.interactionManager.getGameMode(),
+                    PlayerListHelper.getDisplayName(player, gray)
+            );
+            ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$getEntries().add(entry);
+        }
+
+        updatedPlayer.networkHandler.sendPacket(updateJoined);
+    }
 }
