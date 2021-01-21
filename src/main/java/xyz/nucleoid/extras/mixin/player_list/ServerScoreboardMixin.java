@@ -27,4 +27,11 @@ public class ServerScoreboardMixin {
     private void updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
         PlayerListHelper.updatePlayer(this.server.getPlayerManager().getPlayer(playerName));
     }
+
+    @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
+    private void updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
+        for (String playerName : team.getPlayerList()) {
+            PlayerListHelper.updatePlayer(this.server.getPlayerManager().getPlayer(playerName));
+        }
+    }
 }
