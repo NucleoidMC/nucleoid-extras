@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.mixin.player_list;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +32,10 @@ public class ServerScoreboardMixin {
     @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
     private void updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
         for (String playerName : team.getPlayerList()) {
-            PlayerListHelper.updatePlayer(this.server.getPlayerManager().getPlayer(playerName));
+            ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+            if (player != null) {
+                PlayerListHelper.updatePlayer(player);
+            }
         }
     }
 }
