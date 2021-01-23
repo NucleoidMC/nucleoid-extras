@@ -7,6 +7,7 @@ import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -101,26 +102,29 @@ public final class ChatRelayIntegration {
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
-        for (String line : message.lines) {
-            MutableText sender = new LiteralText(message.sender);
-            if (message.nameColor != null) {
-                sender = sender.setStyle(sender.getStyle().withColor(message.nameColor));
-            }
+        PlayerManager playerManager = server.getPlayerManager();
 
+        MutableText sender = new LiteralText(message.sender);
+        if (message.nameColor != null) {
+            sender = sender.setStyle(sender.getStyle().withColor(message.nameColor));
+        }
+
+        for (String line : message.lines) {
             MutableText text = new LiteralText("<@").append(sender).append("> ").formatted(Formatting.GRAY)
                     .append(new LiteralText(line).formatted(Formatting.WHITE));
+            playerManager.broadcastChatMessage(text, MessageType.CHAT, Util.NIL_UUID);
+        }
 
-            if (message.attachments != null) {
-                for (Attachment attachment : message.attachments) {
-                    text = text.append(new LiteralText("\n[Attachment: " + attachment.name + "]").styled(style -> {
-                        return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")));
-                    }));
-                }
+        if (message.attachments != null) {
+            for (Attachment attachment : message.attachments) {
+                MutableText text = new LiteralText("\n[Attachment: " + attachment.name + "]").styled(style -> {
+                    return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")));
+                });
+
+                playerManager.broadcastChatMessage(text, MessageType.CHAT, Util.NIL_UUID);
             }
-
-            server.getPlayerManager().broadcastChatMessage(text, MessageType.CHAT, Util.NIL_UUID);
         }
     }
 
