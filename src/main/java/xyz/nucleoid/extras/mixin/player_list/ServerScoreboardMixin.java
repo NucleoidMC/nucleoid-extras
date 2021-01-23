@@ -21,12 +21,18 @@ public class ServerScoreboardMixin {
 
     @Inject(method = "addPlayerToTeam", at = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/ServerScoreboard;runUpdateListeners()V", shift = At.Shift.AFTER))
     private void updatePlayerAfterJoining(String playerName, Team team, CallbackInfoReturnable<Boolean> cir) {
-        PlayerListHelper.updatePlayer(this.server.getPlayerManager().getPlayer(playerName));
+        ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+        if (player != null) {
+            PlayerListHelper.updatePlayer(player);
+        }
     }
 
     @Inject(method = "removePlayerFromTeam", at = @At("TAIL"))
     private void updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
-        PlayerListHelper.updatePlayer(this.server.getPlayerManager().getPlayer(playerName));
+        ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+        if (player != null) {
+            PlayerListHelper.updatePlayer(player);
+        }
     }
 
     @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
