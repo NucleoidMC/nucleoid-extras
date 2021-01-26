@@ -152,7 +152,7 @@ public final class ChatRelayIntegration {
     }
 
     static class ChatMessage {
-        private static final int SUMMARY_LENGTH = 60;
+        private static final int SUMMARY_LENGTH = 40;
 
         final String sender;
         final String[] lines;
