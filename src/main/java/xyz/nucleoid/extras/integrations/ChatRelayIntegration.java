@@ -183,7 +183,7 @@ public final class ChatRelayIntegration {
                 if (line.length() <= SUMMARY_LENGTH) {
                     return line;
                 } else {
-                    return line.substring(SUMMARY_LENGTH - 2) + "..";
+                    return line.substring(0, SUMMARY_LENGTH - 2) + "..";
                 }
             }
             return null;
