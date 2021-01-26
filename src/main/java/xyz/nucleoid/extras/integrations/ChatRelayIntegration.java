@@ -109,23 +109,24 @@ public final class ChatRelayIntegration {
             sender = sender.setStyle(sender.getStyle().withColor(message.nameColor));
         }
 
+        MessageBuilder result = new MessageBuilder(new LiteralText("<@").append(sender).append(">")
+                .formatted(Formatting.GRAY));
+
         for (String line : message.lines) {
-            MutableText text = new LiteralText("<@").append(sender).append("> ").formatted(Formatting.GRAY)
-                    .append(new LiteralText(line).formatted(Formatting.WHITE));
-            playerManager.broadcastChatMessage(text, MessageType.CHAT, Util.NIL_UUID);
+            result.append(new LiteralText(line));
         }
 
         if (message.attachments != null) {
             for (Attachment attachment : message.attachments) {
-                MutableText text = new LiteralText("\n[Attachment: " + attachment.name + "]").styled(style -> {
+                result.append(new LiteralText("[Attachment: " + attachment.name + "]").styled(style -> {
                     return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
                             .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")));
-                });
-
-                playerManager.broadcastChatMessage(text, MessageType.CHAT, Util.NIL_UUID);
+                }));
             }
         }
+
+        playerManager.broadcastChatMessage(result.build(), MessageType.CHAT, Util.NIL_UUID);
     }
 
     static class ChatMessage {
@@ -149,6 +150,30 @@ public final class ChatRelayIntegration {
         Attachment(String name, String url) {
             this.name = name;
             this.url = url;
+        }
+    }
+
+    static class MessageBuilder {
+        private static final MutableText NEW_LINE = new LiteralText("\n | ").formatted(Formatting.GRAY);
+
+        MutableText text;
+        boolean first = true;
+
+        MessageBuilder(Text prefix) {
+            this.text = new LiteralText("").append(prefix).append(" ");
+        }
+
+        void append(MutableText text) {
+            if (this.first) {
+                this.text = this.text.append(text);
+                this.first = false;
+            } else {
+                this.text = this.text.append(NEW_LINE).append(text);
+            }
+        }
+
+        MutableText build() {
+            return this.text;
         }
     }
 }
