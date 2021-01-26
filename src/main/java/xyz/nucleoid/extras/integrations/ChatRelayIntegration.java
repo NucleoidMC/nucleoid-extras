@@ -60,7 +60,14 @@ public final class ChatRelayIntegration {
             attachments = null;
         }
 
-        return new ChatMessage(sender, content.split("\n"), nameColor, attachments);
+        ChatMessage replyingTo;
+        if (body.has("replying_to")) {
+            replyingTo = parseMessage(body.getAsJsonObject("replying_to"));
+        } else {
+            replyingTo = null;
+        }
+
+        return new ChatMessage(sender, content.split("\n"), nameColor, attachments, replyingTo);
     }
 
     @NotNull
@@ -104,13 +111,13 @@ public final class ChatRelayIntegration {
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
         PlayerManager playerManager = server.getPlayerManager();
 
-        MutableText sender = new LiteralText(message.sender);
-        if (message.nameColor != null) {
-            sender = sender.setStyle(sender.getStyle().withColor(message.nameColor));
-        }
+        MutableText sender = message.getSenderName();
+        MutableText prefix = new LiteralText("<@").append(sender).append(">").formatted(Formatting.GRAY);
+        MessageBuilder result = new MessageBuilder(prefix);
 
-        MessageBuilder result = new MessageBuilder(new LiteralText("<@").append(sender).append(">")
-                .formatted(Formatting.GRAY));
+        if (message.replyingTo != null) {
+            result.append(this.createReplyText(message.replyingTo));
+        }
 
         for (String line : message.lines) {
             result.append(new LiteralText(line));
@@ -129,17 +136,57 @@ public final class ChatRelayIntegration {
         playerManager.broadcastChatMessage(result.build(), MessageType.CHAT, Util.NIL_UUID);
     }
 
+    private MutableText createReplyText(ChatMessage message) {
+        String summary = message.getSummary();
+
+        MutableText replyText = new LiteralText("(replying to @")
+                .append(message.getSenderName());
+
+        if (summary != null) {
+            replyText = replyText.append(": ").append(new LiteralText(summary).formatted(Formatting.ITALIC));
+        }
+
+        replyText = replyText.append(")");
+
+        return replyText.formatted(Formatting.GRAY);
+    }
+
     static class ChatMessage {
+        private static final int SUMMARY_LENGTH = 60;
+
         final String sender;
         final String[] lines;
         final TextColor nameColor;
         final Attachment[] attachments;
+        final ChatMessage replyingTo;
 
-        ChatMessage(String sender, String[] lines, @Nullable TextColor nameColor, @Nullable Attachment[] attachments) {
+        ChatMessage(String sender, String[] lines, @Nullable TextColor nameColor, @Nullable Attachment[] attachments, @Nullable ChatMessage replyingTo) {
             this.sender = sender;
             this.lines = lines;
             this.nameColor = nameColor;
             this.attachments = attachments;
+            this.replyingTo = replyingTo;
+        }
+
+        MutableText getSenderName() {
+            MutableText sender = new LiteralText(this.sender);
+            if (this.nameColor != null) {
+                sender = sender.setStyle(sender.getStyle().withColor(this.nameColor));
+            }
+            return sender;
+        }
+
+        @Nullable
+        String getSummary() {
+            if (this.lines.length > 0) {
+                String line = this.lines[0];
+                if (line.length() <= SUMMARY_LENGTH) {
+                    return line;
+                } else {
+                    return line.substring(SUMMARY_LENGTH - 2) + "..";
+                }
+            }
+            return null;
         }
     }
 
