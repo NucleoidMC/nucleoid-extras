@@ -15,6 +15,11 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.PlayerSendChatEvent;
+import xyz.nucleoid.plasmid.chat.ChatChannel;
+import xyz.nucleoid.plasmid.chat.HasChatChannel;
+import xyz.nucleoid.plasmid.game.ManagedGameSpace;
+import xyz.nucleoid.plasmid.game.rule.GameRule;
+import xyz.nucleoid.plasmid.game.rule.RuleResult;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -94,6 +99,13 @@ public final class ChatRelayIntegration {
     }
 
     private void onSendChatMessage(ServerPlayerEntity player, String content) {
+        ManagedGameSpace gameSpace = ManagedGameSpace.forWorld(player.world);
+        boolean teamChatAllowed = gameSpace != null && gameSpace.testRule(GameRule.TEAM_CHAT) == RuleResult.ALLOW;
+        if (((HasChatChannel) player).getChatChannel() == ChatChannel.TEAM
+                && player.getScoreboardTeam() == null && teamChatAllowed) {
+            return;
+        }
+
         JsonObject body = new JsonObject();
 
         GameProfile profile = player.getGameProfile();
