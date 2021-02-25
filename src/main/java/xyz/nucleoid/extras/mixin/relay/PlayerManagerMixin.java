@@ -15,7 +15,7 @@ import xyz.nucleoid.extras.event.PlayerSendChatEvent;
 import java.util.UUID;
 
 @Mixin(value = PlayerManager.class, priority = 2000)
-public abstract class ServerPlayNetworkHandlerMixin {
+public abstract class PlayerManagerMixin {
     @Shadow
     @Nullable
     public abstract ServerPlayerEntity getPlayer(UUID uuid);

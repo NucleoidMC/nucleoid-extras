@@ -12,7 +12,7 @@
     "player_list.PlayerManagerMixin",
     "player_list.ServerScoreboardMixin",
     "player_list.ServerWorldMixin",
-    "relay.ServerPlayNetworkHandlerMixin",
+    "relay.PlayerManagerMixin",
     "relay.TranslatableTextInvoker",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
