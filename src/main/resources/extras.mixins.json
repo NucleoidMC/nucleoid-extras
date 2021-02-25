@@ -10,9 +10,10 @@
     "ServerWorldAccessor",
     "player_list.PlayerListS2CPacketAccessor",
     "player_list.PlayerManagerMixin",
-    "player_list.ServerWorldMixin",
     "player_list.ServerScoreboardMixin",
+    "player_list.ServerWorldMixin",
     "relay.ServerPlayNetworkHandlerMixin",
+    "relay.TranslatableTextInvoker",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
   ],
