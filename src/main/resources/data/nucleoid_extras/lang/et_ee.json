@@ -1,0 +1,9 @@
+{
+  "nucleoid.sidebar.welcome": "Tere tulemast Nucleoidi!",
+  "nucleoid.sidebar.games": "Avatud mängud:",
+  "nucleoid.sidebar.join": "...kirjuta /game join",
+  "nucleoid.sidebar.compass": "või kasuta kompassi!",
+  "nucleoid.stop.scheduled": "Ajastatud on serveri taaskäivitus! Server taaskäivitub %s minuti pärast või siis, kui kõik mängud lõppevad.",
+  "nucleoid.stop.scheduled.already": "Serveri taaskäivitus on juba ajastatud.",
+  "nucleoid.stop.game.open": "Selle mänguga ei saa liituda: ajastatud on serveri peatamine!"
+}
