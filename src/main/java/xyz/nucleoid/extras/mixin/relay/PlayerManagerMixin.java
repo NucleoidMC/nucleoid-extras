@@ -29,8 +29,8 @@ public abstract class PlayerManagerMixin {
             if (message instanceof TranslatableText) {
                 Object[] args = ((TranslatableText) message).getArgs();
                 if (args.length == 2) {
-                    String content = args[1].getString();
-                    PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(playerEntity, content);
+                    Text content = Text.of(args[1].toString());
+                    PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(playerEntity, content.getString());
                 }
             }
         }
