@@ -6,6 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.command.NucleoidCommandAliases;
+import xyz.nucleoid.extras.event.PlayerSendChatEvent;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 public final class NucleoidExtras implements ModInitializer {
@@ -19,6 +20,9 @@ public final class NucleoidExtras implements ModInitializer {
         ScheduledStop.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
+        PlayerSendChatEvent.EVENT.register((player, content) -> {
+            System.out.println("relay: " + content);
+        });
     }
 
     private static void onServerTick(MinecraftServer server) {
