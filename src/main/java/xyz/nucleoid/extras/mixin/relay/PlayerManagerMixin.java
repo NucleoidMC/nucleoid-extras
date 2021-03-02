@@ -4,6 +4,7 @@ import net.minecraft.network.MessageType;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,8 +26,13 @@ public abstract class PlayerManagerMixin {
         if (type != MessageType.CHAT) return;
         ServerPlayerEntity playerEntity = getPlayer(senderUuid);
         if (playerEntity != null) {
-            String content = ((TranslatableTextInvoker)message).invokeGetArg(1).getString();
-            PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(playerEntity, content);
+            if (message instanceof TranslatableText) {
+                Object[] args = ((TranslatableText) message).getArgs();
+                if (args.length == 2) {
+                    String content = args[1].toString();
+                    PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(playerEntity, content);
+                }
+            }
         }
     }
 }
