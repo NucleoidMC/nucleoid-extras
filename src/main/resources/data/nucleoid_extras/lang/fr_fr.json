@@ -3,7 +3,6 @@
 	"nucleoid.sidebar.games": "Jeux ouverts :",
 	"nucleoid.sidebar.join": "...exécutez /game join",
 	"nucleoid.sidebar.compass": "ou utilisez la boussole !",
-	"nucleoid.discord": "nucleoid.xyz/discord",
 	"nucleoid.stop.scheduled": "Le redémarrage du serveur a été programmé ! Le serveur va redémarrer dans %s minutes, ou dès que tous les jeux seront terminés.",
 	"nucleoid.stop.scheduled.already": "Un redémarrage du serveur a déjà été programmé.",
 	"nucleoid.stop.game.open": "Impossible de rejoindre ce jeu : un redémarrage a été programmé !"
