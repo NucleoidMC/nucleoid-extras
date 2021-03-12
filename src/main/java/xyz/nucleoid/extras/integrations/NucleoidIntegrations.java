@@ -64,6 +64,7 @@ public final class NucleoidIntegrations {
         ServerStatusIntegration.bind(integrations, config);
         ServerLifecycleIntegration.bind(integrations, config);
         ServerPerformanceIntegration.bind(integrations, config);
+        RemoteCommandIntegration.bind(integrations, config);
     }
 
     @Nullable
@@ -87,11 +88,7 @@ public final class NucleoidIntegrations {
     }
 
     public IntegrationSender openSender(String type) {
-        if (this.registeredSenders.add(type)) {
-            return body -> this.proxy.send(type, body);
-        } else {
-            throw new IllegalArgumentException("duplicate sender opened for " + type);
-        }
+        return body -> this.proxy.send(type, body);
     }
 
     public void tick() {
