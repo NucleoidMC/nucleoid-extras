@@ -24,6 +24,8 @@ dependencies {
 
 	modImplementation 'xyz.nucleoid:plasmid:0.4.101'
 
+	modImplementation include('xyz.nucleoid:more-codecs:0.1.1')
+
 	modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
 		exclude module : "fabric-loader"
 	}
