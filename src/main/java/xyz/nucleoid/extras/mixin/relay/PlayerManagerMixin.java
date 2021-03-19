@@ -6,6 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,15 +24,18 @@ public abstract class PlayerManagerMixin {
     @Nullable
     public abstract ServerPlayerEntity getPlayer(UUID uuid);
 
-    @Inject(method = "broadcastChatMessage", at = @At(value = "RETURN"))
+    @Inject(method = "broadcastChatMessage", at = @At("HEAD"), cancellable = true)
     private void onBroadcastChatMessage(Text message, MessageType type, UUID senderUuid, CallbackInfo ci) {
         if (type != MessageType.CHAT || senderUuid == Util.NIL_UUID) return;
 
-        ServerPlayerEntity player = getPlayer(senderUuid);
+        ServerPlayerEntity player = this.getPlayer(senderUuid);
         if (player != null) {
             String content = getContent(message);
             if (content != null) {
-                PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(player, content);
+                ActionResult result = PlayerSendChatEvent.EVENT.invoker().onPlayerSendChat(player, content);
+                if (result != ActionResult.PASS) {
+                    ci.cancel();
+                }
             }
         }
     }

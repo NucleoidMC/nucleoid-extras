@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras;
+package xyz.nucleoid.extras.player_list;
 
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;

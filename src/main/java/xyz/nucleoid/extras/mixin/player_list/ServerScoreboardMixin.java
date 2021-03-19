@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.nucleoid.extras.PlayerListHelper;
+import xyz.nucleoid.extras.player_list.PlayerListHelper;
 
 @Mixin(ServerScoreboard.class)
 public class ServerScoreboardMixin {

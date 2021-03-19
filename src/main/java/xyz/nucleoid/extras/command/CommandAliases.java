@@ -13,7 +13,7 @@ import xyz.nucleoid.extras.ServerCommandSourceExt;
 import java.util.Map;
 import java.util.UUID;
 
-public final class NucleoidCommandAliases {
+public final class CommandAliases {
     private static final CommandOutput NO_FEEDBACK_OUTPUT = new CommandOutput() {
         @Override
         public void sendSystemMessage(Text message, UUID senderUuid) {

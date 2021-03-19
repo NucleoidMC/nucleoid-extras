@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.integrations;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.SharedConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +15,6 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public final class NucleoidIntegrations {
@@ -28,7 +27,6 @@ public final class NucleoidIntegrations {
     private final IntegrationsProxy proxy;
 
     private final Map<String, Consumer<JsonObject>> messageReceivers = new Object2ObjectOpenHashMap<>();
-    private final Set<String> registeredSenders = new ObjectOpenHashSet<>();
     private final List<Runnable> connectionOpenListeners = new ArrayList<>();
 
     private NucleoidIntegrations(IntegrationsConfig config) {
@@ -67,13 +65,15 @@ public final class NucleoidIntegrations {
         RemoteCommandIntegration.bind(integrations, config);
     }
 
+    public static void register() {
+        initialized = true;
+        IntegrationsConfig config = NucleoidExtrasConfig.get().getIntegrations();
+        instance = config != null ? new NucleoidIntegrations(config) : null;
+    }
+
     @Nullable
     public static NucleoidIntegrations get() {
-        if (!initialized) {
-            initialized = true;
-            IntegrationsConfig config = NucleoidExtrasConfig.get().getIntegrations();
-            instance = config != null ? new NucleoidIntegrations(config) : null;
-        }
+        Preconditions.checkState(initialized, "integrations not initialized");
         return instance;
     }
 

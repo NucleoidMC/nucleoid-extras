@@ -5,18 +5,22 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xyz.nucleoid.extras.command.NucleoidCommandAliases;
+import xyz.nucleoid.extras.chat_filter.ChatFilter;
+import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
+import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
+import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
 public final class NucleoidExtras implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(NucleoidExtras.class);
 
     @Override
     public void onInitialize() {
-        NucleoidIntegrations.get();
-
-        NucleoidCommandAliases.register();
+        ChatFilter.register();
+        CommandAliases.register();
         ScheduledStop.register();
+
+        NucleoidIntegrations.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }

@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras;
+package xyz.nucleoid.extras.sidebar;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;

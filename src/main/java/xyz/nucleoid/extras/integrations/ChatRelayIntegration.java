@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -93,7 +94,7 @@ public final class ChatRelayIntegration {
         }
     }
 
-    private void onSendChatMessage(ServerPlayerEntity player, String content) {
+    private ActionResult onSendChatMessage(ServerPlayerEntity player, String content) {
         JsonObject body = new JsonObject();
 
         GameProfile profile = player.getGameProfile();
@@ -106,6 +107,8 @@ public final class ChatRelayIntegration {
         body.addProperty("content", content);
 
         this.chatSender.send(body);
+
+        return ActionResult.PASS;
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {

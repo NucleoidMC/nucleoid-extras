@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras;
+package xyz.nucleoid.extras.scheduled_stop;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
