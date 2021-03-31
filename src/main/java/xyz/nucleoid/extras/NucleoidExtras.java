@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
+import xyz.nucleoid.extras.command.GamemodeFixCommand;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
@@ -19,6 +20,7 @@ public final class NucleoidExtras implements ModInitializer {
         ChatFilter.register();
         CommandAliases.register();
         ScheduledStop.register();
+        GamemodeFixCommand.register();
 
         NucleoidIntegrations.register();
 

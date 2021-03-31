@@ -6,5 +6,8 @@
   "nucleoid.discord": "nucleoid.xyz/discord",
   "nucleoid.stop.scheduled": "Server restart has been scheduled! The server will restart in %s minutes, or when all games exit.",
   "nucleoid.stop.scheduled.already": "Server restart has already been scheduled.",
-  "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!"
+  "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!",
+  "nucleoid.error.in_game": "You cannot run this command when you are in a game!",
+  "nucleoid.error.correct_game_mode": "You are already in the correct game mode!",
+  "nucleoid.gamemode.fixed": "Your game mode has been changed to adventure!"
 }
