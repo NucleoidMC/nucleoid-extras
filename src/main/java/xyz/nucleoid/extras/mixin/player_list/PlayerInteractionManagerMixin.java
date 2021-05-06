@@ -12,27 +12,27 @@ import xyz.nucleoid.extras.player_list.PlayerListHelper;
 
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class PlayerInteractionManagerMixin {
-	@Redirect(
-			method = "setGameMode(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"
-			)
-	)
-	private void overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
-		PlayerListS2CPacket.Entry entry = ((PlayerListS2CPacketAccessor) whitePacket).nucleoid$getEntries().get(0);
-		ServerPlayerEntity player = playerManager.getPlayer(entry.getProfile().getId());
+    @Redirect(
+            method = "setGameMode(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"
+            )
+    )
+    private void overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
+        PlayerListS2CPacket.Entry entry = ((PlayerListS2CPacketAccessor) whitePacket).nucleoid$getEntries().get(0);
+        ServerPlayerEntity player = playerManager.getPlayer(entry.getProfile().getId());
 
-		if (player == null) return;
+        if (player == null) return;
 
-		PlayerListS2CPacket grayPacket = PlayerListHelper.getUpdateGameModeNamePacket(player, true);
+        PlayerListS2CPacket grayPacket = PlayerListHelper.getUpdateGameModeNamePacket(player, true);
 
-		for (ServerPlayerEntity target : playerManager.getPlayerList()) {
-			if (PlayerListHelper.shouldGray(player, target)) {
-				target.networkHandler.sendPacket(grayPacket);
-			} else {
-				target.networkHandler.sendPacket(whitePacket);
-			}
-		}
-	}
+        for (ServerPlayerEntity target : playerManager.getPlayerList()) {
+            if (PlayerListHelper.shouldGray(player, target)) {
+                target.networkHandler.sendPacket(grayPacket);
+            } else {
+                target.networkHandler.sendPacket(whitePacket);
+            }
+        }
+    }
 }
