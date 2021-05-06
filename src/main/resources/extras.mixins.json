@@ -10,6 +10,7 @@
     "ServerCommandSourceAccessor",
     "ServerCommandSourceMixin",
     "ServerWorldAccessor",
+    "player_list.PlayerInteractionManagerMixin",
     "player_list.PlayerListS2CPacketAccessor",
     "player_list.PlayerManagerMixin",
     "player_list.ServerScoreboardMixin",
