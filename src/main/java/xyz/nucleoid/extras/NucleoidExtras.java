@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -16,6 +18,9 @@ public final class NucleoidExtras implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        NEBlocks.register();
+        NEItems.register();
+
         ChatFilter.register();
         CommandAliases.register();
         ScheduledStop.register();
