@@ -24,7 +24,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
 
     @Override
     public Block getVirtualBlock() {
-        return virtualBlock;
+        return this.virtualBlock;
     }
 
     @Override
@@ -43,14 +43,14 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
     }
 
     private static Vec3d getVector(float pitch, float yaw) {
-        double yawRad = Math.toRadians(yaw);
         double pitchRad = Math.toRadians(pitch);
+        double yawRad = Math.toRadians(yaw);
 
-        double horizontal = Math.cos(pitchRad);
+        double horizontal = -Math.cos(pitchRad);
         return new Vec3d(
-                Math.cos(yawRad) * horizontal,
+                Math.sin(yawRad) * horizontal,
                 Math.sin(pitchRad),
-                Math.sin(yawRad) * horizontal
+                -Math.cos(yawRad) * horizontal
         );
     }
 
