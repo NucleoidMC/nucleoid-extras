@@ -3,6 +3,7 @@ package xyz.nucleoid.extras;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.lobby.NEBlocks;
@@ -14,6 +15,7 @@ import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
 public final class NucleoidExtras implements ModInitializer {
+    public static final String ID = "nucleoid_extras";
     public static final Logger LOGGER = LogManager.getLogger(NucleoidExtras.class);
 
     @Override
@@ -43,5 +45,9 @@ public final class NucleoidExtras implements ModInitializer {
         if (integrations != null) {
             integrations.tick();
         }
+    }
+
+    public static Identifier identifier(String path) {
+        return new Identifier(ID, path);
     }
 }

@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -35,7 +34,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
         if (blockEntity instanceof LaunchPadBlockEntity) {
             LaunchPadBlockEntity launchPad = (LaunchPadBlockEntity) blockEntity;
 
-            entity.setVelocity(getVector(-launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
+            entity.setVelocity(getVector(launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
             if (entity instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
             }
@@ -44,11 +43,15 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
     }
 
     private static Vec3d getVector(float pitch, float yaw) {
-        float f = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
-        float g = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
-        float h = -MathHelper.cos(-pitch * 0.017453292F);
-        float i = MathHelper.sin(-pitch * 0.017453292F);
-        return new Vec3d((g * h), i, (f * h));
+        double yawRad = Math.toRadians(yaw);
+        double pitchRad = Math.toRadians(pitch);
+
+        double horizontal = Math.cos(pitchRad);
+        return new Vec3d(
+                Math.cos(yawRad) * horizontal,
+                Math.sin(pitchRad),
+                Math.sin(yawRad) * horizontal
+        );
     }
 
     @Nullable

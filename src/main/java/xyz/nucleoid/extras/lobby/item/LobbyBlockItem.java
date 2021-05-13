@@ -13,8 +13,8 @@ import net.minecraft.util.Formatting;
 
 import java.util.List;
 
-public class BlockItemWarning extends VirtualBlockItem {
-    public BlockItemWarning(Block block, Settings settings, Item virtualItem) {
+public class LobbyBlockItem extends VirtualBlockItem {
+    public LobbyBlockItem(Block block, Settings settings, Item virtualItem) {
         super(block, settings, virtualItem);
     }
 
