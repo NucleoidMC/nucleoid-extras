@@ -53,6 +53,8 @@ public final class ChatFilterConfig {
     }
 
     public boolean test(String message) {
+        message = message.toLowerCase(Locale.ROOT);
+
         for (String text : this.containsIllegalText) {
             if (message.contains(text)) {
                 return true;
@@ -63,7 +65,7 @@ public final class ChatFilterConfig {
 
         Set<String> illegalWords = this.illegalWords;
         for (String word : words) {
-            if (illegalWords.contains(word.toLowerCase(Locale.ROOT))) {
+            if (illegalWords.contains(word)) {
                 return true;
             }
         }
