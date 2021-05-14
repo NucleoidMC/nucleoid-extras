@@ -1,9 +1,36 @@
 {	
 	"nucleoid.sidebar.welcome": "Bienvenue sur Nucleoid !",
 	"nucleoid.sidebar.games": "Jeux ouverts :",
+	"nucleoid.sidebar.game": "%s: %s",
+	"nucleoid.sidebar.game.player.1": "%s joueur",
+	"nucleoid.sidebar.game.player.more": "%s joueurs",
 	"nucleoid.sidebar.join": "...exécutez /game join",
 	"nucleoid.sidebar.compass": "ou utilisez la boussole !",
+	
 	"nucleoid.stop.scheduled": "Le redémarrage du serveur a été programmé ! Le serveur va redémarrer dans %s minutes, ou dès que tous les jeux seront terminés.",
 	"nucleoid.stop.scheduled.already": "Un redémarrage du serveur a déjà été programmé.",
-	"nucleoid.stop.game.open": "Impossible de rejoindre ce jeu : un redémarrage a été programmé !"
+	"nucleoid.stop.game.open": "Impossible de rejoindre ce jeu : un redémarrage a été programmé !",
+
+	"block.nucleoid_extras.light_block": "Bloc de lumière",
+	"block.nucleoid_extras.end_portal": "Portail de l'End",
+	"block.nucleoid_extras.end_gateway": "Passerelle de l'End",
+	"block.nucleoid_extras.gold_launch_pad": "Tremplin en or",
+	"block.nucleoid_extras.iron_launch_pad": "Tremplin en fer",
+
+	"block.nucleoid_extras.black_concrete_powder": "Béton noir en poudre flotant",
+	"block.nucleoid_extras.blue_concrete_powder": "Béton bleu en poudre flotant",
+	"block.nucleoid_extras.brown_concrete_powder": "Béton marron en poudre flotant",
+	"block.nucleoid_extras.cyan_concrete_powder": "Béton cyan en poudre flotant",
+	"block.nucleoid_extras.green_concrete_powder": "Béton vert en poudre flotant",
+	"block.nucleoid_extras.gray_concrete_powder": "Béton gris en poudre flotant",
+	"block.nucleoid_extras.light_blue_concrete_powder": "Béton bleu clair en poudre flotant",
+	"block.nucleoid_extras.light_gray_concrete_powder": "Béton gris clair en poudre flotant",
+	"block.nucleoid_extras.lime_concrete_powder": "Béton vert clair en poudre flotant",
+	"block.nucleoid_extras.magenta_concrete_powder": "Béton magenta en poudre flotant",
+	"block.nucleoid_extras.orange_concrete_powder": "Béton orange en poudre flotant",
+	"block.nucleoid_extras.pink_concrete_powder": "Béton rose en poudre flotant",
+	"block.nucleoid_extras.purple_concrete_powder": "Béton violet en poudre flotant",
+	"block.nucleoid_extras.red_concrete_powder": "Béton rouge en poudre flotant",
+	"block.nucleoid_extras.white_concrete_powder": "Béton blanc en poudre flotant",
+	"block.nucleoid_extras.yellow_concrete_powder": "Béton jaune en poudre flotant"
 }	
