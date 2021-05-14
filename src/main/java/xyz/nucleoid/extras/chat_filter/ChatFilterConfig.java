@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.chat_filter;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,20 +18,25 @@ import java.util.stream.Collectors;
 public final class ChatFilterConfig {
     public static final Codec<ChatFilterConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
-                Codec.STRING.listOf().fieldOf("illegal_words").forGetter(c -> new ArrayList<>(c.illegalWords)),
+                Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
+                Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
                 MoreCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
                 Registry.SOUND_EVENT.optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
         ).apply(instance, ChatFilterConfig::new);
     });
 
     private final Set<String> illegalWords;
+    private final List<String> containsIllegalText;
     private final @Nullable Text feedbackMessage;
     private final @Nullable SoundEvent feedbackSound;
 
-    private ChatFilterConfig(List<String> illegalWords, Optional<Text> feedbackMessage, Optional<SoundEvent> feedbackSound) {
+    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<SoundEvent> feedbackSound) {
         this.illegalWords = illegalWords.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toSet());
+        this.containsIllegalText = containsIllegalText.stream()
+                .map(s -> s.toLowerCase(Locale.ROOT))
+                .collect(Collectors.toList());
 
         this.feedbackMessage = feedbackMessage.map(ChatFilterConfig::formatFeedback).orElse(null);
         this.feedbackSound = feedbackSound.orElse(null);
@@ -47,6 +53,12 @@ public final class ChatFilterConfig {
     }
 
     public boolean test(String message) {
+        for (String text : this.containsIllegalText) {
+            if (message.contains(text)) {
+                return true;
+            }
+        }
+
         String[] words = message.split("\\s");
 
         Set<String> illegalWords = this.illegalWords;
