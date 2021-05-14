@@ -1,6 +1,9 @@
 {
   "nucleoid.sidebar.welcome": "Welcome to Nucleoid!",
   "nucleoid.sidebar.games": "Open games:",
+  "nucleoid.sidebar.game": "%s: %s",
+  "nucleoid.sidebar.game.player.1": "%s player",
+  "nucleoid.sidebar.game.player.more": "%s players",
   "nucleoid.sidebar.join": "...run /game join",
   "nucleoid.sidebar.compass": "or use the compass!",
   "nucleoid.discord": "nucleoid.xyz/discord",

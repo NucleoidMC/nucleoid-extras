@@ -4,6 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -65,7 +66,8 @@ public final class NucleoidSidebar {
             }
 
             int players = game.getPlayerCount();
-            content.writeLine(Formatting.GREEN + name + ": " + Formatting.AQUA + players + " players");
+            content.writeFormattedTranslated(Formatting.GREEN, "nucleoid.sidebar.game", name,
+                    new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).formatted(Formatting.AQUA));
         });
 
         content.writeLine("");
