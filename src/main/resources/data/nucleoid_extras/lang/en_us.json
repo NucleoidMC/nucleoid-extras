@@ -32,5 +32,7 @@
   "block.nucleoid_extras.purple_concrete_powder": "Floating Purple Concrete Powder",
   "block.nucleoid_extras.red_concrete_powder": "Floating Red Concrete Powder",
   "block.nucleoid_extras.white_concrete_powder": "Floating White Concrete Powder",
-  "block.nucleoid_extras.yellow_concrete_powder": "Floating Yellow Concrete Powder"
+  "block.nucleoid_extras.yellow_concrete_powder": "Floating Yellow Concrete Powder",
+
+  "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!"
 }
