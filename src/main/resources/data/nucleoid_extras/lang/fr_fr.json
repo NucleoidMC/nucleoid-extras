@@ -32,5 +32,7 @@
 	"block.nucleoid_extras.purple_concrete_powder": "Béton violet en poudre flotant",
 	"block.nucleoid_extras.red_concrete_powder": "Béton rouge en poudre flotant",
 	"block.nucleoid_extras.white_concrete_powder": "Béton blanc en poudre flotant",
-	"block.nucleoid_extras.yellow_concrete_powder": "Béton jaune en poudre flotant"
+	"block.nucleoid_extras.yellow_concrete_powder": "Béton jaune en poudre flotant",
+
+	"text.nucleoid_extras.lobby_items": "Ne pas utiliser en dehors du lobby !"
 }	
