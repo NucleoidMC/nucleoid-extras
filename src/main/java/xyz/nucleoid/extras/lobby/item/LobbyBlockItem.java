@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class LobbyBlockItem extends VirtualBlockItem {
 
     @Override
     public void addTextToTooltip(List<Text> tooltip, ItemStack stack, ServerPlayerEntity player) {
-        tooltip.add(new LiteralText("Do not use this block outside of lobby!").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+        tooltip.add(new TranslatableText("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 
     @Override

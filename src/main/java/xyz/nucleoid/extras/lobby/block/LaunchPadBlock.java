@@ -8,6 +8,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
@@ -29,16 +31,19 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (entity.isOnGround()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
 
-        if (blockEntity instanceof LaunchPadBlockEntity) {
-            LaunchPadBlockEntity launchPad = (LaunchPadBlockEntity) blockEntity;
+            if (blockEntity instanceof LaunchPadBlockEntity) {
+                LaunchPadBlockEntity launchPad = (LaunchPadBlockEntity) blockEntity;
 
-            entity.setVelocity(getVector(launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
-            if (entity instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+                entity.setVelocity(getVector(launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
+                if (entity instanceof ServerPlayerEntity) {
+                    ((ServerPlayerEntity) entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+                    ((ServerPlayerEntity) entity).playSound(SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5f, 1);
+                }
+                super.onEntityCollision(state, world, pos, entity);
             }
-            super.onEntityCollision(state, world, pos, entity);
         }
     }
 
