@@ -47,6 +47,12 @@ public final class ChatRelayIntegration {
     @NotNull
     private static ChatMessage parseMessage(JsonObject body) {
         String sender = body.get("sender").getAsString();
+
+        String senderUserId = sender;
+        if (body.has("sender_user")) {
+            senderUserId = parseUserId(body.getAsJsonObject("sender_user"));
+        }
+
         String content = body.get("content").getAsString();
 
         TextColor nameColor = null;
@@ -68,7 +74,13 @@ public final class ChatRelayIntegration {
             replyingTo = null;
         }
 
-        return new ChatMessage(sender, content.split("\n"), nameColor, attachments, replyingTo);
+        return new ChatMessage(sender, senderUserId, content.split("\n"), nameColor, attachments, replyingTo);
+    }
+
+    private static String parseUserId(JsonObject user) {
+        String name = user.get("name").getAsString();
+        int discriminator = user.get("discriminator").getAsInt();
+        return name + "#" + discriminator;
     }
 
     @NotNull
@@ -158,13 +170,15 @@ public final class ChatRelayIntegration {
         private static final int SUMMARY_LENGTH = 40;
 
         final String sender;
+        final String senderUserId;
         final String[] lines;
         final TextColor nameColor;
         final Attachment[] attachments;
         final ChatMessage replyingTo;
 
-        ChatMessage(String sender, String[] lines, @Nullable TextColor nameColor, @Nullable Attachment[] attachments, @Nullable ChatMessage replyingTo) {
+        ChatMessage(String sender, String senderUserId, String[] lines, @Nullable TextColor nameColor, @Nullable Attachment[] attachments, @Nullable ChatMessage replyingTo) {
             this.sender = sender;
+            this.senderUserId = senderUserId;
             this.lines = lines;
             this.nameColor = nameColor;
             this.attachments = attachments;
@@ -174,7 +188,10 @@ public final class ChatRelayIntegration {
         MutableText getSenderName() {
             MutableText sender = new LiteralText(this.sender);
             if (this.nameColor != null) {
-                sender = sender.setStyle(sender.getStyle().withColor(this.nameColor));
+                Style style = sender.getStyle()
+                        .withColor(this.nameColor)
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(this.senderUserId)));
+                sender = sender.setStyle(style);
             }
             return sender;
         }
