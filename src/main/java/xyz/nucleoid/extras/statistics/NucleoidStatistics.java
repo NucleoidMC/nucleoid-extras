@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.event.GameEvents;
+import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.stats.GameStatisticBundle;
 
 import java.io.IOException;
@@ -33,9 +34,10 @@ public class NucleoidStatistics {
 
     private void attachEventListener() {
         GameEvents.CLOSING.register((space, reason) -> {
-            // TODO: Should we only submit statistics on reason == FINISHED?
-            for (Map.Entry<String, GameStatisticBundle> entry : space.getAllStatistics().entrySet()) {
-                this.submitStatisticBundle(entry.getKey(), entry.getValue());
+            if (reason == GameCloseReason.FINISHED) {
+                for (Map.Entry<String, GameStatisticBundle> entry : space.getAllStatistics().entrySet()) {
+                    this.submitStatisticBundle(entry.getKey(), entry.getValue());
+                }
             }
         });
     }
