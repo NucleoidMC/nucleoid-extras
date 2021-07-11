@@ -51,9 +51,9 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
     }
 
     public static CompletableFuture<IntegrationsSocketConnection> connect(SocketAddress address, Handler handler) {
-        IntegrationsSocketConnection connection = new IntegrationsSocketConnection(handler);
+        var connection = new IntegrationsSocketConnection(handler);
 
-        Bootstrap bootstrap = new Bootstrap();
+        var bootstrap = new Bootstrap();
         bootstrap.group(EVENT_LOOP_GROUP);
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.remoteAddress(address);
@@ -68,7 +68,7 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
             }
         });
 
-        CompletableFuture<IntegrationsSocketConnection> future = new CompletableFuture<>();
+        var future = new CompletableFuture<IntegrationsSocketConnection>();
         bootstrap.connect().addListener((ChannelFutureListener) channelFuture -> {
             if (channelFuture.isSuccess()) {
                 connection.channel = channelFuture.channel();
@@ -86,11 +86,11 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
 
     @Override
     public boolean send(String type, JsonObject body) {
-        JsonObject payload = new JsonObject();
+        var payload = new JsonObject();
         payload.addProperty("type", type);
         payload.add("body", body);
 
-        byte[] bytes = GSON.toJson(payload).getBytes(StandardCharsets.UTF_8);
+        var bytes = GSON.toJson(payload).getBytes(StandardCharsets.UTF_8);
         this.writeQueue.add(Unpooled.wrappedBuffer(bytes));
 
         if (this.scheduledWrite.compareAndSet(false, true)) {
@@ -103,13 +103,13 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
     private void writeQueued() {
         this.scheduledWrite.set(false);
 
-        ConcurrentLinkedQueue<ByteBuf> writeQueue = this.writeQueue;
+        var writeQueue = this.writeQueue;
         if (!writeQueue.isEmpty()) {
-            Channel channel = this.channel;
+            var channel = this.channel;
 
             ByteBuf message;
             while ((message = writeQueue.poll()) != null) {
-                ChannelFuture future = channel.write(message);
+                var future = channel.write(message);
                 future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
             }
 
@@ -119,9 +119,9 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf message) {
-        JsonObject json = JSON_PARSER.parse(message.toString(StandardCharsets.UTF_8)).getAsJsonObject();
-        String type = json.get("type").getAsString();
-        JsonObject body = json.getAsJsonObject("body");
+        var json = JSON_PARSER.parse(message.toString(StandardCharsets.UTF_8)).getAsJsonObject();
+        var type = json.get("type").getAsString();
+        var body = json.getAsJsonObject("body");
         this.handler.acceptMessage(type, body);
     }
 

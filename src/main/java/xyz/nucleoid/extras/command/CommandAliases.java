@@ -8,7 +8,6 @@ import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.extras.ServerCommandSourceExt;
 
 import java.util.Map;
 import java.util.UUID;
@@ -37,31 +36,31 @@ public final class CommandAliases {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            NucleoidExtrasConfig config = NucleoidExtrasConfig.get();
-            CommandAliasConfig aliases = config.getAliases();
+            var config = NucleoidExtrasConfig.get();
+            var aliases = config.aliases();
             if (aliases == null) {
                 return;
             }
 
-            for (Map.Entry<String, CommandAliasConfig.Entry> entry : aliases.getMap().entrySet()) {
-                LiteralArgumentBuilder<ServerCommandSource>[] literals = buildLiterals(entry);
+            for (var entry : aliases.map().entrySet()) {
+                var literals = buildLiterals(entry);
 
-                CommandAliasConfig.Entry value = entry.getValue();
-                String[] commands = value.commands;
+                var value = entry.getValue();
+                var commands = value.commands;
                 literals[literals.length - 1].executes(context -> {
-                    ServerCommandSource source = context.getSource().withMaxLevel(4);
+                    var source = context.getSource().withMaxLevel(4);
                     if (!value.feedback) {
-                        source = ((ServerCommandSourceExt) source).withOutput(NO_FEEDBACK_OUTPUT);
+                        source = source.withOutput(NO_FEEDBACK_OUTPUT);
                     }
 
                     int result = Command.SINGLE_SUCCESS;
-                    for (String command : commands) {
+                    for (var command : commands) {
                         result = dispatcher.execute(command, source);
                     }
                     return result;
                 });
 
-                LiteralArgumentBuilder<ServerCommandSource> root = linkLiterals(literals);
+                var root = linkLiterals(literals);
                 dispatcher.register(root);
             }
         });
@@ -69,7 +68,7 @@ public final class CommandAliases {
 
     @SuppressWarnings("unchecked")
     private static LiteralArgumentBuilder<ServerCommandSource>[] buildLiterals(Map.Entry<String, CommandAliasConfig.Entry> entry) {
-        String[] names = entry.getKey().split(" ");
+        var names = entry.getKey().split(" ");
 
         LiteralArgumentBuilder<ServerCommandSource>[] literals = new LiteralArgumentBuilder[names.length];
         for (int i = 0; i < names.length; i++) {
@@ -80,9 +79,9 @@ public final class CommandAliases {
     }
 
     private static LiteralArgumentBuilder<ServerCommandSource> linkLiterals(LiteralArgumentBuilder<ServerCommandSource>[] literals) {
-        LiteralArgumentBuilder<ServerCommandSource> chain = literals[0];
+        var chain = literals[0];
         for (int i = 1; i < literals.length; i++) {
-            LiteralArgumentBuilder<ServerCommandSource> next = literals[i];
+            var next = literals[i];
             chain.then(next);
             chain = next;
         }

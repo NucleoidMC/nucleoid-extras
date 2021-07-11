@@ -1,13 +1,9 @@
 package xyz.nucleoid.extras.integrations.relay;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.network.MessageType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
@@ -15,10 +11,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.extras.event.PlayerSendChatEvent;
+import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
+import xyz.nucleoid.stimuli.Stimuli;
+import xyz.nucleoid.stimuli.event.player.PlayerChatEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -32,31 +30,36 @@ public final class ChatRelayIntegration {
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        if (config.shouldSendChat()) {
-            IntegrationSender chatSender = integrations.openSender("chat");
+        if (config.sendChat()) {
+            var chatSender = integrations.openSender("chat");
 
-            ChatRelayIntegration integration = new ChatRelayIntegration(chatSender);
+            var integration = new ChatRelayIntegration(chatSender);
 
             integrations.bindReceiver("chat", body -> {
-                ChatMessage message = parseMessage(body);
+                var message = parseMessage(body);
                 integration.messageQueue.add(message);
             });
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
-            PlayerSendChatEvent.EVENT.register(integration::onSendChatMessage);
+
+            Stimuli.global().listen(PlayerChatEvent.EVENT, (sender, message) -> {
+                var content = NucleoidExtras.getChatMessageContent(message);
+                integration.onSendChatMessage(sender, content);
+                return ActionResult.PASS;
+            });
         }
     }
 
     @NotNull
     private static ChatMessage parseMessage(JsonObject body) {
-        String sender = body.get("sender").getAsString();
+        var sender = body.get("sender").getAsString();
 
-        String senderUserId = sender;
+        var senderUserId = sender;
         if (body.has("sender_user")) {
             senderUserId = parseUserId(body.getAsJsonObject("sender_user"));
         }
 
-        String content = body.get("content").getAsString();
+        var content = body.get("content").getAsString();
 
         TextColor nameColor = null;
         if (body.has("name_color")) {
@@ -81,21 +84,21 @@ public final class ChatRelayIntegration {
     }
 
     private static String parseUserId(JsonObject user) {
-        String name = user.get("name").getAsString();
+        var name = user.get("name").getAsString();
         int discriminator = user.get("discriminator").getAsInt();
         return name + "#" + discriminator;
     }
 
     @NotNull
     private static Attachment[] parseAttachments(JsonObject body) {
-        JsonArray attachmentsArray = body.getAsJsonArray("attachments");
-        Attachment[] attachments = new Attachment[attachmentsArray.size()];
+        var attachmentsArray = body.getAsJsonArray("attachments");
+        var attachments = new Attachment[attachmentsArray.size()];
 
         int i = 0;
-        for (JsonElement element : attachmentsArray) {
-            JsonObject attachment = element.getAsJsonObject();
-            String attachmentName = attachment.get("name").getAsString();
-            String attachmentUrl = attachment.get("url").getAsString();
+        for (var element : attachmentsArray) {
+            var attachment = element.getAsJsonObject();
+            var attachmentName = attachment.get("name").getAsString();
+            var attachmentUrl = attachment.get("url").getAsString();
             attachments[i++] = new Attachment(attachmentName, attachmentUrl);
         }
 
@@ -110,11 +113,11 @@ public final class ChatRelayIntegration {
     }
 
     private ActionResult onSendChatMessage(ServerPlayerEntity player, String content) {
-        JsonObject body = new JsonObject();
+        var body = new JsonObject();
 
-        GameProfile profile = player.getGameProfile();
+        var profile = player.getGameProfile();
 
-        JsonObject senderRoot = new JsonObject();
+        var senderRoot = new JsonObject();
         senderRoot.addProperty("id", profile.getId().toString());
         senderRoot.addProperty("name", profile.getName());
 
@@ -127,22 +130,22 @@ public final class ChatRelayIntegration {
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
-        PlayerManager playerManager = server.getPlayerManager();
+        var playerManager = server.getPlayerManager();
 
-        MutableText sender = message.getSenderName();
-        MutableText prefix = new LiteralText("<@").append(sender).append(">").formatted(Formatting.GRAY);
-        MessageBuilder result = new MessageBuilder(prefix);
+        var sender = message.getSenderName();
+        var prefix = new LiteralText("<@").append(sender).append(">").formatted(Formatting.GRAY);
+        var result = new MessageBuilder(prefix);
 
         if (message.replyingTo != null) {
             result.append(this.createReplyText(message.replyingTo));
         }
 
-        for (String line : message.lines) {
+        for (var line : message.lines) {
             result.append(new LiteralText(line));
         }
 
         if (message.attachments != null) {
-            for (Attachment attachment : message.attachments) {
+            for (var attachment : message.attachments) {
                 result.append(new LiteralText("[Attachment: " + attachment.name + "]").styled(style -> {
                     return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
@@ -155,9 +158,9 @@ public final class ChatRelayIntegration {
     }
 
     private MutableText createReplyText(ChatMessage message) {
-        String summary = message.getSummary();
+        var summary = message.getSummary();
 
-        MutableText replyText = new LiteralText("(replying to @")
+        var replyText = new LiteralText("(replying to @")
                 .append(message.getSenderName());
 
         if (summary != null) {
@@ -169,29 +172,19 @@ public final class ChatRelayIntegration {
         return replyText.formatted(Formatting.GRAY);
     }
 
-    static class ChatMessage {
+    record ChatMessage(
+            String sender, String senderUserId,
+            String[] lines,
+            @Nullable TextColor nameColor,
+            @Nullable Attachment[] attachments,
+            @Nullable ChatRelayIntegration.ChatMessage replyingTo
+    ) {
         private static final int SUMMARY_LENGTH = 40;
-
-        final String sender;
-        final String senderUserId;
-        final String[] lines;
-        final TextColor nameColor;
-        final Attachment[] attachments;
-        final ChatMessage replyingTo;
-
-        ChatMessage(String sender, String senderUserId, String[] lines, @Nullable TextColor nameColor, @Nullable Attachment[] attachments, @Nullable ChatMessage replyingTo) {
-            this.sender = sender;
-            this.senderUserId = senderUserId;
-            this.lines = lines;
-            this.nameColor = nameColor;
-            this.attachments = attachments;
-            this.replyingTo = replyingTo;
-        }
 
         MutableText getSenderName() {
             MutableText sender = new LiteralText(this.sender);
             if (this.nameColor != null) {
-                Style style = sender.getStyle()
+                var style = sender.getStyle()
                         .withColor(this.nameColor)
                         .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(this.senderUserId)));
                 sender = sender.setStyle(style);
@@ -202,7 +195,7 @@ public final class ChatRelayIntegration {
         @Nullable
         String getSummary() {
             if (this.lines.length > 0) {
-                String line = this.lines[0];
+                var line = this.lines[0];
                 if (line.length() <= SUMMARY_LENGTH) {
                     return line;
                 } else {
@@ -213,14 +206,7 @@ public final class ChatRelayIntegration {
         }
     }
 
-    static class Attachment {
-        final String name;
-        final String url;
-
-        Attachment(String name, String url) {
-            this.name = name;
-            this.url = url;
-        }
+    record Attachment(String name, String url) {
     }
 
     static class MessageBuilder {

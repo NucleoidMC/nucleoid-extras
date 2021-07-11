@@ -9,11 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.plasmid.game.ConfiguredGame;
-import xyz.nucleoid.plasmid.game.ManagedGameSpace;
+import xyz.nucleoid.plasmid.game.config.GameConfig;
+import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public final class GameStatusIntegration {
@@ -31,10 +30,10 @@ public final class GameStatusIntegration {
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        if (config.shouldSendGames()) {
-            IntegrationSender statusSender = integrations.openSender("status");
+        if (config.sendGames()) {
+            var statusSender = integrations.openSender("status");
 
-            GameStatusIntegration integration = new GameStatusIntegration(statusSender);
+            var integration = new GameStatusIntegration(statusSender);
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
         }
     }
@@ -44,7 +43,7 @@ public final class GameStatusIntegration {
         if (time - this.lastCheckTime > CHECK_INTERVAL_MS) {
             this.lastCheckTime = time;
 
-            Status status = this.checkStatus();
+            var status = this.checkStatus();
             if (status != null) {
                 this.statusSender.send(status.serialize());
             }
@@ -53,7 +52,7 @@ public final class GameStatusIntegration {
 
     @Nullable
     private Status checkStatus() {
-        Status swap = this.lastStatus;
+        var swap = this.lastStatus;
         swap.clear();
 
         this.lastStatus = this.currentStatus;
@@ -69,9 +68,9 @@ public final class GameStatusIntegration {
     }
 
     private void buildStatus(Status status) {
-        Collection<ManagedGameSpace> games = ManagedGameSpace.getOpen();
-        for (ManagedGameSpace game : games) {
-            status.addGame(game.getGameConfig(), game.getPlayerCount());
+        var games = GameSpaceManager.get().getOpenGameSpaces();
+        for (var game : games) {
+            status.addGame(game.getSourceConfig(), game.getPlayerCount());
         }
     }
 
@@ -82,15 +81,15 @@ public final class GameStatusIntegration {
             this.games.clear();
         }
 
-        void addGame(ConfiguredGame<?> game, int playerCount) {
-            this.games.add(new GameEntry(game.getName(), game.getType().getIdentifier(), playerCount));
+        void addGame(GameConfig<?> game, int playerCount) {
+            this.games.add(new GameEntry(game.getName().asString(), game.getType().getIdentifier(), playerCount));
         }
 
         JsonObject serialize() {
-            JsonObject root = new JsonObject();
+            var root = new JsonObject();
 
-            JsonArray gamesArray = new JsonArray();
-            for (GameEntry game : this.games) {
+            var gamesArray = new JsonArray();
+            for (var game : this.games) {
                 gamesArray.add(game.serialize());
             }
 
@@ -101,40 +100,17 @@ public final class GameStatusIntegration {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof Status) {
-                Status status = (Status) obj;
-                return this.games.equals(status.games);
-            }
-            return false;
+            return obj instanceof Status status && this.games.equals(status.games);
         }
     }
 
-    static final class GameEntry {
-        final String name;
-        final Identifier typeId;
-        final int playerCount;
-
-        GameEntry(String name, Identifier typeId, int playerCount) {
-            this.name = name;
-            this.typeId = typeId;
-            this.playerCount = playerCount;
-        }
-
+    record GameEntry(String name, Identifier typeId, int playerCount) {
         JsonObject serialize() {
-            JsonObject root = new JsonObject();
+            var root = new JsonObject();
             root.addProperty("name", this.name);
             root.addProperty("type", this.typeId.toString());
             root.addProperty("player_count", this.playerCount);
             return root;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof GameEntry) {
-                GameEntry game = (GameEntry) obj;
-                return this.playerCount == game.playerCount && this.name.equals(game.name) && this.typeId.equals(game.typeId);
-            }
-            return false;
         }
     }
 }

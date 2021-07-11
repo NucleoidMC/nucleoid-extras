@@ -13,7 +13,7 @@ public class PlayerManagerMixin {
     @Inject(method = "remove", at = @At("HEAD"))
     private void onPlayerLeave(ServerPlayerEntity player, CallbackInfo ci) {
         if (player.world.getRegistryKey() == NucleoidSidebar.DIMENSION) {
-            NucleoidSidebar.get(player.server).removePlayer(player);
+            NucleoidSidebar.get().removePlayer(player);
         }
     }
 }

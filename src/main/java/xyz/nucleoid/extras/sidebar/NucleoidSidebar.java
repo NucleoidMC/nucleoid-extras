@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.sidebar;
 
-import net.minecraft.server.MinecraftServer;
+import eu.pb4.sidebars.api.lines.LineBuilder;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -9,12 +9,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.ManagedGameSpace;
-import xyz.nucleoid.plasmid.widget.SidebarWidget;
+import xyz.nucleoid.plasmid.game.common.widget.SidebarWidget;
+import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
+import xyz.nucleoid.plasmid.game.manager.ManagedGameSpace;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.stream.Stream;
 
 public final class NucleoidSidebar {
     private static NucleoidSidebar instance;
@@ -25,13 +25,13 @@ public final class NucleoidSidebar {
 
     private final SidebarWidget widget;
 
-    private NucleoidSidebar(MinecraftServer server) {
-        this.widget = new SidebarWidget(server, TITLE);
+    private NucleoidSidebar() {
+        this.widget = new SidebarWidget(TITLE);
     }
 
-    public static NucleoidSidebar get(MinecraftServer server) {
+    public static NucleoidSidebar get() {
         if (instance == null) {
-            instance = new NucleoidSidebar(server);
+            instance = new NucleoidSidebar();
         }
         return instance;
     }
@@ -40,39 +40,40 @@ public final class NucleoidSidebar {
         this.widget.set(this::writeSidebar);
     }
 
-    private void writeSidebar(SidebarWidget.Content content) {
-        content.writeFormattedTranslated(Formatting.GOLD, "nucleoid.sidebar.welcome");
+    private void writeSidebar(LineBuilder builder) {
+        builder.add(new TranslatableText("nucleoid.sidebar.welcome").formatted(Formatting.GOLD));
 
-        content.writeFormattedTranslated(Formatting.AQUA, "nucleoid.discord");
+        builder.add(new TranslatableText("nucleoid.discord").formatted(Formatting.AQUA));
 
-        Collection<ManagedGameSpace> openGames = ManagedGameSpace.getOpen();
+        var openGames = GameSpaceManager.get().getOpenGameSpaces();
         if (!openGames.isEmpty()) {
-            content.writeLine("");
-            this.writeGamesToSidebar(content, openGames);
+            builder.add(new LiteralText(""));
+            this.writeGamesToSidebar(builder, openGames);
         }
     }
 
-    private void writeGamesToSidebar(SidebarWidget.Content content, Collection<ManagedGameSpace> openGames) {
-        content.writeFormattedTranslated(Formatting.GOLD, "nucleoid.sidebar.games");
+    private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames) {
+        builder.add(new TranslatableText("nucleoid.sidebar.games").formatted(Formatting.GOLD));
 
-        Stream<ManagedGameSpace> games = openGames.stream()
+        var games = openGames.stream()
                 .sorted(Comparator.comparingInt(GameSpace::getPlayerCount).reversed())
                 .limit(3);
 
         games.forEach(game -> {
-            String name = game.getGameConfig().getName();
+            var name = game.getSourceConfig().getName().asString();
             if (name.length() > 12) {
                 name = name.substring(0, 11) + "..";
             }
 
             int players = game.getPlayerCount();
-            content.writeFormattedTranslated(Formatting.GREEN, "nucleoid.sidebar.game", name,
-                    new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).formatted(Formatting.AQUA));
+            var playersText = new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players);
+
+            builder.add(new TranslatableText("nucleoid.sidebar.game", name, playersText.formatted(Formatting.AQUA)));
         });
 
-        content.writeLine("");
-        content.writeFormattedTranslated(Formatting.GRAY, "nucleoid.sidebar.join");
-        content.writeFormattedTranslated(Formatting.GRAY, "nucleoid.sidebar.compass");
+        builder.add(new LiteralText(""));
+        builder.add(new TranslatableText("nucleoid.sidebar.join").formatted(Formatting.GRAY));
+        builder.add(new TranslatableText("nucleoid.sidebar.compass").formatted(Formatting.GRAY));
     }
 
     public void addPlayer(ServerPlayerEntity player) {

@@ -3,7 +3,6 @@ package xyz.nucleoid.extras.mixin.player_list;
 import net.minecraft.scoreboard.ServerScoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +20,7 @@ public class ServerScoreboardMixin {
 
     @Inject(method = "addPlayerToTeam", at = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/ServerScoreboard;runUpdateListeners()V", shift = At.Shift.AFTER))
     private void updatePlayerAfterJoining(String playerName, Team team, CallbackInfoReturnable<Boolean> cir) {
-        ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+        var player = this.server.getPlayerManager().getPlayer(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
         }
@@ -29,7 +28,7 @@ public class ServerScoreboardMixin {
 
     @Inject(method = "removePlayerFromTeam", at = @At("TAIL"))
     private void updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
-        ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+        var player = this.server.getPlayerManager().getPlayer(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
         }
@@ -37,8 +36,8 @@ public class ServerScoreboardMixin {
 
     @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
     private void updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
-        for (String playerName : team.getPlayerList()) {
-            ServerPlayerEntity player = this.server.getPlayerManager().getPlayer(playerName);
+        for (var playerName : team.getPlayerList()) {
+            var player = this.server.getPlayerManager().getPlayer(playerName);
             if (player != null) {
                 PlayerListHelper.updatePlayer(player);
             }

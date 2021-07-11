@@ -40,7 +40,7 @@ public final class NucleoidIntegrations {
 
         NucleoidIntegrations.bindIntegrations(this, config);
 
-        InetSocketAddress address = new InetSocketAddress(config.getHost(), config.getPort());
+        var address = new InetSocketAddress(config.host(), config.port());
         this.proxy = new IntegrationsProxy(address, new IntegrationsConnection.Handler() {
             @Override
             public void acceptConnection() {
@@ -74,7 +74,7 @@ public final class NucleoidIntegrations {
 
     public static void register() {
         initialized = true;
-        IntegrationsConfig config = NucleoidExtrasConfig.get().getIntegrations();
+        var config = NucleoidExtrasConfig.get().integrations();
         instance = config != null ? new NucleoidIntegrations(config) : null;
     }
 
@@ -103,24 +103,24 @@ public final class NucleoidIntegrations {
     }
 
     void handleConnection() {
-        JsonObject body = new JsonObject();
-        body.addProperty("channel", this.config.getChannel());
+        var body = new JsonObject();
+        body.addProperty("channel", this.config.channel());
         body.addProperty("game_version", SharedConstants.getGameVersion().getName());
 
-        String serverIp = this.config.getServerIp();
+        var serverIp = this.config.serverIp();
         if (serverIp != null) {
             body.addProperty("server_ip", serverIp);
         }
 
         this.proxy.send("handshake", body);
 
-        for (Runnable listener : this.connectionOpenListeners) {
+        for (var listener : this.connectionOpenListeners) {
             listener.run();
         }
     }
 
     void handleMessage(String type, JsonObject body) {
-        Consumer<JsonObject> handler = this.messageReceivers.get(type);
+        var handler = this.messageReceivers.get(type);
         if (handler != null) {
             handler.accept(body);
         } else {

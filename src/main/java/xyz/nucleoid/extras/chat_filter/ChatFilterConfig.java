@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -27,10 +27,10 @@ public final class ChatFilterConfig {
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;
-    private final @Nullable Text feedbackMessage;
+    private final @Nullable MutableText feedbackMessage;
     private final @Nullable SoundEvent feedbackSound;
 
-    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<SoundEvent> feedbackSound) {
+    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<MutableText> feedbackMessage, Optional<SoundEvent> feedbackSound) {
         this.illegalWords = illegalWords.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toSet());
@@ -42,8 +42,8 @@ public final class ChatFilterConfig {
         this.feedbackSound = feedbackSound.orElse(null);
     }
 
-    private static Text formatFeedback(Text text) {
-        return text.shallowCopy().styled(style -> {
+    private static MutableText formatFeedback(MutableText text) {
+        return text.styled(style -> {
             if (style.getColor() == null) {
                 return style.withColor(Formatting.RED);
             } else {
@@ -55,16 +55,16 @@ public final class ChatFilterConfig {
     public boolean test(String message) {
         message = message.toLowerCase(Locale.ROOT);
 
-        for (String text : this.containsIllegalText) {
+        for (var text : this.containsIllegalText) {
             if (message.contains(text)) {
                 return true;
             }
         }
 
-        String[] words = message.split("\\s");
+        var words = message.split("\\s");
 
-        Set<String> illegalWords = this.illegalWords;
-        for (String word : words) {
+        var illegalWords = this.illegalWords;
+        for (var word : words) {
             if (illegalWords.contains(word)) {
                 return true;
             }

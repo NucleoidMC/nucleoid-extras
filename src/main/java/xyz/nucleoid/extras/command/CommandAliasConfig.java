@@ -9,19 +9,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
-public final class CommandAliasConfig {
+public record CommandAliasConfig(Map<String, Entry> map) {
     public static final Codec<CommandAliasConfig> CODEC = Codec.unboundedMap(Codec.STRING, Entry.CODEC)
-            .xmap(CommandAliasConfig::new, config -> config.map);
-
-    private final Map<String, Entry> map;
-
-    private CommandAliasConfig(Map<String, Entry> map) {
-        this.map = map;
-    }
-
-    public Map<String, Entry> getMap() {
-        return this.map;
-    }
+            .xmap(CommandAliasConfig::new, CommandAliasConfig::map);
 
     public static final class Entry {
         private static final Codec<String[]> COMMANDS_CODEC = MoreCodecs.listOrUnit(Codec.STRING)

@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.PolymerMod;
 import eu.pb4.polymer.block.BasicVirtualBlock;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -39,7 +40,7 @@ public class NEBlocks {
     public static final Block GOLD_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.of(Material.STONE).strength(100).noCollision(), Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Block IRON_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.of(Material.STONE).strength(100).noCollision(), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
-    public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = BlockEntityType.Builder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build(null);
+    public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build(null);
 
     private static Block createConcretePowder(Block virtual) {
         return new BasicVirtualBlock(AbstractBlock.Settings.of(Material.STONE).strength(100), virtual);

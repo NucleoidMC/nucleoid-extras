@@ -3,13 +3,11 @@ package xyz.nucleoid.extras.integrations.status;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.MetricsData;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.extras.mixin.MetricsDataAccessor;
-import xyz.nucleoid.extras.mixin.MinecraftServerAccessor;
+import xyz.nucleoid.extras.mixin.ServerEntityManagerAccessor;
 import xyz.nucleoid.extras.mixin.ServerWorldAccessor;
 
 public final class ServerPerformanceIntegration {
@@ -23,13 +21,13 @@ public final class ServerPerformanceIntegration {
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        if (!config.shouldSendPerformance()) {
+        if (!config.sendPerformance()) {
             return;
         }
 
-        IntegrationSender performanceSender = integrations.openSender("performance");
+        var performanceSender = integrations.openSender("performance");
 
-        ServerPerformanceIntegration integration = new ServerPerformanceIntegration(performanceSender);
+        var integration = new ServerPerformanceIntegration(performanceSender);
         ServerTickEvents.END_SERVER_TICK.register(integration::tick);
     }
 
@@ -38,24 +36,27 @@ public final class ServerPerformanceIntegration {
         if (time - this.lastSendTime > SEND_INTERVAL_MS) {
             this.lastSendTime = time;
 
-            float averageTickMs = getAverageTickMs(((MinecraftServerAccessor) server).nucleoid$getMetricsData());
+            float averageTickMs = getAverageTickMs(server.getMetricsData());
             int tps = averageTickMs != 0 ? (int) Math.min(1000.0F / averageTickMs, 20) : 20;
 
             int dimensions = 0;
             int entities = 0;
             int chunks = 0;
 
-            for (ServerWorld world : server.getWorlds()) {
+            for (var world : server.getWorlds()) {
+                var entityManager = ((ServerWorldAccessor) world).nucleoid$getEntityManager();
+                var entityIds = ((ServerEntityManagerAccessor) entityManager).nucleoid$getEntityUuids();
+
                 dimensions += 1;
-                entities += ((ServerWorldAccessor) world).nucleoid$getEntitiesById().size();
+                entities += entityIds.size();
                 chunks += world.getChunkManager().getLoadedChunkCount();
             }
 
-            Runtime runtime = Runtime.getRuntime();
+            var runtime = Runtime.getRuntime();
             long totalMemory = runtime.totalMemory();
             long usedMemory = totalMemory - runtime.freeMemory();
 
-            JsonObject payload = new JsonObject();
+            var payload = new JsonObject();
             payload.addProperty("average_tick_ms", averageTickMs);
             payload.addProperty("tps", tps);
             payload.addProperty("dimensions", dimensions);
@@ -69,7 +70,7 @@ public final class ServerPerformanceIntegration {
     }
 
     private static float getAverageTickMs(MetricsData data) {
-        long[] samples = ((MetricsDataAccessor) data).nucleoid$getSamples();
+        long[] samples = data.getSamples();
         long total = 0;
         for (long sample : samples) {
             total += sample;

@@ -21,11 +21,11 @@ public final class ServerLifecycleIntegration {
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        if (config.shouldSendLifecycle()) {
-            IntegrationSender lifecycleStartSender = integrations.openSender("lifecycle_start");
-            IntegrationSender lifecycleStopSender = integrations.openSender("lifecycle_stop");
+        if (config.sendLifecycle()) {
+            var lifecycleStartSender = integrations.openSender("lifecycle_start");
+            var lifecycleStopSender = integrations.openSender("lifecycle_stop");
 
-            ServerLifecycleIntegration integration = new ServerLifecycleIntegration(lifecycleStartSender, lifecycleStopSender);
+            var integration = new ServerLifecycleIntegration(lifecycleStartSender, lifecycleStopSender);
 
             integrations.bindConnectionOpen(integration::onConnectionOpen);
 
@@ -63,7 +63,7 @@ public final class ServerLifecycleIntegration {
     }
 
     private boolean trySendStop(boolean crash) {
-        JsonObject payload = new JsonObject();
+        var payload = new JsonObject();
         payload.addProperty("crash", crash);
         return this.lifecycleStopSender.send(payload);
     }

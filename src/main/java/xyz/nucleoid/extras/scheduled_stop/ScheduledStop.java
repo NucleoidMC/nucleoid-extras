@@ -12,9 +12,11 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import xyz.nucleoid.plasmid.event.GameEvents;
-import xyz.nucleoid.plasmid.game.*;
-
-import java.util.Collection;
+import xyz.nucleoid.plasmid.game.GameCloseReason;
+import xyz.nucleoid.plasmid.game.GameOpenException;
+import xyz.nucleoid.plasmid.game.GameSpace;
+import xyz.nucleoid.plasmid.game.config.GameConfig;
+import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -50,9 +52,9 @@ public final class ScheduledStop {
     }
 
     private static int scheduleRestart(CommandContext<ServerCommandSource> context) {
-        ServerCommandSource source = context.getSource();
+        var source = context.getSource();
         if (!stopScheduled) {
-            MinecraftServer server = source.getMinecraftServer();
+            var server = source.getServer();
             int time = server.getTicks();
 
             stopScheduled = true;
@@ -78,8 +80,8 @@ public final class ScheduledStop {
             stopTime = Integer.MAX_VALUE;
             graceTime = Integer.MAX_VALUE;
 
-            for (ManagedGameSpace game : ManagedGameSpace.getOpen()) {
-                game.close(GameCloseReason.CANCELED);
+            for (var gameSpace : GameSpaceManager.get().getOpenGameSpaces()) {
+                gameSpace.close(GameCloseReason.CANCELED);
             }
 
             server.stop(false);
@@ -91,8 +93,8 @@ public final class ScheduledStop {
         if (time < graceTime) return false;
         if (time > stopTime) return true;
 
-        Collection<ManagedGameSpace> games = ManagedGameSpace.getOpen();
-        for (ManagedGameSpace game : games) {
+        var games = GameSpaceManager.get().getOpenGameSpaces();
+        for (var game : games) {
             if (!game.getPlayers().isEmpty()) {
                 return false;
             }
@@ -101,7 +103,7 @@ public final class ScheduledStop {
         return true;
     }
 
-    private static void openGame(ConfiguredGame<?> config, GameSpace gameSpace) {
+    private static void openGame(GameConfig<?> config, GameSpace gameSpace) {
         if (stopScheduled) {
             throw new GameOpenException(new TranslatableText("nucleoid.stop.game.open"));
         }

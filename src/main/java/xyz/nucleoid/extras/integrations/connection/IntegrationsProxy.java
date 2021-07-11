@@ -68,7 +68,7 @@ public final class IntegrationsProxy implements IntegrationsConnection {
 
     @Override
     public boolean send(String type, JsonObject body) {
-        IntegrationsConnection connection = this.connection;
+        var connection = this.connection;
         if (connection != null) {
             return connection.send(type, body);
         } else {

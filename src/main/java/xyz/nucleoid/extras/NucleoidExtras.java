@@ -3,14 +3,18 @@ package xyz.nucleoid.extras;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.StringVisitable;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xyz.nucleoid.extras.lobby.NEBlocks;
-import xyz.nucleoid.extras.lobby.NEItems;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
+import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
@@ -35,13 +39,13 @@ public final class NucleoidExtras implements ModInitializer {
     private static void onServerTick(MinecraftServer server) {
         int ticks = server.getTicks();
         if (ticks % 20 == 0) {
-            NucleoidExtrasConfig config = NucleoidExtrasConfig.get();
-            if (config.isSidebarEnabled()) {
-                NucleoidSidebar.get(server).update();
+            var config = NucleoidExtrasConfig.get();
+            if (config.sidebar()) {
+                NucleoidSidebar.get().update();
             }
         }
 
-        NucleoidIntegrations integrations = NucleoidIntegrations.get();
+        var integrations = NucleoidIntegrations.get();
         if (integrations != null) {
             integrations.tick();
         }
@@ -49,5 +53,23 @@ public final class NucleoidExtras implements ModInitializer {
 
     public static Identifier identifier(String path) {
         return new Identifier(ID, path);
+    }
+
+    @Nullable
+    public static String getChatMessageContent(Text message) {
+        if (message instanceof TranslatableText translatable) {
+            var args = translatable.getArgs();
+            if (args.length == 2) {
+                var content = args[1];
+                if (content instanceof String string) {
+                    return string;
+                } else if (content instanceof StringVisitable visitable) {
+                    return visitable.getString();
+                }
+            }
+        } else {
+            return message.getString();
+        }
+        return null;
     }
 }

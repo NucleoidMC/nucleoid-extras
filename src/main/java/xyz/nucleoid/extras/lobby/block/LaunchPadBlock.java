@@ -12,7 +12,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,15 +31,13 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (entity.isOnGround()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            var blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof LaunchPadBlockEntity) {
-                LaunchPadBlockEntity launchPad = (LaunchPadBlockEntity) blockEntity;
-
+            if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
                 entity.setVelocity(getVector(launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
-                if (entity instanceof ServerPlayerEntity) {
-                    ((ServerPlayerEntity) entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
-                    ((ServerPlayerEntity) entity).playSound(SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5f, 1);
+                if (entity instanceof ServerPlayerEntity player) {
+                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+                    player.playSound(SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5f, 1);
                 }
                 super.onEntityCollision(state, world, pos, entity);
             }
@@ -61,7 +58,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new LaunchPadBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new LaunchPadBlockEntity(pos, state);
     }
 }

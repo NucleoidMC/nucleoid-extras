@@ -2,15 +2,16 @@ package xyz.nucleoid.extras.lobby.block;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class LaunchPadBlockEntity extends BlockEntity {
     private float pitch = 10;
     private float power = 4;
 
-    public LaunchPadBlockEntity() {
-        super(NEBlocks.LAUNCH_PAD_ENTITY);
+    public LaunchPadBlockEntity(BlockPos pos, BlockState state) {
+        super(NEBlocks.LAUNCH_PAD_ENTITY, pos, state);
     }
 
     public float getPitch() {
@@ -22,17 +23,18 @@ public class LaunchPadBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        CompoundTag main = super.toTag(tag);
-        main.putFloat("Pitch", this.pitch);
-        main.putFloat("Power", this.power);
-        return main;
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        nbt = super.writeNbt(nbt);
+        nbt.putFloat("Pitch", this.pitch);
+        nbt.putFloat("Power", this.power);
+
+        return nbt;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        this.pitch = tag.getFloat("Pitch");
-        this.power = tag.getFloat("Power");
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.pitch = nbt.getFloat("Pitch");
+        this.power = nbt.getFloat("Power");
     }
 }

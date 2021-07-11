@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.mixin.sidebar;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.profiler.Profiler;
@@ -24,14 +25,14 @@ public abstract class ServerWorldMixin extends World {
     @Inject(method = "addPlayer", at = @At("RETURN"))
     private void addPlayer(ServerPlayerEntity player, CallbackInfo ci) {
         if (this.getRegistryKey() == NucleoidSidebar.DIMENSION) {
-            NucleoidSidebar.get(player.server).addPlayer(player);
+            NucleoidSidebar.get().addPlayer(player);
         }
     }
 
     @Inject(method = "removePlayer", at = @At("RETURN"))
-    private void removePlayer(ServerPlayerEntity player, CallbackInfo ci) {
+    private void removePlayer(ServerPlayerEntity player, Entity.RemovalReason reason, CallbackInfo ci) {
         if (this.getRegistryKey() == NucleoidSidebar.DIMENSION) {
-            NucleoidSidebar.get(player.server).removePlayer(player);
+            NucleoidSidebar.get().removePlayer(player);
         }
     }
 }

@@ -5,8 +5,6 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
@@ -30,10 +28,10 @@ public final class PlayerStatusIntegration {
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        if (config.shouldSendPlayers()) {
-            IntegrationSender statusSender = integrations.openSender("status");
+        if (config.sendPlayers()) {
+            var statusSender = integrations.openSender("status");
 
-            PlayerStatusIntegration integration = new PlayerStatusIntegration(statusSender);
+            var integration = new PlayerStatusIntegration(statusSender);
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
         }
     }
@@ -43,7 +41,7 @@ public final class PlayerStatusIntegration {
         if (time - this.lastCheckTime > CHECK_INTERVAL_MS) {
             this.lastCheckTime = time;
 
-            Status status = this.checkStatus(server);
+            var status = this.checkStatus(server);
             if (status != null) {
                 this.statusSender.send(status.serialize());
             }
@@ -52,7 +50,7 @@ public final class PlayerStatusIntegration {
 
     @Nullable
     private Status checkStatus(MinecraftServer server) {
-        Status swap = this.lastStatus;
+        var swap = this.lastStatus;
         swap.clear();
 
         this.lastStatus = this.currentStatus;
@@ -68,8 +66,8 @@ public final class PlayerStatusIntegration {
     }
 
     private void buildStatus(MinecraftServer server, Status status) {
-        PlayerManager playerManager = server.getPlayerManager();
-        for (ServerPlayerEntity player : playerManager.getPlayerList()) {
+        var playerManager = server.getPlayerManager();
+        for (var player : playerManager.getPlayerList()) {
             status.addPlayer(player.getGameProfile());
         }
     }
@@ -86,11 +84,11 @@ public final class PlayerStatusIntegration {
         }
 
         JsonObject serialize() {
-            JsonObject root = new JsonObject();
+            var root = new JsonObject();
 
-            JsonArray playerArray = new JsonArray();
-            for (GameProfile player : this.players) {
-                JsonObject playerRoot = new JsonObject();
+            var playerArray = new JsonArray();
+            for (var player : this.players) {
+                var playerRoot = new JsonObject();
                 playerRoot.addProperty("id", player.getId().toString());
                 playerRoot.addProperty("name", player.getName());
                 playerArray.add(playerRoot);
@@ -103,11 +101,7 @@ public final class PlayerStatusIntegration {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof Status) {
-                Status status = (Status) obj;
-                return this.players.equals(status.players);
-            }
-            return false;
+            return obj instanceof Status status && this.players.equals(status.players);
         }
     }
 }
