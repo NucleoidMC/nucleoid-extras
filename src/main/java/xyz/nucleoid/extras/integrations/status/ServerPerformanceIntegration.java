@@ -1,10 +1,13 @@
-package xyz.nucleoid.extras.integrations;
+package xyz.nucleoid.extras.integrations.status;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.MetricsData;
+import xyz.nucleoid.extras.integrations.IntegrationSender;
+import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.mixin.MetricsDataAccessor;
 import xyz.nucleoid.extras.mixin.MinecraftServerAccessor;
 import xyz.nucleoid.extras.mixin.ServerWorldAccessor;

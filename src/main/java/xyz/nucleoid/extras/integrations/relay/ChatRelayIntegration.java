@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.integrations;
+package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,6 +16,9 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.PlayerSendChatEvent;
+import xyz.nucleoid.extras.integrations.IntegrationSender;
+import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

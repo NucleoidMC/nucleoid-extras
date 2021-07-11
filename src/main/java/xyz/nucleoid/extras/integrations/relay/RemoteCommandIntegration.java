@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.integrations;
+package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -9,6 +9,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import xyz.nucleoid.extras.integrations.IntegrationSender;
+import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;

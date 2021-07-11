@@ -1,8 +1,11 @@
-package xyz.nucleoid.extras.integrations;
+package xyz.nucleoid.extras.integrations.status;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import xyz.nucleoid.extras.integrations.IntegrationSender;
+import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 public final class ServerLifecycleIntegration {
     private static boolean crashed;

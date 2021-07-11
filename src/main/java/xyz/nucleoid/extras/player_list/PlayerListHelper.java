@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.player_list;
 
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -53,41 +54,20 @@ public class PlayerListHelper {
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
-        updatePlayerName(updatedPlayer);
-        updatePlayerGameMode(updatedPlayer);
+        updatePlayer(updatedPlayer, PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
+        updatePlayer(updatedPlayer, PlayerListS2CPacket.Action.UPDATE_GAME_MODE);
     }
 
-    private static void updatePlayerName(ServerPlayerEntity updatedPlayer) {
+    private static void updatePlayer(ServerPlayerEntity updatedPlayer, PlayerListS2CPacket.Action action) {
+        MinecraftServer server = updatedPlayer.server;
+
         PlayerListS2CPacket normalPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, false);
         PlayerListS2CPacket grayPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, true);
 
         PlayerListS2CPacket updateJoined = new PlayerListS2CPacket();
-        ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$setAction(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
+        ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$setAction(action);
 
-        for (ServerPlayerEntity player : updatedPlayer.server.getPlayerManager().getPlayerList()) {
-            boolean gray = PlayerListHelper.shouldGray(player, updatedPlayer);
-
-            player.networkHandler.sendPacket(gray ? grayPacket : normalPacket);
-            PlayerListS2CPacket.Entry entry = updateJoined.new Entry(
-                    player.getGameProfile(),
-                    0,
-                    getGameMode(player, gray),
-                    PlayerListHelper.getDisplayName(player, gray)
-            );
-            ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$getEntries().add(entry);
-        }
-
-        updatedPlayer.networkHandler.sendPacket(updateJoined);
-    }
-
-    private static void updatePlayerGameMode(ServerPlayerEntity updatedPlayer) {
-        PlayerListS2CPacket normalPacket = PlayerListHelper.getUpdateGameModeNamePacket(updatedPlayer, false);
-        PlayerListS2CPacket grayPacket = PlayerListHelper.getUpdateGameModeNamePacket(updatedPlayer, true);
-
-        PlayerListS2CPacket updateJoined = new PlayerListS2CPacket();
-        ((PlayerListS2CPacketAccessor) updateJoined).nucleoid$setAction(PlayerListS2CPacket.Action.UPDATE_GAME_MODE);
-
-        for (ServerPlayerEntity player : updatedPlayer.server.getPlayerManager().getPlayerList()) {
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             boolean gray = PlayerListHelper.shouldGray(player, updatedPlayer);
 
             player.networkHandler.sendPacket(gray ? grayPacket : normalPacket);

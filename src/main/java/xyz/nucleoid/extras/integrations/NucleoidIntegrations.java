@@ -10,6 +10,12 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsConnection;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsProxy;
+import xyz.nucleoid.extras.integrations.game.GameStatusIntegration;
+import xyz.nucleoid.extras.integrations.relay.ChatRelayIntegration;
+import xyz.nucleoid.extras.integrations.relay.RemoteCommandIntegration;
+import xyz.nucleoid.extras.integrations.status.PlayerStatusIntegration;
+import xyz.nucleoid.extras.integrations.status.ServerLifecycleIntegration;
+import xyz.nucleoid.extras.integrations.status.ServerPerformanceIntegration;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -59,7 +65,8 @@ public final class NucleoidIntegrations {
 
     private static void bindIntegrations(NucleoidIntegrations integrations, IntegrationsConfig config) {
         ChatRelayIntegration.bind(integrations, config);
-        ServerStatusIntegration.bind(integrations, config);
+        PlayerStatusIntegration.bind(integrations, config);
+        GameStatusIntegration.bind(integrations, config);
         ServerLifecycleIntegration.bind(integrations, config);
         ServerPerformanceIntegration.bind(integrations, config);
         RemoteCommandIntegration.bind(integrations, config);

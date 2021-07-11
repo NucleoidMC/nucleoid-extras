@@ -1,14 +1,14 @@
-package xyz.nucleoid.extras.integrations;
+package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.integrations.IntegrationSender;
+import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.plasmid.game.ConfiguredGame;
 import xyz.nucleoid.plasmid.game.ManagedGameSpace;
 
@@ -16,35 +16,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class ServerStatusIntegration {
+public final class GameStatusIntegration {
     private static final long CHECK_INTERVAL_MS = 10 * 1000;
 
     private final IntegrationSender statusSender;
-    private final boolean players;
-    private final boolean games;
 
     private long lastCheckTime;
 
     private Status currentStatus = new Status();
     private Status lastStatus = new Status();
 
-    private ServerStatusIntegration(IntegrationSender statusSender, boolean players, boolean games) {
+    private GameStatusIntegration(IntegrationSender statusSender) {
         this.statusSender = statusSender;
-        this.players = players;
-        this.games = games;
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {
-        boolean players = config.shouldSendPlayers();
-        boolean games = config.shouldSendGames();
-        if (!players && !games) {
-            return;
+        if (config.shouldSendGames()) {
+            IntegrationSender statusSender = integrations.openSender("status");
+
+            GameStatusIntegration integration = new GameStatusIntegration(statusSender);
+            ServerTickEvents.END_SERVER_TICK.register(integration::tick);
         }
-
-        IntegrationSender statusSender = integrations.openSender("status");
-
-        ServerStatusIntegration integration = new ServerStatusIntegration(statusSender, players, games);
-        ServerTickEvents.END_SERVER_TICK.register(integration::tick);
     }
 
     private void tick(MinecraftServer server) {
@@ -52,7 +44,7 @@ public final class ServerStatusIntegration {
         if (time - this.lastCheckTime > CHECK_INTERVAL_MS) {
             this.lastCheckTime = time;
 
-            Status status = this.checkStatus(server);
+            Status status = this.checkStatus();
             if (status != null) {
                 this.statusSender.send(status.serialize());
             }
@@ -60,14 +52,14 @@ public final class ServerStatusIntegration {
     }
 
     @Nullable
-    private Status checkStatus(MinecraftServer server) {
+    private Status checkStatus() {
         Status swap = this.lastStatus;
         swap.clear();
 
         this.lastStatus = this.currentStatus;
         this.currentStatus = swap;
 
-        this.buildStatus(server, this.currentStatus);
+        this.buildStatus(this.currentStatus);
 
         if (!this.currentStatus.equals(this.lastStatus)) {
             return this.currentStatus;
@@ -76,37 +68,22 @@ public final class ServerStatusIntegration {
         }
     }
 
-    private void buildStatus(MinecraftServer server, Status status) {
-        if (this.games) {
-            Collection<ManagedGameSpace> games = ManagedGameSpace.getOpen();
-            for (ManagedGameSpace game : games) {
-                status.addGame(game.getGameConfig(), game.getPlayerCount());
-            }
-        }
-
-        if (this.players) {
-            PlayerManager playerManager = server.getPlayerManager();
-            for (ServerPlayerEntity player : playerManager.getPlayerList()) {
-                status.addPlayer(player.getGameProfile());
-            }
+    private void buildStatus(Status status) {
+        Collection<ManagedGameSpace> games = ManagedGameSpace.getOpen();
+        for (ManagedGameSpace game : games) {
+            status.addGame(game.getGameConfig(), game.getPlayerCount());
         }
     }
 
     static final class Status {
-        final List<GameProfile> players = new ArrayList<>();
         final List<GameEntry> games = new ArrayList<>();
 
         void clear() {
-            this.players.clear();
             this.games.clear();
         }
 
         void addGame(ConfiguredGame<?> game, int playerCount) {
             this.games.add(new GameEntry(game.getName(), game.getType().getIdentifier(), playerCount));
-        }
-
-        void addPlayer(GameProfile player) {
-            this.players.add(player);
         }
 
         JsonObject serialize() {
@@ -119,16 +96,6 @@ public final class ServerStatusIntegration {
 
             root.add("games", gamesArray);
 
-            JsonArray playerArray = new JsonArray();
-            for (GameProfile player : this.players) {
-                JsonObject playerRoot = new JsonObject();
-                playerRoot.addProperty("id", player.getId().toString());
-                playerRoot.addProperty("name", player.getName());
-                playerArray.add(playerRoot);
-            }
-
-            root.add("players", playerArray);
-
             return root;
         }
 
@@ -136,7 +103,7 @@ public final class ServerStatusIntegration {
         public boolean equals(Object obj) {
             if (obj instanceof Status) {
                 Status status = (Status) obj;
-                return this.players.equals(status.players) && this.games.equals(status.games);
+                return this.games.equals(status.games);
             }
             return false;
         }
