@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
-import xyz.nucleoid.extras.statistics.StatisticsBackendConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +37,7 @@ public final class NucleoidExtrasConfig {
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(config -> config.sidebar),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations)),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases)),
-                ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter)),
-                StatisticsBackendConfig.CODEC.optionalFieldOf("statistics_backend").forGetter(config -> Optional.ofNullable(config.statisticsBackend))
+                ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter))
         ).apply(instance, NucleoidExtrasConfig::new);
     });
 
@@ -49,14 +47,12 @@ public final class NucleoidExtrasConfig {
     private final IntegrationsConfig integrations;
     private final CommandAliasConfig aliases;
     private final ChatFilterConfig chatFilter;
-    private final StatisticsBackendConfig statisticsBackend;
 
-    private NucleoidExtrasConfig(boolean sidebar, Optional<IntegrationsConfig> integrations, Optional<CommandAliasConfig> aliases, Optional<ChatFilterConfig> chatFilter, Optional<StatisticsBackendConfig> statisticsBackend) {
+    private NucleoidExtrasConfig(boolean sidebar, Optional<IntegrationsConfig> integrations, Optional<CommandAliasConfig> aliases, Optional<ChatFilterConfig> chatFilter) {
         this.sidebar = sidebar;
         this.integrations = integrations.orElse(null);
         this.aliases = aliases.orElse(null);
         this.chatFilter = chatFilter.orElse(null);
-        this.statisticsBackend = statisticsBackend.orElse(null);
     }
 
     private NucleoidExtrasConfig() {
@@ -64,7 +60,6 @@ public final class NucleoidExtrasConfig {
         this.integrations = null;
         this.aliases = null;
         this.chatFilter = null;
-        this.statisticsBackend = null;
     }
 
     @Nullable
@@ -80,10 +75,6 @@ public final class NucleoidExtrasConfig {
     @Nullable
     public ChatFilterConfig getChatFilter() {
         return this.chatFilter;
-    }
-
-    public StatisticsBackendConfig getStatisticsBackend() {
-        return statisticsBackend;
     }
 
     public boolean isSidebarEnabled() {

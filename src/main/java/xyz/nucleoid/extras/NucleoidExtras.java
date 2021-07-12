@@ -29,7 +29,6 @@ public final class NucleoidExtras implements ModInitializer {
         ScheduledStop.register();
 
         NucleoidIntegrations.register();
-        NucleoidStatistics.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }

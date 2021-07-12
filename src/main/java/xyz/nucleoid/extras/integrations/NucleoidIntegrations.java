@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsConnection;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsProxy;
+import xyz.nucleoid.extras.statistics.NucleoidStatistics;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public final class NucleoidIntegrations {
         ServerLifecycleIntegration.bind(integrations, config);
         ServerPerformanceIntegration.bind(integrations, config);
         RemoteCommandIntegration.bind(integrations, config);
+        NucleoidStatistics.bind(integrations);
     }
 
     public static void register() {

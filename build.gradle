@@ -28,7 +28,7 @@ dependencies {
 	modImplementation include('xyz.nucleoid:more-codecs:0.1.4')
 
 	modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
-		exclude module : "fabric-loader"
+		exclude module: "fabric-loader"
 	}
 }
 
