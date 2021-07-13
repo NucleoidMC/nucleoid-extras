@@ -38,11 +38,9 @@ public final class NucleoidExtras implements ModInitializer {
 
     private static void onServerTick(MinecraftServer server) {
         int ticks = server.getTicks();
-        if (ticks % 20 == 0) {
-            var config = NucleoidExtrasConfig.get();
-            if (config.sidebar()) {
-                NucleoidSidebar.get().update();
-            }
+        var config = NucleoidExtrasConfig.get();
+        if (config.sidebar()) {
+            NucleoidSidebar.get().update(ticks, server);
         }
 
         var integrations = NucleoidIntegrations.get();
