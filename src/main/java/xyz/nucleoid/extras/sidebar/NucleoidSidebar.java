@@ -127,16 +127,8 @@ public final class NucleoidSidebar {
     }
 
     private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames, boolean altText) {
-
         builder.add(new TranslatableText("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
-        /*for (var game : Map.of("GameName1", 5, "DTM v2", 8, "Another One", 4, "Bed Wars", 7).entrySet()) {
-            var name = game.getKey();
-            if (name.length() > 12) {
-                name = name.substring(0, 11) + "..";
-            }
-
-            int players = game.getValue();*/
         var games = openGames.stream()
                 .sorted(Comparator.comparingInt(GameSpace::getPlayerCount).reversed())
                 .limit(4);
