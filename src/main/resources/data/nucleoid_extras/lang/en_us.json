@@ -1,11 +1,17 @@
 {
-  "nucleoid.sidebar.welcome": "Welcome to Nucleoid!",
-  "nucleoid.sidebar.games": "Open games:",
-  "nucleoid.sidebar.game": "%s: %s",
+  "nucleoid.sidebar.welcome": "Welcome %s!",
+  "nucleoid.sidebar.player_in_game.1": "%s player online!",
+  "nucleoid.sidebar.player_in_game.more": "%s players online!",
+
+  "nucleoid.sidebar.game.title": "Open games:",
+  "nucleoid.sidebar.game.title.no_games": "No games open!",
+  "nucleoid.sidebar.game.entry": "%s: %s",
+  "nucleoid.sidebar.game.more": "...and %s more!",
   "nucleoid.sidebar.game.player.1": "%s player",
   "nucleoid.sidebar.game.player.more": "%s players",
-  "nucleoid.sidebar.join": "...run /game join",
-  "nucleoid.sidebar.compass": "or use the compass!",
+
+  "nucleoid.sidebar.join.1": "Join with %s...",
+  "nucleoid.sidebar.join.2": "...or by using the compass!",
   "nucleoid.discord": "nucleoid.xyz/discord",
   "nucleoid.stop.scheduled": "Server restart has been scheduled! The server will restart in %s minutes, or when all games exit.",
   "nucleoid.stop.scheduled.already": "Server restart has already been scheduled.",
