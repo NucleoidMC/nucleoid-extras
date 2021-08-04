@@ -7,9 +7,6 @@
     "MinecraftServerMixin",
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
-    "player_list.PlayerInteractionManagerMixin",
-    "player_list.PlayerManagerMixin",
-    "player_list.ServerScoreboardMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
   ],

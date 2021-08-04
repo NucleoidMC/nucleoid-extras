@@ -35,7 +35,7 @@ public final class NucleoidExtras implements ModInitializer {
         NucleoidIntegrations.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
-        PlayerListHelper.registerEvents();
+        //PlayerListHelper.registerEvents();
     }
 
     private static void onServerTick(MinecraftServer server) {

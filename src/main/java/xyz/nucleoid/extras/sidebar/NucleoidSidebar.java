@@ -135,10 +135,7 @@ public final class NucleoidSidebar {
 
         games.forEach(game -> {
             // This should be replaced with better shortened names (ideally predefined ones)
-            var name = game.getSourceConfig().getName().asString();
-            if (name.length() > 12) {
-                name = name.substring(0, 11) + "..";
-            }
+            var name = game.getSourceConfig().getName();
 
             int players = game.getPlayerCount();
             var playersText = new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
