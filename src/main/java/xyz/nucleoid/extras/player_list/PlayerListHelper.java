@@ -5,6 +5,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
+import xyz.nucleoid.plasmid.event.GameEvents;
+import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 public class PlayerListHelper {
@@ -69,5 +71,15 @@ public class PlayerListHelper {
         }
 
         updatedPlayer.networkHandler.sendPacket(updateJoined);
+    }
+
+
+    public static void registerEvents() {
+        GameEvents.PLAYER_JOIN.register(PlayerListHelper::event);
+        GameEvents.PLAYER_LEFT.register(PlayerListHelper::event);
+    }
+
+    private static void event(GameSpace space, ServerPlayerEntity player) {
+        updatePlayer(player);
     }
 }
