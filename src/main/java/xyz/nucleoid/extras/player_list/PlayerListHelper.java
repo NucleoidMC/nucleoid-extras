@@ -20,7 +20,6 @@ public class PlayerListHelper {
     public static PlayerListS2CPacket getUpdateGameModeNamePacket(ServerPlayerEntity player, boolean gray) {
         var packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_GAME_MODE);
         packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), player.getDisplayName()));
-
         return packet;
     }
 
