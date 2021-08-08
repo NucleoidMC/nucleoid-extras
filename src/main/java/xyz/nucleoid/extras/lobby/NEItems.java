@@ -1,11 +1,13 @@
 package xyz.nucleoid.extras.lobby;
 
+import eu.pb4.polymer.block.VirtualHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
+import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
 
 public class NEItems {
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
@@ -31,6 +33,14 @@ public class NEItems {
     public static final Item RED_CONCRETE_POWDER = createSimple(NEBlocks.RED_CONCRETE_POWDER, Items.RED_CONCRETE_POWDER);
     public static final Item WHITE_CONCRETE_POWDER = createSimple(NEBlocks.WHITE_CONCRETE_POWDER, Items.WHITE_CONCRETE_POWDER);
     public static final Item YELLOW_CONCRETE_POWDER = createSimple(NEBlocks.YELLOW_CONCRETE_POWDER, Items.YELLOW_CONCRETE_POWDER);
+
+    public static final Item TINY_POTATO = createHead(NEBlocks.TINY_POTATO);
+    public static final Item IRRITATER = createHead(NEBlocks.IRRITATER);
+    public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
+
+    private static Item createHead(Block head) {
+        return new LobbyHeadItem((VirtualHeadBlock) head, new Item.Settings());
+    }
 
     private static Item createSimple(Block block, Item virtual) {
         return new LobbyBlockItem(block, new Item.Settings(), virtual);
@@ -59,6 +69,11 @@ public class NEItems {
         register("red_concrete_powder", RED_CONCRETE_POWDER);
         register("white_concrete_powder", WHITE_CONCRETE_POWDER);
         register("yellow_concrete_powder", YELLOW_CONCRETE_POWDER);
+
+        register("tiny_potato", TINY_POTATO);
+        register("irritater", IRRITATER);
+        register("azalea_tater", AZALEA_TATER);
+
     }
 
     private static <T extends Item> T register(String id, T item) {
