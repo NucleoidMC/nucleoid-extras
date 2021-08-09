@@ -12,7 +12,7 @@ public final record IntegrationsConfig(
         @Nullable String serverIp,
         boolean sendPlayers, boolean sendGames, boolean sendChat,
         boolean sendLifecycle, boolean sendPerformance,
-        boolean acceptRemoteCommands
+        boolean acceptRemoteCommands, boolean sendStatistics
 ) {
     public static final Codec<IntegrationsConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
@@ -25,11 +25,12 @@ public final record IntegrationsConfig(
                 Codec.BOOL.optionalFieldOf("send_chat", true).forGetter(IntegrationsConfig::sendChat),
                 Codec.BOOL.optionalFieldOf("send_lifecycle", true).forGetter(IntegrationsConfig::sendLifecycle),
                 Codec.BOOL.optionalFieldOf("send_performance", true).forGetter(IntegrationsConfig::sendPerformance),
-                Codec.BOOL.optionalFieldOf("accept_remote_commands", false).forGetter(IntegrationsConfig::acceptRemoteCommands)
+                Codec.BOOL.optionalFieldOf("accept_remote_commands", false).forGetter(IntegrationsConfig::acceptRemoteCommands),
+                Codec.BOOL.optionalFieldOf("send_statistics", false).forGetter(IntegrationsConfig::sendStatistics)
         ).apply(instance, IntegrationsConfig::new);
     });
 
-    private IntegrationsConfig(String channel, String host, int port, Optional<String> serverIp, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle, boolean sendPerformance, boolean acceptRemoteCommands) {
-        this(channel, host, port, serverIp.orElse(null), sendPlayers, sendGames, sendChat, sendLifecycle, sendPerformance, acceptRemoteCommands);
+    private IntegrationsConfig(String channel, String host, int port, Optional<String> serverIp, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle, boolean sendPerformance, boolean acceptRemoteCommands, boolean sendStatistics) {
+        this(channel, host, port, serverIp.orElse(null), sendPlayers, sendGames, sendChat, sendLifecycle, sendPerformance, acceptRemoteCommands, sendStatistics);
     }
 }
