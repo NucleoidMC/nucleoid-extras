@@ -45,7 +45,7 @@
 
   "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!",
 
-  "text.nucleoid_extras.statistics.web_url": "Check out and share this game at https://nucleoid.xyz/game/#%s",
+  "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
   "text.nucleoid_extras.statistics.stat": "%s: %s"
 }
