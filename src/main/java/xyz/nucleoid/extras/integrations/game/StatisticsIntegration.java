@@ -43,23 +43,27 @@ public class StatisticsIntegration {
                 player.sendMessage(new TranslatableText("text.nucleoid_extras.statistics.bundle_header", bundleName)
                         .formatted(Formatting.GREEN), false);
 
-                stats.visitAllStatistics((key, value) ->
+                stats.visitAllStatistics((key, value) -> {
+                    if (!key.isHidden()) {
                         player.sendMessage(new TranslatableText("text.nucleoid_extras.statistics.stat",
-                                new TranslatableText(key.getTranslationKey()), value), false));
+                                new TranslatableText(key.getTranslationKey()), value), false);
+                    }
+                });
 
                 player.sendMessage(new LiteralText("+--------------------------------------+")
                         .formatted(Formatting.DARK_GRAY), false);
             }
         }
 
-        LOGGER.debug("Submitting statistic bundle for '{}'...", namespace);
+        UUID gameId = space.getId();
+
+        LOGGER.debug("Submitting statistic bundle for '{}' game id: {}...", namespace, gameId);
 
         JsonObject body = new JsonObject();
         JsonObject bundleObject = new JsonObject();
         bundleObject.addProperty("namespace", namespace);
         bundleObject.add("stats", bundle.encodeBundle());
         body.add("bundle", bundleObject);
-        UUID gameId = space.getId();
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
         // TODO: Enable this when the web thing is done
