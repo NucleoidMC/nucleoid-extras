@@ -21,7 +21,6 @@ import xyz.nucleoid.extras.lobby.block.VirtualEndGatewayBlock;
 public class NEBlocks {
     public static final Block END_PORTAL = new BasicVirtualBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision(), Blocks.END_PORTAL);
     public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
-    public static final Block LIGHT_BLOCK = new BasicVirtualBlock(AbstractBlock.Settings.of(Material.GLASS).strength(100).luminance((state) -> 14), Blocks.BARRIER);
 
     public static final Block BLACK_CONCRETE_POWDER = createConcretePowder(Blocks.BLACK_CONCRETE_POWDER);
     public static final Block BLUE_CONCRETE_POWDER = createConcretePowder(Blocks.BLUE_CONCRETE_POWDER);
@@ -60,7 +59,6 @@ public class NEBlocks {
     public static void register() {
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
-        register("light_block", LIGHT_BLOCK);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
 
