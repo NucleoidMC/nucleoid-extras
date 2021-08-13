@@ -7,6 +7,8 @@
     "MinecraftServerMixin",
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
+    "patches.EntityMixin",
+    "patches.StatusEffectMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
   ],
