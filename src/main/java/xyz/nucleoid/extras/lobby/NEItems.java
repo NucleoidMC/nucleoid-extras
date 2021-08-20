@@ -8,6 +8,7 @@ import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
+import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 
 public class NEItems {
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
@@ -36,6 +37,8 @@ public class NEItems {
     public static final Item TINY_POTATO = createHead(NEBlocks.TINY_POTATO);
     public static final Item IRRITATER = createHead(NEBlocks.IRRITATER);
     public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
+
+    public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
 
     private static Item createHead(Block head) {
         return new LobbyHeadItem((VirtualHeadBlock) head, new Item.Settings());
@@ -72,6 +75,7 @@ public class NEItems {
         register("irritater", IRRITATER);
         register("azalea_tater", AZALEA_TATER);
 
+        register("quick_armor_stand", QUICK_ARMOR_STAND);
     }
 
     private static <T extends Item> T register(String id, T item) {
