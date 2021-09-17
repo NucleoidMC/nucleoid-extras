@@ -70,7 +70,7 @@ public final class GameStatusIntegration {
     private void buildStatus(Status status) {
         var games = GameSpaceManager.get().getOpenGameSpaces();
         for (var game : games) {
-            status.addGame(game.getSourceConfig(), game.getPlayerCount());
+            status.addGame(game.getMetadata().sourceConfig(), game.getPlayers().size());
         }
     }
 
@@ -82,7 +82,7 @@ public final class GameStatusIntegration {
         }
 
         void addGame(GameConfig<?> game, int playerCount) {
-            this.games.add(new GameEntry(game.getName().asString(), game.getType().getIdentifier(), playerCount));
+            this.games.add(new GameEntry(game.name().asString(), game.type().id(), playerCount));
         }
 
         JsonObject serialize() {

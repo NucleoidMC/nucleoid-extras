@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
+import xyz.nucleoid.extras.error.ErrorReportingConfig;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 
 import java.io.IOException;
@@ -26,7 +27,8 @@ public final record NucleoidExtrasConfig(
         boolean sidebar,
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
-        @Nullable ChatFilterConfig chatFilter
+        @Nullable ChatFilterConfig chatFilter,
+        ErrorReportingConfig errorReporting
 ) {
     private static final Path PATH = Paths.get("config/nucleoid.json");
 
@@ -38,16 +40,17 @@ public final record NucleoidExtrasConfig(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(NucleoidExtrasConfig::sidebar),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
-                ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter()))
-        ).apply(instance, (sidebar, integrations, aliases, filter) -> {
-            return new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null));
+                ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
+                ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting)
+        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting) -> {
+            return new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting);
         });
     });
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, null, null, null);
+        this(false, null, null, null, ErrorReportingConfig.NONE);
     }
 
     @NotNull

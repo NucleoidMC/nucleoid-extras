@@ -11,11 +11,13 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 import xyz.nucleoid.plasmid.game.manager.ManagedGameSpace;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 public final class NucleoidSidebar {
     private static NucleoidSidebar instance;
@@ -130,14 +132,14 @@ public final class NucleoidSidebar {
         builder.add(new TranslatableText("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
-                .sorted(Comparator.comparingInt(GameSpace::getPlayerCount).reversed())
+                .sorted(Comparator.comparingInt((ManagedGameSpace space) -> space.getPlayers().size()).reversed())
                 .limit(4);
 
         games.forEach(game -> {
             // This should be replaced with better shortened names (ideally predefined ones)
-            var name = game.getSourceConfig().getName();
+            var name = game.getMetadata().sourceConfig().name();
 
-            int players = game.getPlayerCount();
+            int players = game.getPlayers().size();
             var playersText = new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
 
             builder.add(new LiteralText(" • ")

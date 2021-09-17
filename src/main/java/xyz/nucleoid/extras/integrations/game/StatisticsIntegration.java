@@ -44,7 +44,7 @@ public class StatisticsIntegration {
                         .formatted(Formatting.GREEN), false);
 
                 stats.visitAllStatistics((key, value) -> {
-                    if (!key.isHidden()) {
+                    if (!key.hidden()) {
                         player.sendMessage(new TranslatableText("text.nucleoid_extras.statistics.stat",
                                 new TranslatableText(key.getTranslationKey()), value), false);
                     }
@@ -55,14 +55,14 @@ public class StatisticsIntegration {
             }
         }
 
-        UUID gameId = space.getId();
+        UUID gameId = space.getMetadata().id();
 
         LOGGER.debug("Submitting statistic bundle for '{}' game id: {}...", namespace, gameId);
 
         JsonObject body = new JsonObject();
         JsonObject bundleObject = new JsonObject();
         bundleObject.addProperty("namespace", namespace);
-        bundleObject.add("stats", bundle.encodeBundle());
+        bundleObject.add("stats", bundle.encode());
         body.add("bundle", bundleObject);
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
@@ -94,7 +94,7 @@ public class StatisticsIntegration {
             integrations.bindConnectionOpen(instance::onConnectionOpen);
             GameEvents.CLOSING.register((space, reason) -> {
                 if (reason == GameCloseReason.FINISHED) {
-                    space.visitAllStatistics((namespace, bundle) ->
+                    space.getStatistics().visitAll((namespace, bundle) ->
                             instance.handleStatisticsBundle(space, namespace, bundle));
                 }
             });
