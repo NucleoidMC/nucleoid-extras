@@ -5,8 +5,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
-import xyz.nucleoid.plasmid.event.GameEvents;
-import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 public class PlayerListHelper {
@@ -19,15 +17,9 @@ public class PlayerListHelper {
         return gray ? GameMode.SPECTATOR : player.interactionManager.getGameMode();
     }
 
-    public static PlayerListS2CPacket getUpdateGameModeNamePacket(ServerPlayerEntity player, boolean gray) {
-        var packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_GAME_MODE);
-        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), player.getDisplayName()));
-        return packet;
-    }
-
-    public static PlayerListS2CPacket getUpdateDisplayNamePacket(ServerPlayerEntity player, boolean gray) {
-        var packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
-        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, player.interactionManager.getGameMode(), getDisplayName(player, gray)));
+    public static PlayerListS2CPacket getUpdatePacket(ServerPlayerEntity player, PlayerListS2CPacket.Action action, boolean gray) {
+        var packet = new PlayerListS2CPacket(action);
+        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), getDisplayName(player, gray)));
 
         return packet;
     }
@@ -41,7 +33,7 @@ public class PlayerListHelper {
 
     public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
         var manager = GameSpaceManager.get();
-        return manager.byPlayer(left) != manager.byPlayer(right);
+        return manager.byWorld(left.getServerWorld()) != manager.byWorld(right.getServerWorld());
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
@@ -52,8 +44,8 @@ public class PlayerListHelper {
     private static void updatePlayer(ServerPlayerEntity updatedPlayer, PlayerListS2CPacket.Action action) {
         var server = updatedPlayer.server;
 
-        var normalPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, false);
-        var grayPacket = PlayerListHelper.getUpdateDisplayNamePacket(updatedPlayer, true);
+        var normalPacket = PlayerListHelper.getUpdatePacket(updatedPlayer, action, false);
+        var grayPacket = PlayerListHelper.getUpdatePacket(updatedPlayer, action, true);
 
         var updateJoined = new PlayerListS2CPacket(action);
 
@@ -71,15 +63,5 @@ public class PlayerListHelper {
         }
 
         updatedPlayer.networkHandler.sendPacket(updateJoined);
-    }
-
-
-    public static void registerEvents() {
-        GameEvents.PLAYER_JOIN.register(PlayerListHelper::event);
-        GameEvents.PLAYER_LEFT.register(PlayerListHelper::event);
-    }
-
-    private static void event(GameSpace space, ServerPlayerEntity player) {
-        updatePlayer(player);
     }
 }

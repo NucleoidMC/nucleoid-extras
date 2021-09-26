@@ -23,7 +23,7 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.5-pre36+1.17.1'
+	modImplementation 'xyz.nucleoid:plasmid:0.5.6+1.17.1'
 	modImplementation include('xyz.nucleoid:more-codecs:0.1.5')
 
 	modRuntime ("supercoder79:databreaker:0.2.7") {

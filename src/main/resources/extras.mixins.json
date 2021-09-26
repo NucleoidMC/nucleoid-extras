@@ -9,6 +9,10 @@
     "ServerWorldAccessor",
     "patches.EntityMixin",
     "patches.StatusEffectMixin",
+    "player_list.PlayerInteractionManagerMixin",
+    "player_list.PlayerManagerMixin",
+    "player_list.ServerScoreboardMixin",
+    "player_list.ServerWorldMixin",
     "sidebar.PlayerManagerMixin",
     "sidebar.ServerWorldMixin"
   ],

@@ -24,12 +24,8 @@ public abstract class PlayerInteractionManagerMixin {
 
         if (player == null) return;
 
-        var grayPacket = PlayerListHelper.getUpdateGameModeNamePacket(player, true);
-
         for (var target : playerManager.getPlayerList()) {
-            if (PlayerListHelper.shouldGray(player, target)) {
-                target.networkHandler.sendPacket(grayPacket);
-            } else {
+            if (!PlayerListHelper.shouldGray(player, target)) {
                 target.networkHandler.sendPacket(whitePacket);
             }
         }

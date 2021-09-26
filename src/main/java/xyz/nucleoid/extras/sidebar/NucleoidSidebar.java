@@ -110,7 +110,7 @@ public final class NucleoidSidebar {
 
             var openGames = GameSpaceManager.get().getOpenGameSpaces();
             if (!openGames.isEmpty()) {
-                this.writeGamesToSidebar(b, openGames, altText);
+                this.writeGamesToSidebar(b, openGames);
             } else {
                 b.add(new TranslatableText("nucleoid.sidebar.game.title.no_games").setStyle(GAME_TITLE_STYLE));
             }
@@ -128,7 +128,7 @@ public final class NucleoidSidebar {
         });
     }
 
-    private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames, boolean altText) {
+    private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames) {
         builder.add(new TranslatableText("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
@@ -136,8 +136,7 @@ public final class NucleoidSidebar {
                 .limit(4);
 
         games.forEach(game -> {
-            // This should be replaced with better shortened names (ideally predefined ones)
-            var name = game.getMetadata().sourceConfig().name();
+            var name = game.getMetadata().sourceConfig().shortName();
 
             int players = game.getPlayers().size();
             var playersText = new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
