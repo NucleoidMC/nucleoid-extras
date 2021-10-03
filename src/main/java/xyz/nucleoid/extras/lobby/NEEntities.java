@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby;
 
+import eu.pb4.polymer.entity.EntityHelper;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -24,6 +25,7 @@ public class NEEntities {
     }
 
     private static <T extends EntityType<?>> T register(String id, T item) {
+        EntityHelper.registerVirtualEntityType(item);
         return Registry.register(Registry.ENTITY_TYPE, NucleoidExtras.identifier(id), item);
     }
 }
