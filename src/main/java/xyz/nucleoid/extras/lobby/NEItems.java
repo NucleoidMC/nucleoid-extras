@@ -13,6 +13,7 @@ import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 public class NEItems {
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
     public static final Item END_GATEWAY = createSimple(NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
+    public static final Item SAFE_TNT = createSimple(NEBlocks.SAFE_TNT, Items.TNT);
 
     public static final Item GOLD_LAUNCH_PAD = createSimple(NEBlocks.GOLD_LAUNCH_PAD, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Item IRON_LAUNCH_PAD = createSimple(NEBlocks.IRON_LAUNCH_PAD, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
@@ -51,6 +52,7 @@ public class NEItems {
     public static void register() {
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
+        register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
 

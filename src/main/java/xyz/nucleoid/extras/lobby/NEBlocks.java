@@ -1,7 +1,7 @@
 package xyz.nucleoid.extras.lobby;
 
-import eu.pb4.polymer.PolymerMod;
 import eu.pb4.polymer.block.BasicVirtualBlock;
+import eu.pb4.polymer.block.BlockHelper;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -19,28 +19,29 @@ import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.VirtualEndGatewayBlock;
 
 public class NEBlocks {
-    public static final Block END_PORTAL = new BasicVirtualBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision(), Blocks.END_PORTAL);
+    public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
     public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
+    public static final Block SAFE_TNT = createSimple(Blocks.TNT);
 
-    public static final Block BLACK_CONCRETE_POWDER = createConcretePowder(Blocks.BLACK_CONCRETE_POWDER);
-    public static final Block BLUE_CONCRETE_POWDER = createConcretePowder(Blocks.BLUE_CONCRETE_POWDER);
-    public static final Block BROWN_CONCRETE_POWDER = createConcretePowder(Blocks.BROWN_CONCRETE_POWDER);
-    public static final Block CYAN_CONCRETE_POWDER = createConcretePowder(Blocks.CYAN_CONCRETE_POWDER);
-    public static final Block GREEN_CONCRETE_POWDER = createConcretePowder(Blocks.GREEN_CONCRETE_POWDER);
-    public static final Block GRAY_CONCRETE_POWDER = createConcretePowder(Blocks.GRAY_CONCRETE_POWDER);
-    public static final Block LIGHT_BLUE_CONCRETE_POWDER = createConcretePowder(Blocks.LIGHT_BLUE_CONCRETE_POWDER);
-    public static final Block LIGHT_GRAY_CONCRETE_POWDER = createConcretePowder(Blocks.LIGHT_GRAY_CONCRETE_POWDER);
-    public static final Block LIME_CONCRETE_POWDER = createConcretePowder(Blocks.LIME_CONCRETE_POWDER);
-    public static final Block MAGENTA_CONCRETE_POWDER = createConcretePowder(Blocks.MAGENTA_CONCRETE_POWDER);
-    public static final Block ORANGE_CONCRETE_POWDER = createConcretePowder(Blocks.ORANGE_CONCRETE_POWDER);
-    public static final Block PINK_CONCRETE_POWDER = createConcretePowder(Blocks.PINK_CONCRETE_POWDER);
-    public static final Block PURPLE_CONCRETE_POWDER = createConcretePowder(Blocks.PURPLE_CONCRETE_POWDER);
-    public static final Block RED_CONCRETE_POWDER = createConcretePowder(Blocks.RED_CONCRETE_POWDER);
-    public static final Block WHITE_CONCRETE_POWDER = createConcretePowder(Blocks.WHITE_CONCRETE_POWDER);
-    public static final Block YELLOW_CONCRETE_POWDER = createConcretePowder(Blocks.YELLOW_CONCRETE_POWDER);
+    public static final Block BLACK_CONCRETE_POWDER = createSimple(Blocks.BLACK_CONCRETE_POWDER);
+    public static final Block BLUE_CONCRETE_POWDER = createSimple(Blocks.BLUE_CONCRETE_POWDER);
+    public static final Block BROWN_CONCRETE_POWDER = createSimple(Blocks.BROWN_CONCRETE_POWDER);
+    public static final Block CYAN_CONCRETE_POWDER = createSimple(Blocks.CYAN_CONCRETE_POWDER);
+    public static final Block GREEN_CONCRETE_POWDER = createSimple(Blocks.GREEN_CONCRETE_POWDER);
+    public static final Block GRAY_CONCRETE_POWDER = createSimple(Blocks.GRAY_CONCRETE_POWDER);
+    public static final Block LIGHT_BLUE_CONCRETE_POWDER = createSimple(Blocks.LIGHT_BLUE_CONCRETE_POWDER);
+    public static final Block LIGHT_GRAY_CONCRETE_POWDER = createSimple(Blocks.LIGHT_GRAY_CONCRETE_POWDER);
+    public static final Block LIME_CONCRETE_POWDER = createSimple(Blocks.LIME_CONCRETE_POWDER);
+    public static final Block MAGENTA_CONCRETE_POWDER = createSimple(Blocks.MAGENTA_CONCRETE_POWDER);
+    public static final Block ORANGE_CONCRETE_POWDER = createSimple(Blocks.ORANGE_CONCRETE_POWDER);
+    public static final Block PINK_CONCRETE_POWDER = createSimple(Blocks.PINK_CONCRETE_POWDER);
+    public static final Block PURPLE_CONCRETE_POWDER = createSimple(Blocks.PURPLE_CONCRETE_POWDER);
+    public static final Block RED_CONCRETE_POWDER = createSimple(Blocks.RED_CONCRETE_POWDER);
+    public static final Block WHITE_CONCRETE_POWDER = createSimple(Blocks.WHITE_CONCRETE_POWDER);
+    public static final Block YELLOW_CONCRETE_POWDER = createSimple(Blocks.YELLOW_CONCRETE_POWDER);
 
-    public static final Block GOLD_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.of(Material.STONE).strength(100).noCollision(), Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
-    public static final Block IRON_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.of(Material.STONE).strength(100).noCollision(), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
+    public static final Block GOLD_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
+    public static final Block IRON_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "ewogICJ0aW1lc3RhbXAiIDogMTYwNjIyODAxMzY0NCwKICAicHJvZmlsZUlkIiA6ICJiMGQ0YjI4YmMxZDc0ODg5YWYwZTg2NjFjZWU5NmFhYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNaW5lU2tpbl9vcmciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTczNTE0YTIzMjQ1ZjE1ZGJhZDVmYjRlNjIyMTYzMDIwODY0Y2NlNGMxNWQ1NmRlM2FkYjkwZmE1YTcxMzdmZCIKICAgIH0KICB9Cn0=");
     public static final Block IRRITATER = createTaterBlock(ParticleTypes.ANGRY_VILLAGER, "ewogICJ0aW1lc3RhbXAiIDogMTYwNjI5MzE0MjMyNywKICAicHJvZmlsZUlkIiA6ICI3NTE0NDQ4MTkxZTY0NTQ2OGM5NzM5YTZlMzk1N2JlYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGFua3NNb2phbmciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTRiMmNiZmUxZmQ0ZDMxMjM0NjEwODFhZDQ2MGFjYjZjMDM0NWJlZDNmM2NlOTZkNDc1YjVmNThmN2I5MDMwYiIKICAgIH0KICB9Cn0=");
@@ -48,8 +49,8 @@ public class NEBlocks {
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build(null);
 
-    private static Block createConcretePowder(Block virtual) {
-        return new BasicVirtualBlock(AbstractBlock.Settings.of(Material.STONE).strength(100), virtual);
+    private static Block createSimple(Block virtual) {
+        return new BasicVirtualBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
@@ -59,6 +60,7 @@ public class NEBlocks {
     public static void register() {
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
+        register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
 
@@ -92,7 +94,7 @@ public class NEBlocks {
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
-        PolymerMod.registerVirtualBlockEntity(NucleoidExtras.identifier(id));
+        BlockHelper.registerVirtualBlockEntity(type);
         return type;
     }
 }
