@@ -39,6 +39,8 @@ public class NEItems {
     public static final Item IRRITATER = createHead(NEBlocks.IRRITATER);
     public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
 
+    public static final Item TATEROID = createHead(NEBlocks.TATEROID);
+
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
 
     private static Item createHead(Block head) {
@@ -76,6 +78,8 @@ public class NEItems {
         register("tiny_potato", TINY_POTATO);
         register("irritater", IRRITATER);
         register("azalea_tater", AZALEA_TATER);
+
+        register("tateroid", TATEROID);
 
         register("quick_armor_stand", QUICK_ARMOR_STAND);
     }

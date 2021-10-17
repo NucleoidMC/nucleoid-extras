@@ -4,6 +4,7 @@
   "package": "xyz.nucleoid.extras.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "BlockWithEntityAccessor",
     "MinecraftServerMixin",
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
