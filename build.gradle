@@ -13,7 +13,7 @@ group = project.maven_group
 repositories {
 	maven { url = "https://maven.nucleoid.xyz/" }
 	maven { url = "https://maven.gegy.dev/" }
-	mavenLocal()
+	maven { url = "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -25,6 +25,8 @@ dependencies {
 
 	modImplementation 'xyz.nucleoid:plasmid:0.5.25+1.17.1'
 	modImplementation include('xyz.nucleoid:more-codecs:0.1.5')
+
+	modCompileOnly "maven.modrinth:styled-chat:1.2.0"
 
 	modRuntime ("supercoder79:databreaker:0.2.7") {
 		exclude module : "fabric-loader"
