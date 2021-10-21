@@ -77,7 +77,7 @@ public class TateroidBlockEntity extends BlockEntity {
         this.world.playSound(null, this.pos, sound, SoundCategory.RECORDS, 3, this.pitch / 24f);
 
         if (this.world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(ParticleTypes.NOTE, this.pos.getX() + 0.5, this.pos.getY() + 1.2, this.pos.getZ() + 0.5, 1, this.pitch / 24f, 0, 0, 1);
+            serverWorld.spawnParticles(ParticleTypes.NOTE, this.pos.getX() + 0.5, this.pos.getY() + 0.9, this.pos.getZ() + 0.5, 0, 1, 0, 0, (double) this.pitch / 24d);
         }
     }
 

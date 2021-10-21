@@ -4,7 +4,7 @@ import net.minecraft.util.ActionResult;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.stimuli.Stimuli;
-import xyz.nucleoid.stimuli.event.player.PlayerChatEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerChatContentEvent;
 
 public final class ChatFilter {
     public static void register() {
@@ -13,9 +13,8 @@ public final class ChatFilter {
             return;
         }
 
-        Stimuli.global().listen(PlayerChatEvent.EVENT, (sender, message) -> {
-            var content = NucleoidExtras.getChatMessageContent(message);
-            if (config.test(content)) {
+        Stimuli.global().listen(PlayerChatContentEvent.EVENT, (sender, message) -> {
+            if (config.test(message.getRaw())) {
                 config.sendFeedbackTo(sender);
                 return ActionResult.FAIL;
             }
