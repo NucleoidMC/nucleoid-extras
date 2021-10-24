@@ -9,8 +9,7 @@ import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 public class PlayerListHelper {
     public static Text getDisplayName(ServerPlayerEntity player, boolean gray) {
-        var displayName = player.getDisplayName();
-        return gray ? displayName.shallowCopy().formatted(Formatting.DARK_GRAY, Formatting.ITALIC) : displayName;
+        return gray ? player.getName().shallowCopy().formatted(Formatting.DARK_GRAY, Formatting.ITALIC) : player.getDisplayName();
     }
 
     public static GameMode getGameMode(ServerPlayerEntity player, boolean gray) {

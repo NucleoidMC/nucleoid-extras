@@ -1,7 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.item.VirtualItem;
-import net.minecraft.enchantment.Enchantments;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -12,7 +12,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -20,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
 
+import java.util.List;
 import java.util.Random;
 
 public class QuickArmorStandItem extends Item implements VirtualItem {
@@ -92,9 +97,8 @@ public class QuickArmorStandItem extends Item implements VirtualItem {
     }
 
     @Override
-    public ItemStack getVirtualItemStack(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
-        var out = VirtualItem.super.getVirtualItemStack(itemStack, player);
-        out.addEnchantment(Enchantments.LOYALTY, 23);
-        return out;
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+        tooltip.add(new TranslatableText("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }
