@@ -1,0 +1,54 @@
+{
+  "nucleoid.sidebar.welcome": "Bem vindo, %s!",
+  "nucleoid.sidebar.player_in_game.1": "%s jogador online!",
+  "nucleoid.sidebar.player_in_game.more": "%s jogadores online!",
+
+  "nucleoid.sidebar.game.title": "Jogos abertos:",
+  "nucleoid.sidebar.game.title.no_games": "Nenhum jogos abertos!",
+  "nucleoid.sidebar.game.entry": "%s: %s",
+  "nucleoid.sidebar.game.more": "...e %s mais!",
+  "nucleoid.sidebar.game.player.1": "%s jogador",
+  "nucleoid.sidebar.game.player.more": "%s jogadores",
+
+  "nucleoid.sidebar.join.1": "Entre com %s...",
+  "nucleoid.sidebar.join.2": "...ou usando a bussola!",
+  "nucleoid.discord": "nucleoid.xyz/discord",
+  "nucleoid.stop.scheduled": "Reiniciamento do servidor foi programado! O servidor irá reiniciar em %s minutos, ou quando todos os jogos terminarem.",
+  "nucleoid.stop.scheduled.already": "Reiniciamento do servidor já foi programado.",
+  "nucleoid.stop.game.open": "Não é possivel entrar neste jogo: foi programado o reiniciamento do servidor!",
+
+  "block.nucleoid_extras.end_portal": "Portal do End (Somente no lobby!)",
+  "block.nucleoid_extras.end_gateway": "Passagem do end (Somente no lobby!)",
+  "block.nucleoid_extras.gold_launch_pad": "Plataforma de Lançamento de Ouro (Somente no lobby!)",
+  "block.nucleoid_extras.iron_launch_pad": "Plataforma de Lançamento de Ferro (Somente no lobby!)",
+
+  "block.nucleoid_extras.black_concrete_powder": "Pó de cimento preto flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.blue_concrete_powder": "Pó de cimento azul flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.brown_concrete_powder": "Pó de cimento marrom flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.cyan_concrete_powder": "Pó de cimento ciano flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.green_concrete_powder": "Pó de cimento verde flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.gray_concrete_powder": "Pó de cimento cinza flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.light_blue_concrete_powder": "Pó de cimento azul claro flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.light_gray_concrete_powder": "Pó de cimento cinza claro flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.lime_concrete_powder": "Pó de cimento verde-limão flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.magenta_concrete_powder": "Pó de cimento magenta flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.orange_concrete_powder": "Pó de cimento laranja flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.pink_concrete_powder": "Pó de cimento rosa flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.purple_concrete_powder": "Pó de cimento roxo flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.red_concrete_powder": "Pó de cimento vermelho flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.white_concrete_powder": "Pó de cimento branco flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.yellow_concrete_powder": "Pó de cimento amarelo flutuante (Somente no lobby!)",
+  "block.nucleoid_extras.tiny_potato": "Tiny Potato (Somente no lobby!)",
+  "block.nucleoid_extras.irritater": "Irritater (Somente no lobby!)",
+  "block.nucleoid_extras.azalea_tater": "Azaleia Tater (Somente no lobby!)",
+  "block.nucleoid_extras.tateroid": "Tateroid (Somente no lobby!)",
+  "block.nucleoid_extras.safe_tnt": "TNT Segura (Somente no lobby!)",
+
+  "item.nucleoid_extras.quick_armor_stand": "Suporte de Armaduras rapido (Somente no lobby!)",
+
+  "text.nucleoid_extras.lobby_items": "Não use esse bloco fora do lobby!",
+
+  "text.nucleoid_extras.statistics.web_url": "Clique aqui para ver todas estatisticas deste jogo!",
+  "text.nucleoid_extras.statistics.bundle_header": "Estatisticas para %s",
+  "text.nucleoid_extras.statistics.stat": "%s: %s"
+}
