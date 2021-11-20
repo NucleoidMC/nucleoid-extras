@@ -5,7 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -27,6 +29,14 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         super(settings);
         this.particleEffect = particleEffect;
         this.texture = texture;
+    }
+
+    public TinyPotatoBlock(Settings settings, BlockState particleState, String texture) {
+        this(settings, new BlockStateParticleEffect(ParticleTypes.BLOCK, particleState), texture);
+    }
+
+    public TinyPotatoBlock(Settings settings, Block particleBlock, String texture) {
+        this(settings, particleBlock.getDefaultState(), texture);
     }
 
     public void spawnPlayerParticles(ServerPlayerEntity player) {
