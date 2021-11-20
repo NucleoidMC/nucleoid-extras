@@ -8,6 +8,7 @@
     "MinecraftServerMixin",
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
+    "lobby.ServerPlayerEntityMixin",
     "patches.EntityMixin",
     "patches.StatusEffectMixin",
     "player_list.PlayerInteractionManagerMixin",

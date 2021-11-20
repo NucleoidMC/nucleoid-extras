@@ -9,6 +9,7 @@ import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
 import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
+import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
 
 public class NEItems {
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
@@ -41,6 +42,7 @@ public class NEItems {
 
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
 
+    public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
 
     private static Item createHead(Block head) {
@@ -81,6 +83,7 @@ public class NEItems {
 
         register("tateroid", TATEROID);
 
+        register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
     }
 
