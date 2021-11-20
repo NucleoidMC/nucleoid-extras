@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
@@ -13,6 +14,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -25,6 +27,20 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         super(settings);
         this.particleEffect = particleEffect;
         this.texture = texture;
+    }
+
+    public void spawnPlayerParticles(ServerPlayerEntity player) {
+        Box box = player.getBoundingBox();
+
+        double deltaX = box.getXLength() / 2d;
+        double deltaY = box.getYLength() / 2d;
+        double deltaZ = box.getZLength() / 2d;
+
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+
+        player.getServerWorld().spawnParticles(this.particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
     }
 
     @Override

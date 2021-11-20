@@ -44,7 +44,12 @@
   "block.nucleoid_extras.tateroid": "Tateroid (Lobby only!)",
   "block.nucleoid_extras.safe_tnt": "Safe TNT (Lobby only!)",
 
+  "item.nucleoid_extras.tater_box": "Tater Box",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
+
+  "text.nucleoid_extras.tater_box.added": "%s has been added to your Tater Box!",
+  "text.nucleoid_extras.tater_box.already_added": "%s is already in your Tater Box!",
+  "text.nucleoid_extras.tater_box.not_owner": "You do not own this Tater Box!",
 
   "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!",
 
