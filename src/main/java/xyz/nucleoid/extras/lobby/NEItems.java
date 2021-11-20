@@ -39,6 +39,7 @@ public class NEItems {
     public static final Item TINY_POTATO = createHead(NEBlocks.TINY_POTATO);
     public static final Item IRRITATER = createHead(NEBlocks.IRRITATER);
     public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
+    public static final Item STONE_TATER = createHead(NEBlocks.STONE_TATER);
 
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
 
@@ -80,6 +81,7 @@ public class NEItems {
         register("tiny_potato", TINY_POTATO);
         register("irritater", IRRITATER);
         register("azalea_tater", AZALEA_TATER);
+        register("stone_tater", STONE_TATER);
 
         register("tateroid", TATEROID);
 
