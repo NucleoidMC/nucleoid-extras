@@ -1,0 +1,60 @@
+{
+  "nucleoid.sidebar.welcome": "¡Bienvenido, %s!",
+  "nucleoid.sidebar.player_in_game.1": "¡%s jugador en línea!",
+  "nucleoid.sidebar.player_in_game.more": "¡%s jugadores en línea!",
+
+  "nucleoid.sidebar.game.title": "Partidas abiertas:",
+  "nucleoid.sidebar.game.title.no_games": "¡No hay partidas abiertas!",
+  "nucleoid.sidebar.game.entry": "%s: %s",
+  "nucleoid.sidebar.game.more": "...y %s más!",
+  "nucleoid.sidebar.game.player.1": "%s jugador",
+  "nucleoid.sidebar.game.player.more": "%s jugadores",
+
+  "nucleoid.sidebar.join.1": "¡Únete con %s...",
+  "nucleoid.sidebar.join.2": "...o usando la brújula!",
+  "nucleoid.discord": "nucleoid.xyz/discord",
+  "nucleoid.stop.scheduled": "¡Se ha programado un reinicio de servidor! El servidor se reiniciará en %s minutos, o cuando todas las partidas terminen.",
+  "nucleoid.stop.scheduled.already": "Un reinicio de servidor ya se ha programado.",
+  "nucleoid.stop.game.open": "No puede unirse a la partida: ¡Hay un reinicio de servidor programado!",
+
+  "block.nucleoid_extras.end_portal": "Portal del End (¡Solo lobby!)",
+  "block.nucleoid_extras.end_gateway": "Acceso al End (¡Solo lobby!)",
+  "block.nucleoid_extras.gold_launch_pad": "Plataforma de lanzamiento de oro (¡Solo lobby!)",
+  "block.nucleoid_extras.iron_launch_pad": "Plataforma de lanzamiento de hierro (¡Solo lobby!)",
+
+  "block.nucleoid_extras.black_concrete_powder": "Cemento Negro Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.blue_concrete_powder": "Cemento Azul Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.brown_concrete_powder": "Cemento Marrón Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.cyan_concrete_powder": "Cemento Cian Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.green_concrete_powder": "Cemento Verde Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.gray_concrete_powder": "Cemento Gris Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.light_blue_concrete_powder": "Cemento Azul Claro Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.light_gray_concrete_powder": "Cemento Gris Claro Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.lime_concrete_powder": "Cemento Verde Lima Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.magenta_concrete_powder": "Cemento Magenta Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.orange_concrete_powder": "Cemento Naranja Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.pink_concrete_powder": "Cemento Rosa Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.purple_concrete_powder": "Cemento Morado Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.red_concrete_powder": "Cemento Rojo Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.white_concrete_powder": "Cemento Blanco Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.yellow_concrete_powder": "Cemento Amarillo Flotante (¡Solo lobby!)",
+  "block.nucleoid_extras.tiny_potato": "Tiny Potato (¡Solo lobby!)",
+  "block.nucleoid_extras.irritater": "Irritater (¡Solo lobby!)",
+  "block.nucleoid_extras.azalea_tater": "Tater de Azalea (¡Solo lobby!)",
+  "block.nucleoid_extras.stone_tater": "Tater de Piedra (¡Solo lobby!)",
+  "block.nucleoid_extras.tateroid": "Tateroid (¡Solo lobby!)",
+  "block.nucleoid_extras.safe_tnt": "TNT Segura (¡Solo lobby!)",
+
+  "item.nucleoid_extras.tater_box": "Caja de Taters",
+  "item.nucleoid_extras.quick_armor_stand": "Soporte para armadura rápido (¡Solo lobby!)",
+
+  "text.nucleoid_extras.tater_box.added": "¡%s ha sido añadido a tu Caja de Taters!",
+  "text.nucleoid_extras.tater_box.already_added": "¡%s ya está en tu Caja de Taters!",
+  "text.nucleoid_extras.tater_box.not_owner": "¡Esta Caja de Taters no es tuya!",
+
+  "text.nucleoid_extras.lobby_items": "¡No use este bloque fuera del lobby!",
+
+  "text.nucleoid_extras.statistics.web_url": "¡Haz click aquí para ver todas tus estadísticas de esta partida!",
+  "text.nucleoid_extras.statistics.bundle_header": "Estadísticas para %s",
+  "text.nucleoid_extras.statistics.stat": "%s: %s" 
+}
