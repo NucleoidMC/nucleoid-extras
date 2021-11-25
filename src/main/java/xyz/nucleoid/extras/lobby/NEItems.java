@@ -41,6 +41,7 @@ public class NEItems {
     public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
     public static final Item STONE_TATER = createHead(NEBlocks.STONE_TATER);
     public static final Item CALCITE_TATER = createHead(NEBlocks.CALCITE_TATER);
+    public static final Item FLAME_TATER = createHead(NEBlocks.FLAME_TATER);
 
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
 
@@ -84,6 +85,7 @@ public class NEItems {
         register("azalea_tater", AZALEA_TATER);
         register("stone_tater", STONE_TATER);
         register("calcite_tater", CALCITE_TATER);
+        register("flame_tater", FLAME_TATER);
 
         register("tateroid", TATEROID);
 
