@@ -53,7 +53,11 @@ public class StatisticsIntegration {
                 player.sendMessage(new LiteralText("+--------------------------------------+")
                         .formatted(Formatting.DARK_GRAY), false);
             }
+
         }
+
+        // Do not send statistics for anonymous games to the backend
+        if (space.getMetadata().sourceConfig().source() != null) return;
 
         UUID gameId = space.getMetadata().id();
 
