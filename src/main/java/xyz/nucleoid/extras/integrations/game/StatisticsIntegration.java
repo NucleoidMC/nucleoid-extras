@@ -46,7 +46,7 @@ public class StatisticsIntegration {
                 stats.visitAllStatistics((key, value) -> {
                     if (!key.hidden()) {
                         player.sendMessage(new TranslatableText("text.nucleoid_extras.statistics.stat",
-                                new TranslatableText(key.getTranslationKey()), value), false);
+                                new TranslatableText(key.getTranslationKey()), roundForDisplay(value)), false);
                     }
                 });
 
@@ -85,6 +85,16 @@ public class StatisticsIntegration {
             JsonObject bundle = iter.next();
             iter.remove();
             this.sendBundle(bundle);
+        }
+    }
+
+    private static String roundForDisplay(Number number) {
+        if (number instanceof Double d) {
+            return String.format("%.2f", d);
+        } else if (number instanceof Float f) {
+            return String.format("%.2f", f);
+        } else {
+            return String.format("%s", number);
         }
     }
 
