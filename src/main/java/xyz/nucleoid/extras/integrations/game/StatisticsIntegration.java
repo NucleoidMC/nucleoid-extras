@@ -56,7 +56,7 @@ public class StatisticsIntegration {
         }
 
         // Do not send statistics for anonymous games to the backend
-        if (space.getMetadata().sourceConfig().source() != null) return;
+        if (space.getMetadata().sourceConfig().source() == null) return;
 
         UUID gameId = space.getMetadata().id();
 
