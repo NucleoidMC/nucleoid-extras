@@ -41,11 +41,12 @@ public class NEItems {
     public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
     public static final Item STONE_TATER = createHead(NEBlocks.STONE_TATER);
     public static final Item CALCITE_TATER = createHead(NEBlocks.CALCITE_TATER);
+    public static final Item TUFF_TATER = createHead(NEBlocks.TUFF_TATER);
+    public static final Item DRIPSTONE_TATER = createHead(NEBlocks.DRIPSTONE_TATER);
     public static final Item FLAME_TATER = createHead(NEBlocks.FLAME_TATER);
     public static final Item PUZZLE_CUBE_TATER = createHead(NEBlocks.PUZZLE_CUBE_TATER);
-
+    public static final Item TATER_OF_UNDYING = createHead(NEBlocks.TATER_OF_UNDYING);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
-
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
 
@@ -86,8 +87,12 @@ public class NEItems {
         register("azalea_tater", AZALEA_TATER);
         register("stone_tater", STONE_TATER);
         register("calcite_tater", CALCITE_TATER);
+        register("tuff_tater", TUFF_TATER);
+        register("dripstone_tater", DRIPSTONE_TATER);
         register("flame_tater", FLAME_TATER);
+
         register("puzzle_cube_tater", PUZZLE_CUBE_TATER);
+        register("tater_of_undying", TATER_OF_UNDYING);
 
         register("tateroid", TATEROID);
 
