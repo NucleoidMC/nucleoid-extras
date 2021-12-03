@@ -15,7 +15,6 @@ import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -30,8 +29,11 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 
@@ -80,42 +82,39 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         ItemStack stack = user.getStackInHand(hand);
 
         if (!world.isClient()) {
-            SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X6, false);
-            builder.setTitle(this.getName(stack));
+            BlockHitResult hit = Item.raycast(world, user, RaycastContext.FluidHandling.NONE);
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                this.tryAdd(world, hit.getBlockPos(), stack, user);
+            } else {
+                SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X6, false);
+                builder.setTitle(this.getName(stack));
 
-            for (Identifier blockId : this.getBlockIds(stack)) {
-                Block block = Registry.BLOCK.get(blockId);
-                ItemStack blockStack = block == null ? new ItemStack(Items.STONE) : block.asItem().getDefaultStack();
-                
-                builder.addSlot(blockStack, (index, type, action, gui) -> {
-                    ItemStack newStack = user.getStackInHand(hand);
-                    if (this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
-                        TaterBoxItem.setSelectedTater(newStack, blockId);
-                        gui.close();
-                    }
-                });
+                for (Identifier blockId : this.getBlockIds(stack)) {
+                    Block block = Registry.BLOCK.get(blockId);
+                    ItemStack blockStack = block == null ? new ItemStack(Items.STONE) : block.asItem().getDefaultStack();
+                    
+                    builder.addSlot(blockStack, (index, type, action, gui) -> {
+                        ItemStack newStack = user.getStackInHand(hand);
+                        if (this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
+                            TaterBoxItem.setSelectedTater(newStack, blockId);
+                            gui.close();
+                        }
+                    });
+                }
+
+                builder.build((ServerPlayerEntity) user).open();
             }
-
-            builder.build((ServerPlayerEntity) user).open();
         }
 
         return TypedActionResult.success(stack, world.isClient());
     }
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        if (world.isClient()) return ActionResult.SUCCESS;
-
-        BlockPos pos = context.getBlockPos();
+    private ActionResult tryAdd(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
         Block block = world.getBlockState(pos).getBlock();
         if (!(block instanceof TinyPotatoBlock)) return ActionResult.PASS;
 
         Identifier id = Registry.BLOCK.getId(block);
         if (id == null) return ActionResult.PASS;
-
-        ItemStack stack = context.getStack();
-        PlayerEntity player = context.getPlayer();
 
         ActionResult owner = this.isOwner(stack, player);
         if (owner == ActionResult.FAIL) {
