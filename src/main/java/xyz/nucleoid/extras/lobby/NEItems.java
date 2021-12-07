@@ -46,6 +46,7 @@ public class NEItems {
     public static final Item FLAME_TATER = createHead(NEBlocks.FLAME_TATER);
     public static final Item PUZZLE_CUBE_TATER = createHead(NEBlocks.PUZZLE_CUBE_TATER);
     public static final Item TATER_OF_UNDYING = createHead(NEBlocks.TATER_OF_UNDYING);
+    public static final Item CRYING_OBSIDIAN_TATER = createHead(NEBlocks.CRYING_OBSIDIAN_TATER);
     public static final Item DICE_TATER = createHead(NEBlocks.DICE_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
@@ -94,6 +95,7 @@ public class NEItems {
 
         register("puzzle_cube_tater", PUZZLE_CUBE_TATER);
         register("tater_of_undying", TATER_OF_UNDYING);
+        register("crying_obsidian_tater", CRYING_OBSIDIAN_TATER);
 
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
