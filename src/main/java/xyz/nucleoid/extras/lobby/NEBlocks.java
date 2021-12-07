@@ -15,6 +15,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.lobby.block.DiceTaterBlock;
 import xyz.nucleoid.extras.lobby.block.LaunchPadBlock;
 import xyz.nucleoid.extras.lobby.block.LaunchPadBlockEntity;
 import xyz.nucleoid.extras.lobby.block.TateroidBlock;
@@ -59,6 +60,7 @@ public class NEBlocks {
     public static final Block TATER_OF_UNDYING = createTaterBlock(ParticleTypes.TOTEM_OF_UNDYING, "ewogICJ0aW1lc3RhbXAiIDogMTYzNzg2MDQ4MDI5NCwKICAicHJvZmlsZUlkIiA6ICI3NTE0NDQ4MTkxZTY0NTQ2OGM5NzM5YTZlMzk1N2JlYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGFua3NNb2phbmciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUyNmQ5MzE0NzgyNWUyZGI0NDRhYWY0YTk0NjRiNjFhZDRlNGRlZmIwYWRmOTQ0YTIyNzU1NDNlZmM5MTkyYSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
 
 
+    public static final Block DICE_TATER = createDiceTaterBlock();
     public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL);
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build(null);
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID).build(null);
@@ -73,6 +75,10 @@ public class NEBlocks {
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
         return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
+    }
+
+    private static Block createDiceTaterBlock() {
+        return new DiceTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100));
     }
 
     private static Block createTateroidBlock(SoundEvent defaultSound) {
@@ -113,6 +119,7 @@ public class NEBlocks {
         register("dripstone_tater", DRIPSTONE_TATER);
         register("flame_tater", FLAME_TATER);
         register("tater_of_undying", TATER_OF_UNDYING);
+        register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
