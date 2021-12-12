@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import eu.pb4.polymer.block.VirtualHeadBlock;
 import eu.pb4.polymer.item.VirtualItem;
 import eu.pb4.sgui.api.gui.SimpleGuiBuilder;
 import net.minecraft.block.Block;
@@ -16,6 +17,7 @@ import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.SkullItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -153,9 +155,26 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     @Override
+    public Item getVirtualItem(ItemStack itemStack, ServerPlayerEntity player) {
+        if (TaterBoxItem.getSelectedTater(itemStack) instanceof VirtualHeadBlock) {
+            return Items.PLAYER_HEAD;
+        } else {
+            return this.getVirtualItem();
+        }
+    }
+
+    @Override
     public ItemStack getVirtualItemStack(ItemStack itemStack, ServerPlayerEntity player) {
         ItemStack out = VirtualItem.super.getVirtualItemStack(itemStack, player);
-        out.getOrCreateSubTag(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
+
+        Block selectedTater = TaterBoxItem.getSelectedTater(itemStack);
+        if (selectedTater instanceof VirtualHeadBlock virtualHeadBlock) {
+            NbtCompound skullOwner = virtualHeadBlock.getVirtualHeadSkullOwner(selectedTater.getDefaultState());
+            out.getOrCreateTag().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
+        } else {
+            out.getOrCreateSubTag(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
+        }
+
         return out;
     }
 
