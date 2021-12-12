@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.item;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -81,10 +82,10 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         return count;
     }
 
-    private Iterable<Identifier> getBlockIds(ItemStack stack) {
+    private Iterator<Identifier> getBlockIds(ItemStack stack) {
         NbtCompound tag = stack.getTag();
-        if (tag == null) return Collections.emptyList();
-        if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return Collections.emptyList();
+        if (tag == null) return Collections.emptyIterator();
+        if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return Collections.emptyIterator();
 
         Set<Identifier> blockIds = new HashSet<>();
         NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
@@ -95,7 +96,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
             }
         }
 
-        return blockIds;
+        return blockIds.stream().sorted().iterator();
     }
 
     private Text getTitle(ItemStack stack) {
@@ -118,7 +119,10 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
                 SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X6, false);
                 builder.setTitle(this.getTitle(stack));
 
-                for (Identifier blockId : this.getBlockIds(stack)) {
+                Iterator<Identifier> iterator = this.getBlockIds(stack);
+                while (iterator.hasNext()) {
+                    Identifier blockId = iterator.next();
+
                     Block block = Registry.BLOCK.get(blockId);
                     ItemStack blockStack = block == null ? new ItemStack(Items.STONE) : block.asItem().getDefaultStack();
                     
