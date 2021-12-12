@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.item;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import eu.pb4.polymer.block.VirtualHeadBlock;
 import eu.pb4.polymer.item.VirtualItem;
 import eu.pb4.sgui.api.gui.SimpleGuiBuilder;
 import net.minecraft.block.Block;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
@@ -62,6 +64,23 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         return player.getUuid().equals(uuid) ? ActionResult.SUCCESS : ActionResult.FAIL;
     }
 
+    private int getBlockCount(ItemStack stack) {
+        NbtCompound tag = stack.getTag();
+        if (tag == null) return 0;
+        if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return 0;
+
+        int count = 0;
+        NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
+        for (int index = 0; index < taters.size(); index++) {
+            Identifier blockId = Identifier.tryParse(taters.getString(index));
+            if (blockId != null) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     private Iterable<Identifier> getBlockIds(ItemStack stack) {
         NbtCompound tag = stack.getTag();
         if (tag == null) return Collections.emptyList();
@@ -79,6 +98,14 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         return blockIds;
     }
 
+    private Text getTitle(ItemStack stack) {
+        Text name = this.getName(stack);
+        int count = this.getBlockCount(stack);
+        int max = TinyPotatoBlock.TATERS.size();
+
+        return new TranslatableText("text.nucleoid_extras.tater_box.title", name, count, max);
+    }
+
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
@@ -89,7 +116,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
                 this.tryAdd(world, hit.getBlockPos(), stack, user);
             } else {
                 SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X6, false);
-                builder.setTitle(this.getName(stack));
+                builder.setTitle(this.getTitle(stack));
 
                 for (Identifier blockId : this.getBlockIds(stack)) {
                     Block block = Registry.BLOCK.get(blockId);
@@ -176,6 +203,17 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         }
 
         return out;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
+        super.appendTooltip(stack, world, tooltip, context);
+
+        int count = this.getBlockCount(stack);
+        int max = TinyPotatoBlock.TATERS.size();
+        String percent = String.format("%.2f", count / (double) max * 100);
+
+        tooltip.add(new TranslatableText("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
     }
 
     public static Block getSelectedTater(ItemStack stack) {
