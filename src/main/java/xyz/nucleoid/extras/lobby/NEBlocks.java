@@ -15,6 +15,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.lobby.block.ColorPatternTaterBlock;
 import xyz.nucleoid.extras.lobby.block.DiceTaterBlock;
 import xyz.nucleoid.extras.lobby.block.InfiniteDispenserBlock;
 import xyz.nucleoid.extras.lobby.block.InfiniteDropperBlock;
@@ -66,6 +67,11 @@ public class NEBlocks {
     public static final Block TATER_OF_UNDYING = createTaterBlock(ParticleTypes.TOTEM_OF_UNDYING, "ewogICJ0aW1lc3RhbXAiIDogMTYzNzg2MDQ4MDI5NCwKICAicHJvZmlsZUlkIiA6ICI3NTE0NDQ4MTkxZTY0NTQ2OGM5NzM5YTZlMzk1N2JlYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGFua3NNb2phbmciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUyNmQ5MzE0NzgyNWUyZGI0NDRhYWY0YTk0NjRiNjFhZDRlNGRlZmIwYWRmOTQ0YTIyNzU1NDNlZmM5MTkyYSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
     public static final Block CRYING_OBSIDIAN_TATER = createTaterBlock(ParticleTypes.DRIPPING_OBSIDIAN_TEAR, "ewogICJ0aW1lc3RhbXAiIDogMTYzODg4MzgyNzAwNiwKICAicHJvZmlsZUlkIiA6ICI5N2ViMDJkMWY5YmI0NjUwYmNmNzE2MTEzYjUzYjY4ZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJTQmNhY3R1cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS83MGQxNTFhMmRhODNiNGEwZWM3M2JlMDhhNDJjNGJjODk2NGZmMWQzYWUyMTA2Y2MyOWI5Yjc5Y2ZjY2I4YjlmIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
 
+    public static final Block TRANS_TATER = ColorPatternTaterBlock({
+        new Vec3f(Vec3d.unpackRgb(0xEE90AD)), // pink
+        new Vec3f(Vec3d.unpackRgb(0x3CB0DA)), // blue
+        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
+    }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQxMjI4NzMzOCwKICAicHJvZmlsZUlkIiA6ICJiN2ZkYmU2N2NkMDA0NjgzYjlmYTllM2UxNzczODI1NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJDVUNGTDE0IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y3N2RiYzgwOWIyNTQ0NDkwMjNmYWMwZGQ0ZTBkOTEwMGI1YzQ0MDc3NDhiZTA4OWYwZTAwYzdlZjdhYjc2NCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
 
     public static final Block DICE_TATER = createDiceTaterBlock();
     public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL);
@@ -82,6 +88,10 @@ public class NEBlocks {
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
         return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
+    }
+
+    private static Block createColorPatternTaterBlock(Vec3f[] pattern, String texture) {
+        return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
     }
 
     private static Block createDiceTaterBlock() {
@@ -130,6 +140,7 @@ public class NEBlocks {
         register("crate_tater", CRATE_TATER);
         register("tater_of_undying", TATER_OF_UNDYING);
         register("crying_obsidian_tater", CRYING_OBSIDIAN_TATER);
+        register("trans_tater", TRANS_TATER);
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
 

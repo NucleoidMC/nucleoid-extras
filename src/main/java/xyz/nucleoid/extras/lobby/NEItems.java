@@ -52,6 +52,7 @@ public class NEItems {
     public static final Item TATER_OF_UNDYING = createHead(NEBlocks.TATER_OF_UNDYING);
     public static final Item CRYING_OBSIDIAN_TATER = createHead(NEBlocks.CRYING_OBSIDIAN_TATER);
     public static final Item DICE_TATER = createHead(NEBlocks.DICE_TATER);
+    public static final Item TRANS_TATER = createHead(NEBlocks.TRANS_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
@@ -105,6 +106,7 @@ public class NEItems {
         register("crying_obsidian_tater", CRYING_OBSIDIAN_TATER);
 
         register("dice_tater", DICE_TATER);
+        register("trans_tater", TRANS_TATER);
         register("tateroid", TATEROID);
 
         register("tater_box", TATER_BOX);
