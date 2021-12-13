@@ -46,6 +46,10 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         this(settings, particleBlock.getDefaultState(), texture);
     }
 
+    public ParticleEffect getParticleEffect(int time) {
+        return this.particleEffect;
+    }
+
     public void spawnPlayerParticles(ServerPlayerEntity player) {
         Box box = player.getBoundingBox();
 
