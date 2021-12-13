@@ -19,9 +19,6 @@ public class NEItems {
     public static final Item GOLD_LAUNCH_PAD = createSimple(NEBlocks.GOLD_LAUNCH_PAD, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Item IRON_LAUNCH_PAD = createSimple(NEBlocks.IRON_LAUNCH_PAD, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
-    public static final Item INFINITE_DISPENSER = createSimple(NEBlocks.INFINITE_DISPENSER, Items.DISPENSER);
-    public static final Item INFINITE_DROPPER = createSimple(NEBlocks.INFINITE_DROPPER, Items.DROPPER);
-
     public static final Item BLACK_CONCRETE_POWDER = createSimple(NEBlocks.BLACK_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER);
     public static final Item BLUE_CONCRETE_POWDER = createSimple(NEBlocks.BLUE_CONCRETE_POWDER, Items.BLUE_CONCRETE_POWDER);
     public static final Item BROWN_CONCRETE_POWDER = createSimple(NEBlocks.BROWN_CONCRETE_POWDER, Items.BROWN_CONCRETE_POWDER);
@@ -51,6 +48,7 @@ public class NEItems {
     public static final Item CRATE_TATER = createHead(NEBlocks.CRATE_TATER);
     public static final Item TATER_OF_UNDYING = createHead(NEBlocks.TATER_OF_UNDYING);
     public static final Item CRYING_OBSIDIAN_TATER = createHead(NEBlocks.CRYING_OBSIDIAN_TATER);
+    public static final Item TRANS_TATER = createHead(NEBlocks.TRANS_TATER);
     public static final Item DICE_TATER = createHead(NEBlocks.DICE_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
@@ -70,8 +68,6 @@ public class NEItems {
         register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
-        register("infinite_dispenser", INFINITE_DISPENSER);
-        register("infinite_dropper", INFINITE_DROPPER);
 
         register("black_concrete_powder", BLACK_CONCRETE_POWDER);
         register("blue_concrete_powder", BLUE_CONCRETE_POWDER);
@@ -103,6 +99,8 @@ public class NEItems {
         register("crate_tater", CRATE_TATER);
         register("tater_of_undying", TATER_OF_UNDYING);
         register("crying_obsidian_tater", CRYING_OBSIDIAN_TATER);
+
+        register("trans_tater", TRANS_TATER);
 
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
