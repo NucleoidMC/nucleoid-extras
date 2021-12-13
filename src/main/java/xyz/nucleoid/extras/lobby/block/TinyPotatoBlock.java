@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.pb4.polymer.block.VirtualHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -22,6 +25,8 @@ import net.minecraft.world.World;
 
 public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
 
+    public static final List<TinyPotatoBlock> TATERS = new ArrayList<>();
+
     private final String texture;
     private final ParticleEffect particleEffect;
 
@@ -29,6 +34,8 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         super(settings);
         this.particleEffect = particleEffect;
         this.texture = texture;
+
+        TATERS.add(this);
     }
 
     public TinyPotatoBlock(Settings settings, BlockState particleState, String texture) {
