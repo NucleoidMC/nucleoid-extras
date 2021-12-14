@@ -101,9 +101,9 @@ public class NEBlocks {
         new Vec3f(Vec3d.unpackRgb(0xBE46B5)), // magenta
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NjU4MjIyMSwKICAicHJvZmlsZUlkIiA6ICJiNjM2OWQ0MzMwNTU0NGIzOWE5OTBhODYyNWY5MmEwNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJCb2JpbmhvXyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS80NDQ5Mjc0MGY0MGMxOWMzZTUyODcxY2RmNmNiZDU4NWU5ODBmYzdiNTBjYjBmYzk0OWJmYmU0NDAzMmE3ZGI3IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
     public static final Block NONBINARY_TATER = createColorPatternTaterBlock(new Vec3f[]{
+        new Vec3f(Vec3d.unpackRgb(0xF9C629)), // yellow
         new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
-        new Vec3f(Vec3d.unpackRgb(0x3F4548)), // gray
-         new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
+        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
         new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NzAyNjQwNiwKICAicHJvZmlsZUlkIiA6ICJjNjEwOTExMDhlOTQ0MWRhODQyZDA5MDVmMDAyOWVhOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJkZVlvbm8iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTA4NTRlNDczYmM3YTBhNjk1NmNiMTJkZjgwMjZkZTlmYzAwZmFlNDBjMDUwMmEzMTgyOTA4YmJiNTBjOWFhNSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
     public static final Block PAN_TATER = createColorPatternTaterBlock(new Vec3f[]{
