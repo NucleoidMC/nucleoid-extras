@@ -46,6 +46,10 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         this(settings, particleBlock.getDefaultState(), texture);
     }
 
+    public ParticleEffect getParticleEffect(int time) {
+        return this.particleEffect;
+    }
+
     public void spawnPlayerParticles(ServerPlayerEntity player) {
         Box box = player.getBoundingBox();
 
@@ -57,7 +61,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         double y = player.getY();
         double z = player.getZ();
 
-        player.getServerWorld().spawnParticles(this.particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+        player.getServerWorld().spawnParticles(this.getParticleEffect(player.getServer().getTicks()), x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         }
 
         if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(this.particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+            serverWorld.spawnParticles(this.getParticleEffect(serverWorld.getServer().getTicks()), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                     1, 0.5, 0.5, 0.5, 0.2);
         }
 
