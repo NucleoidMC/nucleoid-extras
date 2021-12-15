@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.pb4.polymer.block.VirtualHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -22,6 +25,8 @@ import net.minecraft.world.World;
 
 public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
 
+    public static final List<TinyPotatoBlock> TATERS = new ArrayList<>();
+
     private final String texture;
     private final ParticleEffect particleEffect;
 
@@ -29,6 +34,8 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         super(settings);
         this.particleEffect = particleEffect;
         this.texture = texture;
+
+        TATERS.add(this);
     }
 
     public TinyPotatoBlock(Settings settings, BlockState particleState, String texture) {
@@ -37,6 +44,10 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
 
     public TinyPotatoBlock(Settings settings, Block particleBlock, String texture) {
         this(settings, particleBlock.getDefaultState(), texture);
+    }
+
+    public ParticleEffect getParticleEffect(int time) {
+        return this.particleEffect;
     }
 
     public void spawnPlayerParticles(ServerPlayerEntity player) {
@@ -50,7 +61,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         double y = player.getY();
         double z = player.getZ();
 
-        player.getServerWorld().spawnParticles(this.particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+        player.getServerWorld().spawnParticles(this.getParticleEffect(player.getServer().getTicks()), x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
     }
 
     @Override
@@ -67,7 +78,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         }
 
         if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(this.particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+            serverWorld.spawnParticles(this.getParticleEffect(serverWorld.getServer().getTicks()), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                     1, 0.5, 0.5, 0.5, 0.2);
         }
 
