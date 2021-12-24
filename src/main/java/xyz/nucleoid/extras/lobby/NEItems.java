@@ -1,15 +1,22 @@
 package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.block.VirtualHeadBlock;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
 import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
+
+import java.util.Collections;
 
 public class NEItems {
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
@@ -60,6 +67,8 @@ public class NEItems {
     public static final Item NONBINARY_TATER = createHead(NEBlocks.NONBINARY_TATER);
     public static final Item PAN_TATER = createHead(NEBlocks.PAN_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
+    public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
 
@@ -120,9 +129,18 @@ public class NEItems {
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
         register("tateroid", TATEROID);
+        register("santa_hat_tater", SANTA_HAT_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
+
+        ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
+    }
+
+    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+        if (!handler.getPlayer().getInventory().containsAny(Collections.singleton(TATER_BOX))) {
+            handler.getPlayer().getInventory().offer(new ItemStack(TATER_BOX), true);
+        }
     }
 
     private static <T extends Item> T register(String id, T item) {

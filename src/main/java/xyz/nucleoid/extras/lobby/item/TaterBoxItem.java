@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import eu.pb4.polymer.block.VirtualHeadBlock;
 import eu.pb4.polymer.item.VirtualItem;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGuiBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
@@ -124,15 +125,19 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
                     Identifier blockId = iterator.next();
 
                     Block block = Registry.BLOCK.get(blockId);
-                    ItemStack blockStack = block == null ? new ItemStack(Items.STONE) : block.asItem().getDefaultStack();
-                    
-                    builder.addSlot(blockStack, (index, type, action, gui) -> {
+
+                    var tater = new GuiElementBuilder(block == null ? Items.STONE : block.asItem());
+                    tater.setName(block.getName());
+                    tater.hideFlags();
+                    tater.setCallback((index, type, action, gui) -> {
                         ItemStack newStack = user.getStackInHand(hand);
                         if (this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
                             TaterBoxItem.setSelectedTater(newStack, blockId);
                             gui.close();
                         }
                     });
+                    
+                    builder.addSlot(tater);
                 }
 
                 builder.build((ServerPlayerEntity) user).open();
