@@ -112,6 +112,19 @@ public class NEBlocks {
         new Vec3f(Vec3d.unpackRgb(0xFDD73B)), // yellow
         new Vec3f(Vec3d.unpackRgb(0x2394F9)), // blue
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NzE2NDMzOSwKICAicHJvZmlsZUlkIiA6ICJhYzYxZjQwZGJhNDE0YzkwOWU0NWJkMTgwMmY5MTYxYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJBbmlmYW5pIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNmNzYxYmUxOGYwNzBhMDE2ZTRmNjFkMzdlYzEzYjIzMDMyYTU1MmRjZGI3MGE2N2Y4NTVjM2FiMmZhZTU0ZTAiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==");
+    public static final Block GENDERFLUID_TATER = createColorPatternTaterBlock(new Vec3f[]{
+        new Vec3f(Vec3d.unpackRgb(0xBE46B5)), // pink
+        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
+        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
+        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
+        new Vec3f(Vec3d.unpackRgb(0x2394F9)), // blue
+    }, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYxOTIxMjYyMCwKICAicHJvZmlsZUlkIiA6ICJiNzQ3OWJhZTI5YzQ0YjIzYmE1NjI4MzM3OGYwZTNjNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJTeWxlZXgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmEwNjZjZGQ4ZDQ4NTAxZWI1MWVlYTFlM2U0MTdjMjVlZjUxYTA0Mjg0NzE0YmFhZDVhYjVkZTVjZDQyMjFiOCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
+    public static final Block DEMISEXUAL_TATER = createColorPatternTaterBlock(new Vec3f[]{
+        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
+        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
+        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
+        new Vec3f(Vec3d.unpackRgb(0x3F4548)), // gray
+    }, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYyMDQyODY1MiwKICAicHJvZmlsZUlkIiA6ICJmODJmNTQ1MDIzZDA0MTFkYmVlYzU4YWI4Y2JlMTNjNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJSZXNwb25kZW50cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zMmI3Y2QyYzVkNzBjYWI0NzZjZTk1MWUyYzUyMGM5YjM1NzkyNTBhZDkwMDE2NGQ2YzIzMjFjN2Y0M2Q2ZGM3IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
 
     public static final Block DICE_TATER = createDiceTaterBlock();
     public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL);
