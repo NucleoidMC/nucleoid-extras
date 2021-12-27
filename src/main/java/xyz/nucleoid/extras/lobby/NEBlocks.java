@@ -201,6 +201,8 @@ public class NEBlocks {
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
+        register("genderfluid_tater", GENDERFLUID_TATER);
+        register("demisexual_tater", DEMISEXUAL_TATER);
 
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
