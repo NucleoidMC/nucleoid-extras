@@ -82,7 +82,7 @@ public class TateroidBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
 
         nbt.putInt(DURATION_KEY, this.duration);
@@ -92,8 +92,6 @@ public class TateroidBlockEntity extends BlockEntity {
         if (sound != null) {
             nbt.putString(SOUND_KEY, sound.getId().toString());
         }
-
-        return nbt;
     }
 
     @Override

@@ -165,7 +165,7 @@ public final class ChatRelayIntegration {
             }
         }
 
-        playerManager.broadcastChatMessage(result.build(), MessageType.CHAT, Util.NIL_UUID);
+        playerManager.broadcast(result.build(), MessageType.CHAT, Util.NIL_UUID);
     }
 
     private MutableText createReplyText(ChatMessage message) {

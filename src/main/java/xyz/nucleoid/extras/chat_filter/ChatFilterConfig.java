@@ -22,7 +22,7 @@ public final class ChatFilterConfig {
                 Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
                 Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
                 MoreCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
-                Registry.SOUND_EVENT.optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
+                Registry.SOUND_EVENT.getCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
         ).apply(instance, ChatFilterConfig::new);
     });
 

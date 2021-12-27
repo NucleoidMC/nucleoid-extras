@@ -61,7 +61,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         double y = player.getY();
         double z = player.getZ();
 
-        player.getServerWorld().spawnParticles(this.getParticleEffect(player.getServer().getTicks()), x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+        player.getWorld().spawnParticles(this.getParticleEffect(player.getServer().getTicks()), x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
     }
 
     @Override

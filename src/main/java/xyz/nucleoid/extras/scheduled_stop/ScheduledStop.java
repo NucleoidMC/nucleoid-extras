@@ -61,7 +61,7 @@ public final class ScheduledStop {
             graceTime = time + GRACE_TIME;
             stopTime = time + FORCE_STOP_TIME;
 
-            server.getPlayerManager().broadcastChatMessage(
+            server.getPlayerManager().broadcast(
                     new TranslatableText("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
                             .formatted(Formatting.BOLD, Formatting.RED),
                     MessageType.SYSTEM,

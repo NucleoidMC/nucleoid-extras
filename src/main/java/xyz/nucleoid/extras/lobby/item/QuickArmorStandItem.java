@@ -56,9 +56,9 @@ public class QuickArmorStandItem extends Item implements VirtualItem {
             ItemStack itemStack = context.getStack();
             Vec3d vec3d = Vec3d.ofBottomCenter(blockPos);
             Box box = NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
-            if (world.isSpaceEmpty(null, box, (entity) -> true) && world.getOtherEntities(null, box).isEmpty()) {
+            if (world.isSpaceEmpty(box) && world.getOtherEntities(null, box).isEmpty()) {
                 if (world instanceof ServerWorld serverWorld) {
-                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE.create(serverWorld, itemStack.getTag(), null, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
+                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE.create(serverWorld, itemStack.getNbt(), null, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
                     if (armorStandEntity == null) {
                         return ActionResult.FAIL;
                     }

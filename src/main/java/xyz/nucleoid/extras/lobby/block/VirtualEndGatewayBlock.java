@@ -1,9 +1,11 @@
 package xyz.nucleoid.extras.lobby.block;
 
+import eu.pb4.polymer.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.block.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,6 +30,6 @@ public class VirtualEndGatewayBlock extends Block implements VirtualBlock {
         main.putInt("z", pos.getZ());
         main.putLong("Age", Long.MIN_VALUE);
 
-        player.networkHandler.sendPacket(new BlockEntityUpdateS2CPacket(pos, 8, main));
+        player.networkHandler.sendPacket(PolymerBlockUtils.createBlockEntityPacket(pos, BlockEntityType.END_GATEWAY, main));
     }
 }

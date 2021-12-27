@@ -32,7 +32,7 @@ public class PlayerListHelper {
 
     public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
         var manager = GameSpaceManager.get();
-        return manager.byWorld(left.getServerWorld()) != manager.byWorld(right.getServerWorld());
+        return manager.byWorld(left.getWorld()) != manager.byWorld(right.getWorld());
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {

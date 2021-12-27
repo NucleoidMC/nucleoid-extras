@@ -17,6 +17,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.OrderedTick;
 
 public class DiceTaterBlock extends TinyPotatoBlock {
     private static final int ROLLING_FACE = 0;
@@ -51,7 +52,7 @@ public class DiceTaterBlock extends TinyPotatoBlock {
 
         if (world instanceof ServerWorld) {
             world.setBlockState(pos, state.with(FACE, ROLLING_FACE));
-            world.getBlockTickScheduler().schedule(pos, this, ROLLING_TICKS);
+            world.getBlockTickScheduler().scheduleTick(new OrderedTick<>(this, pos, ROLLING_TICKS, 0));
 
             float pitch = 1.6f + world.getRandom().nextFloat() * 0.4f;
             world.playSound(null, pos, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1, pitch);

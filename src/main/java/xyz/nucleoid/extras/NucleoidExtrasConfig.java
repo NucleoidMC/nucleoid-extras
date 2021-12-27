@@ -28,7 +28,8 @@ public final record NucleoidExtrasConfig(
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
-        ErrorReportingConfig errorReporting
+        ErrorReportingConfig errorReporting,
+        boolean devServer
 ) {
     private static final Path PATH = Paths.get("config/nucleoid.json");
 
@@ -41,16 +42,17 @@ public final record NucleoidExtrasConfig(
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
-                ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting)
-        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting) -> {
-            return new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting);
+                ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
+                Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
+        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting, devServer) -> {
+            return new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer);
         });
     });
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, null, null, null, ErrorReportingConfig.NONE);
+        this(false, null, null, null, ErrorReportingConfig.NONE, false);
     }
 
     @NotNull

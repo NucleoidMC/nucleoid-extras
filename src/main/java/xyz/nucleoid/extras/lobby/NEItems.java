@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby;
 
+import eu.pb4.polymer.api.item.PolymerItemGroup;
 import eu.pb4.polymer.block.VirtualHeadBlock;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
@@ -19,6 +21,8 @@ import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
 import java.util.Collections;
 
 public class NEItems {
+    public static final PolymerItemGroup ITEM_GROUP = PolymerItemGroup.create(NucleoidExtras.identifier("general"), new TranslatableText("text.nucleoid_extras.name"));
+
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
     public static final Item END_GATEWAY = createSimple(NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
     public static final Item SAFE_TNT = createSimple(NEBlocks.SAFE_TNT, Items.TNT);
@@ -69,15 +73,15 @@ public class NEItems {
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
 
-    public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings());
-    public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
+    public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP));
+    public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
     private static Item createHead(Block head) {
-        return new LobbyHeadItem((VirtualHeadBlock) head, new Item.Settings());
+        return new LobbyHeadItem((VirtualHeadBlock) head, new Item.Settings().group(ITEM_GROUP));
     }
 
     private static Item createSimple(Block block, Item virtual) {
-        return new LobbyBlockItem(block, new Item.Settings(), virtual);
+        return new LobbyBlockItem(block, new Item.Settings().group(ITEM_GROUP), virtual);
     }
 
     public static void register() {
@@ -135,6 +139,8 @@ public class NEItems {
         register("quick_armor_stand", QUICK_ARMOR_STAND);
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
+
+        ITEM_GROUP.setIcon(TINY_POTATO.getDefaultStack());
     }
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {

@@ -56,7 +56,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     private ActionResult isOwner(ItemStack stack, PlayerEntity player) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag == null) return ActionResult.PASS;
         
         if (!tag.contains(OWNER_KEY, NbtElement.LIST_TYPE)) return ActionResult.PASS;
@@ -67,7 +67,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     private int getBlockCount(ItemStack stack) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag == null) return 0;
         if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return 0;
 
@@ -84,7 +84,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     private Iterator<Identifier> getBlockIds(ItemStack stack) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag == null) return Collections.emptyIterator();
         if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return Collections.emptyIterator();
 
@@ -160,7 +160,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
             return ActionResult.FAIL;
         }
         
-        NbtCompound tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateNbt();
         if (owner == ActionResult.PASS) {
             tag.putUuid(OWNER_KEY, player.getUuid());
         }
@@ -206,9 +206,9 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         Block selectedTater = TaterBoxItem.getSelectedTater(itemStack);
         if (selectedTater instanceof VirtualHeadBlock virtualHeadBlock) {
             NbtCompound skullOwner = virtualHeadBlock.getVirtualHeadSkullOwner(selectedTater.getDefaultState());
-            out.getOrCreateTag().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
+            out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
         } else {
-            out.getOrCreateSubTag(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
+            out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
         }
 
         return out;
@@ -226,7 +226,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     public static Block getSelectedTater(ItemStack stack) {
-        NbtCompound tag = stack.getTag();
+        NbtCompound tag = stack.getNbt();
         if (tag == null) return null;
 
         Identifier selectedTaterId = Identifier.tryParse(tag.getString(SELECTED_TATER_KEY));
@@ -237,7 +237,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     public static void setSelectedTater(ItemStack stack, Identifier selectedTaterId) {
-        NbtCompound tag = stack.getOrCreateTag();
+        NbtCompound tag = stack.getOrCreateNbt();
         tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
     }
 }

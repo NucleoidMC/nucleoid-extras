@@ -11,6 +11,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 import xyz.nucleoid.plasmid.game.manager.ManagedGameSpace;
 
@@ -34,10 +35,13 @@ public final class NucleoidSidebar {
     private static final Style LINK_STYLE = Style.EMPTY.withColor(0x94eeff);
 
     private static final String NAME = "Nucleoid";
+    private static final Text DEV_TITLE = new LiteralText(" (DEV)").setStyle(Style.EMPTY.withColor(0xd9d9d9));
+
     private static final Text NAME_APPEND = new LiteralText(".xyz").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withBold(false));
 
     private static final Text TITLE_MAIN = new LiteralText(NAME).setStyle(MAIN_TITLE_STYLE).append(NAME_APPEND);
     private static final Text TITLE_ALT = new LiteralText(NAME).setStyle(ALT_TITLE_STYLE).append(NAME_APPEND);
+
 
     private static final Text[] TITLE_ANIMATION_1 = createAnimatedTitle(NAME, NAME_APPEND, MAIN_TITLE_STYLE, FLASH_TITLE_STYLE, ALT_TITLE_STYLE);
     private static final Text[] TITLE_ANIMATION_2 = createAnimatedTitle(NAME, NAME_APPEND, ALT_TITLE_STYLE, FLASH_TITLE_STYLE, MAIN_TITLE_STYLE);
@@ -73,14 +77,22 @@ public final class NucleoidSidebar {
         return instance;
     }
 
-    public void update(long ticks, MinecraftServer server) {
+    public void update(long ticks, MinecraftServer server, NucleoidExtrasConfig config) {
         {
             int cycle = (int) ticks % 180 - 160;
+            Text title = null;
             if (cycle == -160) {
-                this.widget.setTitle(alt ? TITLE_MAIN : TITLE_ALT);
+                title = alt ? TITLE_MAIN : TITLE_ALT;
                 alt = !alt;
             } else if (cycle > 0 && cycle % 2 == 0) {
-                this.widget.setTitle((alt ? TITLE_ANIMATION_1 : TITLE_ANIMATION_2)[cycle * TITLE_SIZE / 20]);
+                title = (alt ? TITLE_ANIMATION_1 : TITLE_ANIMATION_2)[cycle * TITLE_SIZE / 20];
+            }
+            if (title != null) {
+                if (config.devServer()) {
+                    this.widget.setTitle(title.shallowCopy().append(DEV_TITLE));
+                } else {
+                    this.widget.setTitle(title);
+                }
             }
         }
 

@@ -1,4 +1,6 @@
 {
+  "text.nucleoid_extras.name": "Nucleoid Extras",
+
   "nucleoid.sidebar.welcome": "Welcome %s!",
   "nucleoid.sidebar.player_in_game.1": "%s player online!",
   "nucleoid.sidebar.player_in_game.more": "%s players online!",

@@ -42,7 +42,7 @@ public final class NucleoidExtras implements ModInitializer {
         int ticks = server.getTicks();
         var config = NucleoidExtrasConfig.get();
         if (config.sidebar()) {
-            NucleoidSidebar.get().update(ticks, server);
+            NucleoidSidebar.get().update(ticks, server, config);
         }
 
         var integrations = NucleoidIntegrations.get();
