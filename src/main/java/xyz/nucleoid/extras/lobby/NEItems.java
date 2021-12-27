@@ -72,6 +72,8 @@ public class NEItems {
     public static final Item PAN_TATER = createHead(NEBlocks.PAN_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
+    public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
+    public static final Item DEMISEXUAL_TATER = createHead(NEBlocks.DEMISEXUAL_TATER);
 
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
@@ -134,6 +136,8 @@ public class NEItems {
         register("pan_tater", PAN_TATER);
         register("tateroid", TATEROID);
         register("santa_hat_tater", SANTA_HAT_TATER);
+        register("genderfluid_tater", GENDERFLUID_TATER);
+        register("demisexual_tater", DEMISEXUAL_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
