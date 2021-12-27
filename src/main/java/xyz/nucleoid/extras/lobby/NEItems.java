@@ -23,6 +23,8 @@ import java.util.Collections;
 public class NEItems {
     public static final PolymerItemGroup ITEM_GROUP = PolymerItemGroup.create(NucleoidExtras.identifier("general"), new TranslatableText("text.nucleoid_extras.name"));
 
+    public static final Item NUCLEOID_LOGO = createHead(NEBlocks.NUCLEOID_LOGO);
+
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
     public static final Item END_GATEWAY = createSimple(NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
     public static final Item SAFE_TNT = createSimple(NEBlocks.SAFE_TNT, Items.TNT);
@@ -87,6 +89,7 @@ public class NEItems {
     }
 
     public static void register() {
+        register("nucleoid_logo", NUCLEOID_LOGO);
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
         register("safe_tnt", SAFE_TNT);
@@ -144,7 +147,7 @@ public class NEItems {
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
-        ITEM_GROUP.setIcon(TINY_POTATO.getDefaultStack());
+        ITEM_GROUP.setIcon(NUCLEOID_LOGO.getDefaultStack());
     }
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {

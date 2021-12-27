@@ -23,7 +23,7 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.5.40+1.18'
+	modImplementation 'xyz.nucleoid:plasmid:0.5.41+1.18'
 	modImplementation include('xyz.nucleoid:more-codecs:0.1.5')
 
 	modCompileOnly "maven.modrinth:styled-chat:1.2.0"
@@ -43,7 +43,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 16
+	it.options.release = 17
 }
 
 java {

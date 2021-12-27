@@ -35,7 +35,7 @@ public final class NucleoidSidebar {
     private static final Style LINK_STYLE = Style.EMPTY.withColor(0x94eeff);
 
     private static final String NAME = "Nucleoid";
-    private static final Text DEV_TITLE = new LiteralText(" (DEV)").setStyle(Style.EMPTY.withColor(0xd9d9d9));
+    private static final Text DEV_TITLE = new LiteralText(" (DEV)").setStyle(Style.EMPTY.withColor(0xbf0059));
 
     private static final Text NAME_APPEND = new LiteralText(".xyz").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withBold(false));
 

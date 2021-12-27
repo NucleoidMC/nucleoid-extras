@@ -29,6 +29,8 @@ import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.VirtualEndGatewayBlock;
 
 public class NEBlocks {
+    public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYzNzcxMTc2OSwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2JhYzc0MDBkZmNiOWEzODczNjFhM2FkN2MyOTY5NDNlYjg0MWE5YmRhMTNhZDg5NTU4ZTJkNmVmZWJmMTY3YmMiCiAgICB9CiAgfQp9");
+
     public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
     public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
     public static final Block SAFE_TNT = createSimple(Blocks.TNT);
@@ -156,6 +158,8 @@ public class NEBlocks {
     }
 
     public static void register() {
+        register("nucleoid_logo", NUCLEOID_LOGO);
+
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
         register("safe_tnt", SAFE_TNT);
