@@ -72,6 +72,7 @@ public class NEItems {
     public static final Item LESBIAN_TATER = createHead(NEBlocks.LESBIAN_TATER);
     public static final Item NONBINARY_TATER = createHead(NEBlocks.NONBINARY_TATER);
     public static final Item PAN_TATER = createHead(NEBlocks.PAN_TATER);
+    public static final Item WARDEN_TATER = createHead(NEBlocks.WARDEN_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
     public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
@@ -137,6 +138,7 @@ public class NEItems {
         register("lesbian_tater", LESBIAN_TATER);
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
+        register("warden_tater", WARDEN_TATER);
         register("tateroid", TATEROID);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);

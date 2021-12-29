@@ -50,6 +50,18 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         return this.particleEffect;
     }
 
+    public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return this.getParticleEffect(world.getServer().getTicks());
+    }
+
+    public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
+        return this.getParticleEffect(player.getServer().getTicks());
+    }
+
+    public int getPlayerParticleRate(ServerPlayerEntity player) {
+        return 2;
+    }
+
     public void spawnPlayerParticles(ServerPlayerEntity player) {
         Box box = player.getBoundingBox();
 
@@ -61,7 +73,10 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         double y = player.getY();
         double z = player.getZ();
 
-        player.getWorld().spawnParticles(this.getParticleEffect(player.getServer().getTicks()), x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+        ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
+        if (particleEffect != null) {
+            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+        }
     }
 
     @Override
@@ -78,8 +93,11 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
         }
 
         if (world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(this.getParticleEffect(serverWorld.getServer().getTicks()), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    1, 0.5, 0.5, 0.5, 0.2);
+            ParticleEffect particleEffect = this.getBlockParticleEffect(state, serverWorld, pos, player, hand, hit);
+            if (particleEffect != null) {
+                serverWorld.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        1, 0.5, 0.5, 0.5, 0.2);
+            }
         }
 
         return ActionResult.SUCCESS;
