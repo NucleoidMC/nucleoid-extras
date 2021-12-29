@@ -27,6 +27,7 @@ import xyz.nucleoid.extras.lobby.block.TateroidBlock;
 import xyz.nucleoid.extras.lobby.block.TateroidBlockEntity;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.VirtualEndGatewayBlock;
+import xyz.nucleoid.extras.lobby.block.WardenTaterBlock;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYzNzcxMTc2OSwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2JhYzc0MDBkZmNiOWEzODczNjFhM2FkN2MyOTY5NDNlYjg0MWE5YmRhMTNhZDg5NTU4ZTJkNmVmZWJmMTY3YmMiCiAgICB9CiAgfQp9");
@@ -128,6 +129,7 @@ public class NEBlocks {
         new Vec3f(Vec3d.unpackRgb(0x3F4548)), // gray
     }, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYyMDQyODY1MiwKICAicHJvZmlsZUlkIiA6ICJmODJmNTQ1MDIzZDA0MTFkYmVlYzU4YWI4Y2JlMTNjNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJSZXNwb25kZW50cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zMmI3Y2QyYzVkNzBjYWI0NzZjZTk1MWUyYzUyMGM5YjM1NzkyNTBhZDkwMDE2NGQ2YzIzMjFjN2Y0M2Q2ZGM3IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
 
+    public static final Block WARDEN_TATER = createWardenTaterBlock("ewogICJ0aW1lc3RhbXAiIDogMTY0MDgxMTgxMjYwNCwKICAicHJvZmlsZUlkIiA6ICJkODAwZDI4MDlmNTE0ZjkxODk4YTU4MWYzODE0Yzc5OSIsCiAgInByb2ZpbGVOYW1lIiA6ICJ0aGVCTFJ4eCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81MmU0MTFhYTE1MDFjNzJkOTlkNzM4Y2IzOGUyNTBhMzk1YzY2MDRiOGJjY2M5ZjI5ZDdmMjZlOWNhY2Q4ZDZmIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
     public static final Block DICE_TATER = createDiceTaterBlock();
     public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL);
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build(null);
@@ -147,6 +149,10 @@ public class NEBlocks {
 
     private static Block createColorPatternTaterBlock(Vec3f[] pattern, String texture) {
         return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
+    }
+
+    private static Block createWardenTaterBlock(String texture) {
+        return new WardenTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
     }
 
     private static Block createDiceTaterBlock() {
@@ -208,6 +214,7 @@ public class NEBlocks {
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
 
+        register("warden_tater", WARDEN_TATER);
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
 

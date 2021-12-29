@@ -24,11 +24,12 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
     @Inject(method = "playerTick", at = @At("TAIL"))
     private void playerTick(CallbackInfo ci) {
-        if (this.age % 2 == 0) {
-            ItemStack helmet = this.getEquippedStack(EquipmentSlot.HEAD);
-            if (helmet.getItem() instanceof TaterBoxItem) {
-                if (TaterBoxItem.getSelectedTater(helmet) instanceof TinyPotatoBlock tinyPotatoBlock) {
-                    tinyPotatoBlock.spawnPlayerParticles((ServerPlayerEntity) (Object) this);
+        ItemStack helmet = this.getEquippedStack(EquipmentSlot.HEAD);
+        if (helmet.getItem() instanceof TaterBoxItem) {
+            if (TaterBoxItem.getSelectedTater(helmet) instanceof TinyPotatoBlock tinyPotatoBlock) {
+                ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+                if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
+                    tinyPotatoBlock.spawnPlayerParticles(player);
                 }
             }
         }
