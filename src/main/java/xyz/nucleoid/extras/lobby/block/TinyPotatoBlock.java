@@ -7,8 +7,11 @@ import eu.pb4.polymer.block.VirtualHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,6 +47,14 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
 
     public TinyPotatoBlock(Settings settings, Block particleBlock, String texture) {
         this(settings, particleBlock.getDefaultState(), texture);
+    }
+
+    public TinyPotatoBlock(Settings settings, ItemStack particleStack, String texture) {
+        this(settings, new ItemStackParticleEffect(ParticleTypes.ITEM, particleStack), texture);
+    }
+
+    public TinyPotatoBlock(Settings settings, Item particleItem, String texture) {
+        this(settings, new ItemStack(particleItem), texture);
     }
 
     public ParticleEffect getParticleEffect(int time) {
