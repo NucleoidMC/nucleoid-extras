@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.item.VirtualBlockItem;
+import eu.pb4.polymer.api.item.PolymerBlockItem;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantments;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LobbyBlockItem extends VirtualBlockItem {
+public class LobbyBlockItem extends PolymerBlockItem {
     public LobbyBlockItem(Block block, Settings settings, Item virtualItem) {
         super(block, settings, virtualItem);
     }
@@ -28,8 +29,8 @@ public class LobbyBlockItem extends VirtualBlockItem {
     }
 
     @Override
-    public ItemStack getVirtualItemStack(ItemStack itemStack, ServerPlayerEntity player) {
-        var out = super.getVirtualItemStack(itemStack, player);
+    public ItemStack getPolymerItemStack(ItemStack itemStack, ServerPlayerEntity player) {
+        var out = super.getPolymerItemStack(itemStack, player);
         out.addEnchantment(Enchantments.INFINITY, 1);
         return out;
     }

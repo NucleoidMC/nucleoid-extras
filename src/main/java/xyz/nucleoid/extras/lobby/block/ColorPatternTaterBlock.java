@@ -12,9 +12,9 @@ public class ColorPatternTaterBlock extends TinyPotatoBlock {
     public ColorPatternTaterBlock(Settings settings, Vec3f[] pattern, String texture) {
         super(settings, (ParticleEffect) null, texture);
 
-        this.particleEffects = Stream.of(pattern).map(color -> {
-            return new DustParticleEffect(color, 1);
-        }).toArray(ParticleEffect[]::new);
+        this.particleEffects = Stream.of(pattern).map(color ->
+            new DustParticleEffect(color, 1)
+        ).toArray(ParticleEffect[]::new);
     }
 
     @Override

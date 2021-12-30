@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-final class DiscordWebhook {
+record DiscordWebhook(String url) {
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
             .setNameFormat("webhook-error-reporter")
             .setDaemon(true)
@@ -26,12 +26,6 @@ final class DiscordWebhook {
 
     private static final String BOUNDARY = Long.toHexString(System.nanoTime());
     private static final String CONTENT_TYPE = "multipart/form-data;boundary=\"" + BOUNDARY + "\"";
-
-    private final String url;
-
-    private DiscordWebhook(String url) {
-        this.url = url;
-    }
 
     public static DiscordWebhook open(String url) {
         return new DiscordWebhook(url);

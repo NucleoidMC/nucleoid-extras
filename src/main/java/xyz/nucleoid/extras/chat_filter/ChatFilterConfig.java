@@ -17,14 +17,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class ChatFilterConfig {
-    public static final Codec<ChatFilterConfig> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(
+    public static final Codec<ChatFilterConfig> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
                 Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
                 Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
                 MoreCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
                 Registry.SOUND_EVENT.getCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
-        ).apply(instance, ChatFilterConfig::new);
-    });
+        ).apply(instance, ChatFilterConfig::new)
+    );
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;

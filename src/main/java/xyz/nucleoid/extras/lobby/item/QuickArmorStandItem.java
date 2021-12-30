@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.item.VirtualItem;
+import eu.pb4.polymer.api.item.PolymerItem;
+
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -27,7 +28,7 @@ import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
 import java.util.List;
 import java.util.Random;
 
-public class QuickArmorStandItem extends Item implements VirtualItem {
+public class QuickArmorStandItem extends Item implements PolymerItem {
     public QuickArmorStandItem(Settings settings) {
         super(settings);
     }
@@ -92,7 +93,7 @@ public class QuickArmorStandItem extends Item implements VirtualItem {
     }
 
     @Override
-    public Item getVirtualItem() {
+    public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
         return Items.ARMOR_STAND;
     }
 

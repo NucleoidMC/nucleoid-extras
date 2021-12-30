@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public final record IntegrationsConfig(
+public record IntegrationsConfig(
         String channel,
         String host, int port,
         @Nullable String serverIp,
@@ -14,8 +14,8 @@ public final record IntegrationsConfig(
         boolean sendLifecycle, boolean sendPerformance,
         boolean acceptRemoteCommands, boolean sendStatistics
 ) {
-    public static final Codec<IntegrationsConfig> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(
+    public static final Codec<IntegrationsConfig> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
                 Codec.STRING.fieldOf("channel").forGetter(IntegrationsConfig::channel),
                 Codec.STRING.fieldOf("host").forGetter(IntegrationsConfig::host),
                 Codec.INT.fieldOf("port").forGetter(IntegrationsConfig::port),
@@ -27,8 +27,8 @@ public final record IntegrationsConfig(
                 Codec.BOOL.optionalFieldOf("send_performance", true).forGetter(IntegrationsConfig::sendPerformance),
                 Codec.BOOL.optionalFieldOf("accept_remote_commands", false).forGetter(IntegrationsConfig::acceptRemoteCommands),
                 Codec.BOOL.optionalFieldOf("send_statistics", false).forGetter(IntegrationsConfig::sendStatistics)
-        ).apply(instance, IntegrationsConfig::new);
-    });
+        ).apply(instance, IntegrationsConfig::new)
+    );
 
     private IntegrationsConfig(String channel, String host, int port, Optional<String> serverIp, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle, boolean sendPerformance, boolean acceptRemoteCommands, boolean sendStatistics) {
         this(channel, host, port, serverIp.orElse(null), sendPlayers, sendGames, sendChat, sendLifecycle, sendPerformance, acceptRemoteCommands, sendStatistics);

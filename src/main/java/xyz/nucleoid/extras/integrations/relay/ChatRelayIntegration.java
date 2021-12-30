@@ -157,11 +157,11 @@ public final class ChatRelayIntegration {
 
         if (message.attachments != null) {
             for (var attachment : message.attachments) {
-                result.append(new LiteralText("[Attachment: " + attachment.name + "]").styled(style -> {
-                    return style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
+                result.append(new LiteralText("[Attachment: " + attachment.name + "]").styled(style ->
+                    style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")));
-                }));
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")))
+                ));
             }
         }
 

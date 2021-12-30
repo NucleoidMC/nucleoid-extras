@@ -31,9 +31,9 @@ public final class ScheduledStop {
     private static int stopTime = Integer.MAX_VALUE;
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            registerCommands(dispatcher);
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+            registerCommands(dispatcher)
+        );
 
         ServerTickEvents.END_SERVER_TICK.register(ScheduledStop::tick);
 

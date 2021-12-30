@@ -1,7 +1,8 @@
 package xyz.nucleoid.extras.lobby;
 
+import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItemGroup;
-import eu.pb4.polymer.block.VirtualHeadBlock;
+
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
@@ -89,7 +90,7 @@ public class NEItems {
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
     private static Item createHead(Block head) {
-        return new LobbyHeadItem((VirtualHeadBlock) head, new Item.Settings().group(ITEM_GROUP));
+        return new LobbyHeadItem((PolymerHeadBlock) head, new Item.Settings().group(ITEM_GROUP));
     }
 
     private static Item createSimple(Block block, Item virtual) {

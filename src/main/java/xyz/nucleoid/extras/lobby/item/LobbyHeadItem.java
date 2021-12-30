@@ -1,7 +1,8 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.block.VirtualHeadBlock;
-import eu.pb4.polymer.item.VirtualHeadBlockItem;
+import eu.pb4.polymer.api.block.PolymerHeadBlock;
+import eu.pb4.polymer.api.item.PolymerHeadBlockItem;
+
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -14,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LobbyHeadItem extends VirtualHeadBlockItem {
-    public LobbyHeadItem(VirtualHeadBlock block, Settings settings) {
+public class LobbyHeadItem extends PolymerHeadBlockItem {
+    public LobbyHeadItem(PolymerHeadBlock block, Settings settings) {
         super(block, settings);
     }
 

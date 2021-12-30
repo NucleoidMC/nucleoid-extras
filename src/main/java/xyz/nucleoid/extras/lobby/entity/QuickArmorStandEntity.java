@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.entity;
 
-import eu.pb4.polymer.entity.VirtualEntity;
+import eu.pb4.polymer.api.entity.PolymerEntity;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -8,7 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEEntities;
 
-public class QuickArmorStandEntity extends ArmorStandEntity implements VirtualEntity {
+public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEntity {
     public QuickArmorStandEntity(EntityType<? extends ArmorStandEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -18,7 +19,7 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements VirtualEn
     }
 
     @Override
-    public EntityType<?> getVirtualEntityType() {
+    public EntityType<?> getPolymerEntityType() {
         return EntityType.ARMOR_STAND;
     }
 

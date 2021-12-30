@@ -3,7 +3,7 @@ package xyz.nucleoid.extras.lobby.block;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.pb4.polymer.block.VirtualHeadBlock;
+import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +26,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
+public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
 
     public static final List<TinyPotatoBlock> TATERS = new ArrayList<>();
 
@@ -115,7 +115,7 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
     }
 
     @Override
-    public String getVirtualHeadSkin(BlockState state) {
+    public String getPolymerSkinValue(BlockState state) {
         return this.texture;
     }
 
@@ -124,7 +124,12 @@ public class TinyPotatoBlock extends Block implements VirtualHeadBlock {
     }
 
     @Override
-    public BlockState getVirtualBlockState(BlockState state) {
-        return VirtualHeadBlock.super.getVirtualBlockState(state).with(Properties.ROTATION, state.get(Properties.ROTATION));
+    public Block getPolymerBlock(BlockState state) {
+        return PolymerHeadBlock.super.getPolymerBlock();
+    }
+
+    @Override
+    public BlockState getPolymerBlockState(BlockState state) {
+        return PolymerHeadBlock.super.getPolymerBlockState(state).with(Properties.ROTATION, state.get(Properties.ROTATION));
     }
 }
