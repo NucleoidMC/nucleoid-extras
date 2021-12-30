@@ -79,6 +79,13 @@ public class NEItems {
     public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
     public static final Item DEMISEXUAL_TATER = createHead(NEBlocks.DEMISEXUAL_TATER);
 
+    public static final Item SKELETATER = createHead(NEBlocks.SKELETATER);
+    public static final Item WITHER_SKELETATER = createHead(NEBlocks.WITHER_SKELETATER);
+    public static final Item ZOMBIE_TATER = createHead(NEBlocks.ZOMBIE_TATER);
+    public static final Item CREEPER_TATER = createHead(NEBlocks.CREEPER_TATER);
+    public static final Item STEVE_TATER = createHead(NEBlocks.STEVE_TATER);
+    public static final Item ALEX_TATER = createHead(NEBlocks.ALEX_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
@@ -144,6 +151,13 @@ public class NEItems {
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
+
+        register("skeletater", SKELETATER);
+        register("wither_skeletater", WITHER_SKELETATER);
+        register("zombie_tater", ZOMBIE_TATER);
+        register("creeper_tater", CREEPER_TATER);
+        register("steve_tater", STEVE_TATER);
+        register("alex_tater", ALEX_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);

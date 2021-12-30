@@ -67,6 +67,12 @@
   "block.nucleoid_extras.warden_tater": "Warden Tater",
   "block.nucleoid_extras.tateroid": "Tateroid",
   "block.nucleoid_extras.santa_hat_tater": "Tiny Potato with Santa hat",
+  "block.nucleoid_extras.skeletater": "Skeletater",
+  "block.nucleoid_extras.wither_skeletater": "Wither Skeletater",
+  "block.nucleoid_extras.zombie_tater": "Zombie Tater",
+  "block.nucleoid_extras.creeper_tater": "Creeper Tater",
+  "block.nucleoid_extras.steve_tater": "Steve Tater",
+  "block.nucleoid_extras.alex_tater": "Alex Tater",
   "block.nucleoid_extras.nucleoid_logo": "Nucleoid Logo",
 
   "block.nucleoid_extras.safe_tnt": "Safe TNT (Lobby only!)",
