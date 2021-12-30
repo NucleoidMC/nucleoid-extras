@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import eu.pb4.polymer.block.VirtualBlock;
+import eu.pb4.polymer.api.block.PolymerBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -15,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class LaunchPadBlock extends Block implements BlockEntityProvider, VirtualBlock {
+public class LaunchPadBlock extends Block implements BlockEntityProvider, PolymerBlock {
     private final Block virtualBlock;
 
     public LaunchPadBlock(Settings settings, Block virtualBlock) {
@@ -24,7 +25,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Virtua
     }
 
     @Override
-    public Block getVirtualBlock() {
+    public Block getPolymerBlock(BlockState state) {
         return this.virtualBlock;
     }
 

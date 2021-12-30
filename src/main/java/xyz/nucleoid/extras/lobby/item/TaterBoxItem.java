@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import eu.pb4.polymer.block.VirtualHeadBlock;
-import eu.pb4.polymer.item.VirtualItem;
+import eu.pb4.polymer.api.block.PolymerHeadBlock;
+import eu.pb4.polymer.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGuiBuilder;
 import net.minecraft.block.Block;
@@ -41,9 +41,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 
-public class TaterBoxItem extends ArmorItem implements VirtualItem {
+public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
 
     private static final String OWNER_KEY = "Owner";
@@ -126,7 +128,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
 
                     Block block = Registry.BLOCK.get(blockId);
 
-                    var tater = new GuiElementBuilder(block == null ? Items.STONE : block.asItem());
+                    var tater = new GuiElementBuilder(block.asItem());
                     tater.setName(block.getName());
                     tater.hideFlags();
                     tater.setCallback((index, type, action, gui) -> {
@@ -152,7 +154,6 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         if (!(block instanceof TinyPotatoBlock)) return ActionResult.PASS;
 
         Identifier id = Registry.BLOCK.getId(block);
-        if (id == null) return ActionResult.PASS;
 
         ActionResult owner = this.isOwner(stack, player);
         if (owner == ActionResult.FAIL) {
@@ -186,26 +187,21 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
     }
 
     @Override
-    public Item getVirtualItem() {
-        return Items.LEATHER_HELMET;
-    }
-
-    @Override
-    public Item getVirtualItem(ItemStack itemStack, ServerPlayerEntity player) {
-        if (TaterBoxItem.getSelectedTater(itemStack) instanceof VirtualHeadBlock) {
+    public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
+        if (TaterBoxItem.getSelectedTater(itemStack) instanceof PolymerHeadBlock) {
             return Items.PLAYER_HEAD;
         } else {
-            return this.getVirtualItem();
+            return Items.LEATHER_HELMET;
         }
     }
 
     @Override
-    public ItemStack getVirtualItemStack(ItemStack itemStack, ServerPlayerEntity player) {
-        ItemStack out = VirtualItem.super.getVirtualItemStack(itemStack, player);
+    public ItemStack getPolymerItemStack(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
+        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, player);
 
         Block selectedTater = TaterBoxItem.getSelectedTater(itemStack);
-        if (selectedTater instanceof VirtualHeadBlock virtualHeadBlock) {
-            NbtCompound skullOwner = virtualHeadBlock.getVirtualHeadSkullOwner(selectedTater.getDefaultState());
+        if (selectedTater instanceof PolymerHeadBlock polymerHeadBlock) {
+            NbtCompound skullOwner = polymerHeadBlock.getPolymerHeadSkullOwner(selectedTater.getDefaultState());
             out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
         } else {
             out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
@@ -232,8 +228,7 @@ public class TaterBoxItem extends ArmorItem implements VirtualItem {
         Identifier selectedTaterId = Identifier.tryParse(tag.getString(SELECTED_TATER_KEY));
         if (selectedTaterId == null) return null;
 
-        Block selectedTater = Registry.BLOCK.get(selectedTaterId);
-        return selectedTater;
+        return Registry.BLOCK.get(selectedTaterId);
     }
 
     public static void setSelectedTater(ItemStack stack, Identifier selectedTaterId) {

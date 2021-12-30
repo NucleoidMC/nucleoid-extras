@@ -122,7 +122,7 @@ public class TateroidBlock extends TinyPotatoBlock implements BlockEntityProvide
     }
 
     @Override
-    public String getVirtualHeadSkin(BlockState state) {
+    public String getPolymerSkinValue(BlockState state) {
         return state.get(COLOR).texture;
     }
 

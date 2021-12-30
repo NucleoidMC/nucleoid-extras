@@ -22,7 +22,7 @@ public class TateroidBlockEntity extends BlockEntity {
     private static final String SOUND_KEY = "Sound";
 
     private int duration = 0;
-    private int tempo = 1 * SharedConstants.TICKS_PER_SECOND;
+    private int tempo = SharedConstants.TICKS_PER_SECOND;
     private int pitch = 0;
     private SoundEvent sound;
 

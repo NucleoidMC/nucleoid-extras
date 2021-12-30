@@ -1,7 +1,7 @@
 package xyz.nucleoid.extras.chat_filter;
 
 import net.minecraft.util.ActionResult;
-import xyz.nucleoid.extras.NucleoidExtras;
+
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.stimuli.Stimuli;
 import xyz.nucleoid.stimuli.event.player.PlayerChatContentEvent;

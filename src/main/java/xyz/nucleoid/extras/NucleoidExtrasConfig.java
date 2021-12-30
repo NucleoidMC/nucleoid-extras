@@ -23,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-public final record NucleoidExtrasConfig(
+public record NucleoidExtrasConfig(
         boolean sidebar,
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
@@ -34,20 +34,19 @@ public final record NucleoidExtrasConfig(
     private static final Path PATH = Paths.get("config/nucleoid.json");
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final JsonParser JSON_PARSER = new JsonParser();
 
-    private static final Codec<NucleoidExtrasConfig> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(
+    private static final Codec<NucleoidExtrasConfig> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(NucleoidExtrasConfig::sidebar),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
                 Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
-        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting, devServer) -> {
-            return new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer);
-        });
-    });
+        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting, devServer) ->
+            new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer)
+        )
+    );
 
     private static NucleoidExtrasConfig instance;
 
@@ -73,7 +72,7 @@ public final record NucleoidExtrasConfig(
 
     private static NucleoidExtrasConfig loadConfig() {
         try (var input = Files.newInputStream(PATH)) {
-            var json = JSON_PARSER.parse(new InputStreamReader(input));
+            var json = JsonParser.parseReader(new InputStreamReader(input));
             var result = CODEC.decode(JsonOps.INSTANCE, json).map(Pair::getFirst);
             return result.result().orElseGet(NucleoidExtrasConfig::new);
         } catch (IOException e) {

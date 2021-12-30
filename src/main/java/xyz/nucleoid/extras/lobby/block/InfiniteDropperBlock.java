@@ -28,7 +28,7 @@ public class InfiniteDropperBlock extends InfiniteDispenserBlock {
     }
 
     @Override
-    public Block getVirtualBlock() {
+    public Block getPolymerBlock(BlockState state) {
         return Blocks.DROPPER;
     }
 }

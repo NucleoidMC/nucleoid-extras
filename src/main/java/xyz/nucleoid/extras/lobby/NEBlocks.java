@@ -1,7 +1,8 @@
 package xyz.nucleoid.extras.lobby;
 
-import eu.pb4.polymer.block.BasicVirtualBlock;
-import eu.pb4.polymer.block.BlockHelper;
+import eu.pb4.polymer.api.block.PolymerBlockUtils;
+import eu.pb4.polymer.api.block.SimplePolymerBlock;
+
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -136,7 +137,7 @@ public class NEBlocks {
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID).build(null);
 
     private static Block createSimple(Block virtual) {
-        return new BasicVirtualBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
+        return new SimplePolymerBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
@@ -147,6 +148,8 @@ public class NEBlocks {
         return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
     }
 
+    private static Block createTaterBlock(Item particleItem, String texture) {
+        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleItem, texture);
     private static Block createColorPatternTaterBlock(Vec3f[] pattern, String texture) {
         return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
     }
@@ -228,7 +231,7 @@ public class NEBlocks {
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {
         Registry.register(Registry.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
-        BlockHelper.registerVirtualBlockEntity(type);
+        PolymerBlockUtils.registerBlockEntity(type);
         return type;
     }
 }

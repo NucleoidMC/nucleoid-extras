@@ -87,7 +87,7 @@ public class DiceTaterBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public String getVirtualHeadSkin(BlockState state) {
+    public String getPolymerSkinValue(BlockState state) {
         int face = state.get(FACE);
         return TEXTURES[face];
     }

@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import eu.pb4.polymer.block.VirtualBlock;
+import eu.pb4.polymer.api.block.PolymerBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
-public class InfiniteDispenserBlock extends DispenserBlock implements VirtualBlock {
+public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlock {
     public InfiniteDispenserBlock(Settings settings) {
         super(settings);
     }
@@ -22,7 +23,7 @@ public class InfiniteDispenserBlock extends DispenserBlock implements VirtualBlo
     @Override
     protected void dispense(ServerWorld world, BlockPos pos) {
         BlockPointerImpl pointer = new BlockPointerImpl(world, pos);
-        DispenserBlockEntity blockEntity = (DispenserBlockEntity) pointer.getBlockEntity();
+        DispenserBlockEntity blockEntity = pointer.getBlockEntity();
 
         int slot = blockEntity.chooseNonEmptySlot();
 
@@ -40,13 +41,13 @@ public class InfiniteDispenserBlock extends DispenserBlock implements VirtualBlo
     }
 
     @Override
-    public Block getVirtualBlock() {
+    public Block getPolymerBlock(BlockState state) {
         return Blocks.DISPENSER;
     }
 
     @Override
-    public BlockState getVirtualBlockState(BlockState state) {
-        return VirtualBlock.super.getVirtualBlockState(state)
+    public BlockState getPolymerBlockState(BlockState state) {
+        return PolymerBlock.super.getPolymerBlockState(state)
             .with(FACING, state.get(FACING))
             .with(TRIGGERED, state.get(TRIGGERED));
     }

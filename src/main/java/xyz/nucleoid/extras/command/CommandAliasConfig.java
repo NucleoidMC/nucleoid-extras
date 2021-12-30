@@ -20,12 +20,12 @@ public record CommandAliasConfig(Map<String, Entry> map) {
         private static final Codec<Entry> SIMPLE_CODEC = COMMANDS_CODEC
                 .xmap(Entry::new, entry -> entry.commands);
 
-        private static final Codec<Entry> RECORD_CODEC = RecordCodecBuilder.create(instance -> {
-            return instance.group(
+        private static final Codec<Entry> RECORD_CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
                     COMMANDS_CODEC.fieldOf("execute").forGetter(entry -> entry.commands),
                     Codec.BOOL.optionalFieldOf("feedback", true).forGetter(entry -> entry.feedback)
-            ).apply(instance, Entry::new);
-        });
+            ).apply(instance, Entry::new)
+        );
 
         public static final Codec<Entry> CODEC = Codec.either(RECORD_CODEC, SIMPLE_CODEC)
                 .xmap(

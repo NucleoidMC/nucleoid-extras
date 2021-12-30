@@ -5,14 +5,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import joptsimple.internal.Strings;
 import org.jetbrains.annotations.Nullable;
 
-public final record ErrorReportingConfig(
+public record ErrorReportingConfig(
         String discordWebhookUrl
 ) {
-    public static final Codec<ErrorReportingConfig> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(
+    public static final Codec<ErrorReportingConfig> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
                 Codec.STRING.optionalFieldOf("discord_webhook_url", "").forGetter(config -> config.discordWebhookUrl)
-        ).apply(instance, ErrorReportingConfig::new);
-    });
+        ).apply(instance, ErrorReportingConfig::new)
+    );
 
     public static final ErrorReportingConfig NONE = new ErrorReportingConfig(null);
 
