@@ -232,6 +232,13 @@ public class NEBlocks {
         register("dice_tater", DICE_TATER);
         register("tateroid", TATEROID);
 
+        register("skeletater", SKELETATER);
+        register("wither_skeletater", WITHER_SKELETATER);
+        register("zombie_tater", ZOMBIE_TATER);
+        register("creeper_tater", CREEPER_TATER);
+        register("steve_tater", STEVE_TATER);
+        register("alex_tater", ALEX_TATER);
+
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);
     }
