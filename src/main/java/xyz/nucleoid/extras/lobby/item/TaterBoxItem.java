@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.item;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import java.util.UUID;
 import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.gui.SimpleGuiBuilder;
+import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
@@ -26,8 +27,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -44,6 +45,7 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
+import xyz.nucleoid.plasmid.util.Guis;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -102,7 +104,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return blockIds.stream().sorted().iterator();
     }
 
-    private Text getTitle(ItemStack stack) {
+    private MutableText getTitle(ItemStack stack) {
         Text name = this.getName(stack);
         int count = this.getBlockCount(stack);
         int max = TinyPotatoBlock.TATERS.size();
@@ -119,8 +121,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             if (hit.getType() == HitResult.Type.BLOCK) {
                 this.tryAdd(world, hit.getBlockPos(), stack, user);
             } else {
-                SimpleGuiBuilder builder = new SimpleGuiBuilder(ScreenHandlerType.GENERIC_9X6, false);
-                builder.setTitle(this.getTitle(stack));
+                List<GuiElementInterface> taters = new ArrayList<>();
 
                 Iterator<Identifier> iterator = this.getBlockIds(stack);
                 while (iterator.hasNext()) {
@@ -139,10 +140,11 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
                         }
                     });
                     
-                    builder.addSlot(tater);
+                    taters.add(tater.build());
                 }
 
-                builder.build((ServerPlayerEntity) user).open();
+                var ui = Guis.createSelectorGui((ServerPlayerEntity) user, this.getTitle(stack), false, taters);
+                ui.open();
             }
         }
 
