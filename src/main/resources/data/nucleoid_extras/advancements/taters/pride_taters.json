@@ -2,8 +2,7 @@
   "parent": "nucleoid_extras:taters/first_tater",
   "display": {
     "icon": {
-      "item": "minecraft:player_head",
-      "nbt": "{SkullOwner:{Id:[I;0,0,0,0],Properties:{textures:[{Value:\"ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NjM3NjgwOCwKICAicHJvZmlsZUlkIiA6ICIzZjM4YmViZGYwMWQ0MjNkYWI4MjczZjUwNGFiNGEyNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJjazM0Nzk0MjM1NzUzNzMxIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5ZjQ0NmYyOTM5NmZmNDQ0ZDBlZjRmNTNhNzBjMjhhZmI2OWU1ZDFkYTAzN2MwM2MyNzdkMjM5MTdkYWNkZWQiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==\"}]}}}"
+      "item": "nucleoid_extras:gay_tater"
     },
     "title": {
       "translate": "advancements.nucleoid_extras.pride_taters.title"
