@@ -12,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
@@ -90,7 +91,24 @@ public class NEItems {
     public static final Item STEVE_TATER = createHead(NEBlocks.STEVE_TATER);
     public static final Item ALEX_TATER = createHead(NEBlocks.ALEX_TATER);
 
-    public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP));
+    public static final Item WHITE_TATER = createHead(NEBlocks.WHITE_TATER);
+    public static final Item ORANGE_TATER = createHead(NEBlocks.ORANGE_TATER);
+    public static final Item MAGENTA_TATER = createHead(NEBlocks.MAGENTA_TATER);
+    public static final Item LIGHT_BLUE_TATER = createHead(NEBlocks.LIGHT_BLUE_TATER);
+    public static final Item YELLOW_TATER = createHead(NEBlocks.YELLOW_TATER);
+    public static final Item LIME_TATER = createHead(NEBlocks.LIME_TATER);
+    public static final Item PINK_TATER = createHead(NEBlocks.PINK_TATER);
+    public static final Item GRAY_TATER = createHead(NEBlocks.GRAY_TATER);
+    public static final Item LIGHT_GRAY_TATER = createHead(NEBlocks.LIGHT_GRAY_TATER);
+    public static final Item CYAN_TATER = createHead(NEBlocks.CYAN_TATER);
+    public static final Item PURPLE_TATER = createHead(NEBlocks.PURPLE_TATER);
+    public static final Item BLUE_TATER = createHead(NEBlocks.BLUE_TATER);
+    public static final Item BROWN_TATER = createHead(NEBlocks.BROWN_TATER);
+    public static final Item GREEN_TATER = createHead(NEBlocks.GREEN_TATER);
+    public static final Item RED_TATER = createHead(NEBlocks.RED_TATER);
+    public static final Item BLACK_TATER = createHead(NEBlocks.BLACK_TATER);
+
+    public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
     private static Item createHead(Block head) {
@@ -166,6 +184,23 @@ public class NEItems {
         register("creeper_tater", CREEPER_TATER);
         register("steve_tater", STEVE_TATER);
         register("alex_tater", ALEX_TATER);
+
+        register("white_tater", WHITE_TATER);
+        register("orange_tater", ORANGE_TATER);
+        register("magenta_tater", MAGENTA_TATER);
+        register("light_blue_tater", LIGHT_BLUE_TATER);
+        register("yellow_tater", YELLOW_TATER);
+        register("lime_tater", LIME_TATER);
+        register("pink_tater", PINK_TATER);
+        register("gray_tater", GRAY_TATER);
+        register("light_gray_tater", LIGHT_GRAY_TATER);
+        register("cyan_tater", CYAN_TATER);
+        register("purple_tater", PURPLE_TATER);
+        register("blue_tater", BLUE_TATER);
+        register("brown_tater", BROWN_TATER);
+        register("green_tater", GREEN_TATER);
+        register("red_tater", RED_TATER);
+        register("black_tater", BLACK_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
