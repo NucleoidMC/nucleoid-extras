@@ -168,6 +168,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             tag.putUuid(OWNER_KEY, player.getUuid());
         }
 
+        NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
+
         NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
         for (int index = 0; index < taters.size(); index++) {
             String string = taters.getString(index);
@@ -184,7 +186,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
         Text message = new TranslatableText("text.nucleoid_extras.tater_box.added", block.getName());
         player.sendMessage(message, true);
-        NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
 
         return ActionResult.SUCCESS;
     }
