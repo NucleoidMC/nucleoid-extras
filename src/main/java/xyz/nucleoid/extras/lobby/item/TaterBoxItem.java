@@ -43,7 +43,9 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
+import xyz.nucleoid.extras.lobby.criterion.TaterCollectedCriterion;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -172,7 +174,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             if (id.toString().equals(string)) {
                 Text message = new TranslatableText("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
                 player.sendMessage(message, true);
-
+                NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
+                
                 return ActionResult.FAIL;
             }
         }
@@ -182,6 +185,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
         Text message = new TranslatableText("text.nucleoid_extras.tater_box.added", block.getName());
         player.sendMessage(message, true);
+        NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
 
         return ActionResult.SUCCESS;
     }

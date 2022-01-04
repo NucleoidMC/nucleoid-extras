@@ -14,6 +14,7 @@ import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
@@ -28,6 +29,7 @@ public final class NucleoidExtras implements ModInitializer {
         NEBlocks.register();
         NEItems.register();
         NEEntities.register();
+        NECriteria.register();
 
         ChatFilter.register();
         CommandAliases.register();
