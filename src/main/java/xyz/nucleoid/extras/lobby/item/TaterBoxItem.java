@@ -205,6 +205,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
         } else {
             out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
+            out.getOrCreateNbt().putBoolean("Unbreakable", true);
         }
 
         return out;
