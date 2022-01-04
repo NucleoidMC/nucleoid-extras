@@ -174,7 +174,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             if (id.toString().equals(string)) {
                 Text message = new TranslatableText("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
                 player.sendMessage(message, true);
-
+                NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
+                
                 return ActionResult.FAIL;
             }
         }
