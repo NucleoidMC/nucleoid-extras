@@ -52,7 +52,7 @@ public class DiceTaterBlock extends TinyPotatoBlock {
 
         if (world instanceof ServerWorld) {
             world.setBlockState(pos, state.with(FACE, ROLLING_FACE));
-            world.getBlockTickScheduler().scheduleTick(new OrderedTick<>(this, pos, ROLLING_TICKS, 0));
+            world.createAndScheduleBlockTick(pos, this, ROLLING_TICKS);
 
             float pitch = 1.6f + world.getRandom().nextFloat() * 0.4f;
             world.playSound(null, pos, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1, pitch);
