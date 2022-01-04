@@ -111,5 +111,18 @@
 
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
-  "text.nucleoid_extras.statistics.stat": "%s: %s"
+  "text.nucleoid_extras.statistics.stat": "%s: %s",
+
+  "advancements.nucleoid_extras.first_tater.title": "My First Tater",
+  "advancements.nucleoid_extras.first_tater.description": "Collect your first Tater in your Tater Box.",
+  "advancements.nucleoid_extras.ten_taters.title": "Tater Hobbyist",
+  "advancements.nucleoid_extras.ten_taters.description": "Collect 10 Taters in your Tater Box.",
+  "advancements.nucleoid_extras.twenty_five_taters.title": "Tater Collector",
+  "advancements.nucleoid_extras.twenty_five_taters.description": "Collect 25 Taters in your Tater Box.",
+  "advancements.nucleoid_extras.fifty_taters.title": "Tater Hoarder",
+  "advancements.nucleoid_extras.fifty_taters.description": "Collect 50 Taters in your Tater Box.",
+  "advancements.nucleoid_extras.all_taters.title": "Tater Magnate",
+  "advancements.nucleoid_extras.all_taters.description": "Collect every Tater in your Tater Box!",
+  "advancements.nucleoid_extras.pride_taters.title": "Tiny Potato Says You're Valid",
+  "advancements.nucleoid_extras.pride_taters.description": "Collect all Pride Taters in your Tater Box."
 }

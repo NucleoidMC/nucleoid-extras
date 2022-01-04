@@ -1,0 +1,27 @@
+{
+  "parent": "nucleoid_extras:taters/twenty_five_taters",
+  "display": {
+    "icon": {
+      "item": "minecraft:player_head",
+      "nbt": "{SkullOwner:{Id:[I;0,0,0,0],Properties:{textures:[{Value:\"ewogICJ0aW1lc3RhbXAiIDogMTY0MDcwMTgxODU1NCwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y0NzJlMmZjMzZjN2Q4ZWY3Y2ZmOGNmYmE3MWU3ZTIzOGY4OWRlMDFlOGQ0NGMyMTcwM2YxYWM2ZDJjNDdmMSIKICAgIH0KICB9Cn0=\"}]}}}"
+    },
+    "title": {
+      "translate": "advancements.nucleoid_extras.fifty_taters.title"
+    },
+    "description": {
+      "translate": "advancements.nucleoid_extras.fifty_taters.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_50_taters": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "count": 50
+      }
+    }
+  }
+}
