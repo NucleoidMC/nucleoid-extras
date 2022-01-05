@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonObject;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -69,11 +70,10 @@ public class StatisticsIntegration {
         body.add("bundle", bundleObject);
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
-        // TODO: Enable this when the web thing is done
-//        space.getPlayers().sendMessage(new TranslatableText("text.nucleoid_extras.statistics.web_url", gameId)
-//                .formatted(Formatting.GRAY, Formatting.ITALIC)
-//                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-//                        "https://nucleoid.xyz/game/#" + gameId))));
+        space.getPlayers().sendMessage(new TranslatableText("text.nucleoid_extras.statistics.web_url", gameId)
+                .formatted(Formatting.GRAY, Formatting.ITALIC)
+                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
+                        "https://stats.nucleoid.xyz/games/" + gameId))));
     }
 
     private void sendBundle(JsonObject bundle) {
