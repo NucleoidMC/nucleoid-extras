@@ -61,6 +61,7 @@ public class NEItems {
     public static final Item STONE_TATER = createHead(NEBlocks.STONE_TATER);
     public static final Item CALCITE_TATER = createHead(NEBlocks.CALCITE_TATER);
     public static final Item TUFF_TATER = createHead(NEBlocks.TUFF_TATER);
+    public static final Item BASALT_TATER = createHead(NEBlocks.BASALT_TATER);
     public static final Item DRIPSTONE_TATER = createHead(NEBlocks.DRIPSTONE_TATER);
     public static final Item AMETHYST_TATER = createHead(NEBlocks.AMETHYST_TATER);
     public static final Item PACKED_ICE_TATER = createHead(NEBlocks.PACKED_ICE_TATER);
@@ -169,6 +170,7 @@ public class NEItems {
         register("stone_tater", STONE_TATER);
         register("calcite_tater", CALCITE_TATER);
         register("tuff_tater", TUFF_TATER);
+        register("basalt_tater", BASALT_TATER);
         register("dripstone_tater", DRIPSTONE_TATER);
         register("amethyst_tater", AMETHYST_TATER);
         register("packed_ice_tater", PACKED_ICE_TATER);
