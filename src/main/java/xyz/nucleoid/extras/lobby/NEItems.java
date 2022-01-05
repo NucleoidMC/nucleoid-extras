@@ -109,6 +109,21 @@ public class NEItems {
     public static final Item RED_TATER = createHead(NEBlocks.RED_TATER);
     public static final Item BLACK_TATER = createHead(NEBlocks.BLACK_TATER);
 
+    public static final Item COAL_TATER = createHead(NEBlocks.COAL_TATER);
+    public static final Item DIAMOND_TATER = createHead(NEBlocks.DIAMOND_TATER);
+    public static final Item EMERALD_TATER = createHead(NEBlocks.EMERALD_TATER);
+    public static final Item GOLD_TATER = createHead(NEBlocks.GOLD_TATER);
+    public static final Item IRON_TATER = createHead(NEBlocks.IRON_TATER);
+    public static final Item LAPIS_TATER = createHead(NEBlocks.LAPIS_TATER);
+    public static final Item NETHERITE_TATER = createHead(NEBlocks.NETHERITE_TATER);
+    public static final Item QUARTZ_TATER = createHead(NEBlocks.QUARTZ_TATER);
+    public static final Item REDSTONE_TATER = createHead(NEBlocks.REDSTONE_TATER);
+
+    public static final Item COPPER_TATER = createHead(NEBlocks.COPPER_TATER);
+    public static final Item EXPOSED_COPPER_TATER = createHead(NEBlocks.EXPOSED_COPPER_TATER);
+    public static final Item WEATHERED_COPPER_TATER = createHead(NEBlocks.WEATHERED_COPPER_TATER);
+    public static final Item OXIDIZED_COPPER_TATER = createHead(NEBlocks.OXIDIZED_COPPER_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
@@ -203,6 +218,21 @@ public class NEItems {
         register("green_tater", GREEN_TATER);
         register("red_tater", RED_TATER);
         register("black_tater", BLACK_TATER);
+
+        register("coal_tater", COAL_TATER);
+        register("diamond_tater", DIAMOND_TATER);
+        register("emerald_tater", EMERALD_TATER);
+        register("gold_tater", GOLD_TATER);
+        register("iron_tater", IRON_TATER);
+        register("lapis_tater", LAPIS_TATER);
+        register("netherite_tater", NETHERITE_TATER);
+        register("quartz_tater", QUARTZ_TATER);
+        register("redstone_tater", REDSTONE_TATER);
+
+        register("copper_tater", COPPER_TATER);
+        register("exposed_copper_tater", EXPOSED_COPPER_TATER);
+        register("weathered_copper_tater", WEATHERED_COPPER_TATER);
+        register("oxidized_copper_tater", OXIDIZED_COPPER_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
