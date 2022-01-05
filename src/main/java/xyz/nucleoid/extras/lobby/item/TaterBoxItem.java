@@ -46,8 +46,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
-import xyz.nucleoid.plasmid.util.Guis;
-import xyz.nucleoid.extras.lobby.criterion.TaterCollectedCriterion;
+import xyz.nucleoid.extras.util.PagedGui;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -145,7 +144,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
                     taters.add(tater.build());
                 }
 
-                var ui = Guis.createSelectorGui((ServerPlayerEntity) user, this.getTitle(stack), false, taters);
+                var ui = PagedGui.of((ServerPlayerEntity) user, taters);
+                ui.setTitle(this.getTitle(stack));
                 ui.open();
             }
         }
