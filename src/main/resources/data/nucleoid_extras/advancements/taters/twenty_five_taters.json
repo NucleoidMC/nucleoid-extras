@@ -2,7 +2,7 @@
   "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:amethyst_tater"
+      "item": "nucleoid_extras:gold_tater"
     },
     "title": {
       "translate": "advancements.nucleoid_extras.twenty_five_taters.title"

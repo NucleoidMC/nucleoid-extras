@@ -2,7 +2,7 @@
   "parent": "nucleoid_extras:taters/twenty_five_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:skeletater"
+      "item": "nucleoid_extras:diamond_tater"
     },
     "title": {
       "translate": "advancements.nucleoid_extras.fifty_taters.title"
