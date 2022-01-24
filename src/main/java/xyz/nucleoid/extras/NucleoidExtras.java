@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
+import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.NECriteria;
@@ -36,6 +37,8 @@ public final class NucleoidExtras implements ModInitializer {
         ScheduledStop.register();
 
         NucleoidIntegrations.register();
+
+        ExtrasErrorReporter.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }
