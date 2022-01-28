@@ -12,7 +12,6 @@ import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
@@ -125,6 +124,20 @@ public class NEItems {
     public static final Item WEATHERED_COPPER_TATER = createHead(NEBlocks.WEATHERED_COPPER_TATER);
     public static final Item OXIDIZED_COPPER_TATER = createHead(NEBlocks.OXIDIZED_COPPER_TATER);
 
+    public static final Item CAKE_TATER = createHead(NEBlocks.CAKE_TATER);
+    public static final Item ENDERTATER = createHead(NEBlocks.ENDERTATER);
+    public static final Item FURNACE_TATER = createHead(NEBlocks.FURNACE_TATER);
+    public static final Item MELON_TATER = createHead(NEBlocks.MELON_TATER);
+    public static final Item PUMPKIN_TATER = createHead(NEBlocks.PUMPKIN_TATER);
+    public static final Item JACK_O_TATER = createHead(NEBlocks.JACK_O_TATER);
+    public static final Item SCULK_TATER = createHead(NEBlocks.SCULK_TATER);
+    public static final Item SLIME_TATER = createHead(NEBlocks.SLIME_TATER);
+    public static final Item HEROBRINE_TATER = createHead(NEBlocks.HEROBRINE_TATER);
+    public static final Item OCHRE_FROGLIGHT_TATER = createHead(NEBlocks.OCHRE_FROGLIGHT_TATER);
+    public static final Item PEARLESCENT_FROGLIGHT_TATER = createHead(NEBlocks.PEARLESCENT_FROGLIGHT_TATER);
+    public static final Item VERDANT_FROGLIGHT_TATER = createHead(NEBlocks.VERDANT_FROGLIGHT_TATER);
+    public static final Item SNOWMAN_TATER = createHead(NEBlocks.SNOWMAN_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
@@ -235,6 +248,20 @@ public class NEItems {
         register("exposed_copper_tater", EXPOSED_COPPER_TATER);
         register("weathered_copper_tater", WEATHERED_COPPER_TATER);
         register("oxidized_copper_tater", OXIDIZED_COPPER_TATER);
+
+        register("cake_tater", CAKE_TATER);
+        register("endertater", ENDERTATER);
+        register("furnace_tater", FURNACE_TATER);
+        register("melon_tater", MELON_TATER);
+        register("pumpkin_tater", PUMPKIN_TATER);
+        register("jack_o_tater", JACK_O_TATER);
+        register("sculk_tater", SCULK_TATER);
+        register("slime_tater", SLIME_TATER);
+        register("herobrine_tater", HEROBRINE_TATER);
+        register("ochre_froglight_tater", OCHRE_FROGLIGHT_TATER);
+        register("pearlescent_froglight_tater", PEARLESCENT_FROGLIGHT_TATER);
+        register("verdant_froglight_tater", VERDANT_FROGLIGHT_TATER);
+        register("snowman_tater", SNOWMAN_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);

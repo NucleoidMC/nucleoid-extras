@@ -116,11 +116,12 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
+        TypedActionResult<ItemStack> result = TypedActionResult.success(stack, world.isClient());
 
         if (!world.isClient()) {
             BlockHitResult hit = Item.raycast(world, user, RaycastContext.FluidHandling.NONE);
             if (hit.getType() == HitResult.Type.BLOCK) {
-                this.tryAdd(world, hit.getBlockPos(), stack, user);
+                result = new TypedActionResult<>(this.tryAdd(world, hit.getBlockPos(), stack, user), stack);
             } else {
                 List<GuiElementInterface> taters = new ArrayList<>();
 
@@ -150,14 +151,14 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             }
         }
 
-        return TypedActionResult.success(stack, world.isClient());
+        return result;
     }
 
     private ActionResult tryAdd(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
         Block block = world.getBlockState(pos).getBlock();
         if (!(block instanceof TinyPotatoBlock)) return ActionResult.PASS;
 
-        Identifier id = Registry.BLOCK.getId(block);
+        Identifier taterId = Registry.BLOCK.getId(block);
 
         ActionResult owner = this.isOwner(stack, player);
         if (owner == ActionResult.FAIL) {
@@ -170,26 +171,25 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             tag.putUuid(OWNER_KEY, player.getUuid());
         }
 
-        NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
-        for (int index = 0; index < taters.size(); index++) {
-            String string = taters.getString(index);
-            if (id.toString().equals(string)) {
-                Text message = new TranslatableText("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
-                player.sendMessage(message, true);
-                NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
-                
-                return ActionResult.FAIL;
-            }
+
+        boolean alreadyAdded = TaterBoxItem.containsTater(stack, taterId);
+        Text message;
+
+        if (alreadyAdded) {
+            message = new TranslatableText("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
+        } else {
+            NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
+
+            taters.add(NbtString.of(taterId.toString()));
+            tag.put(TATERS_KEY, taters);
+
+            message = new TranslatableText("text.nucleoid_extras.tater_box.added", block.getName());
         }
 
-        taters.add(NbtString.of(id.toString()));
-        tag.put(TATERS_KEY, taters);
-
-        Text message = new TranslatableText("text.nucleoid_extras.tater_box.added", block.getName());
         player.sendMessage(message, true);
-        NECriteria.TATER_COLLECTED.trigger((ServerPlayerEntity) player, id, getBlockCount(stack));
+        TaterBoxItem.triggerCriterion((ServerPlayerEntity) player, taterId, getBlockCount(stack));
 
-        return ActionResult.SUCCESS;
+        return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
 
     @Override
@@ -241,5 +241,21 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     public static void setSelectedTater(ItemStack stack, Identifier selectedTaterId) {
         NbtCompound tag = stack.getOrCreateNbt();
         tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
+    }
+
+    public static void triggerCriterion(ServerPlayerEntity player, Identifier taterId, int count) {
+        NECriteria.TATER_COLLECTED.trigger(player, taterId, count);
+    }
+
+    public static boolean containsTater(ItemStack stack, Identifier taterId) {
+        NbtCompound tag = stack.getOrCreateNbt();
+        NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
+        for (int index = 0; index < taters.size(); index++) {
+            String string = taters.getString(index);
+            if (taterId.toString().equals(string)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
