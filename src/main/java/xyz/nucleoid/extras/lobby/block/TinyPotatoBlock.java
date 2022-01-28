@@ -32,13 +32,19 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
 
     private final String texture;
     private final ParticleEffect particleEffect;
+    private final int particleRate;
 
-    public TinyPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture) {
+    public TinyPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture, int particleRate) {
         super(settings);
         this.particleEffect = particleEffect;
         this.texture = texture;
+        this.particleRate = particleRate;
 
         TATERS.add(this);
+    }
+
+    public TinyPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture) {
+        this(settings, particleEffect, texture, 2);
     }
 
     public TinyPotatoBlock(Settings settings, BlockState particleState, String texture) {
@@ -70,7 +76,7 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
     }
 
     public int getPlayerParticleRate(ServerPlayerEntity player) {
-        return 2;
+        return particleRate;
     }
 
     public void spawnPlayerParticles(ServerPlayerEntity player) {

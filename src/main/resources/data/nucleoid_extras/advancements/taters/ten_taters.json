@@ -2,7 +2,7 @@
   "parent": "nucleoid_extras:taters/first_tater",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:copper_tater"
+      "item": "nucleoid_extras:iron_tater"
     },
     "title": {
       "translate": "advancements.nucleoid_extras.ten_taters.title"
