@@ -1,0 +1,86 @@
+{
+  "parent": "nucleoid_extras:taters/coral_taters",
+  "display": {
+    "icon": {
+      "item": "nucleoid_extras:prismarine_tater"
+    },
+    "title": {
+      "translate": "advancements.nucleoid_extras.aquatic_taters.title"
+    },
+    "description": {
+      "translate": "advancements.nucleoid_extras.aquatic_taters.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_prismarine_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:prismarine_tater"
+      }
+    },
+    "get_prismarine_brick_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:prismarine_brick_tater"
+      }
+    },
+    "get_dark_prismarine_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dark_prismarine_tater"
+      }
+    },
+    "get_blue_ice_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:blue_ice_tater"
+      }
+    },
+    "get_sponge_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:sponge_tater"
+      }
+    },
+    "get_smooth_stone_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:smooth_stone_tater"
+      }
+    },
+    "get_brain_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:brain_coral_tater"
+      }
+    },
+    "get_bubble_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:bubble_coral_tater"
+      }
+    },
+    "get_fire_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:fire_coral_tater"
+      }
+    },
+    "get_horn_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:horn_coral_tater"
+      }
+    },
+    "get_tube_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:tube_coral_tater"
+      }
+    }
+  }
+}
