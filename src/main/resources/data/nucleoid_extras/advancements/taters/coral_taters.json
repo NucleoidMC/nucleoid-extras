@@ -1,0 +1,50 @@
+{
+  "parent": "nucleoid_extras:taters/first_tater",
+  "display": {
+    "icon": {
+      "item": "nucleoid_extras:brain_coral_tater"
+    },
+    "title": {
+      "translate": "advancements.nucleoid_extras.coral_taters.title"
+    },
+    "description": {
+      "translate": "advancements.nucleoid_extras.coral_taters.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "get_brain_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:brain_coral_tater"
+      }
+    },
+    "get_bubble_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:bubble_coral_tater"
+      }
+    },
+    "get_fire_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:fire_coral_tater"
+      }
+    },
+    "get_horn_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:horn_coral_tater"
+      }
+    },
+    "get_tube_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:tube_coral_tater"
+      }
+    }
+  }
+}
