@@ -1,5 +1,5 @@
 {
-  "parent": "nucleoid_extras:taters/first_tater",
+  "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
       "item": "nucleoid_extras:oak_tater"
@@ -62,6 +62,54 @@
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
         "tater": "nucleoid_extras:warped_tater"
+      }
+    },
+    "get_oak_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:oak_log_tater"
+      }
+    },
+    "get_spruce_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:spruce_log_tater"
+      }
+    },
+    "get_birch_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:birch_log_tater"
+      }
+    },
+    "get_jungle_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:jungle_log_tater"
+      }
+    },
+    "get_acacia_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:acacia_log_tater"
+      }
+    },
+    "get_dark_oak_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dark_oak_log_tater"
+      }
+    },
+    "get_crimson_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:crimson_stem_tater"
+      }
+    },
+    "get_warped_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:warped_stem_tater"
       }
     }
   }

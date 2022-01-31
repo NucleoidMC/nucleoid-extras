@@ -2,13 +2,13 @@
   "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:crying_obsidian_tater"
+      "item": "nucleoid_extras:endertater"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.nether_taters.title"
+      "translate": "advancements.nucleoid_extras.adventure_taters.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.nether_taters.description"
+      "translate": "advancements.nucleoid_extras.adventure_taters.description"
     },
     "frame": "goal",
     "show_toast": true,
@@ -16,94 +16,94 @@
     "hidden": false
   },
   "criteria": {
-    "get_crying_obsidian_tater": {
+    "get_red_mooshroom_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:crying_obsidian_tater"
+        "tater": "nucleoid_extras:red_mooshroom_tater"
       }
     },
-    "get_basalt_tater": {
+    "get_snowman_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:basalt_tater"
+        "tater": "nucleoid_extras:snowman_tater"
       }
     },
-    "get_netherite_tater": {
+    "get_magma_cube_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:netherite_tater"
+        "tater": "nucleoid_extras:magma_cube_tater"
       }
     },
-    "get_crimson_tater": {
+    "get_blaze_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:crimson_tater"
+        "tater": "nucleoid_extras:blaze_tater"
       }
     },
-    "get_warped_tater": {
+    "get_cave_spider_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:warped_tater"
+        "tater": "nucleoid_extras:cave_spider_tater"
       }
     },
-    "get_warped_wart_tater": {
+    "get_endertater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:warped_wart_tater"
+        "tater": "nucleoid_extras:endertater"
       }
     },
-    "get_shroomlight_tater": {
+    "get_stone_brick_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:shroomlight_tater"
+        "tater": "nucleoid_extras:stone_brick_tater"
       }
     },
-    "get_strider_tater": {
+    "get_melon_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:strider_tater"
+        "tater": "nucleoid_extras:melon_tater"
       }
     },
-    "get_cold_strider_tater": {
+    "get_mycelium_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:cold_strider_tater"
+        "tater": "nucleoid_extras:mycelium_tater"
       }
     },
-    "get_blackstone_tater": {
+    "get_red_mushroom_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:blackstone_tater"
+        "tater": "nucleoid_extras:red_mushroom_tater"
       }
     },
-    "get_gilded_blackstone_tater": {
+    "get_brown_mushroom_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:gilded_blackstone_tater"
+        "tater": "nucleoid_extras:brown_mushroom_tater"
       }
     },
-    "get_crimson_nylium_tater": {
+    "get_mushroom_stem_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:crimson_nylium_tater"
+        "tater": "nucleoid_extras:mushroom_stem_tater"
       }
     },
-    "get_warped_nylium_tater": {
+    "get_nether_brick_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:warped_nylium_tater"
+        "tater": "nucleoid_extras:nether_brick_tater"
       }
     },
-    "get_crimson_stem_tater": {
+    "get_end_stone_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:crimson_stem_tater"
+        "tater": "nucleoid_extras:end_stone_tater"
       }
     },
-    "get_warped_stem_tater": {
+    "get_eye_of_ender_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:warped_stem_tater"
+        "tater": "nucleoid_extras:eye_of_ender_tater"
       }
     }
   }
