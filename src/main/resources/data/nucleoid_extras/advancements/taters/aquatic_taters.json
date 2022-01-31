@@ -117,6 +117,12 @@
       "conditions": {
         "tater": "nucleoid_extras:drowned_tater"
       }
+    },
+    "get_conduit_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:conduit_tater"
+      }
     }
   }
 }

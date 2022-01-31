@@ -75,6 +75,30 @@
       "conditions": {
         "tater": "nucleoid_extras:inverted_daylight_detector_tater"
       }
+    },
+    "get_guardian_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:guardian_tater"
+      }
+    },
+    "get_elder_guardian_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:elder_guardian_tater"
+      }
+    },
+    "get_slime_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:slime_tater"
+      }
+    },
+    "get_alex_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:alex_tater"
+      }
     }
   }
 }
