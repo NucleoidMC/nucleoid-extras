@@ -69,6 +69,30 @@
       "conditions": {
         "tater": "nucleoid_extras:amethyst_tater"
       }
+    },
+    "get_glow_squid_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:glow_squid_tater"
+      }
+    },
+    "get_deepslate_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:deepslate_tater"
+      }
+    },
+    "get_cobbled_deepslate_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:cobbled_deepslate_tater"
+      }
+    },
+    "get_deepslate_brick_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:deepslate_brick_tater"
+      }
     }
   }
 }
