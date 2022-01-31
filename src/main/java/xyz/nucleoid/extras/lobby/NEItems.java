@@ -56,7 +56,7 @@ public class NEItems {
     public static final Item TINY_POTATO = createHead(NEBlocks.TINY_POTATO);
     public static final Item IRRITATER = createHead(NEBlocks.IRRITATER);
     public static final Item SAD_TATER = createHead(NEBlocks.SAD_TATER);
-    public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
+    public static final Item FLOWERING_AZALEA_TATER = createHead(NEBlocks.FLOWERING_AZALEA_TATER);
     public static final Item STONE_TATER = createHead(NEBlocks.STONE_TATER);
     public static final Item CALCITE_TATER = createHead(NEBlocks.CALCITE_TATER);
     public static final Item TUFF_TATER = createHead(NEBlocks.TUFF_TATER);
@@ -261,6 +261,37 @@ public class NEItems {
     public static final Item WARPED_STEM_TATER = createHead(NEBlocks.WARPED_STEM_TATER);
     public static final Item WITHER_TATER = createHead(NEBlocks.WITHER_TATER);
 
+    public static final Item AZALEA_TATER = createHead(NEBlocks.AZALEA_TATER);
+    public static final Item BELL_TATER = createHead(NEBlocks.BELL_TATER);
+    public static final Item COLD_FROG_TATER = createHead(NEBlocks.COLD_FROG_TATER);
+    public static final Item CONDUIT_TATER = createHead(NEBlocks.CONDUIT_TATER);
+    public static final Item ELDER_GUARDIAN_TATER = createHead(NEBlocks.ELDER_GUARDIAN_TATER);
+    public static final Item END_STONE_BRICK_TATER = createHead(NEBlocks.END_STONE_BRICK_TATER);
+    public static final Item FLOWER_POT_TATER = createHead(NEBlocks.FLOWER_POT_TATER);
+    public static final Item GUARDIAN_TATER = createHead(NEBlocks.GUARDIAN_TATER);
+    public static final Item ILLAGER_TATER = createHead(NEBlocks.ILLAGER_TATER);
+    public static final Item ILLUSIONER_TATER = createHead(NEBlocks.ILLUSIONER_TATER);
+    public static final Item JUKEBOX_TATER = createHead(NEBlocks.JUKEBOX_TATER);
+    public static final Item LANTERN_TATER = createHead(NEBlocks.LANTERN_TATER);
+    public static final Item PIGLIN_TATER = createHead(NEBlocks.PIGLIN_TATER);
+    public static final Item PINK_WITHER_TATER = createHead(NEBlocks.PINK_WITHER_TATER);
+    public static final Item PISTON_TATER = createHead(NEBlocks.PISTON_TATER);
+    public static final Item PURPUR_TATER = createHead(NEBlocks.PURPUR_TATER);
+    public static final Item SOUL_LANTERN_TATER = createHead(NEBlocks.SOUL_LANTERN_TATER);
+    public static final Item SOUL_SOIL_TATER = createHead(NEBlocks.SOUL_SOIL_TATER);
+    public static final Item STICKY_PISTON_TATER = createHead(NEBlocks.STICKY_PISTON_TATER);
+    public static final Item TEMPERATE_FROG_TATER = createHead(NEBlocks.TEMPERATE_FROG_TATER);
+    public static final Item UNDERWATER_TNTATER = createHead(NEBlocks.UNDERWATER_TNTATER);
+    public static final Item VEX_TATER = createHead(NEBlocks.VEX_TATER);
+    public static final Item VILLAGER_TATER = createHead(NEBlocks.VILLAGER_TATER);
+    public static final Item VINDITATER = createHead(NEBlocks.VINDITATER);
+    public static final Item WANDERING_TRADER_TATER = createHead(NEBlocks.WANDERING_TRADER_TATER);
+    public static final Item WARM_FROG_TATER = createHead(NEBlocks.WARM_FROG_TATER);
+    public static final Item WAX_TATER = createHead(NEBlocks.WAX_TATER);
+    public static final Item WITCH_TATER = createHead(NEBlocks.WITCH_TATER);
+    public static final Item ZOMBIE_VILLAGER_TATER = createHead(NEBlocks.ZOMBIE_VILLAGER_TATER);
+    public static final Item ZOMBIFIED_PIGLIN_TATER = createHead(NEBlocks.ZOMBIFIED_PIGLIN_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
@@ -302,7 +333,7 @@ public class NEItems {
         register("tiny_potato", TINY_POTATO);
         register("irritater", IRRITATER);
         register("sad_tater", SAD_TATER);
-        register("azalea_tater", AZALEA_TATER);
+        register("flowering_azalea_tater", FLOWERING_AZALEA_TATER);
         register("stone_tater", STONE_TATER);
         register("calcite_tater", CALCITE_TATER);
         register("tuff_tater", TUFF_TATER);
@@ -508,6 +539,37 @@ public class NEItems {
         register("warped_nylium_tater", WARPED_NYLIUM_TATER);
         register("warped_stem_tater", WARPED_STEM_TATER);
         register("wither_tater", WITHER_TATER);
+
+        register("azalea_tater", AZALEA_TATER);
+        register("bell_tater", BELL_TATER);
+        register("cold_frog_tater", COLD_FROG_TATER);
+        register("conduit_tater", CONDUIT_TATER);
+        register("elder_guardian_tater", ELDER_GUARDIAN_TATER);
+        register("end_stone_brick_tater", END_STONE_BRICK_TATER);
+        register("flower_pot_tater", FLOWER_POT_TATER);
+        register("guardian_tater", GUARDIAN_TATER);
+        register("illager_tater", ILLAGER_TATER);
+        register("illusioner_tater", ILLUSIONER_TATER);
+        register("jukebox_tater", JUKEBOX_TATER);
+        register("lantern_tater", LANTERN_TATER);
+        register("piglin_tater", PIGLIN_TATER);
+        register("pink_wither_tater", PINK_WITHER_TATER);
+        register("piston_tater", PISTON_TATER);
+        register("purpur_tater", PURPUR_TATER);
+        register("soul_lantern_tater", SOUL_LANTERN_TATER);
+        register("soul_soil_tater", SOUL_SOIL_TATER);
+        register("sticky_piston_tater", STICKY_PISTON_TATER);
+        register("temperate_frog_tater", TEMPERATE_FROG_TATER);
+        register("underwater_tntater", UNDERWATER_TNTATER);
+        register("vex_tater", VEX_TATER);
+        register("villager_tater", VILLAGER_TATER);
+        register("vinditater", VINDITATER);
+        register("wandering_trader_tater", WANDERING_TRADER_TATER);
+        register("warm_frog_tater", WARM_FROG_TATER);
+        register("wax_tater", WAX_TATER);
+        register("witch_tater", WITCH_TATER);
+        register("zombie_villager_tater", ZOMBIE_VILLAGER_TATER);
+        register("zombified_piglin_tater", ZOMBIFIED_PIGLIN_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);

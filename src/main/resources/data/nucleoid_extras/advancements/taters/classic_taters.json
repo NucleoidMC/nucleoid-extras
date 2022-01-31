@@ -2,13 +2,13 @@
   "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:endertater"
+      "item": "nucleoid_extras:creeper_tater"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.adventure_taters.title"
+      "translate": "advancements.nucleoid_extras.classic_taters.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.adventure_taters.description"
+      "translate": "advancements.nucleoid_extras.classic_taters.description"
     },
     "frame": "goal",
     "show_toast": true,
@@ -16,100 +16,106 @@
     "hidden": false
   },
   "criteria": {
-    "get_red_mooshroom_tater": {
+    "get_creeper_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:red_mooshroom_tater"
+        "tater": "nucleoid_extras:creeper_tater"
       }
     },
-    "get_snowman_tater": {
+    "get_skeletater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:snowman_tater"
+        "tater": "nucleoid_extras:skeletater"
       }
     },
-    "get_magma_cube_tater": {
+    "get_zombie_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:magma_cube_tater"
+        "tater": "nucleoid_extras:zombie_tater"
       }
     },
-    "get_blaze_tater": {
+    "get_pig_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:blaze_tater"
+        "tater": "nucleoid_extras:pig_tater"
       }
     },
-    "get_cave_spider_tater": {
+    "get_spider_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:cave_spider_tater"
+        "tater": "nucleoid_extras:spider_tater"
       }
     },
-    "get_endertater": {
+    "get_sheep_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:endertater"
+        "tater": "nucleoid_extras:sheep_tater"
       }
     },
-    "get_stone_brick_tater": {
+    "get_bedrock_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:stone_brick_tater"
+        "tater": "nucleoid_extras:bedrock_tater"
       }
     },
-    "get_melon_tater": {
+    "get_sand_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:melon_tater"
+        "tater": "nucleoid_extras:sand_tater"
       }
     },
-    "get_mycelium_tater": {
+    "get_oak_log_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:mycelium_tater"
+        "tater": "nucleoid_extras:oak_log_tater"
       }
     },
-    "get_red_mushroom_tater": {
+    "get_sponge_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:red_mushroom_tater"
+        "tater": "nucleoid_extras:sponge_tater"
       }
     },
-    "get_brown_mushroom_tater": {
+    "get_gold_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:brown_mushroom_tater"
+        "tater": "nucleoid_extras:gold_tater"
       }
     },
-    "get_mushroom_stem_tater": {
+    "get_iron_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:mushroom_stem_tater"
+        "tater": "nucleoid_extras:iron_tater"
       }
     },
-    "get_nether_brick_tater": {
+    "get_tntater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:nether_brick_tater"
+        "tater": "nucleoid_extras:tntater"
       }
     },
-    "get_end_stone_tater": {
+    "get_brick_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:end_stone_tater"
+        "tater": "nucleoid_extras:brick_tater"
       }
     },
-    "get_eye_of_ender_tater": {
+    "get_bookshelf_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:eye_of_ender_tater"
+        "tater": "nucleoid_extras:bookshelf_tater"
       }
     },
-    "get_villager_tater": {
+    "get_obsidian_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:villager_tater"
+        "tater": "nucleoid_extras:obsidian_tater"
+      }
+    },
+    "get_wool_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:wool_tater"
       }
     }
   }

@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.criterion;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
@@ -11,6 +12,7 @@ import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
 	public static final Identifier ID = NucleoidExtras.identifier("tater_collected");
@@ -18,6 +20,9 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
 	@Override
 	protected TaterCollectedCriterion.Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
+		if(tater != null && !Registry.BLOCK.containsId(tater)) {
+			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
+		}
 		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? TinyPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
 		return new Conditions(playerPredicate, tater, count);
 	}
