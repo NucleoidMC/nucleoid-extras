@@ -30,6 +30,7 @@ public class DaylightDetectorTaterBlock extends TinyPotatoBlock implements Block
 	public DaylightDetectorTaterBlock(Settings settings, Block particleBlock, String texture, boolean inverted) {
 		super(settings, particleBlock, texture);
 		this.inverted = inverted;
+		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
 	}
 
 	@Override
