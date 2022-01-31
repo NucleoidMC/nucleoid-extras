@@ -54,6 +54,7 @@ import xyz.nucleoid.extras.util.PagedGui;
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
     private static final Text NONE_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.none");
+    private static final Text NOT_FOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
 
     private static final String OWNER_KEY = "Owner";
     private static final String TATERS_KEY = "Taters";
@@ -92,10 +93,9 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return count;
     }
 
-    private Iterator<Identifier> getBlockIds(ItemStack stack) {
+    private Set<Identifier> getBlockIds(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
-        if (tag == null) return Collections.emptyIterator();
-        if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return Collections.emptyIterator();
+        if (tag == null || !tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return Set.of();
 
         Set<Identifier> blockIds = new HashSet<>();
         NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
@@ -106,7 +106,11 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             }
         }
 
-        return blockIds.stream().sorted().iterator();
+        return blockIds;
+    }
+
+    private static Iterator<Identifier> getAllTaterIds() {
+        return TinyPotatoBlock.TATERS.stream().map(Registry.BLOCK::getId).sorted().iterator();
     }
 
     private MutableText getTitle(ItemStack stack) {
@@ -129,14 +133,18 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             } else {
                 List<GuiElementInterface> taters = new ArrayList<>();
 
-                taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null));
+                taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
 
-                Iterator<Identifier> iterator = this.getBlockIds(stack);
+                Iterator<Identifier> iterator = getAllTaterIds();
                 while (iterator.hasNext()) {
-                    Identifier blockId = iterator.next();
-                    Block block = Registry.BLOCK.get(blockId);
+                    Identifier taterId = iterator.next();
 
-                    taters.add(createGuiElement(stack, user, hand, block, block.getName(), blockId));
+                    if(getBlockIds(stack).contains(taterId)) {
+                        Block tater = Registry.BLOCK.get(taterId);
+                        taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), taterId, true));
+                    } else {
+                        taters.add(createGuiElement(stack, user, hand, Items.POTATO, NOT_FOUND_TEXT, taterId, false));
+                    }
                 }
 
                 var ui = PagedGui.of((ServerPlayerEntity) user, taters);
@@ -148,13 +156,13 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return result;
     }
 
-    private GuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text name, Identifier taterId) {
+    private GuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text name, Identifier taterId, boolean selectable) {
         var guiElementBuilder = new GuiElementBuilder(icon.asItem());
         guiElementBuilder.setName(name);
         guiElementBuilder.hideFlags();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
             ItemStack newStack = user.getStackInHand(hand);
-            if (this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
+            if (selectable && this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
                 TaterBoxItem.setSelectedTater(newStack, taterId);
                 gui.close();
             }
@@ -287,5 +295,9 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             }
         }
         return false;
+    }
+
+    public static boolean containsTater(ItemStack stack, Block tater) {
+        return containsTater(stack, Registry.BLOCK.getId(tater));
     }
 }
