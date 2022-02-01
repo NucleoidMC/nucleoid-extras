@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.lobby.item.GamePortalOpenerItem;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
 import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
@@ -292,6 +293,7 @@ public class NEItems {
     public static final Item ZOMBIE_VILLAGER_TATER = createHead(NEBlocks.ZOMBIE_VILLAGER_TATER);
     public static final Item ZOMBIFIED_PIGLIN_TATER = createHead(NEBlocks.ZOMBIFIED_PIGLIN_TATER);
 
+    public static final Item GAME_PORTAL_OEPNER = new GamePortalOpenerItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
 
@@ -571,6 +573,7 @@ public class NEItems {
         register("zombie_villager_tater", ZOMBIE_VILLAGER_TATER);
         register("zombified_piglin_tater", ZOMBIFIED_PIGLIN_TATER);
 
+        register("game_portal_opener", GAME_PORTAL_OEPNER);
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
 
