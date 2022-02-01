@@ -1,8 +1,8 @@
 {
-  "parent": "nucleoid_extras:taters/first_tater",
+  "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:crying_obsidian_tater"
+      "item": "nucleoid_extras:warped_nylium_tater"
     },
     "title": {
       "translate": "advancements.nucleoid_extras.nether_taters.title"
@@ -56,6 +56,78 @@
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
         "tater": "nucleoid_extras:shroomlight_tater"
+      }
+    },
+    "get_strider_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:strider_tater"
+      }
+    },
+    "get_cold_strider_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:cold_strider_tater"
+      }
+    },
+    "get_blackstone_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:blackstone_tater"
+      }
+    },
+    "get_gilded_blackstone_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:gilded_blackstone_tater"
+      }
+    },
+    "get_crimson_nylium_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:crimson_nylium_tater"
+      }
+    },
+    "get_warped_nylium_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:warped_nylium_tater"
+      }
+    },
+    "get_crimson_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:crimson_stem_tater"
+      }
+    },
+    "get_warped_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:warped_stem_tater"
+      }
+    },
+    "get_piglin_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:piglin_tater"
+      }
+    },
+    "get_soul_lantern_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:soul_lantern_tater"
+      }
+    },
+    "get_soul_soil_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:soul_soil_tater"
+      }
+    },
+    "get_zombified_piglin_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:zombified_piglin_tater"
       }
     }
   }

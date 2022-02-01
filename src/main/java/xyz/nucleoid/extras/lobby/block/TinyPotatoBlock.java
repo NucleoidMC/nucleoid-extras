@@ -71,6 +71,13 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
         return this.getParticleEffect(world.getServer().getTicks());
     }
 
+    public void spawnBlockParticles(ServerWorld world, BlockPos pos, ParticleEffect particleEffect) {
+        if (particleEffect != null) {
+            world.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    1, 0.5, 0.5, 0.5, 0.2);
+        }
+    }
+
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
         return this.getParticleEffect(player.getServer().getTicks());
     }
@@ -111,10 +118,7 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
 
         if (world instanceof ServerWorld serverWorld) {
             ParticleEffect particleEffect = this.getBlockParticleEffect(state, serverWorld, pos, player, hand, hit);
-            if (particleEffect != null) {
-                serverWorld.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        1, 0.5, 0.5, 0.5, 0.2);
-            }
+            this.spawnBlockParticles(serverWorld, pos, particleEffect);
         }
 
         return ActionResult.SUCCESS;

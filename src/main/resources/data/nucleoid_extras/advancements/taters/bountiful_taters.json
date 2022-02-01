@@ -1,14 +1,14 @@
 {
-  "parent": "nucleoid_extras:taters/copper_taters",
+  "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:azalea_tater"
+      "item": "nucleoid_extras:granite_tater"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.caves_and_cliffs_taters.title"
+      "translate": "advancements.nucleoid_extras.bountiful_taters.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.caves_and_cliffs_taters.description"
+      "translate": "advancements.nucleoid_extras.bountiful_taters.description"
     },
     "frame": "goal",
     "show_toast": true,
@@ -16,88 +16,88 @@
     "hidden": false
   },
   "criteria": {
-    "get_copper_tater": {
+    "get_andesite_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:copper_tater"
+        "tater": "nucleoid_extras:andesite_tater"
       }
     },
-    "get_exposed_copper_tater": {
+    "get_dark_prismarine_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:exposed_copper_tater"
+        "tater": "nucleoid_extras:dark_prismarine_tater"
       }
     },
-    "get_weathered_copper_tater": {
+    "get_diorite_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:weathered_copper_tater"
+        "tater": "nucleoid_extras:diorite_tater"
       }
     },
-    "get_oxidized_copper_tater": {
+    "get_granite_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:oxidized_copper_tater"
+        "tater": "nucleoid_extras:granite_tater"
       }
     },
-    "get_azalea_tater": {
+    "get_prismarine_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:azalea_tater"
+        "tater": "nucleoid_extras:prismarine_tater"
       }
     },
-    "get_calcite_tater": {
+    "get_prismarine_brick_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:calcite_tater"
+        "tater": "nucleoid_extras:prismarine_brick_tater"
       }
     },
-    "get_tuff_tater": {
+    "get_red_sandstone_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:tuff_tater"
+        "tater": "nucleoid_extras:red_sandstone_tater"
       }
     },
-    "get_dripstone_tater": {
+    "get_sea_lantern_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:dripstone_tater"
+        "tater": "nucleoid_extras:sea_lantern_tater"
       }
     },
-    "get_amethyst_tater": {
+    "get_sponge_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:amethyst_tater"
+        "tater": "nucleoid_extras:sponge_tater"
       }
     },
-    "get_glow_squid_tater": {
+    "get_inverted_daylight_detector_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:glow_squid_tater"
+        "tater": "nucleoid_extras:inverted_daylight_detector_tater"
       }
     },
-    "get_deepslate_tater": {
+    "get_guardian_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:deepslate_tater"
+        "tater": "nucleoid_extras:guardian_tater"
       }
     },
-    "get_cobbled_deepslate_tater": {
+    "get_elder_guardian_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:cobbled_deepslate_tater"
+        "tater": "nucleoid_extras:elder_guardian_tater"
       }
     },
-    "get_deepslate_brick_tater": {
+    "get_slime_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:deepslate_brick_tater"
+        "tater": "nucleoid_extras:slime_tater"
       }
     },
-    "get_flowering_azalea_tater": {
+    "get_alex_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:flowering_azalea_tater"
+        "tater": "nucleoid_extras:alex_tater"
       }
     }
   }

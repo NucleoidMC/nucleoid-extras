@@ -1,5 +1,5 @@
 {
-  "parent": "nucleoid_extras:taters/first_tater",
+  "parent": "nucleoid_extras:taters/ten_taters",
   "display": {
     "icon": {
       "item": "nucleoid_extras:brain_coral_tater"
@@ -44,6 +44,36 @@
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
         "tater": "nucleoid_extras:tube_coral_tater"
+      }
+    },
+    "get_dead_brain_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dead_brain_coral_tater"
+      }
+    },
+    "get_dead_bubble_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dead_bubble_coral_tater"
+      }
+    },
+    "get_dead_fire_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dead_fire_coral_tater"
+      }
+    },
+    "get_dead_horn_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dead_horn_coral_tater"
+      }
+    },
+    "get_dead_tube_coral_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:dead_tube_coral_tater"
       }
     }
   }

@@ -13,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
 
@@ -28,6 +30,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         if (helmet.getItem() instanceof TaterBoxItem) {
             if (TaterBoxItem.getSelectedTater(helmet) instanceof TinyPotatoBlock tinyPotatoBlock) {
                 ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+                NECriteria.WEAR_TATER.trigger(player, TaterBoxItem.getSelectedTaterId(helmet));
                 if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
                     tinyPotatoBlock.spawnPlayerParticles(player);
                 }
