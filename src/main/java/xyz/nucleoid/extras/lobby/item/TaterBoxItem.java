@@ -20,6 +20,7 @@ import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SkullItem;
@@ -36,6 +37,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -45,6 +47,7 @@ import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NECriteria;
+import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 
@@ -294,5 +297,23 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
     public static boolean containsTater(ItemStack stack, Block tater) {
         return containsTater(stack, Registry.BLOCK.getId(tater));
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        super.appendStacks(group, stacks);
+
+        if(group == NEItems.ITEM_GROUP) {
+            ItemStack fullStack = new ItemStack(this);
+
+            NbtCompound nbt = fullStack.getOrCreateNbt();
+            NbtList taters = nbt.getList(TATERS_KEY, NbtElement.STRING_TYPE);
+
+            TinyPotatoBlock.TATERS.forEach((tater) -> taters.add(NbtString.of(Registry.BLOCK.getId(tater).toString())));
+
+            nbt.put(TATERS_KEY, taters);
+
+            stacks.add(fullStack);
+        }
     }
 }
