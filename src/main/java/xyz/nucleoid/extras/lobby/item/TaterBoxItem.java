@@ -1,7 +1,6 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.UUID;
 
 import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItem;
-import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
@@ -49,12 +46,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
-import xyz.nucleoid.extras.util.PagedGui;
+import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
     private static final Text NONE_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.none");
-    private static final Text NOT_FOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
 
     private static final String OWNER_KEY = "Owner";
     private static final String TATERS_KEY = "Taters";
@@ -138,16 +134,14 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
                 Iterator<Identifier> iterator = getAllTaterIds();
                 while (iterator.hasNext()) {
                     Identifier taterId = iterator.next();
+                    boolean found = TaterBoxItem.containsTater(stack, taterId);
+                    Block tater = Registry.BLOCK.get(taterId);
 
-                    if(getBlockIds(stack).contains(taterId)) {
-                        Block tater = Registry.BLOCK.get(taterId);
-                        taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), taterId, true));
-                    } else {
-                        taters.add(createGuiElement(stack, user, hand, Items.POTATO, NOT_FOUND_TEXT, taterId, false));
-                    }
+                    taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), taterId, found));
                 }
 
-                var ui = PagedGui.of((ServerPlayerEntity) user, taters);
+                var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters);
+                ui.setHideUnfound(true);
                 ui.setTitle(this.getTitle(stack));
                 ui.open();
             }
@@ -156,13 +150,14 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return result;
     }
 
-    private GuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text name, Identifier taterId, boolean selectable) {
-        var guiElementBuilder = new GuiElementBuilder(icon.asItem());
+    private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text name, Identifier taterId, boolean found) {
+        var guiElementBuilder = new TaterBoxGui.TaterGuiElementBuilder(icon.asItem());
         guiElementBuilder.setName(name);
+        guiElementBuilder.setFound(found);
         guiElementBuilder.hideFlags();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
             ItemStack newStack = user.getStackInHand(hand);
-            if (selectable && this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
+            if (found && this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
                 TaterBoxItem.setSelectedTater(newStack, taterId);
                 gui.close();
             }
