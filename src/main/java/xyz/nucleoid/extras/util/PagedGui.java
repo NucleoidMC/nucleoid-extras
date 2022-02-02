@@ -34,9 +34,13 @@ public abstract class PagedGui extends SimpleGui {
         super(type, player, includePlayerInventorySlots);
     }
 
-    protected void nextPage() {
-        this.page = Math.min(this.getPageAmount() - 1, this.page + 1);
+    protected void setPage(int page) {
+        this.page = Math.min(this.getPageAmount() - 1, Math.max(0, page));
         this.updateDisplay();
+    }
+
+    protected void nextPage() {
+        setPage(this.page + 1);
     }
 
     protected boolean canNextPage() {
@@ -44,8 +48,7 @@ public abstract class PagedGui extends SimpleGui {
     }
 
     protected void previousPage() {
-        this.page = Math.max(0, this.page - 1);
-        this.updateDisplay();
+        setPage(this.page - 1);
     }
 
     protected boolean canPreviousPage() {
@@ -104,6 +107,7 @@ public abstract class PagedGui extends SimpleGui {
             default -> DisplayElement.filler();
         };
     }
+
     public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
         private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
@@ -181,9 +185,9 @@ public abstract class PagedGui extends SimpleGui {
         player.playSound(SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1, 1);
     }
 
-    public static final class FromList extends PagedGui {
+    public static class FromList extends PagedGui {
 
-        private final List<GuiElementInterface> list;
+        protected final List<GuiElementInterface> list;
 
         public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces) {
             super(type, player, includePlayerInventorySlots);
@@ -191,14 +195,18 @@ public abstract class PagedGui extends SimpleGui {
             this.updateDisplay();
         }
 
+        protected List<GuiElementInterface> getList() {
+            return list;
+        }
+
         @Override
         protected int getPageAmount() {
-            return this.list.size() / this.getSinglePageSize() + 1;
+            return this.getList().size() / this.getSinglePageSize() + 1;
         }
 
         @Override
         protected DisplayElement getElement(int id) {
-            return this.list.size() > id ? DisplayElement.of(this.list.get(id)) : DisplayElement.empty();
+            return this.getList().size() > id ? DisplayElement.of(this.getList().get(id)) : DisplayElement.empty();
         }
     }
 
