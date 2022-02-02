@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.nucleoid_extras.twenty_five_taters.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

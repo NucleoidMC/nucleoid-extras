@@ -2,13 +2,13 @@
   "parent": "nucleoid_extras:taters/first_tater",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:wither_tater"
+      "item": "nucleoid_extras:tateroid"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.pretty_scary_taters.title"
+      "translate": "advancements.nucleoid_extras.tateroids.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.pretty_scary_taters.description"
+      "translate": "advancements.nucleoid_extras.tateroids.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,46 +16,46 @@
     "hidden": false
   },
   "criteria": {
-    "get_beacon_tater": {
+    "get_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:beacon_tater"
+        "tater": "nucleoid_extras:tateroid"
       }
     },
-    "get_wither_tater": {
+    "get_orange_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:wither_tater"
+        "tater": "nucleoid_extras:orange_tateroid"
       }
     },
-    "get_wither_skeletater": {
+    "get_yellow_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:wither_skeletater"
+        "tater": "nucleoid_extras:yellow_tateroid"
       }
     },
-    "get_shielded_wither_tater": {
+    "get_purple_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:shielded_wither_tater"
+        "tater": "nucleoid_extras:purple_tateroid"
       }
     },
-    "get_zombie_villager_tater": {
+    "get_blue_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:zombie_villager_tater"
+        "tater": "nucleoid_extras:blue_tateroid"
       }
     },
-    "get_witch_tater": {
+    "get_green_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:witch_tater"
+        "tater": "nucleoid_extras:green_tateroid"
       }
     },
-    "get_flower_pot_tater": {
+    "get_red_tateroid": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:flower_pot_tater"
+        "tater": "nucleoid_extras:red_tateroid"
       }
     }
   }

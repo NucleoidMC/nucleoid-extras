@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.nucleoid_extras.beta_taters.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -62,6 +62,12 @@
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
         "tater": "nucleoid_extras:sticky_piston_tater"
+      }
+    },
+    "get_charged_creeper_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:charged_creeper_tater"
       }
     }
   }

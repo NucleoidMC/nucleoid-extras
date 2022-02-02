@@ -6,7 +6,6 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BellBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.entity.LivingEntity;

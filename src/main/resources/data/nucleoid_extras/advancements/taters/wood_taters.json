@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.nucleoid_extras.wood_taters.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -110,6 +110,54 @@
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
         "tater": "nucleoid_extras:warped_stem_tater"
+      }
+    },
+    "get_stripped_oak_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_oak_log_tater"
+      }
+    },
+    "get_stripped_spruce_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_spruce_log_tater"
+      }
+    },
+    "get_stripped_birch_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_birch_log_tater"
+      }
+    },
+    "get_stripped_jungle_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_jungle_log_tater"
+      }
+    },
+    "get_stripped_acacia_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_acacia_log_tater"
+      }
+    },
+    "get_stripped_dark_oak_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_dark_oak_log_tater"
+      }
+    },
+    "get_stripped_crimson_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_crimson_stem_tater"
+      }
+    },
+    "get_stripped_warped_stem_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_warped_stem_tater"
       }
     }
   }

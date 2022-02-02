@@ -1,5 +1,5 @@
 {
-  "parent": "nucleoid_extras:taters/frog_taters",
+  "parent": "nucleoid_extras:taters/froglight_taters",
   "display": {
     "icon": {
       "item": "nucleoid_extras:warden_tater"
@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.nucleoid_extras.wild_taters.description"
     },
-    "frame": "goal",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false

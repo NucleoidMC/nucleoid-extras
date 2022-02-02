@@ -72,7 +72,7 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
     }
 
     public void spawnBlockParticles(ServerWorld world, BlockPos pos, ParticleEffect particleEffect) {
-        if (particleEffect != null) {
+        if (particleEffect != null && world.getRandom().nextInt(getBlockParticleChance()) == 0) {
             world.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                     1, 0.5, 0.5, 0.5, 0.2);
         }
@@ -80,6 +80,10 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
 
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
         return this.getParticleEffect(player.getServer().getTicks());
+    }
+
+    public int getBlockParticleChance() {
+        return 1;
     }
 
     public int getPlayerParticleRate(ServerPlayerEntity player) {

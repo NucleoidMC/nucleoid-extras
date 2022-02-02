@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -28,8 +29,8 @@ public class TargetTaterBlock extends TinyPotatoBlock {
 	private static final int RECOVERABLE_POWER_DELAY = 20;
 	private static final int REGULAR_POWER_DELAY = 8;
 
-	public TargetTaterBlock(Settings settings, Block particleBlock, String texture) {
-		super(settings, particleBlock, texture);
+	public TargetTaterBlock(Settings settings, String texture) {
+		super(settings, Blocks.TARGET, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
 	}
 
@@ -45,7 +46,7 @@ public class TargetTaterBlock extends TinyPotatoBlock {
 
 	private static int trigger(WorldAccess world, BlockState state, BlockHitResult hitResult, Entity entity) {
 		int power = TargetTaterBlock.calculatePower(hitResult, hitResult.getPos());
-		int delay = entity instanceof PersistentProjectileEntity ? 20 : 8;
+		int delay = entity instanceof PersistentProjectileEntity ? RECOVERABLE_POWER_DELAY : REGULAR_POWER_DELAY;
 		if (!world.getBlockTickScheduler().isQueued(hitResult.getBlockPos(), state.getBlock())) {
 			TargetTaterBlock.setPower(world, state, power, hitResult.getBlockPos(), delay);
 		}
