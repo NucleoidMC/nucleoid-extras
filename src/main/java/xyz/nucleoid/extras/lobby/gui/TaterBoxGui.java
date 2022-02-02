@@ -17,8 +17,9 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 public class TaterBoxGui extends PagedGui.FromList {
-	private static final Text SHOW_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.show_unfound").formatted(Formatting.WHITE);
-	private static final Text HIDE_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.hide_unfound").formatted(Formatting.WHITE);
+	protected static final Text SHOW_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.show_unfound").formatted(Formatting.WHITE);
+	protected static final Text HIDE_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.hide_unfound").formatted(Formatting.WHITE);
+	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
 	protected boolean hideUnfound = true;
 
@@ -42,10 +43,14 @@ public class TaterBoxGui extends PagedGui.FromList {
 		}
 	}
 
+	public void toggleHideUnfound() {
+		this.setHideUnfound(!shouldHideUnfound());
+	}
+
 	@Override
 	protected DisplayElement getNavElement(int id) {
 		if(id == 4) {
-			return hideUnfoundButton(this);
+			return TaterBoxGui.hideUnfoundButton(this);
 		} else return super.getNavElement(id);
 	}
 
@@ -53,7 +58,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 	public List<GuiElementInterface> getList() {
 		List<GuiElementInterface> all = super.getList();
 
-		if(shouldHideUnfound()) {
+		if(this.shouldHideUnfound()) {
 			return all.stream().filter(element -> {
 				if(element instanceof TaterGuiElement taterGuiElement) return taterGuiElement.isFound();
 				else return true;
@@ -62,28 +67,18 @@ public class TaterBoxGui extends PagedGui.FromList {
 	}
 
 	public static DisplayElement hideUnfoundButton(TaterBoxGui gui) {
-		if (gui.shouldHideUnfound()) {
-			return DisplayElement.of(
-					new GuiElementBuilder(Items.POISONOUS_POTATO)
-							.setName(SHOW_UNFOUND_TEXT)
-							.hideFlags()
-							.setCallback((x, y, z) -> {
-								playClickSound(gui.player);
-								gui.setHideUnfound(false);
-							})
-			);
-		} else {
-			return DisplayElement.of(
-					new GuiElementBuilder(Items.POISONOUS_POTATO)
-							.setName(HIDE_UNFOUND_TEXT)
-							.hideFlags()
-							.glow()
-							.setCallback((x, y, z) -> {
-								playClickSound(gui.player);
-								gui.setHideUnfound(true);
-							})
-			);
-		}
+		boolean hideUnfound = gui.shouldHideUnfound();
+
+		GuiElementBuilder builder = new GuiElementBuilder(UNFOUND_BUTTON_ICON)
+				.setName(hideUnfound ? SHOW_UNFOUND_TEXT : HIDE_UNFOUND_TEXT)
+				.hideFlags()
+				.setCallback((x, y, z) -> {
+					playClickSound(gui.player);
+					gui.toggleHideUnfound();
+				});
+		if(!hideUnfound) builder.glow();
+
+		return DisplayElement.of(builder);
 	}
 
 	public static class TaterGuiElement extends GuiElement {
@@ -100,7 +95,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 	}
 
 	public static class TaterGuiElementBuilder extends GuiElementBuilder {
-		private static final Text NOT_FOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
+		protected static final Text NOT_FOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
 		protected static final Item UNFOUND_ICON = Items.POTATO;
 
 		protected boolean found;

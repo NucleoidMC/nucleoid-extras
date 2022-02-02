@@ -75,7 +75,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return player.getUuid().equals(uuid) ? ActionResult.SUCCESS : ActionResult.FAIL;
     }
 
-    private int getBlockCount(ItemStack stack) {
+    public int getTaterCount(ItemStack stack) {
         NbtCompound tag = stack.getNbt();
         if (tag == null) return 0;
         if (!tag.contains(TATERS_KEY, NbtElement.LIST_TYPE)) return 0;
@@ -114,7 +114,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
     private MutableText getTitle(ItemStack stack) {
         Text name = this.getName(stack);
-        int count = this.getBlockCount(stack);
+        int count = this.getTaterCount(stack);
         int max = TinyPotatoBlock.TATERS.size();
 
         return new TranslatableText("text.nucleoid_extras.tater_box.title", name, count, max);
@@ -202,7 +202,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         }
 
         player.sendMessage(message, true);
-        TaterBoxItem.triggerCriterion((ServerPlayerEntity) player, taterId, getBlockCount(stack));
+        TaterBoxItem.triggerCriterion((ServerPlayerEntity) player, taterId, getTaterCount(stack));
 
         return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
@@ -247,7 +247,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
         tooltip.add(new TranslatableText("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
 
-        int count = this.getBlockCount(stack);
+        int count = this.getTaterCount(stack);
         int max = TinyPotatoBlock.TATERS.size();
         String percent = String.format("%.2f", count / (double) max * 100);
 
