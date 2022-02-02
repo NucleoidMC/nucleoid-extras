@@ -2,13 +2,13 @@
   "parent": "nucleoid_extras:taters/first_tater",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:copper_tater"
+      "item": "nucleoid_extras:skeletater"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.copper_taters.title"
+      "translate": "advancements.nucleoid_extras.skeletaters.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.copper_taters.description"
+      "translate": "advancements.nucleoid_extras.skeletaters.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,28 +16,28 @@
     "hidden": false
   },
   "criteria": {
-    "get_copper_tater": {
+    "get_skeletater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:copper_tater"
+        "tater": "nucleoid_extras:skeletater"
       }
     },
-    "get_exposed_copper_tater": {
+    "get_wither_skeletater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:exposed_copper_tater"
+        "tater": "nucleoid_extras:wither_skeletater"
       }
     },
-    "get_weathered_copper_tater": {
+    "get_stray_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:weathered_copper_tater"
+        "tater": "nucleoid_extras:stray_tater"
       }
     },
-    "get_oxidized_copper_tater": {
+    "get_mossy_skeletater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:oxidized_copper_tater"
+        "tater": "nucleoid_extras:mossy_skeletater"
       }
     }
   }

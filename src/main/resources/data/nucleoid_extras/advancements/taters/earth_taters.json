@@ -2,13 +2,13 @@
   "parent": "nucleoid_extras:taters/first_tater",
   "display": {
     "icon": {
-      "item": "nucleoid_extras:cobblestone_tater"
+      "item": "nucleoid_extras:moobloom_tater"
     },
     "title": {
-      "translate": "advancements.nucleoid_extras.pre_classic_taters.title"
+      "translate": "advancements.nucleoid_extras.earth_taters.title"
     },
     "description": {
-      "translate": "advancements.nucleoid_extras.pre_classic_taters.description"
+      "translate": "advancements.nucleoid_extras.earth_taters.description"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,40 +16,40 @@
     "hidden": false
   },
   "criteria": {
-    "get_steve_tater": {
+    "get_moobloom_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:steve_tater"
+        "tater": "nucleoid_extras:moobloom_tater"
       }
     },
-    "get_grass_tater": {
+    "get_glow_squid_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:grass_tater"
+        "tater": "nucleoid_extras:glow_squid_tater"
       }
     },
-    "get_cobblestone_tater": {
+    "get_tropical_slime_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:cobblestone_tater"
+        "tater": "nucleoid_extras:tropical_slime_tater"
       }
     },
-    "get_dirt_tater": {
+    "get_muddy_pig_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:dirt_tater"
+        "tater": "nucleoid_extras:muddy_pig_tater"
       }
     },
-    "get_stone_tater": {
+    "get_bouldering_zombie_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:stone_tater"
+        "tater": "nucleoid_extras:bouldering_zombie_tater"
       }
     },
-    "get_oak_tater": {
+    "get_lobber_zombie_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {
-        "tater": "nucleoid_extras:oak_tater"
+        "tater": "nucleoid_extras:lobber_zombie_tater"
       }
     }
   }

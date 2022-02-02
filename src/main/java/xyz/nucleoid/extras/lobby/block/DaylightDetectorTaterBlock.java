@@ -7,11 +7,10 @@ import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.DaylightDetectorBlockEntity;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -27,8 +26,8 @@ public class DaylightDetectorTaterBlock extends TinyPotatoBlock implements Block
 
 	public final boolean inverted;
 
-	public DaylightDetectorTaterBlock(Settings settings, Block particleBlock, String texture, boolean inverted) {
-		super(settings, particleBlock, texture);
+	public DaylightDetectorTaterBlock(Settings settings, String texture, boolean inverted) {
+		super(settings, Blocks.DAYLIGHT_DETECTOR.getDefaultState().with(Properties.INVERTED, inverted), texture);
 		this.inverted = inverted;
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
 	}

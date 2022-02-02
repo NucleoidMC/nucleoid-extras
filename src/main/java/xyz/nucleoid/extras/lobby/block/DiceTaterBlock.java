@@ -17,7 +17,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.tick.OrderedTick;
 
 public class DiceTaterBlock extends TinyPotatoBlock {
     private static final int ROLLING_FACE = 0;

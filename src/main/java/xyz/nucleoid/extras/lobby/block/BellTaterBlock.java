@@ -7,13 +7,13 @@ import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BellBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -31,8 +31,8 @@ import net.minecraft.world.event.GameEvent;
 public class BellTaterBlock extends TinyPotatoBlock implements BlockEntityProvider {
 	public static final BooleanProperty POWERED = Properties.POWERED;
 
-	public BellTaterBlock(Settings settings, Block particleBlock, String texture) {
-		super(settings, particleBlock, texture);
+	public BellTaterBlock(Settings settings, String texture) {
+		super(settings, ParticleTypes.NOTE, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
 	}
 

@@ -82,6 +82,12 @@ public class NEItems {
     public static final Item PAN_TATER = createHead(NEBlocks.PAN_TATER);
     public static final Item WARDEN_TATER = createHead(NEBlocks.WARDEN_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
+    public static final Item RED_TATEROID = createHead(NEBlocks.RED_TATEROID);
+    public static final Item ORANGE_TATEROID = createHead(NEBlocks.ORANGE_TATEROID);
+    public static final Item YELLOW_TATEROID = createHead(NEBlocks.YELLOW_TATEROID);
+    public static final Item GREEN_TATEROID = createHead(NEBlocks.GREEN_TATEROID);
+    public static final Item BLUE_TATEROID = createHead(NEBlocks.BLUE_TATEROID);
+    public static final Item PURPLE_TATEROID = createHead(NEBlocks.PURPLE_TATEROID);
     public static final Item FLIPPED_TATER = createHead(NEBlocks.FLIPPED_TATER);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
     public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
@@ -293,9 +299,24 @@ public class NEItems {
     public static final Item ZOMBIE_VILLAGER_TATER = createHead(NEBlocks.ZOMBIE_VILLAGER_TATER);
     public static final Item ZOMBIFIED_PIGLIN_TATER = createHead(NEBlocks.ZOMBIFIED_PIGLIN_TATER);
 
-    public static final Item GAME_PORTAL_OEPNER = new GamePortalOpenerItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
+    public static final Item BONE_SPIDER_TATER = createHead(NEBlocks.BONE_SPIDER_TATER);
+    public static final Item BOULDERING_ZOMBIE_TATER = createHead(NEBlocks.BOULDERING_ZOMBIE_TATER);
+    public static final Item CHARGED_CREEPER_TATER = createHead(NEBlocks.CHARGED_CREEPER_TATER);
+    public static final Item LOBBER_ZOMBIE_TATER = createHead(NEBlocks.LOBBER_ZOMBIE_TATER);
+    public static final Item MOSSY_SKELETATER = createHead(NEBlocks.MOSSY_SKELETATER);
+    public static final Item STRIPPED_ACACIA_LOG_TATER = createHead(NEBlocks.STRIPPED_ACACIA_LOG_TATER);
+    public static final Item STRIPPED_BIRCH_LOG_TATER = createHead(NEBlocks.STRIPPED_BIRCH_LOG_TATER);
+    public static final Item STRIPPED_CRIMSON_STEM_TATER = createHead(NEBlocks.STRIPPED_CRIMSON_STEM_TATER);
+    public static final Item STRIPPED_DARK_OAK_LOG_TATER = createHead(NEBlocks.STRIPPED_DARK_OAK_LOG_TATER);
+    public static final Item STRIPPED_JUNGLE_LOG_TATER = createHead(NEBlocks.STRIPPED_JUNGLE_LOG_TATER);
+    public static final Item STRIPPED_OAK_LOG_TATER = createHead(NEBlocks.STRIPPED_OAK_LOG_TATER);
+    public static final Item STRIPPED_SPRUCE_LOG_TATER = createHead(NEBlocks.STRIPPED_SPRUCE_LOG_TATER);
+    public static final Item STRIPPED_WARPED_STEM_TATER = createHead(NEBlocks.STRIPPED_WARPED_STEM_TATER);
+    public static final Item TROPICAL_SLIME_TATER = createHead(NEBlocks.TROPICAL_SLIME_TATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
+    public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
 
     private static Item createHead(Block head) {
         return new LobbyHeadItem((PolymerHeadBlock) head, new Item.Settings().group(ITEM_GROUP));
@@ -362,6 +383,12 @@ public class NEItems {
         register("pan_tater", PAN_TATER);
         register("warden_tater", WARDEN_TATER);
         register("tateroid", TATEROID);
+        register("red_tateroid", RED_TATEROID);
+        register("orange_tateroid", ORANGE_TATEROID);
+        register("yellow_tateroid", YELLOW_TATEROID);
+        register("green_tateroid", GREEN_TATEROID);
+        register("blue_tateroid", BLUE_TATEROID);
+        register("purple_tateroid", PURPLE_TATEROID);
         register("flipped_tater", FLIPPED_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
@@ -573,9 +600,24 @@ public class NEItems {
         register("zombie_villager_tater", ZOMBIE_VILLAGER_TATER);
         register("zombified_piglin_tater", ZOMBIFIED_PIGLIN_TATER);
 
-        register("game_portal_opener", GAME_PORTAL_OEPNER);
+        register("bone_spider_tater", BONE_SPIDER_TATER);
+        register("bouldering_zombie_tater", BOULDERING_ZOMBIE_TATER);
+        register("charged_creeper_tater", CHARGED_CREEPER_TATER);
+        register("lobber_zombie_tater", LOBBER_ZOMBIE_TATER);
+        register("mossy_skeletater", MOSSY_SKELETATER);
+        register("stripped_acacia_log_tater", STRIPPED_ACACIA_LOG_TATER);
+        register("stripped_birch_log_tater", STRIPPED_BIRCH_LOG_TATER);
+        register("stripped_crimson_stem_tater", STRIPPED_CRIMSON_STEM_TATER);
+        register("stripped_dark_oak_log_tater", STRIPPED_DARK_OAK_LOG_TATER);
+        register("stripped_jungle_log_tater", STRIPPED_JUNGLE_LOG_TATER);
+        register("stripped_oak_log_tater", STRIPPED_OAK_LOG_TATER);
+        register("stripped_spruce_log_tater", STRIPPED_SPRUCE_LOG_TATER);
+        register("stripped_warped_stem_tater", STRIPPED_WARPED_STEM_TATER);
+        register("tropical_slime_tater", TROPICAL_SLIME_TATER);
+
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
+        register("game_portal_opener", GAME_PORTAL_OPENER);
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
