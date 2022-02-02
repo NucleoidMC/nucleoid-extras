@@ -13,10 +13,14 @@ import eu.pb4.polymer.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterials;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -41,6 +45,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -50,6 +55,7 @@ import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
+import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -171,6 +177,28 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
     private ActionResult tryAdd(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
         Block block = world.getBlockState(pos).getBlock();
+        return this.tryAdd(block, stack, player);
+    }
+
+    public ActionResult tryAdd(Entity entity, Vec3d hitPos, ItemStack stack, PlayerEntity player) {
+        if (entity instanceof ArmorStandEntity armorStand) {
+            EquipmentSlot slot = ((ArmorStandEntityAccessor) (Object) armorStand).callSlotFromPosition(hitPos);
+            return this.tryAdd(armorStand.getEquippedStack(slot), stack, player);
+        }
+
+        return ActionResult.PASS;
+    }
+
+    private ActionResult tryAdd(ItemStack slotStack, ItemStack stack, PlayerEntity player) {
+        if (!slotStack.isEmpty() && slotStack.getItem() instanceof BlockItem slotItem) {
+            Block block = slotItem.getBlock();
+            return this.tryAdd(block, stack, player);
+        }
+
+        return ActionResult.PASS;
+    }
+
+    private ActionResult tryAdd(Block block, ItemStack stack, PlayerEntity player) {
         if (!(block instanceof TinyPotatoBlock)) return ActionResult.PASS;
 
         Identifier taterId = Registry.BLOCK.getId(block);
