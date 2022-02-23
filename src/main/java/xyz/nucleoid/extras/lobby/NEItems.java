@@ -314,6 +314,14 @@ public class NEItems {
     public static final Item STRIPPED_WARPED_STEM_TATER = createHead(NEBlocks.STRIPPED_WARPED_STEM_TATER);
     public static final Item TROPICAL_SLIME_TATER = createHead(NEBlocks.TROPICAL_SLIME_TATER);
 
+    public static final Item APPLE_TATER = createHead(NEBlocks.APPLE_TATER);
+    public static final Item GOLDEN_APPLE_TATER = createHead(NEBlocks.GOLDEN_APPLE_TATER);
+    public static final Item ICE_TATER = createHead(NEBlocks.ICE_TATER);
+    public static final Item KING_TATER = createHead(NEBlocks.KING_TATER);
+    public static final Item RAW_COPPER_TATER = createHead(NEBlocks.RAW_COPPER_TATER);
+    public static final Item RAW_GOLD_TATER = createHead(NEBlocks.RAW_GOLD_TATER);
+    public static final Item RAW_IRON_TATER = createHead(NEBlocks.RAW_IRON_TATER);
+    
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
@@ -614,6 +622,14 @@ public class NEItems {
         register("stripped_spruce_log_tater", STRIPPED_SPRUCE_LOG_TATER);
         register("stripped_warped_stem_tater", STRIPPED_WARPED_STEM_TATER);
         register("tropical_slime_tater", TROPICAL_SLIME_TATER);
+
+        register("apple_tater", APPLE_TATER);
+        register("golden_apple_tater", GOLDEN_APPLE_TATER);
+        register("ice_tater", ICE_TATER);
+        register("king_tater", KING_TATER);
+        register("raw_copper_tater", RAW_COPPER_TATER);
+        register("raw_gold_tater", RAW_GOLD_TATER);
+        register("raw_iron_tater", RAW_IRON_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
