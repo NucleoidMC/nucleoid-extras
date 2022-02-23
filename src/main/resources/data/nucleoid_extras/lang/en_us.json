@@ -307,6 +307,8 @@
   "item.nucleoid_extras.tater_box": "Tater Box",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
 
+  "entity.nucleoid_extras.quick_armor_stand": "Quick Armor Stand",
+
   "text.nucleoid_extras.tater_box.title": "%s (%s of %s taters)",
   "text.nucleoid_extras.tater_box.completion": "%s of %s taters (%s%%)",
   "text.nucleoid_extras.tater_box.added": "%s has been added to your Tater Box!",
