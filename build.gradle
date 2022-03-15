@@ -23,7 +23,7 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.5.41+1.18'
+	modImplementation 'xyz.nucleoid:plasmid:0.5+1.18.2-SNAPSHOT'
 	modImplementation include('xyz.nucleoid:more-codecs:0.1.5')
 
 	modCompileOnly "maven.modrinth:styled-chat:1.2.0"

@@ -7,7 +7,6 @@ import xyz.nucleoid.extras.lobby.NEBlocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -132,9 +131,9 @@ public class BellTaterBlockEntity extends BlockEntity {
 			int j = MathHelper.clamp((i - 21) / -2, 3, 15);
 			for (int k = 0; k < j; ++k) {
 				int l = mutableInt.addAndGet(5);
-				double h = (double) BackgroundHelper.ColorMixer.getRed(l) / 255.0;
-				double m = (double)BackgroundHelper.ColorMixer.getGreen(l) / 255.0;
-				double n = (double)BackgroundHelper.ColorMixer.getBlue(l) / 255.0;
+				double h = (double)(l >> 16 & 0xFF) / 255.0;
+				double m = (double)(l >> 8 & 0xFF) / 255.0;
+				double n = (double)(l & 0xFF) / 255.0;
 				world.addParticle(ParticleTypes.ENTITY_EFFECT, e, (float)pos.getY() + 0.5f, g, h, m, n);
 			}
 		});

@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.lobby.block;
 
 import java.util.Random;
 
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,7 +15,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -25,6 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 
@@ -33,7 +33,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
 
     private static final Identifier LUCKY_TATER_DROPS_ID = NucleoidExtras.identifier("lucky_tater_drops");
-    private static final Tag<Block> LUCKY_TATER_DROPS = TagFactory.BLOCK.create(LUCKY_TATER_DROPS_ID);
+    private static final TagKey<Block> LUCKY_TATER_DROPS = TagKey.of(Registry.BLOCK_KEY, LUCKY_TATER_DROPS_ID);
 
     private final String cooldownTexture;
 
@@ -59,8 +59,9 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
             return ActionResult.FAIL;
         }
 
-        if (world instanceof ServerWorld serverWorld && !LUCKY_TATER_DROPS.values().isEmpty()) {
-            Block drop = LUCKY_TATER_DROPS.getRandom(world.getRandom());
+        var taters = Registry.BLOCK.getEntryList(LUCKY_TATER_DROPS);
+        if (world instanceof ServerWorld serverWorld && taters.isPresent()) {
+            Block drop = taters.get().getRandom(world.getRandom()).get().value();
             if (drop instanceof TinyPotatoBlock taterDrop) {
                 BlockPos dropPos = this.getDropPos(serverWorld, state, pos);
                 if (dropPos != null) {
