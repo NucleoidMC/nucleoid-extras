@@ -159,6 +159,24 @@
       "conditions": {
         "tater": "nucleoid_extras:stripped_warped_stem_tater"
       }
+    },
+    "get_mangrove_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:mangrove_tater"
+      }
+    },
+    "get_mangrove_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:mangrove_log_tater"
+      }
+    },
+    "get_stripped_mangrove_log_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:stripped_mangrove_log_tater"
+      }
     }
   }
 }
