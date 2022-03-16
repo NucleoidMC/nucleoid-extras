@@ -321,6 +321,14 @@ public class NEItems {
     public static final Item RAW_COPPER_TATER = createHead(NEBlocks.RAW_COPPER_TATER);
     public static final Item RAW_GOLD_TATER = createHead(NEBlocks.RAW_GOLD_TATER);
     public static final Item RAW_IRON_TATER = createHead(NEBlocks.RAW_IRON_TATER);
+
+    public static final Item ALLAY_TATER = createHead(NEBlocks.ALLAY_TATER);
+    public static final Item MANGROVE_LOG_TATER = createHead(NEBlocks.MANGROVE_LOG_TATER);
+    public static final Item MANGROVE_TATER = createHead(NEBlocks.MANGROVE_TATER);
+    public static final Item MUD_BRICK_TATER = createHead(NEBlocks.MUD_BRICK_TATER);
+    public static final Item MUD_TATER = createHead(NEBlocks.MUD_TATER);
+    public static final Item PACKED_MUD_TATER = createHead(NEBlocks.PACKED_MUD_TATER);
+    public static final Item STRIPPED_MANGROVE_LOG_TATER = createHead(NEBlocks.STRIPPED_MANGROVE_LOG_TATER);
     
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
@@ -630,6 +638,14 @@ public class NEItems {
         register("raw_copper_tater", RAW_COPPER_TATER);
         register("raw_gold_tater", RAW_GOLD_TATER);
         register("raw_iron_tater", RAW_IRON_TATER);
+
+        register("allay_tater", ALLAY_TATER);
+        register("mangrove_log_tater", MANGROVE_LOG_TATER);
+        register("mangrove_tater", MANGROVE_TATER);
+        register("mud_brick_tater", MUD_BRICK_TATER);
+        register("mud_tater", MUD_TATER);
+        register("packed_mud_tater", PACKED_MUD_TATER);
+        register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);

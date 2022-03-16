@@ -299,6 +299,13 @@
   "block.nucleoid_extras.raw_copper_tater": "Raw Copper Tater",
   "block.nucleoid_extras.raw_gold_tater": "Raw Gold Tater",
   "block.nucleoid_extras.raw_iron_tater": "Raw Iron Tater",
+  "block.nucleoid_extras.allay_tater": "Allay Tater",
+  "block.nucleoid_extras.mangrove_log_tater": "Mangrove Log Tater",
+  "block.nucleoid_extras.mangrove_tater": "Mangrove Tater",
+  "block.nucleoid_extras.mud_brick_tater": "Mud Brick Tater",
+  "block.nucleoid_extras.mud_tater": "Mud Tater",
+  "block.nucleoid_extras.packed_mud_tater": "Packed Mud Tater",
+  "block.nucleoid_extras.stripped_mangrove_log_tater": "Stripped Mangrove Log Tater",
   "block.nucleoid_extras.nucleoid_logo": "Nucleoid Logo",
 
   "block.nucleoid_extras.safe_tnt": "Safe TNT (Lobby only!)",
