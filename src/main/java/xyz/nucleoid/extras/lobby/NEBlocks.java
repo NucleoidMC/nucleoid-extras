@@ -381,6 +381,8 @@ public class NEBlocks {
     public static final Block PACKED_MUD_TATER = createTaterBlock(Blocks.DIRT, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1NDgwOTk3NiwKICAicHJvZmlsZUlkIiA6ICI5MThhMDI5NTU5ZGQ0Y2U2YjE2ZjdhNWQ1M2VmYjQxMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJCZWV2ZWxvcGVyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzY3YTU5MTEwNjFjOTQ5N2MxZTg4OGFhYmU5NzM3MGQ0ZDAwZjkwMGNhNzk4Y2IxYWM4Y2Y0MWZlN2JiNDE1MzIiCiAgICB9CiAgfQp9");
     public static final Block STRIPPED_MANGROVE_LOG_TATER = createTaterBlock(Blocks.STRIPPED_CRIMSON_STEM, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1MDg2MjQ5NSwKICAicHJvZmlsZUlkIiA6ICJhYzM2YmVkZGQxNGQ0YjVmYmQyYzc5OThlMWMwOTg3ZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtYWlzYWthIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2MwM2QwZTc3NDJmYTY2NTA2YjU3MzljOThkMGNmMjk0MTE0NjM2MDg4NzdmYTY2N2NlMjljN2I4NTc5M2QxOGEiCiAgICB9CiAgfQp9");
 
+    public static final Block CORRUPTATER = new CorruptaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), 2);
+
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID, RED_TATEROID, ORANGE_TATEROID, YELLOW_TATEROID, GREEN_TATEROID, BLUE_TATEROID, PURPLE_TATEROID).build();
     public static final BlockEntityType<DaylightDetectorTaterBlockEntity> DAYLIGHT_DETECTOR_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(DaylightDetectorTaterBlockEntity::new, DAYLIGHT_DETECTOR_TATER, INVERTED_DAYLIGHT_DETECTOR_TATER).build();
@@ -754,6 +756,8 @@ public class NEBlocks {
         register("mud_tater", MUD_TATER);
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
+
+        register("corruptater", CORRUPTATER);
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);

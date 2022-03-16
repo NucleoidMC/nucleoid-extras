@@ -329,7 +329,9 @@ public class NEItems {
     public static final Item MUD_TATER = createHead(NEBlocks.MUD_TATER);
     public static final Item PACKED_MUD_TATER = createHead(NEBlocks.PACKED_MUD_TATER);
     public static final Item STRIPPED_MANGROVE_LOG_TATER = createHead(NEBlocks.STRIPPED_MANGROVE_LOG_TATER);
-    
+
+    public static final Item CORRUPTATER = createHead(NEBlocks.CORRUPTATER);
+
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings().group(ITEM_GROUP));
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().group(ITEM_GROUP).maxCount(1));
@@ -646,6 +648,8 @@ public class NEItems {
         register("mud_tater", MUD_TATER);
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
+
+        register("corruptater", CORRUPTATER);
 
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
