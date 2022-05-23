@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -40,7 +41,14 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
 
     @Override
     public Item getPolymerItem(ItemStack stack, ServerPlayerEntity player) {
-        return Items.CLOCK;
+        GamePortal portal = getGamePortal(stack);
+        return portal == null ? Items.CLOCK : portal.getIcon().getItem();
+    }
+
+    @Override
+    public Text getName(ItemStack stack) {
+        GamePortal portal = getGamePortal(stack);
+        return portal == null ? super.getName(stack) : portal.getName();
     }
 
     private static GamePortal getGamePortal(ItemStack stack) {
