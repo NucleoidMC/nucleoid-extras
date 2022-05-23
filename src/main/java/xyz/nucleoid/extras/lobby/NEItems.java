@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.item.GamePortalOpenerItem;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
@@ -21,6 +22,7 @@ import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
 
 import java.util.Collections;
+import java.util.function.Consumer;
 
 public class NEItems {
     public static final PolymerItemGroup ITEM_GROUP = PolymerItemGroup.create(NucleoidExtras.identifier("general"), new TranslatableText("text.nucleoid_extras.name"));
@@ -660,10 +662,34 @@ public class NEItems {
         ITEM_GROUP.setIcon(NUCLEOID_LOGO.getDefaultStack());
     }
 
-    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
-        if (!handler.getPlayer().getInventory().containsAny(Collections.singleton(TATER_BOX))) {
-            handler.getPlayer().getInventory().offer(new ItemStack(TATER_BOX), true);
+    private static boolean tryOfferStack(ServerPlayNetworkHandler handler, Item item, Consumer<ItemStack> consumer) {
+        var inventory = handler.getPlayer().getInventory();
+
+        if (inventory.containsAny(Collections.singleton(item))) {
+            return false;
         }
+
+        var stack = new ItemStack(item);
+        consumer.accept(stack);
+
+        handler.getPlayer().getInventory().offer(stack, true);
+        return true;
+    }
+
+    private static boolean tryOfferStack(ServerPlayNetworkHandler handler, Item item) {
+        return tryOfferStack(handler, item, stack -> {});
+    }
+
+    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+        var config = NucleoidExtrasConfig.get();
+
+        tryOfferStack(handler, TATER_BOX);
+
+        config.gamePortalOpener().ifPresent(gamePortal -> {
+            tryOfferStack(handler, GAME_PORTAL_OPENER, stack -> {
+                GamePortalOpenerItem.setGamePortalId(stack, gamePortal);
+            });
+        });
     }
 
     private static <T extends Item> T register(String id, T item) {
