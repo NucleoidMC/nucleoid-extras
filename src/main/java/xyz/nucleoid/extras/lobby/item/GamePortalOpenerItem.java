@@ -59,4 +59,8 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
 
         return null;
     }
+
+    public static void setGamePortalId(ItemStack stack, Identifier id) {
+        stack.getOrCreateNbt().putString(GAME_PORTAL_KEY, id.toString());
+    }
 }

@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.Identifier;
 import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
 import xyz.nucleoid.extras.error.ErrorReportingConfig;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 public record NucleoidExtrasConfig(
         boolean sidebar,
+        Optional<Identifier> gamePortalOpener,
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
@@ -38,20 +40,21 @@ public record NucleoidExtrasConfig(
     private static final Codec<NucleoidExtrasConfig> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(NucleoidExtrasConfig::sidebar),
+                Identifier.CODEC.optionalFieldOf("game_portal_opener").forGetter(NucleoidExtrasConfig::gamePortalOpener),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
                 Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
-        ).apply(instance, (sidebar, integrations, aliases, filter, errorReporting, devServer) ->
-            new NucleoidExtrasConfig(sidebar, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer)
+        ).apply(instance, (sidebar, gamePortalOpener, integrations, aliases, filter, errorReporting, devServer) ->
+            new NucleoidExtrasConfig(sidebar, gamePortalOpener, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer)
         )
     );
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, null, null, null, ErrorReportingConfig.NONE, false);
+        this(false, Optional.empty(), null, null, null, ErrorReportingConfig.NONE, false);
     }
 
     @NotNull
