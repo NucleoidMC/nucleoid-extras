@@ -1,5 +1,7 @@
 package xyz.nucleoid.extras.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 
@@ -24,6 +26,10 @@ public final class GameVersionResolver {
         return SharedConstants.getGameVersion().getName();
     }
 
+    /**
+     * {@return the name of the highest supported version by ViaVersion, or {@code null} if it could not be resolved}
+     */
+    @Nullable
     private static String getViaVersionHighestSupportedVersion() {
         try {
             int maxVersion = (int) Via.getAPI().getSupportedVersions().last();
