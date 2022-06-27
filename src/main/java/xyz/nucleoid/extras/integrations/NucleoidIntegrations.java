@@ -3,7 +3,6 @@ package xyz.nucleoid.extras.integrations;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.SharedConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +16,7 @@ import xyz.nucleoid.extras.integrations.relay.RemoteCommandIntegration;
 import xyz.nucleoid.extras.integrations.status.PlayerStatusIntegration;
 import xyz.nucleoid.extras.integrations.status.ServerLifecycleIntegration;
 import xyz.nucleoid.extras.integrations.status.ServerPerformanceIntegration;
+import xyz.nucleoid.extras.util.GameVersionResolver;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public final class NucleoidIntegrations {
     void handleConnection() {
         var body = new JsonObject();
         body.addProperty("channel", this.config.channel());
-        body.addProperty("game_version", SharedConstants.getGameVersion().getName());
+        body.addProperty("game_version", GameVersionResolver.getVersion());
 
         var serverIp = this.config.serverIp();
         if (serverIp != null) {
