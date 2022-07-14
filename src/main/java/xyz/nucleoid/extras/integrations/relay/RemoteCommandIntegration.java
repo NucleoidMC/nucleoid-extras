@@ -5,14 +5,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
@@ -35,7 +34,22 @@ public final class RemoteCommandIntegration {
             integrations.bindReceiver("command", body -> {
                 var command = body.get("command").getAsString();
                 var sender = body.get("sender").getAsString();
-                integration.commandQueue.add(new RemoteCommand(command, sender));
+                var discordRoles = body.get("roles").getAsJsonArray();
+                var roles = new ArrayList<String>();
+                roles.add("discord_everyone");
+                var permissionLevel = 0;
+                for (var roleId : discordRoles) {
+                    var role = config.discordRoleMap().get(roleId.getAsString());
+                    if (role != null) {
+                        roles.add(role);
+                    }
+                    var level = config.discordPermissionMap().get(roleId.getAsString());
+                    if (level != null && level > permissionLevel) {
+                        permissionLevel = level;
+                    }
+                }
+
+                integration.commandQueue.add(new RemoteCommand(command, sender, permissionLevel, roles));
             });
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
@@ -56,7 +70,7 @@ public final class RemoteCommandIntegration {
         this.systemSender.send(body);
     }
 
-    record RemoteCommand(String command, String sender) {
+    record RemoteCommand(String command, String sender, int permissionLevel, List<String> roles) {
         ServerCommandSource createCommandSource(MinecraftServer server, Consumer<Text> result) {
             var output = new CommandOutput() {
                 @Override
@@ -81,7 +95,7 @@ public final class RemoteCommandIntegration {
             };
 
             var name = "@" + this.sender;
-            return new ServerCommandSource(output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), 4, name, new LiteralText(name), server, null);
+            return CommandSourceBuilder.INSTANCE.buildCommandSource(output, server, name, this.permissionLevel, this.roles);
         }
     }
 }

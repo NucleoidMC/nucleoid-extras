@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public record IntegrationsConfig(
@@ -12,7 +14,8 @@ public record IntegrationsConfig(
         @Nullable String serverIp,
         boolean sendPlayers, boolean sendGames, boolean sendChat,
         boolean sendLifecycle, boolean sendPerformance,
-        boolean acceptRemoteCommands, boolean sendStatistics
+        boolean acceptRemoteCommands, boolean sendStatistics,
+        Map<String, Integer> discordPermissionMap, Map<String, String> discordRoleMap
 ) {
     public static final Codec<IntegrationsConfig> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -26,11 +29,13 @@ public record IntegrationsConfig(
                 Codec.BOOL.optionalFieldOf("send_lifecycle", true).forGetter(IntegrationsConfig::sendLifecycle),
                 Codec.BOOL.optionalFieldOf("send_performance", true).forGetter(IntegrationsConfig::sendPerformance),
                 Codec.BOOL.optionalFieldOf("accept_remote_commands", false).forGetter(IntegrationsConfig::acceptRemoteCommands),
-                Codec.BOOL.optionalFieldOf("send_statistics", false).forGetter(IntegrationsConfig::sendStatistics)
+                Codec.BOOL.optionalFieldOf("send_statistics", false).forGetter(IntegrationsConfig::sendStatistics),
+                Codec.unboundedMap(Codec.STRING, Codec.intRange(0, 4)).optionalFieldOf("discord_permission_map", Collections.emptyMap()).forGetter(IntegrationsConfig::discordPermissionMap),
+                Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("discord_role_map", Collections.emptyMap()).forGetter(IntegrationsConfig::discordRoleMap)
         ).apply(instance, IntegrationsConfig::new)
     );
 
-    private IntegrationsConfig(String channel, String host, int port, Optional<String> serverIp, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle, boolean sendPerformance, boolean acceptRemoteCommands, boolean sendStatistics) {
-        this(channel, host, port, serverIp.orElse(null), sendPlayers, sendGames, sendChat, sendLifecycle, sendPerformance, acceptRemoteCommands, sendStatistics);
+    private IntegrationsConfig(String channel, String host, int port, Optional<String> serverIp, boolean sendPlayers, boolean sendGames, boolean sendChat, boolean sendLifecycle, boolean sendPerformance, boolean acceptRemoteCommands, boolean sendStatistics, Map<String, Integer> discordPermissionMap, Map<String, String> discordRoleMap) {
+        this(channel, host, port, serverIp.orElse(null), sendPlayers, sendGames, sendChat, sendLifecycle, sendPerformance, acceptRemoteCommands, sendStatistics, discordPermissionMap, discordRoleMap);
     }
 }
