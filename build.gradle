@@ -30,8 +30,6 @@ dependencies {
 	modCompileOnly "maven.modrinth:styled-chat:1.2.0"
 	modCompileOnly "com.viaversion:viaversion-api:4.3.1"
 	modCompileOnly "dev.gegy:player-roles-api:1.5.2"
-	// Depend on the full mod to use internals that aren't in the API
-	modCompileOnly "dev.gegy:player-roles:1.5.2"
 
 	/*modRuntime ("supercoder79:databreaker:0.2.7") {
 		exclude module : "fabric-loader"

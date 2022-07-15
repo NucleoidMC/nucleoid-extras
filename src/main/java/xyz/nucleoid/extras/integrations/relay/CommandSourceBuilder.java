@@ -5,7 +5,8 @@ import dev.gegy.roles.api.Role;
 import dev.gegy.roles.api.RoleReader;
 import dev.gegy.roles.api.VirtualServerCommandSource;
 import dev.gegy.roles.api.override.RoleOverrideReader;
-import dev.gegy.roles.override.RoleOverrideMap;
+import dev.gegy.roles.api.override.RoleOverrideType;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
@@ -14,10 +15,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public interface CommandSourceBuilder {
     CommandSourceBuilder INSTANCE = FabricLoader.getInstance().isModLoaded("player_roles") ? new PlayerRoles() : new Vanilla();
@@ -41,17 +41,35 @@ public interface CommandSourceBuilder {
         @Override
         public ServerCommandSource buildCommandSource(CommandOutput output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
             var resolvedRoles = new ArrayList<Role>();
-            var overrideMap = new RoleOverrideMap();
             for (var roleId : roles) {
                 var role = PlayerRolesApi.provider().get(roleId);
                 if (role != null) {
                     resolvedRoles.add(role);
                 }
             }
+
             resolvedRoles.sort(null);
+
+            var overrides = new Reference2ObjectOpenHashMap<RoleOverrideType<?>, List<Object>>();
             for (var role : resolvedRoles) {
-                overrideMap.addAll(role.getOverrides());
+                for (var type : role.getOverrides().typeSet()) {
+                    overrides.computeIfAbsent(type, __ -> new ArrayList<>()).addAll(role.getOverrides().get(type));
+                }
             }
+
+            var overrideReader = new RoleOverrideReader() {
+                @Override
+                @SuppressWarnings("unchecked")
+                public @Nullable <T> Collection<T> getOrNull(RoleOverrideType<T> type) {
+                    return (List<T>) overrides.get(type);
+                }
+
+                @Override
+                public Set<RoleOverrideType<?>> typeSet() {
+                    return overrides.keySet();
+                }
+            };
+
             var roleReader = new RoleReader() {
                 @NotNull
                 @Override
@@ -66,7 +84,7 @@ public interface CommandSourceBuilder {
 
                 @Override
                 public RoleOverrideReader overrides() {
-                    return overrideMap;
+                    return overrideReader;
                 }
             };
             return new VirtualServerCommandSource(roleReader, output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, new LiteralText(name), server, null);

@@ -17,6 +17,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 public final class RemoteCommandIntegration {
+    private static final String DISCORD_EVERYONE_ROLE = "discord_everyone";
+
     private final ConcurrentLinkedQueue<RemoteCommand> commandQueue = new ConcurrentLinkedQueue<>();
 
     private final IntegrationSender systemSender;
@@ -36,7 +38,7 @@ public final class RemoteCommandIntegration {
                 var sender = body.get("sender").getAsString();
                 var discordRoles = body.get("roles").getAsJsonArray();
                 var roles = new ArrayList<String>();
-                roles.add("discord_everyone");
+                roles.add(DISCORD_EVERYONE_ROLE);
                 var permissionLevel = 0;
                 for (var roleId : discordRoles) {
                     var role = config.discordRoleMap().get(roleId.getAsString());
