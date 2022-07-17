@@ -12,7 +12,6 @@ import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
@@ -76,7 +75,7 @@ public final class RemoteCommandIntegration {
         ServerCommandSource createCommandSource(MinecraftServer server, Consumer<Text> result) {
             var output = new CommandOutput() {
                 @Override
-                public void sendSystemMessage(Text message, UUID senderUuid) {
+                public void sendMessage(Text message) {
                     result.accept(message);
                 }
 

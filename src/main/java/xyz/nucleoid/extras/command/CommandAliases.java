@@ -2,7 +2,7 @@ package xyz.nucleoid.extras.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
@@ -15,7 +15,7 @@ import java.util.UUID;
 public final class CommandAliases {
     private static final CommandOutput NO_FEEDBACK_OUTPUT = new CommandOutput() {
         @Override
-        public void sendSystemMessage(Text message, UUID senderUuid) {
+        public void sendMessage(Text message) {
         }
 
         @Override
@@ -35,7 +35,7 @@ public final class CommandAliases {
     };
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             var config = NucleoidExtrasConfig.get();
             var aliases = config.aliases();
             if (aliases == null) {

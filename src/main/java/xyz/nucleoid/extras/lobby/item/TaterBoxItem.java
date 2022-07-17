@@ -35,7 +35,6 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -58,8 +57,8 @@ import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
-    private static final Text NOT_OWNER_MESSAGE = new TranslatableText("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
-    private static final Text NONE_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.none");
+    private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
+    private static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
 
     private static final String OWNER_KEY = "Owner";
     private static final String TATERS_KEY = "Taters";
@@ -123,7 +122,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         int count = this.getTaterCount(stack);
         int max = TinyPotatoBlock.TATERS.size();
 
-        return new TranslatableText("text.nucleoid_extras.tater_box.title", name, count, max);
+        return Text.translatable("text.nucleoid_extras.tater_box.title", name, count, max);
     }
 
     @Override
@@ -219,14 +218,14 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         Text message;
 
         if (alreadyAdded) {
-            message = new TranslatableText("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
+            message = Text.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
         } else {
             NbtList taters = tag.getList(TATERS_KEY, NbtElement.STRING_TYPE);
 
             taters.add(NbtString.of(taterId.toString()));
             tag.put(TATERS_KEY, taters);
 
-            message = new TranslatableText("text.nucleoid_extras.tater_box.added", block.getName());
+            message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
         }
 
         player.sendMessage(message, true);
@@ -273,13 +272,13 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             selectedName = NONE_TEXT;
         }
 
-        tooltip.add(new TranslatableText("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
 
         int count = this.getTaterCount(stack);
         int max = TinyPotatoBlock.TATERS.size();
         String percent = String.format("%.2f", count / (double) max * 100);
 
-        tooltip.add(new TranslatableText("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
     }
 
     @Nullable

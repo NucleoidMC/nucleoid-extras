@@ -11,7 +11,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public interface CommandSourceBuilder {
 
         @Override
         public ServerCommandSource buildCommandSource(CommandOutput output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
-            return new ServerCommandSource(output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, new LiteralText(name), server, null);
+            return new ServerCommandSource(output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, Text.literal(name), server, null);
         }
     }
 
@@ -87,7 +87,7 @@ public interface CommandSourceBuilder {
                     return overrideReader;
                 }
             };
-            return new VirtualServerCommandSource(roleReader, output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, new LiteralText(name), server, null);
+            return new VirtualServerCommandSource(roleReader, output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, Text.literal(name), server, null);
         }
     }
 }

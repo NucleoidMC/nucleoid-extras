@@ -15,10 +15,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,6 @@ import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
 
 import java.util.List;
-import java.util.Random;
 
 public class QuickArmorStandItem extends Item implements PolymerItem {
     public QuickArmorStandItem(Settings settings) {
@@ -69,7 +68,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
                     this.setRotations(armorStandEntity, world.random);
                     serverWorld.spawnEntityAndPassengers(armorStandEntity);
                     world.playSound(null, armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
-                    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity);
+                    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.getPos());
                 }
 
                 itemStack.decrement(1);
@@ -100,6 +99,6 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+        tooltip.add(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }

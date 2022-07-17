@@ -1,24 +1,22 @@
 package xyz.nucleoid.extras.lobby.gui;
 
-import java.util.List;
-
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
-import xyz.nucleoid.extras.util.PagedGui;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import xyz.nucleoid.extras.util.PagedGui;
+
+import java.util.List;
 
 public class TaterBoxGui extends PagedGui.FromList {
-	protected static final Text SHOW_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.show_unfound").formatted(Formatting.WHITE);
-	protected static final Text HIDE_UNFOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.hide_unfound").formatted(Formatting.WHITE);
+	protected static final Text SHOW_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.show_unfound").formatted(Formatting.WHITE);
+	protected static final Text HIDE_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.hide_unfound").formatted(Formatting.WHITE);
 	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
 	protected boolean hideUnfound = true;
@@ -95,7 +93,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 	}
 
 	public static class TaterGuiElementBuilder extends GuiElementBuilder {
-		protected static final Text NOT_FOUND_TEXT = new TranslatableText("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
+		protected static final Text NOT_FOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
 		protected static final Item UNFOUND_ICON = Items.POTATO;
 
 		protected boolean found;

@@ -1,19 +1,19 @@
 package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
+import eu.pb4.placeholders.api.ParserContext;
+import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.MessageType;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -45,16 +45,18 @@ public final class ChatRelayIntegration {
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
 
             if (FabricLoader.getInstance().isModLoaded("styledchat")) {
-                StyledChatEvents.MESSAGE_CONTENT_SEND.register((message, sender, filtered) -> {
-                    if (!filtered) {
-                        integration.onSendChatMessage(sender, message.getString());
+                StyledChatEvents.MESSAGE_CONTENT.register((message, context) -> {
+                    if (context.hasPlayer()) {
+                        var text = message.toText(ParserContext.of(PlaceholderContext.KEY, context), true);
+                        var player = context.player();
+                        assert player != null;
+                        integration.onSendChatMessage(player, text.getString());
                     }
                     return message;
                 });
             } else {
-                Stimuli.global().listen(PlayerChatEvent.EVENT, (sender, message) -> {
-                    var content = NucleoidExtras.getChatMessageContent(message);
-                    integration.onSendChatMessage(sender, content);
+                Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
+                    integration.onSendChatMessage(player, message.getContent().getString());
                     return ActionResult.PASS;
                 });
             }
@@ -123,28 +125,25 @@ public final class ChatRelayIntegration {
         }
     }
 
-    private ActionResult onSendChatMessage(ServerPlayerEntity player, String content) {
+    private void onSendChatMessage(ServerPlayerEntity player, String content) {
         var body = new JsonObject();
 
-        var profile = player.getGameProfile();
-
         var senderRoot = new JsonObject();
-        senderRoot.addProperty("id", profile.getId().toString());
-        senderRoot.addProperty("name", profile.getName());
+        senderRoot.addProperty("id", player.getUuidAsString());
+        senderRoot.addProperty("name", player.getGameProfile().getName());
 
         body.add("sender", senderRoot);
         body.addProperty("content", content);
 
         this.chatSender.send(body);
 
-        return ActionResult.PASS;
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
         var playerManager = server.getPlayerManager();
 
         var sender = message.getSenderName();
-        var prefix = new LiteralText("<@").append(sender).append(">").formatted(Formatting.GRAY);
+        var prefix = Text.literal("<@").append(sender).append(">").formatted(Formatting.GRAY);
         var result = new MessageBuilder(prefix);
 
         if (message.replyingTo != null) {
@@ -152,30 +151,30 @@ public final class ChatRelayIntegration {
         }
 
         for (var line : message.lines) {
-            result.append(new LiteralText(line));
+            result.append(Text.literal(line));
         }
 
         if (message.attachments != null) {
             for (var attachment : message.attachments) {
-                result.append(new LiteralText("[Attachment: " + attachment.name + "]").styled(style ->
+                result.append(Text.literal("[Attachment: " + attachment.name + "]").styled(style ->
                     style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
                             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("Open attachment")))
+                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open attachment")))
                 ));
             }
         }
 
-        playerManager.broadcast(result.build(), MessageType.CHAT, Util.NIL_UUID);
+        playerManager.broadcast(result.build(), MessageType.SYSTEM);
     }
 
     private MutableText createReplyText(ChatMessage message) {
         var summary = message.getSummary();
 
-        var replyText = new LiteralText("(replying to @")
+        var replyText = Text.literal("(replying to @")
                 .append(message.getSenderName());
 
         if (summary != null) {
-            replyText = replyText.append(": ").append(new LiteralText(summary).formatted(Formatting.ITALIC));
+            replyText = replyText.append(": ").append(Text.literal(summary).formatted(Formatting.ITALIC));
         }
 
         replyText = replyText.append(")");
@@ -193,11 +192,11 @@ public final class ChatRelayIntegration {
         private static final int SUMMARY_LENGTH = 40;
 
         MutableText getSenderName() {
-            MutableText sender = new LiteralText(this.sender);
+            MutableText sender = Text.literal(this.sender);
             if (this.nameColor != null) {
                 var style = sender.getStyle()
                         .withColor(this.nameColor)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(this.senderUserId)));
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(this.senderUserId)));
                 sender = sender.setStyle(style);
             }
             return sender;
@@ -221,13 +220,13 @@ public final class ChatRelayIntegration {
     }
 
     static class MessageBuilder {
-        private static final MutableText NEW_LINE = new LiteralText("\n | ").formatted(Formatting.GRAY);
+        private static final MutableText NEW_LINE = Text.literal("\n | ").formatted(Formatting.GRAY);
 
         MutableText text;
         boolean first = true;
 
         MessageBuilder(Text prefix) {
-            this.text = new LiteralText("").append(prefix).append(" ");
+            this.text = Text.empty().append(prefix).append(" ");
         }
 
         void append(MutableText text) {

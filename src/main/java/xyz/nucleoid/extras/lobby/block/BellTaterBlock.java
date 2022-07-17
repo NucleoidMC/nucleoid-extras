@@ -83,7 +83,7 @@ public class BellTaterBlock extends TinyPotatoBlock implements BlockEntityProvid
 			}
 			bellTaterBlockEntity.activate(direction);
 			world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0f, 1.0f);
-			world.emitGameEvent(entity, GameEvent.RING_BELL, pos);
+			world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
 			return true;
 		}
 		return false;

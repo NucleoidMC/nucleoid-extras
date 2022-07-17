@@ -14,8 +14,8 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Vibration;
 import net.minecraft.world.event.BlockPositionSource;
+import net.minecraft.world.event.EntityPositionSource;
 import net.minecraft.world.event.PositionSource;
 
 public class WardenTaterBlock extends TinyPotatoBlock {
@@ -28,13 +28,13 @@ public class WardenTaterBlock extends TinyPotatoBlock {
 
     @Override
     public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return getTaterVibrationParticleEffect(pos, world);
+        return getTaterVibrationParticleEffect(pos, new BlockPositionSource(pos), world);
     }
 
     @Override
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
         BlockPos pos = new BlockPos(player.getX(), player.getEyeY(), player.getZ());
-        return getTaterVibrationParticleEffect(pos, player.getWorld());
+        return getTaterVibrationParticleEffect(pos, new EntityPositionSource(player, 0), player.getWorld());
     }
 
     @Override
@@ -42,7 +42,7 @@ public class WardenTaterBlock extends TinyPotatoBlock {
         return ARRIVAL_TICKS;
     }
 
-    private static ParticleEffect getTaterVibrationParticleEffect(BlockPos pos, ServerWorld world) {
+    private static ParticleEffect getTaterVibrationParticleEffect(BlockPos pos, PositionSource source, ServerWorld world) {
         LongList taters = new LongArrayList();
 
         int range = (int) (BOX_SIZE / 2d);
@@ -60,7 +60,7 @@ public class WardenTaterBlock extends TinyPotatoBlock {
         int index = world.getRandom().nextInt(taters.size());
         BlockPos taterPos = BlockPos.fromLong(taters.getLong(index));
 
-        return createParticleEffect(pos, taterPos);
+        return new VibrationParticleEffect(new BlockPositionSource(taterPos), (int) Math.floor(Math.sqrt(pos.getSquaredDistance(taterPos))));
     }
 
     private static boolean isVibrationTater(BlockState state) {
@@ -70,12 +70,5 @@ public class WardenTaterBlock extends TinyPotatoBlock {
 
         Block block = state.getBlock();
         return block instanceof TinyPotatoBlock && !(block instanceof WardenTaterBlock);
-    }
-
-    private static ParticleEffect createParticleEffect(BlockPos origin, BlockPos destination) {
-        PositionSource destinationSource = new BlockPositionSource(destination);
-        Vibration vibration = new Vibration(origin, destinationSource, ARRIVAL_TICKS);
-
-        return new VibrationParticleEffect(vibration);
     }
 }
