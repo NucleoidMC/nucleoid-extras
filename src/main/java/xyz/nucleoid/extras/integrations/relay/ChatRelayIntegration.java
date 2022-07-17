@@ -6,9 +6,9 @@ import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.message.MessageSender;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -50,14 +50,13 @@ public final class ChatRelayIntegration {
                         var text = message.toText(ParserContext.of(PlaceholderContext.KEY, context), true);
                         var player = context.player();
                         assert player != null;
-                        var sender = player.asMessageSender();
-                        integration.onSendChatMessage(sender, text.getString());
+                        integration.onSendChatMessage(player, text.getString());
                     }
                     return message;
                 });
             } else {
-                Stimuli.global().listen(PlayerChatEvent.EVENT, (sender, message) -> {
-                    integration.onSendChatMessage(sender, message.getContent().getString());
+                Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
+                    integration.onSendChatMessage(player, message.getContent().getString());
                     return ActionResult.PASS;
                 });
             }
@@ -126,12 +125,12 @@ public final class ChatRelayIntegration {
         }
     }
 
-    private void onSendChatMessage(MessageSender sender, String content) {
+    private void onSendChatMessage(ServerPlayerEntity player, String content) {
         var body = new JsonObject();
 
         var senderRoot = new JsonObject();
-        senderRoot.addProperty("id", sender.uuid().toString());
-        senderRoot.addProperty("name", sender.name().getString());
+        senderRoot.addProperty("id", player.getUuidAsString());
+        senderRoot.addProperty("name", player.getGameProfile().getName());
 
         body.add("sender", senderRoot);
         body.addProperty("content", content);
