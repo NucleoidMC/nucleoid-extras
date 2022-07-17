@@ -20,7 +20,7 @@ public class LobbyHeadItem extends PolymerHeadBlockItem {
 
     @Override
     public Text getName() {
-        return Text.literal("").append(super.getName()).append(" ").append(Text.translatable("text.nucleoid_extras.lobby_only"));
+        return Text.empty().append(super.getName()).append(" ").append(Text.translatable("text.nucleoid_extras.lobby_only"));
     }
 
     @Override

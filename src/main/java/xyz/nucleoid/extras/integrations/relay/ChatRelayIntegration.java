@@ -14,7 +14,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -51,15 +50,14 @@ public final class ChatRelayIntegration {
                         var text = message.toText(ParserContext.of(PlaceholderContext.KEY, context), true);
                         var player = context.player();
                         assert player != null;
-                        var sender = new MessageSender(player.getUuid(), player.getPlayerListName());
+                        var sender = player.asMessageSender();
                         integration.onSendChatMessage(sender, text.getString());
                     }
                     return message;
                 });
             } else {
                 Stimuli.global().listen(PlayerChatEvent.EVENT, (sender, message) -> {
-                    var content = NucleoidExtras.getChatMessageContent(message.getContent());
-                    integration.onSendChatMessage(sender, content);
+                    integration.onSendChatMessage(sender, message.getContent().getString());
                     return ActionResult.PASS;
                 });
             }
@@ -167,7 +165,7 @@ public final class ChatRelayIntegration {
             }
         }
 
-        playerManager.broadcast(result.build(), MessageType.CHAT);
+        playerManager.broadcast(result.build(), MessageType.SYSTEM);
     }
 
     private MutableText createReplyText(ChatMessage message) {
@@ -229,7 +227,7 @@ public final class ChatRelayIntegration {
         boolean first = true;
 
         MessageBuilder(Text prefix) {
-            this.text = Text.literal("").append(prefix).append(" ");
+            this.text = Text.empty().append(prefix).append(" ");
         }
 
         void append(MutableText text) {

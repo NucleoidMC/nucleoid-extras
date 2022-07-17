@@ -3,13 +3,9 @@ package xyz.nucleoid.extras;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
@@ -58,23 +54,5 @@ public final class NucleoidExtras implements ModInitializer {
 
     public static Identifier identifier(String path) {
         return new Identifier(ID, path);
-    }
-
-    @Nullable
-    public static String getChatMessageContent(Text message) {
-        if (message.getContent() instanceof TranslatableTextContent translatable) {
-            var args = translatable.getArgs();
-            if (args.length == 2) {
-                var content = args[1];
-                if (content instanceof String string) {
-                    return string;
-                } else if (content instanceof StringVisitable visitable) {
-                    return visitable.getString();
-                }
-            }
-        } else {
-            return message.getString();
-        }
-        return null;
     }
 }

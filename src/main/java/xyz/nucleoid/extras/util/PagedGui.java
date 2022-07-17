@@ -111,7 +111,7 @@ public abstract class PagedGui extends SimpleGui {
         private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
                 new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE)
-                        .setName(Text.literal(""))
+                        .setName(Text.empty())
                         .hideFlags()
         );
 

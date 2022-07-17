@@ -5,6 +5,7 @@ import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
@@ -16,12 +17,7 @@ public class PlayerListHelper {
 
     @Nullable
     private static PlayerPublicKey.PublicKeyData getPublicKey(ServerPlayerEntity player) {
-        var publicKey = player.getPublicKey();
-        if (publicKey == null) {
-            return null;
-        } else {
-            return publicKey.data();
-        }
+        return Util.map(player.getPublicKey(), PlayerPublicKey::data);
     }
 
     public static GameMode getGameMode(ServerPlayerEntity player, boolean gray) {
@@ -30,7 +26,7 @@ public class PlayerListHelper {
 
     public static PlayerListS2CPacket getUpdatePacket(ServerPlayerEntity player, PlayerListS2CPacket.Action action, boolean gray) {
         var packet = new PlayerListS2CPacket(action);
-        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), getDisplayName(player, gray), getPublicKey(player)));
+        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), getDisplayName(player, gray), null));
 
         return packet;
     }
