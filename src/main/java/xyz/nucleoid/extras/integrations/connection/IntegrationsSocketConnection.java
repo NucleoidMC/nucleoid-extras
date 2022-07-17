@@ -37,7 +37,6 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
     private static final int FRAME_HEADER_SIZE = 4;
 
     private static final Gson GSON = new Gson();
-    private static final JsonParser JSON_PARSER = new JsonParser();
 
     private final Handler handler;
 
@@ -119,7 +118,7 @@ public final class IntegrationsSocketConnection extends SimpleChannelInboundHand
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf message) {
-        var json = JSON_PARSER.parse(message.toString(StandardCharsets.UTF_8)).getAsJsonObject();
+        var json = JsonParser.parseString(message.toString(StandardCharsets.UTF_8)).getAsJsonObject();
         var type = json.get("type").getAsString();
         var body = json.getAsJsonObject("body");
         this.handler.acceptMessage(type, body);
