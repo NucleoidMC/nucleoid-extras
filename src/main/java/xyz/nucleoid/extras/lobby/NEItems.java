@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItemGroup;
-
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
@@ -11,21 +10,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.extras.lobby.item.GamePortalOpenerItem;
-import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
-import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
-import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
-import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
+import xyz.nucleoid.extras.lobby.item.*;
 
 import java.util.Collections;
 import java.util.function.Consumer;
 
 public class NEItems {
-    public static final PolymerItemGroup ITEM_GROUP = PolymerItemGroup.create(NucleoidExtras.identifier("general"), new TranslatableText("text.nucleoid_extras.name"));
+    public static final PolymerItemGroup ITEM_GROUP = PolymerItemGroup.create(NucleoidExtras.identifier("general"), Text.translatable("text.nucleoid_extras.name"));
 
     public static final Item NUCLEOID_LOGO = createHead(NEBlocks.NUCLEOID_LOGO);
 

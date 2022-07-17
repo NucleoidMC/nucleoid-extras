@@ -82,7 +82,7 @@ public final class GameStatusIntegration {
         }
 
         void addGame(GameConfig<?> game, int playerCount) {
-            this.games.add(new GameEntry(game.name().asString(), game.type().id(), playerCount));
+            this.games.add(new GameEntry(game.name().getString(), game.type().id(), playerCount));
         }
 
         JsonObject serialize() {

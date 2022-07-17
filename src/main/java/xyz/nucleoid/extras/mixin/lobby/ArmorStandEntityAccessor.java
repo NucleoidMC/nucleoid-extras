@@ -9,6 +9,6 @@ import net.minecraft.util.math.Vec3d;
 
 @Mixin(ArmorStandEntity.class)
 public interface ArmorStandEntityAccessor {
-    @Invoker("slotFromPosition")
-    public abstract EquipmentSlot callSlotFromPosition(Vec3d hitPos);
+    @Invoker("getSlotFromPosition")
+    EquipmentSlot callSlotFromPosition(Vec3d hitPos);
 }

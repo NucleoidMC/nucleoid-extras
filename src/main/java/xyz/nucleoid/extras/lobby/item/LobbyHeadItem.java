@@ -5,10 +5,8 @@ import eu.pb4.polymer.api.item.PolymerHeadBlockItem;
 
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +20,7 @@ public class LobbyHeadItem extends PolymerHeadBlockItem {
 
     @Override
     public Text getName() {
-        return new LiteralText("").append(super.getName()).append(" ").append(new TranslatableText("text.nucleoid_extras.lobby_only"));
+        return Text.literal("").append(super.getName()).append(" ").append(Text.translatable("text.nucleoid_extras.lobby_only"));
     }
 
     @Override
@@ -33,6 +31,6 @@ public class LobbyHeadItem extends PolymerHeadBlockItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableText("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+        tooltip.add(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }

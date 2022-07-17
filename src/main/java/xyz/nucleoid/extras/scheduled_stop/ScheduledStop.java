@@ -3,14 +3,13 @@ package xyz.nucleoid.extras.scheduled_stop;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.network.MessageType;
+import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import xyz.nucleoid.plasmid.event.GameEvents;
 import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameOpenException;
@@ -31,7 +30,7 @@ public final class ScheduledStop {
     private static int stopTime = Integer.MAX_VALUE;
 
     public static void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
             registerCommands(dispatcher)
         );
 
@@ -62,13 +61,12 @@ public final class ScheduledStop {
             stopTime = time + FORCE_STOP_TIME;
 
             server.getPlayerManager().broadcast(
-                    new TranslatableText("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
+                    Text.translatable("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
                             .formatted(Formatting.BOLD, Formatting.RED),
-                    MessageType.SYSTEM,
-                    Util.NIL_UUID
+                    MessageType.SYSTEM
             );
         } else {
-            source.sendError(new TranslatableText("nucleoid.stop.scheduled.already"));
+            source.sendError(Text.translatable("nucleoid.stop.scheduled.already"));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -105,7 +103,7 @@ public final class ScheduledStop {
 
     private static void openGame(GameConfig<?> config, GameSpace gameSpace) {
         if (stopScheduled) {
-            throw new GameOpenException(new TranslatableText("nucleoid.stop.game.open"));
+            throw new GameOpenException(Text.translatable("nucleoid.stop.game.open"));
         }
     }
 }

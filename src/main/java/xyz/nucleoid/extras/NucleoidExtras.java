@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -62,7 +62,7 @@ public final class NucleoidExtras implements ModInitializer {
 
     @Nullable
     public static String getChatMessageContent(Text message) {
-        if (message instanceof TranslatableText translatable) {
+        if (message.getContent() instanceof TranslatableTextContent translatable) {
             var args = translatable.getArgs();
             if (args.length == 2) {
                 var content = args[1];

@@ -44,7 +44,7 @@ public final class ChatFilterConfig {
     }
 
     private static MutableText formatFeedback(Text text) {
-        return text.shallowCopy().styled(style -> {
+        return text.copy().styled(style -> {
             if (style.getColor() == null) {
                 return style.withColor(Formatting.RED);
             } else {

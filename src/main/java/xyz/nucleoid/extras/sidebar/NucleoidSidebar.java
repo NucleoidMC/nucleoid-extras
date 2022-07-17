@@ -4,10 +4,8 @@ import eu.pb4.sidebars.api.Sidebar;
 import eu.pb4.sidebars.api.lines.LineBuilder;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -35,27 +33,27 @@ public final class NucleoidSidebar {
     private static final Style LINK_STYLE = Style.EMPTY.withColor(0x94eeff);
 
     private static final String NAME = "Nucleoid";
-    private static final Text DEV_TITLE = new LiteralText(" (DEV)").setStyle(Style.EMPTY.withColor(0xbf0059));
+    private static final Text DEV_TITLE = Text.literal(" (DEV)").setStyle(Style.EMPTY.withColor(0xbf0059));
 
-    private static final Text NAME_APPEND = new LiteralText(".xyz").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withBold(false));
+    private static final Text NAME_APPEND = Text.literal(".xyz").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withBold(false));
 
-    private static final Text TITLE_MAIN = new LiteralText(NAME).setStyle(MAIN_TITLE_STYLE).append(NAME_APPEND);
-    private static final Text TITLE_ALT = new LiteralText(NAME).setStyle(ALT_TITLE_STYLE).append(NAME_APPEND);
+    private static final Text TITLE_MAIN = Text.literal(NAME).setStyle(MAIN_TITLE_STYLE).append(NAME_APPEND);
+    private static final Text TITLE_ALT = Text.literal(NAME).setStyle(ALT_TITLE_STYLE).append(NAME_APPEND);
 
 
     private static final Text[] TITLE_ANIMATION_1 = createAnimatedTitle(NAME, NAME_APPEND, MAIN_TITLE_STYLE, FLASH_TITLE_STYLE, ALT_TITLE_STYLE);
     private static final Text[] TITLE_ANIMATION_2 = createAnimatedTitle(NAME, NAME_APPEND, ALT_TITLE_STYLE, FLASH_TITLE_STYLE, MAIN_TITLE_STYLE);
     private static final int TITLE_SIZE = NAME.length();
 
-    private static final Text SIZE_FORCING_TEXT = new LiteralText(" ".repeat(34));
+    private static final Text SIZE_FORCING_TEXT = Text.literal(" ".repeat(34));
 
     private static Text[] createAnimatedTitle(String string, Text append, Style leftStyle, Style middleStyle, Style rightStyle) {
         List<Text> texts = new ArrayList<>();
 
         for (int x = 0; x < string.length(); x++) {
-            texts.add(new LiteralText(x == 0 ? "" : string.substring(0, x)).setStyle(leftStyle).append(
-                    new LiteralText(string.substring(x, x + 1)).setStyle(middleStyle))
-                    .append(new LiteralText(string.substring(x + 1)).setStyle(rightStyle))
+            texts.add(Text.literal(x == 0 ? "" : string.substring(0, x)).setStyle(leftStyle).append(
+                    Text.literal(string.substring(x, x + 1)).setStyle(middleStyle))
+                    .append(Text.literal(string.substring(x + 1)).setStyle(rightStyle))
                     .append(append)
             );
         }
@@ -89,7 +87,7 @@ public final class NucleoidSidebar {
             }
             if (title != null) {
                 if (config.devServer()) {
-                    this.widget.setTitle(title.shallowCopy().append(DEV_TITLE));
+                    this.widget.setTitle(title.copy().append(DEV_TITLE));
                 } else {
                     this.widget.setTitle(title);
                 }
@@ -101,47 +99,47 @@ public final class NucleoidSidebar {
             b.add(SIZE_FORCING_TEXT);
             b.add((p) -> {
                 if (p != null) {
-                    return new LiteralText("» ").append(
-                            new TranslatableText("nucleoid.sidebar.welcome",
-                                    new LiteralText("").formatted(Formatting.WHITE).append(p.getDisplayName())
+                    return Text.literal("» ").append(
+                            Text.translatable("nucleoid.sidebar.welcome",
+                                    Text.literal("").formatted(Formatting.WHITE).append(p.getDisplayName())
                             ).setStyle(TOP_SIDEBAR_STYLE)
                     ).formatted(Formatting.GRAY);
                 } else {
-                    return LiteralText.EMPTY;
+                    return Text.empty();
                 }
             });
 
             int playerCount = server.getCurrentPlayerCount();
-            b.add(new LiteralText("» ").append(
-                        new TranslatableText("nucleoid.sidebar.player_in_game." + (playerCount < 2 ? "1" : "more"),
-                                new LiteralText("" + playerCount).formatted(Formatting.WHITE)
+            b.add(Text.literal("» ").append(
+                        Text.translatable("nucleoid.sidebar.player_in_game." + (playerCount < 2 ? "1" : "more"),
+                                Text.literal("" + playerCount).formatted(Formatting.WHITE)
                         ).setStyle(TOP_SIDEBAR_STYLE)
             ).formatted(Formatting.GRAY));
 
-            b.add(LiteralText.EMPTY);
+            b.add(Text.empty());
 
             var openGames = GameSpaceManager.get().getOpenGameSpaces();
             if (!openGames.isEmpty()) {
                 this.writeGamesToSidebar(b, openGames);
             } else {
-                b.add(new TranslatableText("nucleoid.sidebar.game.title.no_games").setStyle(GAME_TITLE_STYLE));
+                b.add(Text.translatable("nucleoid.sidebar.game.title.no_games").setStyle(GAME_TITLE_STYLE));
             }
 
-            b.add(LiteralText.EMPTY);
+            b.add(Text.empty());
             if (altText) {
-                b.add(new TranslatableText("nucleoid.sidebar.join.1", new LiteralText("/game join").formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
+                b.add(Text.translatable("nucleoid.sidebar.join.1", Text.literal("/game join").formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
             } else {
-                b.add(new TranslatableText("nucleoid.sidebar.join.2").formatted(Formatting.GRAY));
+                b.add(Text.translatable("nucleoid.sidebar.join.2").formatted(Formatting.GRAY));
             }
 
-            b.add(LiteralText.EMPTY);
+            b.add(Text.empty());
 
-            b.add(new TranslatableText("nucleoid.discord").setStyle(LINK_STYLE));
+            b.add(Text.translatable("nucleoid.discord").setStyle(LINK_STYLE));
         });
     }
 
     private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames) {
-        builder.add(new TranslatableText("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
+        builder.add(Text.translatable("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
                 .sorted(Comparator.comparingInt((ManagedGameSpace space) -> space.getPlayers().size()).reversed())
@@ -151,15 +149,15 @@ public final class NucleoidSidebar {
             var name = game.getMetadata().sourceConfig().shortName();
 
             int players = game.getPlayers().size();
-            var playersText = new TranslatableText("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
+            var playersText = Text.translatable("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
 
-            builder.add(new LiteralText(" • ")
+            builder.add(Text.literal(" • ")
                     .formatted(Formatting.DARK_GRAY)
-                    .append(new TranslatableText("nucleoid.sidebar.game.entry", name, playersText).formatted(Formatting.WHITE)));
+                    .append(Text.translatable("nucleoid.sidebar.game.entry", name, playersText).formatted(Formatting.WHITE)));
         });
 
         if (openGames.size() > 4) {
-            builder.add(new TranslatableText("nucleoid.sidebar.game.more", openGames.size() - 4).setStyle(GAME_COUNT_STYLE));
+            builder.add(Text.translatable("nucleoid.sidebar.game.more", openGames.size() - 4).setStyle(GAME_COUNT_STYLE));
         }
     }
 

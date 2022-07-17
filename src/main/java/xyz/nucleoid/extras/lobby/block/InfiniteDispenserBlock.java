@@ -25,11 +25,11 @@ public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlo
         BlockPointerImpl pointer = new BlockPointerImpl(world, pos);
         DispenserBlockEntity blockEntity = pointer.getBlockEntity();
 
-        int slot = blockEntity.chooseNonEmptySlot();
+        int slot = blockEntity.chooseNonEmptySlot(world.getRandom());
 
         if (slot < 0) {
             world.syncWorldEvent(WorldEvents.DISPENSER_FAILS, pos, 0);
-            world.emitGameEvent(GameEvent.DISPENSE_FAIL, pos);
+            world.emitGameEvent(GameEvent.DISPENSE_FAIL, pos, GameEvent.Emitter.of(pointer.getBlockState()));
         } else {
             ItemStack stack = blockEntity.getStack(slot);
             DispenserBehavior behavior = this.getBehaviorForItem(stack);
