@@ -1,11 +1,7 @@
 package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
-import eu.pb4.placeholders.api.ParserContext;
-import eu.pb4.placeholders.api.PlaceholderContext;
-import eu.pb4.styledchat.StyledChatEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,22 +40,10 @@ public final class ChatRelayIntegration {
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
 
-            if (FabricLoader.getInstance().isModLoaded("styledchat")) {
-                StyledChatEvents.MESSAGE_CONTENT.register((message, context) -> {
-                    if (context.hasPlayer()) {
-                        var text = message.toText(ParserContext.of(PlaceholderContext.KEY, context), true);
-                        var player = context.player();
-                        assert player != null;
-                        integration.onSendChatMessage(player, text.getString());
-                    }
-                    return message;
-                });
-            } else {
-                Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
-                    integration.onSendChatMessage(player, message.getContent().getString());
-                    return ActionResult.PASS;
-                });
-            }
+            Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
+                integration.onSendChatMessage(player, message.getContent().getString());
+                return ActionResult.PASS;
+            });
         }
     }
 
