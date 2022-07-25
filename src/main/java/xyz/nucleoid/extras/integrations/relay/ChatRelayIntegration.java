@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,18 +41,11 @@ public final class ChatRelayIntegration {
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
 
-            Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
-                System.out.println("== Message Received");
-                System.out.println("Mes: " + message.getContent().getString());
-                try {
-                    integration.onSendChatMessage(player, message.getContent().getString());
-                    System.out.println("Sent to backend");
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    System.out.println("Didn't work");
-                }
 
-                return ActionResult.PASS;
+            ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
+                if (typeKey.equals(MessageType.CHAT)) {
+                    integration.onSendChatMessage(sender, message.raw().getContent().getString());
+                }
             });
         }
     }
