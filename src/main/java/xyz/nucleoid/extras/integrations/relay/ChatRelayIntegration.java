@@ -41,7 +41,16 @@ public final class ChatRelayIntegration {
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
 
             Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
-                integration.onSendChatMessage(player, message.getContent().getString());
+                System.out.println("== Message Received");
+                System.out.println("Mes: " + message.getContent().getString());
+                try {
+                    integration.onSendChatMessage(player, message.getContent().getString());
+                    System.out.println("Sent to backend");
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    System.out.println("Didn't work");
+                }
+
                 return ActionResult.PASS;
             });
         }
