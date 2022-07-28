@@ -5,7 +5,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -63,7 +62,7 @@ public final class ScheduledStop {
             server.getPlayerManager().broadcast(
                     Text.translatable("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
                             .formatted(Formatting.BOLD, Formatting.RED),
-                    MessageType.SYSTEM
+                    false
             );
         } else {
             source.sendError(Text.translatable("nucleoid.stop.scheduled.already"));

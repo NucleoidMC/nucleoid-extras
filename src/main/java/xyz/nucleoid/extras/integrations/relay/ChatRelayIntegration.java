@@ -3,19 +3,15 @@ package xyz.nucleoid.extras.integrations.relay;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.minecraft.network.message.MessageType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.stimuli.Stimuli;
-import xyz.nucleoid.stimuli.event.player.PlayerChatEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -41,11 +37,8 @@ public final class ChatRelayIntegration {
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
 
-
-            ServerMessageEvents.CHAT_MESSAGE.register((message, sender, typeKey) -> {
-                if (typeKey.equals(MessageType.CHAT)) {
-                    integration.onSendChatMessage(sender, message.raw().getContent().getString());
-                }
+            ServerMessageEvents.CHAT_MESSAGE.register((message, sender, parameters) -> {
+                integration.onSendChatMessage(sender, message.getContent().getString());
             });
         }
     }
@@ -151,7 +144,7 @@ public final class ChatRelayIntegration {
             }
         }
 
-        playerManager.broadcast(result.build(), MessageType.SYSTEM);
+        playerManager.broadcast(result.build(), false);
     }
 
     private MutableText createReplyText(ChatMessage message) {

@@ -13,7 +13,7 @@ public final class ChatFilter {
             return;
         }
 
-        Stimuli.global().listen(PlayerChatEvent.EVENT, (player, sender, message) -> {
+        Stimuli.global().listen(PlayerChatEvent.EVENT, (player, message, parameters) -> {
             if (config.test(message.getContent().getString())) {
                 config.sendFeedbackTo(player);
                 return ActionResult.FAIL;

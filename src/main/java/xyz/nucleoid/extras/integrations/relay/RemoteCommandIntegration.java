@@ -61,7 +61,7 @@ public final class RemoteCommandIntegration {
         RemoteCommand command;
         while ((command = this.commandQueue.poll()) != null) {
             var commandSource = command.createCommandSource(server, this::sendCommandResult);
-            server.getCommandManager().execute(commandSource, command.command);
+            server.getCommandManager().executeWithPrefix(commandSource, command.command);
         }
     }
 
