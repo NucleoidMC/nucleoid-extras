@@ -327,6 +327,10 @@ public class NEItems {
     public static final Item PACKED_MUD_TATER = createHead(NEBlocks.PACKED_MUD_TATER);
     public static final Item STRIPPED_MANGROVE_LOG_TATER = createHead(NEBlocks.STRIPPED_MANGROVE_LOG_TATER);
 
+    public static final Item BRONZE_CAPSULE_TATER = createHead(NEBlocks.BRONZE_CAPSULE_TATER);
+    public static final Item SILVER_CAPSULE_TATER = createHead(NEBlocks.SILVER_CAPSULE_TATER);
+    public static final Item GOLD_CAPSULE_TATER = createHead(NEBlocks.GOLD_CAPSULE_TATER);
+
     public static final Item CORRUPTATER = createHead(NEBlocks.CORRUPTATER);
 
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().group(ITEM_GROUP).maxDamage(0));
@@ -645,6 +649,10 @@ public class NEItems {
         register("mud_tater", MUD_TATER);
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
+
+        register("bronze_capsule_tater", BRONZE_CAPSULE_TATER);
+        register("silver_capsule_tater", SILVER_CAPSULE_TATER);
+        register("gold_capsule_tater", GOLD_CAPSULE_TATER);
 
         register("corruptater", CORRUPTATER);
 

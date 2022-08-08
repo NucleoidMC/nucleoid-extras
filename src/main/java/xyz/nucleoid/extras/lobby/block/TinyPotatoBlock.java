@@ -107,6 +107,13 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
         }
     }
 
+    /**
+     * {@return whether the block should be removed after the tater is collected}
+     */
+    public boolean isFickle() {
+        return false;
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
