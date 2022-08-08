@@ -17,6 +17,7 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 
@@ -58,9 +60,8 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
             return ActionResult.FAIL;
         }
 
-        var taters = Registry.BLOCK.getEntryList(LUCKY_TATER_DROPS);
-        if (world instanceof ServerWorld serverWorld && taters.isPresent()) {
-            Block drop = taters.get().getRandom(world.getRandom()).get().value();
+        if (world instanceof ServerWorld serverWorld) {
+            Block drop = this.getDrop(serverWorld);
             if (drop instanceof TinyPotatoBlock taterDrop) {
                 BlockPos dropPos = this.getDropPos(serverWorld, state, pos);
                 if (dropPos != null) {
@@ -87,6 +88,28 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    private Block getDrop(ServerWorld world) {
+        var drops = Registry.BLOCK.getEntryList(LUCKY_TATER_DROPS);
+
+        if (drops.isEmpty()) {
+            return null;
+        }
+
+        var builder = DataPool.<Block>builder();
+
+        for (RegistryEntry<Block> entry : drops.get()) {
+            Block block = entry.value();
+            int weight = block instanceof LuckyTaterDrop drop ? drop.getWeight() : 1;
+
+            builder.add(block, weight);
+        }
+
+        return builder
+            .build()
+            .getDataOrEmpty(world.getRandom())
+            .orElse(null);
     }
 
     private BlockPos getDropPos(ServerWorld world, BlockState state, BlockPos pos) {

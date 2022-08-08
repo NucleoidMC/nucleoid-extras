@@ -12,6 +12,7 @@ import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -175,8 +176,16 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     }
 
     private ActionResult tryAdd(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
-        Block block = world.getBlockState(pos).getBlock();
-        return this.tryAdd(block, stack, player);
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+
+        ActionResult result = this.tryAdd(block, stack, player);
+
+        if (isFickle(result, block, player)) {
+            world.breakBlock(pos, false);
+        }
+
+        return result;
     }
 
     public ActionResult tryAdd(Entity entity, Vec3d hitPos, ItemStack stack, PlayerEntity player) {
@@ -191,7 +200,13 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private ActionResult tryAdd(ItemStack slotStack, ItemStack stack, PlayerEntity player) {
         if (!slotStack.isEmpty() && slotStack.getItem() instanceof BlockItem slotItem) {
             Block block = slotItem.getBlock();
-            return this.tryAdd(block, stack, player);
+            ActionResult result = this.tryAdd(block, stack, player);
+
+            if (isFickle(result, block, player)) {
+                slotStack.setCount(0);
+            }
+
+            return result;
         }
 
         return ActionResult.PASS;
@@ -295,6 +310,10 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         if(id == null) return null;
 
         return Registry.BLOCK.get(id);
+    }
+
+    private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {
+        return result.isAccepted() && block instanceof TinyPotatoBlock tater && tater.isFickle() && !player.isCreative();
     }
 
     public static void setSelectedTater(ItemStack stack, @Nullable Identifier selectedTaterId) {
