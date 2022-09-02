@@ -2,16 +2,24 @@ package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.api.item.PolymerItemGroup;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.item.*;
@@ -78,6 +86,7 @@ public class NEItems {
     public static final Item NONBINARY_TATER = createHead(NEBlocks.NONBINARY_TATER);
     public static final Item PAN_TATER = createHead(NEBlocks.PAN_TATER);
     public static final Item WARDEN_TATER = createHead(NEBlocks.WARDEN_TATER);
+    public static final Item VIRAL_TATER = createHead(NEBlocks.VIRAL_TATER);
     public static final Item TATEROID = createHead(NEBlocks.TATEROID);
     public static final Item RED_TATEROID = createHead(NEBlocks.RED_TATEROID);
     public static final Item ORANGE_TATEROID = createHead(NEBlocks.ORANGE_TATEROID);
@@ -397,6 +406,7 @@ public class NEItems {
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
         register("warden_tater", WARDEN_TATER);
+        register("viral_tater", VIRAL_TATER);
         register("tateroid", TATEROID);
         register("red_tateroid", RED_TATEROID);
         register("orange_tateroid", ORANGE_TATEROID);
@@ -654,6 +664,8 @@ public class NEItems {
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
+        UseEntityCallback.EVENT.register(NEItems::onUseEntity);
+
         ITEM_GROUP.setIcon(NUCLEOID_LOGO.getDefaultStack());
     }
 
@@ -685,6 +697,20 @@ public class NEItems {
                 GamePortalOpenerItem.setGamePortalId(stack, gamePortal);
             });
         });
+    }
+
+    private static ActionResult onUseEntity(PlayerEntity player, World world, Hand hand, Entity entity, EntityHitResult hitResult) {
+        if (!player.getWorld().isClient() && hitResult != null) {
+            ItemStack stack = player.getStackInHand(hand);
+            if (stack.getItem() instanceof TaterBoxItem taterBox) {
+                Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
+                ActionResult result = taterBox.tryAdd(entity, hitPos, stack, player);
+
+                return result.isAccepted() ? result : ActionResult.FAIL;
+            }
+        }
+
+        return ActionResult.PASS;
     }
 
     private static <T extends Item> T register(String id, T item) {
