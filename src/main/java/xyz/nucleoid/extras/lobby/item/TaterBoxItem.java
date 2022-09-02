@@ -34,6 +34,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -51,6 +52,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
@@ -65,6 +67,9 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final String TATERS_KEY = "Taters";
     private static final String SELECTED_TATER_KEY = "SelectedTater";
     private static final int COLOR = 0xCEADAA;
+
+    private static final Identifier VIRAL_TATERS_ID = NucleoidExtras.identifier("viral_taters");
+    private static final TagKey<Block> VIRAL_TATERS = TagKey.of(Registry.BLOCK_KEY, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
         super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, settings);
@@ -192,6 +197,16 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         if (entity instanceof ArmorStandEntity armorStand) {
             EquipmentSlot slot = ((ArmorStandEntityAccessor) (Object) armorStand).callSlotFromPosition(hitPos);
             return this.tryAdd(armorStand.getEquippedStack(slot), stack, player);
+        } else if (entity instanceof PlayerEntity targetPlayer) {
+            ItemStack targetStack = targetPlayer.getEquippedStack(EquipmentSlot.HEAD);
+            
+            if (targetStack.getItem() instanceof TaterBoxItem) {
+                Block targetTater = TaterBoxItem.getSelectedTater(targetStack);
+
+                if (targetTater != null && targetTater.getDefaultState().isIn(VIRAL_TATERS)) {
+                    return this.tryAdd(targetTater, stack, player);
+                }
+            }
         }
 
         return ActionResult.PASS;
