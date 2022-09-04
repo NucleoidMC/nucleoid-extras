@@ -16,6 +16,8 @@ import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.config.GameConfig;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
+import java.util.ArrayList;
+
 import static net.minecraft.server.command.CommandManager.literal;
 
 public final class ScheduledStop {
@@ -77,7 +79,8 @@ public final class ScheduledStop {
             stopTime = Integer.MAX_VALUE;
             graceTime = Integer.MAX_VALUE;
 
-            for (var gameSpace : GameSpaceManager.get().getOpenGameSpaces()) {
+            var games = new ArrayList<>(GameSpaceManager.get().getOpenGameSpaces());
+            for (var gameSpace : games) {
                 gameSpace.close(GameCloseReason.CANCELED);
             }
 
