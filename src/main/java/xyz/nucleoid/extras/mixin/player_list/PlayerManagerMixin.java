@@ -26,9 +26,9 @@ public abstract class PlayerManagerMixin {
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"))
     private void sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
-        var player = playerManager.getPlayer(entry.getProfile().getId());
+        var player = playerManager.getPlayer(entry.profileId());
 
-        var grayPacket = PlayerListHelper.getAddPlayerPacket(player, true);
+        var grayPacket = PlayerListHelper.createAddPacket(player, true);
 
         for (var target : this.playerMap.values()) {
             if (PlayerListHelper.shouldGray(player, target)) {
@@ -42,10 +42,10 @@ public abstract class PlayerManagerMixin {
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V", ordinal = 7))
     private void sendOthersToJoining(ServerPlayNetworkHandler networkHandler, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
-        var player = this.getPlayer(entry.getProfile().getId());
+        var player = this.getPlayer(entry.profileId());
 
         if (PlayerListHelper.shouldGray(player, networkHandler.player)) {
-            networkHandler.sendPacket(PlayerListHelper.getAddPlayerPacket(player, true));
+            networkHandler.sendPacket(PlayerListHelper.createAddPacket(player, true));
         } else {
             networkHandler.sendPacket(whitePacket);
         }

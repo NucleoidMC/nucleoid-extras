@@ -1,9 +1,11 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import eu.pb4.polymer.api.utils.PolymerUtils;
+import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
@@ -19,9 +21,9 @@ public final class CorruptaterBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state) {
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
         var tater = getTater();
-        return tater.getPolymerSkinValue(tater.getDefaultState());
+        return tater.getPolymerSkinValue(tater.getDefaultState(), pos, player);
     }
 
     private TinyPotatoBlock getTater() {

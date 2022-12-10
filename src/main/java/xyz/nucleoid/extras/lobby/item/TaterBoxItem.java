@@ -1,15 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
-
-import eu.pb4.polymer.api.block.PolymerHeadBlock;
-import eu.pb4.polymer.api.item.PolymerItem;
+import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
+import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,39 +10,25 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterials;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.SkullItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.NECriteria;
@@ -58,6 +36,8 @@ import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+
+import java.util.*;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -69,7 +49,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final int COLOR = 0xCEADAA;
 
     private static final Identifier VIRAL_TATERS_ID = NucleoidExtras.identifier("viral_taters");
-    private static final TagKey<Block> VIRAL_TATERS = TagKey.of(Registry.BLOCK_KEY, VIRAL_TATERS_ID);
+    private static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
         super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, settings);
@@ -120,7 +100,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     }
 
     private static Iterator<Identifier> getAllTaterIds() {
-        return TinyPotatoBlock.TATERS.stream().map(Registry.BLOCK::getId).sorted().iterator();
+        return TinyPotatoBlock.TATERS.stream().map(Registries.BLOCK::getId).sorted().iterator();
     }
 
     private MutableText getTitle(ItemStack stack) {
@@ -149,7 +129,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
                 while (iterator.hasNext()) {
                     Identifier taterId = iterator.next();
                     boolean found = TaterBoxItem.containsTater(stack, taterId);
-                    Block tater = Registry.BLOCK.get(taterId);
+                    Block tater = Registries.BLOCK.get(taterId);
 
                     taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), taterId, found));
                 }
@@ -230,7 +210,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private ActionResult tryAdd(Block block, ItemStack stack, PlayerEntity player) {
         if (!(block instanceof TinyPotatoBlock)) return ActionResult.PASS;
 
-        Identifier taterId = Registry.BLOCK.getId(block);
+        Identifier taterId = Registries.BLOCK.getId(block);
 
         ActionResult owner = this.isOwner(stack, player);
         if (owner == ActionResult.FAIL) {
@@ -274,12 +254,12 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
-        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, player);
+    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipContext context, @Nullable ServerPlayerEntity player) {
+        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, context, player);
 
         Block selectedTater = TaterBoxItem.getSelectedTater(itemStack);
-        if (selectedTater instanceof PolymerHeadBlock polymerHeadBlock) {
-            NbtCompound skullOwner = polymerHeadBlock.getPolymerHeadSkullOwner(selectedTater.getDefaultState());
+        if (selectedTater instanceof PolymerHeadBlock polymerHeadBlock && player != null) {
+            NbtCompound skullOwner = polymerHeadBlock.getPolymerHeadSkullOwner(selectedTater.getDefaultState(), player.getBlockPos(), player);
             out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
         } else {
             out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
@@ -324,7 +304,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         Identifier id = getSelectedTaterId(stack);
         if(id == null) return null;
 
-        return Registry.BLOCK.get(id);
+        return Registries.BLOCK.get(id);
     }
 
     private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {
@@ -357,24 +337,19 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     }
 
     public static boolean containsTater(ItemStack stack, Block tater) {
-        return containsTater(stack, Registry.BLOCK.getId(tater));
+        return containsTater(stack, Registries.BLOCK.getId(tater));
     }
 
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        super.appendStacks(group, stacks);
+    public static void addToItemGroup(ItemGroup.Entries entries) {
+        ItemStack fullStack = new ItemStack(NEItems.TATER_BOX);
 
-        if(group == NEItems.ITEM_GROUP) {
-            ItemStack fullStack = new ItemStack(this);
+        NbtCompound nbt = fullStack.getOrCreateNbt();
+        NbtList taters = nbt.getList(TATERS_KEY, NbtElement.STRING_TYPE);
 
-            NbtCompound nbt = fullStack.getOrCreateNbt();
-            NbtList taters = nbt.getList(TATERS_KEY, NbtElement.STRING_TYPE);
+        TinyPotatoBlock.TATERS.forEach((tater) -> taters.add(NbtString.of(Registries.BLOCK.getId(tater).toString())));
 
-            TinyPotatoBlock.TATERS.forEach((tater) -> taters.add(NbtString.of(Registry.BLOCK.getId(tater).toString())));
+        nbt.put(TATERS_KEY, taters);
 
-            nbt.put(TATERS_KEY, taters);
-
-            stacks.add(fullStack);
-        }
+        entries.add(fullStack);
     }
 }

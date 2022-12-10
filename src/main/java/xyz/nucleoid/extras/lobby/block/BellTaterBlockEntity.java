@@ -1,10 +1,5 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import java.util.List;
-
-import org.apache.commons.lang3.mutable.MutableInt;
-import xyz.nucleoid.extras.lobby.NEBlocks;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -12,14 +7,18 @@ import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.EntityTypeTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableInt;
+import xyz.nucleoid.extras.lobby.NEBlocks;
+
+import java.util.List;
 
 public class BellTaterBlockEntity extends BlockEntity {
 	private long lastRingTime;
@@ -140,7 +139,7 @@ public class BellTaterBlockEntity extends BlockEntity {
 	}
 
 	/**
-	 * Determines whether the given entity is in the {@link net.minecraft.tag.EntityTypeTags#RAIDERS} entity type tag and within 48 blocks of the given position.
+	 * Determines whether the given entity is in the {@link EntityTypeTags#RAIDERS} entity type tag and within 48 blocks of the given position.
 	 */
 	private static boolean isRaiderEntity(BlockPos pos, LivingEntity entity) {
 		return entity.isAlive() && !entity.isRemoved() && pos.isWithinDistance(entity.getPos(), 48.0) && entity.getType().isIn(EntityTypeTags.RAIDERS);

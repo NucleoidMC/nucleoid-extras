@@ -2,14 +2,14 @@ package xyz.nucleoid.extras.lobby.block;
 
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 import java.util.stream.Stream;
 
 public class ColorPatternTaterBlock extends TinyPotatoBlock {
     private final ParticleEffect[] particleEffects;
 
-    public ColorPatternTaterBlock(Settings settings, Vec3f[] pattern, String texture) {
+    public ColorPatternTaterBlock(Settings settings, Vector3f[] pattern, String texture) {
         super(settings, (ParticleEffect) null, texture);
 
         this.particleEffects = Stream.of(pattern).map(color ->

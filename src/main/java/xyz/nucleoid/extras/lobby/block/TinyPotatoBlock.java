@@ -1,9 +1,6 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import eu.pb4.polymer.api.block.PolymerHeadBlock;
+import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,6 +22,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
 
@@ -136,7 +136,7 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state) {
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
         return this.texture;
     }
 

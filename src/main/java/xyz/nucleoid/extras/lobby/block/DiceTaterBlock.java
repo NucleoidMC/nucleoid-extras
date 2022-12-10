@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -50,7 +51,7 @@ public class DiceTaterBlock extends TinyPotatoBlock {
 
         if (world instanceof ServerWorld) {
             world.setBlockState(pos, state.with(FACE, ROLLING_FACE));
-            world.createAndScheduleBlockTick(pos, this, ROLLING_TICKS);
+            world.scheduleBlockTick(pos, this, ROLLING_TICKS);
 
             float pitch = 1.6f + world.getRandom().nextFloat() * 0.4f;
             world.playSound(null, pos, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1, pitch);
@@ -85,7 +86,7 @@ public class DiceTaterBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state) {
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
         int face = state.get(FACE);
         return TEXTURES[face];
     }

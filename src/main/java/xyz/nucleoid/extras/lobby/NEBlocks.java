@@ -1,8 +1,7 @@
 package xyz.nucleoid.extras.lobby;
 
-import eu.pb4.polymer.api.block.PolymerBlockUtils;
-import eu.pb4.polymer.api.block.SimplePolymerBlock;
-
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
+import eu.pb4.polymer.core.api.block.SimplePolymerBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -16,16 +15,16 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import org.joml.Vector3f;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
-import xyz.nucleoid.extras.lobby.block.LaunchPadBlockEntity;
-import xyz.nucleoid.extras.lobby.block.TateroidBlockEntity;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYzNzcxMTc2OSwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2JhYzc0MDBkZmNiOWEzODczNjFhM2FkN2MyOTY5NDNlYjg0MWE5YmRhMTNhZDg5NTU4ZTJkNmVmZWJmMTY3YmMiCiAgICB9CiAgfQp9");
@@ -88,60 +87,60 @@ public class NEBlocks {
     public static final Block STEVE_TATER = createTaterBlock(ParticleTypes.HAPPY_VILLAGER, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDcwMjE3MDM2MCwKICAicHJvZmlsZUlkIiA6ICIxNzhmMTJkYWMzNTQ0ZjRhYjExNzkyZDc1MDkzY2JmYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJzaWxlbnRkZXRydWN0aW9uIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2NlN2NjMDViZWU5OTNjZDcwMWE3NDI0MTViMDkxNTYzODFhNTRhYWE3YWQ1OTcxOTQxNzIyZTMyZGQ2ZWYzZjIiCiAgICB9CiAgfQp9");
     public static final Block ALEX_TATER = createTaterBlock(ParticleTypes.HAPPY_VILLAGER, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDcwMjE5Mzc5MCwKICAicHJvZmlsZUlkIiA6ICI0NDAzZGM1NDc1YmM0YjE1YTU0OGNmZGE2YjBlYjdkOSIsCiAgInByb2ZpbGVOYW1lIiA6ICJQWFkxIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2UxZjdkYzkwOWIyZDZjNjc5ZmZiNGM2OWM4ZDdjOGVkMzljZjQ3YTgzMzMwMTEzZjhmZTQ1YWM0YjBhNDgzYzgiCiAgICB9CiAgfQp9");
 
-    public static final Block TRANS_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xEE90AD)), // pink
-        new Vec3f(Vec3d.unpackRgb(0x3CB0DA)), // blue
-        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
+    public static final Block TRANS_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xEE90AD).toVector3f(), // pink
+        Vec3d.unpackRgb(0x3CB0DA).toVector3f(), // blue
+        Vec3d.unpackRgb(0xCFD5D6).toVector3f(), // white
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQxMjI4NzMzOCwKICAicHJvZmlsZUlkIiA6ICJiN2ZkYmU2N2NkMDA0NjgzYjlmYTllM2UxNzczODI1NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJDVUNGTDE0IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y3N2RiYzgwOWIyNTQ0NDkwMjNmYWMwZGQ0ZTBkOTEwMGI1YzQ0MDc3NDhiZTA4OWYwZTAwYzdlZjdhYjc2NCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
-    public static final Block ASEXUAL_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
-        new Vec3f(Vec3d.unpackRgb(0x3F4548)), // gray
-        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
+    public static final Block ASEXUAL_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0x16161B).toVector3f(), // black
+        Vec3d.unpackRgb(0x3F4548).toVector3f(), // gray
+        Vec3d.unpackRgb(0xCFD5D6).toVector3f(), // white
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NTY2NzYxMCwKICAicHJvZmlsZUlkIiA6ICJmODJmNTQ1MDIzZDA0MTFkYmVlYzU4YWI4Y2JlMTNjNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJSZXNwb25kZW50cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zOTAyODg3ZGM1NWQ0ZjczNmQwYjU2NmFkODEyZjI1NjExM2FhYTRhMzE4ZmZiODY1NjIzZmI1YTY3N2FlZjMyIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
-    public static final Block BI_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xBE46B5)), // pink
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
-        new Vec3f(Vec3d.unpackRgb(0x353A9E)), // blue
+    public static final Block BI_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xBE46B5).toVector3f(), // pink
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
+        Vec3d.unpackRgb(0x353A9E).toVector3f(), // blue
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NjEyNzQzOCwKICAicHJvZmlsZUlkIiA6ICIxNzhmMTJkYWMzNTQ0ZjRhYjExNzkyZDc1MDkzY2JmYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJzaWxlbnRkZXRydWN0aW9uIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzQ1MjZhNzJjYTViZTQyOTIwY2QzMTAyODBjMDNlMmM5ZTlhNzBjNTVhYTljYzFhMGM0ODM5NmQ1NTZmMWM3NWQiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==");
-    public static final Block GAY_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xA12823)), // red
-        new Vec3f(Vec3d.unpackRgb(0xF17716)), // orange
-        new Vec3f(Vec3d.unpackRgb(0xF9C629)), // yellow
-        new Vec3f(Vec3d.unpackRgb(0x556E1C)), // green
-        new Vec3f(Vec3d.unpackRgb(0x353A9E)), // blue
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
+    public static final Block GAY_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xA12823).toVector3f(), // red
+        Vec3d.unpackRgb(0xF17716).toVector3f(), // orange
+        Vec3d.unpackRgb(0xF9C629).toVector3f(), // yellow
+        Vec3d.unpackRgb(0x556E1C).toVector3f(), // green
+        Vec3d.unpackRgb(0x353A9E).toVector3f(), // blue
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NjM3NjgwOCwKICAicHJvZmlsZUlkIiA6ICIzZjM4YmViZGYwMWQ0MjNkYWI4MjczZjUwNGFiNGEyNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJjazM0Nzk0MjM1NzUzNzMxIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y5ZjQ0NmYyOTM5NmZmNDQ0ZDBlZjRmNTNhNzBjMjhhZmI2OWU1ZDFkYTAzN2MwM2MyNzdkMjM5MTdkYWNkZWQiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==");
-    public static final Block LESBIAN_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xA12823)), // red
-        new Vec3f(Vec3d.unpackRgb(0xF17716)), // orange
-        new Vec3f(Vec3d.unpackRgb(0xEAEDED)), // white
-        new Vec3f(Vec3d.unpackRgb(0xEE90AD)), // pink
-        new Vec3f(Vec3d.unpackRgb(0xBE46B5)), // magenta
+    public static final Block LESBIAN_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xA12823).toVector3f(), // red
+        Vec3d.unpackRgb(0xF17716).toVector3f(), // orange
+        Vec3d.unpackRgb(0xEAEDED).toVector3f(), // white
+        Vec3d.unpackRgb(0xEE90AD).toVector3f(), // pink
+        Vec3d.unpackRgb(0xBE46B5).toVector3f(), // magenta
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NjU4MjIyMSwKICAicHJvZmlsZUlkIiA6ICJiNjM2OWQ0MzMwNTU0NGIzOWE5OTBhODYyNWY5MmEwNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJCb2JpbmhvXyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS80NDQ5Mjc0MGY0MGMxOWMzZTUyODcxY2RmNmNiZDU4NWU5ODBmYzdiNTBjYjBmYzk0OWJmYmU0NDAzMmE3ZGI3IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
-    public static final Block NONBINARY_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xF9C629)), // yellow
-        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
-        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
+    public static final Block NONBINARY_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xF9C629).toVector3f(), // yellow
+        Vec3d.unpackRgb(0x16161B).toVector3f(), // black
+        Vec3d.unpackRgb(0xCFD5D6).toVector3f(), // white
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NzAyNjQwNiwKICAicHJvZmlsZUlkIiA6ICJjNjEwOTExMDhlOTQ0MWRhODQyZDA5MDVmMDAyOWVhOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJkZVlvbm8iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTA4NTRlNDczYmM3YTBhNjk1NmNiMTJkZjgwMjZkZTlmYzAwZmFlNDBjMDUwMmEzMTgyOTA4YmJiNTBjOWFhNSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
-    public static final Block PAN_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xFA318C)), // pink
-        new Vec3f(Vec3d.unpackRgb(0xFDD73B)), // yellow
-        new Vec3f(Vec3d.unpackRgb(0x2394F9)), // blue
+    public static final Block PAN_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xFA318C).toVector3f(), // pink
+        Vec3d.unpackRgb(0xFDD73B).toVector3f(), // yellow
+        Vec3d.unpackRgb(0x2394F9).toVector3f(), // blue
     }, "ewogICJ0aW1lc3RhbXAiIDogMTYzOTQ0NzE2NDMzOSwKICAicHJvZmlsZUlkIiA6ICJhYzYxZjQwZGJhNDE0YzkwOWU0NWJkMTgwMmY5MTYxYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJBbmlmYW5pIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzNmNzYxYmUxOGYwNzBhMDE2ZTRmNjFkMzdlYzEzYjIzMDMyYTU1MmRjZGI3MGE2N2Y4NTVjM2FiMmZhZTU0ZTAiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==");
-    public static final Block GENDERFLUID_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0xBE46B5)), // pink
-        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
-        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
-        new Vec3f(Vec3d.unpackRgb(0x2394F9)), // blue
+    public static final Block GENDERFLUID_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0xBE46B5).toVector3f(), // pink
+        Vec3d.unpackRgb(0xCFD5D6).toVector3f(), // white
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
+        Vec3d.unpackRgb(0x16161B).toVector3f(), // black
+        Vec3d.unpackRgb(0x2394F9).toVector3f(), // blue
     }, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYxOTIxMjYyMCwKICAicHJvZmlsZUlkIiA6ICJiNzQ3OWJhZTI5YzQ0YjIzYmE1NjI4MzM3OGYwZTNjNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJTeWxlZXgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmEwNjZjZGQ4ZDQ4NTAxZWI1MWVlYTFlM2U0MTdjMjVlZjUxYTA0Mjg0NzE0YmFhZDVhYjVkZTVjZDQyMjFiOCIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
-    public static final Block DEMISEXUAL_TATER = createColorPatternTaterBlock(new Vec3f[]{
-        new Vec3f(Vec3d.unpackRgb(0x16161B)), // black
-        new Vec3f(Vec3d.unpackRgb(0xCFD5D6)), // white
-        new Vec3f(Vec3d.unpackRgb(0x7B2BAD)), // purple
-        new Vec3f(Vec3d.unpackRgb(0x3F4548)), // gray
+    public static final Block DEMISEXUAL_TATER = createColorPatternTaterBlock(new Vector3f[]{
+        Vec3d.unpackRgb(0x16161B).toVector3f(), // black
+        Vec3d.unpackRgb(0xCFD5D6).toVector3f(), // white
+        Vec3d.unpackRgb(0x7B2BAD).toVector3f(), // purple
+        Vec3d.unpackRgb(0x3F4548).toVector3f(), // gray
     }, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYyMDQyODY1MiwKICAicHJvZmlsZUlkIiA6ICJmODJmNTQ1MDIzZDA0MTFkYmVlYzU4YWI4Y2JlMTNjNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJSZXNwb25kZW50cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS8zMmI3Y2QyYzVkNzBjYWI0NzZjZTk1MWUyYzUyMGM5YjM1NzkyNTBhZDkwMDE2NGQ2YzIzMjFjN2Y0M2Q2ZGM3IiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
 
     public static final Block WARDEN_TATER = createWardenTaterBlock("ewogICJ0aW1lc3RhbXAiIDogMTY0MDgxMTgxMjYwNCwKICAicHJvZmlsZUlkIiA6ICJkODAwZDI4MDlmNTE0ZjkxODk4YTU4MWYzODE0Yzc5OSIsCiAgInByb2ZpbGVOYW1lIiA6ICJ0aGVCTFJ4eCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81MmU0MTFhYTE1MDFjNzJkOTlkNzM4Y2IzOGUyNTBhMzk1YzY2MDRiOGJjY2M5ZjI5ZDdmMjZlOWNhY2Q4ZDZmIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
@@ -385,9 +384,9 @@ public class NEBlocks {
     public static final Block PACKED_MUD_TATER = createTaterBlock(Blocks.DIRT, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1NDgwOTk3NiwKICAicHJvZmlsZUlkIiA6ICI5MThhMDI5NTU5ZGQ0Y2U2YjE2ZjdhNWQ1M2VmYjQxMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJCZWV2ZWxvcGVyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzY3YTU5MTEwNjFjOTQ5N2MxZTg4OGFhYmU5NzM3MGQ0ZDAwZjkwMGNhNzk4Y2IxYWM4Y2Y0MWZlN2JiNDE1MzIiCiAgICB9CiAgfQp9");
     public static final Block STRIPPED_MANGROVE_LOG_TATER = createTaterBlock(Blocks.STRIPPED_CRIMSON_STEM, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1MDg2MjQ5NSwKICAicHJvZmlsZUlkIiA6ICJhYzM2YmVkZGQxNGQ0YjVmYmQyYzc5OThlMWMwOTg3ZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtYWlzYWthIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2MwM2QwZTc3NDJmYTY2NTA2YjU3MzljOThkMGNmMjk0MTE0NjM2MDg4NzdmYTY2N2NlMjljN2I4NTc5M2QxOGEiCiAgICB9CiAgfQp9");
 
-    public static final Block BRONZE_CAPSULE_TATER = createCapsuleTaterBlock(new Vec3f(Vec3d.unpackRgb(0x764D22)), 90, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjU0MTQ1MiwKICAicHJvZmlsZUlkIiA6ICIzYWJkYjI5ZDI2MTU0YTAxOWEzZWQ3OGRlMzI4OWUxNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJFcmljSHViZXIiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM5MTgyMjUwNGQ3OTQ5MTE4NmQ0MmI1YWI2ZmRkOTYxNWJmYzE4ODYzMjRiZTVmNWI2MTNkY2IwMzMxOTY3NyIKICAgIH0KICB9Cn0");
-    public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(new Vec3f(Vec3d.unpackRgb(0xBFBFBF)), 9, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUwMjk3MCwKICAicHJvZmlsZUlkIiA6ICJlN2IxNmI2MzM2OGM0ODIzYmUxZDcxOTg5ODE5YWI3NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTb3VyY2VXcml0ZXJzIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FmZGNlM2VhMTM5OWRkMGI3MzhmYWFlY2Y4OWNjNWJkY2YxNzliOGRjNGYzZDc5NjRjOGNkNDVjODkyNTdmZDEiCiAgICB9CiAgfQp9");
-    public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(new Vec3f(Vec3d.unpackRgb(0xF1A00E)), 1, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUyMjQyMSwKICAicHJvZmlsZUlkIiA6ICI0MjEwNTYxMWQxZjM0NzAyOTQ4NjE3OTYzMDY3NjY2NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJUcmlraXRyYWthdGVsYXp6IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiNTM4ODgzNDU3OGNjYjkwNmU5N2QzZTU0YWViMzNlZGNjMTJkODIxZjA4MWI3ZWIwNDgzMGNiZDI2MGFkODEiCiAgICB9CiAgfQp9");
+    public static final Block BRONZE_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0x764D22).toVector3f(), 90, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjU0MTQ1MiwKICAicHJvZmlsZUlkIiA6ICIzYWJkYjI5ZDI2MTU0YTAxOWEzZWQ3OGRlMzI4OWUxNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJFcmljSHViZXIiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM5MTgyMjUwNGQ3OTQ5MTE4NmQ0MmI1YWI2ZmRkOTYxNWJmYzE4ODYzMjRiZTVmNWI2MTNkY2IwMzMxOTY3NyIKICAgIH0KICB9Cn0");
+    public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xBFBFBF).toVector3f(), 9, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUwMjk3MCwKICAicHJvZmlsZUlkIiA6ICJlN2IxNmI2MzM2OGM0ODIzYmUxZDcxOTg5ODE5YWI3NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTb3VyY2VXcml0ZXJzIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FmZGNlM2VhMTM5OWRkMGI3MzhmYWFlY2Y4OWNjNWJkY2YxNzliOGRjNGYzZDc5NjRjOGNkNDVjODkyNTdmZDEiCiAgICB9CiAgfQp9");
+    public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xF1A00E).toVector3f(), 1, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUyMjQyMSwKICAicHJvZmlsZUlkIiA6ICI0MjEwNTYxMWQxZjM0NzAyOTQ4NjE3OTYzMDY3NjY2NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJUcmlraXRyYWthdGVsYXp6IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiNTM4ODgzNDU3OGNjYjkwNmU5N2QzZTU0YWViMzNlZGNjMTJkODIxZjA4MWI3ZWIwNDgzMGNiZDI2MGFkODEiCiAgICB9CiAgfQp9");
 
     public static final Block CORRUPTATER = new CorruptaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), 2);
 
@@ -416,7 +415,7 @@ public class NEBlocks {
         return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture, particleRate);
     }
   
-    private static Block createColorPatternTaterBlock(Vec3f[] pattern, String texture) {
+    private static Block createColorPatternTaterBlock(Vector3f[] pattern, String texture) {
         return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
     }
 
@@ -432,7 +431,7 @@ public class NEBlocks {
         return new DiceTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100));
     }
 
-    private static Block createTateroidBlock(SoundEvent defaultSound, String texture) {
+    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, String texture) {
         return new TateroidBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), defaultSound, texture);
     }
 
@@ -460,7 +459,7 @@ public class NEBlocks {
         return new ElderGuardianParticleTater(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
     }
 
-    private static Block createCapsuleTaterBlock(Vec3f color, int weight, String texture) {
+    private static Block createCapsuleTaterBlock(Vector3f color, int weight, String texture) {
         return new CapsuleTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), color, weight, texture);
     }
 
@@ -785,11 +784,11 @@ public class NEBlocks {
     }
 
     private static <T extends Block> T register(String id, T block) {
-        return Registry.register(Registry.BLOCK, NucleoidExtras.identifier(id), block);
+        return Registry.register(Registries.BLOCK, NucleoidExtras.identifier(id), block);
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
         PolymerBlockUtils.registerBlockEntity(type);
         return type;
     }

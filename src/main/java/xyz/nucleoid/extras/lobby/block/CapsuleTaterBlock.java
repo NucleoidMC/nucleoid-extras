@@ -4,7 +4,7 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class CapsuleTaterBlock extends ColorTaterBlock implements LuckyTaterDrop {
     private static final int PARTICLE_COUNT = 8;
@@ -14,7 +14,7 @@ public class CapsuleTaterBlock extends ColorTaterBlock implements LuckyTaterDrop
 
     private final int weight;
 
-    public CapsuleTaterBlock(Settings settings, Vec3f color, int weight, String texture) {
+    public CapsuleTaterBlock(Settings settings, Vector3f color, int weight, String texture) {
         super(settings, color, texture);
 
         this.weight = weight;

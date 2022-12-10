@@ -5,14 +5,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class TateroidBlockEntity extends BlockEntity {
@@ -24,7 +26,8 @@ public class TateroidBlockEntity extends BlockEntity {
     private int duration = 0;
     private int tempo = SharedConstants.TICKS_PER_SECOND;
     private int pitch = 0;
-    private SoundEvent sound;
+    @Nullable
+    private RegistryEntry<SoundEvent> sound;
 
     public TateroidBlockEntity(BlockPos pos, BlockState state) {
         super(NEBlocks.TATEROID_ENTITY, pos, state);
@@ -45,7 +48,7 @@ public class TateroidBlockEntity extends BlockEntity {
         this.setDuration(duration, true);
     }
 
-    private SoundEvent getSound() {
+    private RegistryEntry<SoundEvent> getSound() {
         if (this.sound != null) {
             return this.sound;
         }
@@ -71,13 +74,16 @@ public class TateroidBlockEntity extends BlockEntity {
             }
         }
 
-        SoundEvent sound = this.getSound();
+        RegistryEntry<SoundEvent> sound = this.getSound();
         if (sound == null) return;
 
-        this.world.playSound(null, this.pos, sound, SoundCategory.RECORDS, 3, this.pitch / 24f);
+        double x = this.pos.getX() + 0.5;
+        double y = this.pos.getY() + 0.9;
+        double z = this.pos.getZ() + 0.5;
+        this.world.playSound(null, x, y, z, sound, SoundCategory.RECORDS, 3, this.pitch / 24f, this.world.random.nextLong());
 
         if (this.world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(ParticleTypes.NOTE, this.pos.getX() + 0.5, this.pos.getY() + 0.9, this.pos.getZ() + 0.5, 0, 1, 0, 0, (double) this.pitch / 24d);
+            serverWorld.spawnParticles(ParticleTypes.NOTE, x, y, z, 0, 1, 0, 0, (double) this.pitch / 24d);
         }
     }
 
@@ -90,7 +96,8 @@ public class TateroidBlockEntity extends BlockEntity {
         nbt.putInt(PITCH_KEY, this.pitch);
 
         if (sound != null) {
-            nbt.putString(SOUND_KEY, sound.getId().toString());
+            Registries.SOUND_EVENT.createEntryCodec().encodeStart(NbtOps.INSTANCE, sound).result()
+                    .ifPresent(sound -> nbt.put(SOUND_KEY, sound));
         }
     }
 
@@ -102,10 +109,8 @@ public class TateroidBlockEntity extends BlockEntity {
         this.tempo = nbt.getInt(TEMPO_KEY);
         this.pitch = nbt.getInt(PITCH_KEY);
 
-        Identifier soundId = Identifier.tryParse(nbt.getString(SOUND_KEY));
-        if (soundId != null) {
-            this.sound = Registry.SOUND_EVENT.get(soundId);
-        }
+        Registries.SOUND_EVENT.createEntryCodec().parse(NbtOps.INSTANCE, nbt.get(SOUND_KEY)).result()
+            .ifPresent(entry -> this.sound = entry);
     }
 
     protected static void serverTick(World world, BlockPos pos, BlockState state, TateroidBlockEntity blockEntity) {

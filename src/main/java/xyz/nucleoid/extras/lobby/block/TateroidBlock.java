@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
@@ -26,9 +27,9 @@ public class TateroidBlock extends TinyPotatoBlock implements BlockEntityProvide
     private static final BooleanProperty POWERED = Properties.POWERED;
     private static final int FULL_DURATION = 15 * SharedConstants.TICKS_PER_SECOND;
 
-    private final SoundEvent defaultSound;
+    private final RegistryEntry<SoundEvent> defaultSound;
 
-    public TateroidBlock(Settings settings, SoundEvent defaultSound, String texture) {
+    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, String texture) {
         super(settings, ParticleTypes.NOTE, texture);
         this.defaultSound = defaultSound;
 
@@ -43,7 +44,7 @@ public class TateroidBlock extends TinyPotatoBlock implements BlockEntityProvide
         }
     }
 
-    public SoundEvent getDefaultSound() {
+    public RegistryEntry<SoundEvent> getDefaultSound() {
         return this.defaultSound;
     }
 

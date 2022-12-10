@@ -64,7 +64,7 @@ public class TargetTaterBlock extends TinyPotatoBlock {
 
 	private static void setPower(WorldAccess world, BlockState state, int power, BlockPos pos, int delay) {
 		world.setBlockState(pos, state.with(POWER, power), Block.NOTIFY_ALL);
-		world.createAndScheduleBlockTick(pos, state.getBlock(), delay);
+		world.scheduleBlockTick(pos, state.getBlock(), delay);
 	}
 
 	@Override

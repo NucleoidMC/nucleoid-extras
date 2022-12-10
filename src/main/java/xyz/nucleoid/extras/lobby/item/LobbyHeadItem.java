@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.api.block.PolymerHeadBlock;
-import eu.pb4.polymer.api.item.PolymerHeadBlockItem;
-
+import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
+import eu.pb4.polymer.core.api.item.PolymerHeadBlockItem;
+import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
@@ -14,8 +14,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class LobbyHeadItem extends PolymerHeadBlockItem {
-    public LobbyHeadItem(PolymerHeadBlock block, Settings settings) {
-        super(block, settings);
+    @SuppressWarnings("unchecked")
+    public <T extends Block & PolymerHeadBlock> LobbyHeadItem(PolymerHeadBlock block, Settings settings) {
+        super((T) block, settings);
     }
 
     @Override

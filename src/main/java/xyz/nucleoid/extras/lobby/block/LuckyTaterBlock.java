@@ -6,6 +6,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -13,7 +17,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -22,10 +25,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 
@@ -34,7 +34,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
 
     private static final Identifier LUCKY_TATER_DROPS_ID = NucleoidExtras.identifier("lucky_tater_drops");
-    private static final TagKey<Block> LUCKY_TATER_DROPS = TagKey.of(Registry.BLOCK_KEY, LUCKY_TATER_DROPS_ID);
+    private static final TagKey<Block> LUCKY_TATER_DROPS = TagKey.of(RegistryKeys.BLOCK, LUCKY_TATER_DROPS_ID);
 
     private final String cooldownTexture;
 
@@ -51,7 +51,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
         int toColor = LuckyTaterBlock.getRandomColor(player.getRandom());
 
         int scale = player.getRandom().nextInt(3);
-        return new DustColorTransitionParticleEffect(new Vec3f(Vec3d.unpackRgb(fromColor)), new Vec3f(Vec3d.unpackRgb(toColor)), scale);
+        return new DustColorTransitionParticleEffect(Vec3d.unpackRgb(fromColor).toVector3f(), Vec3d.unpackRgb(toColor).toVector3f(), scale);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
 
                     // Start cooldown
                     world.setBlockState(pos, state.with(COOLDOWN, true));
-                    world.createAndScheduleBlockTick(pos, this, COOLDOWN_TICKS);
+                    world.scheduleBlockTick(pos, this, COOLDOWN_TICKS);
                 }
             }
         }
@@ -91,7 +91,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
     }
 
     private Block getDrop(ServerWorld world) {
-        var drops = Registry.BLOCK.getEntryList(LUCKY_TATER_DROPS);
+        var drops = Registries.BLOCK.getEntryList(LUCKY_TATER_DROPS);
 
         if (drops.isEmpty()) {
             return null;
@@ -161,8 +161,8 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state) {
-        return state.get(COOLDOWN) ? this.cooldownTexture : super.getPolymerSkinValue(state);
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
+        return state.get(COOLDOWN) ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, player);
     }
 
     private static int getRandomColor(Random random) {

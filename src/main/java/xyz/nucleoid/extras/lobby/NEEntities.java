@@ -1,13 +1,13 @@
 package xyz.nucleoid.extras.lobby;
 
-import eu.pb4.polymer.api.entity.PolymerEntityUtils;
-
+import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
 
@@ -27,6 +27,6 @@ public class NEEntities {
 
     private static <T extends EntityType<?>> T register(String id, T item) {
         PolymerEntityUtils.registerType(item);
-        return Registry.register(Registry.ENTITY_TYPE, NucleoidExtras.identifier(id), item);
+        return Registry.register(Registries.ENTITY_TYPE, NucleoidExtras.identifier(id), item);
     }
 }
