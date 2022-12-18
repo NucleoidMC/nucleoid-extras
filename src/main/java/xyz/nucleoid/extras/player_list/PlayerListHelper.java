@@ -29,7 +29,7 @@ public class PlayerListHelper {
         return gray ? GameMode.SPECTATOR : player.interactionManager.getGameMode();
     }
 
-    private static PlayerListS2CPacket.Entry createEntry(ServerPlayerEntity player,  boolean gray) {
+    public static PlayerListS2CPacket.Entry createEntry(ServerPlayerEntity player,  boolean gray) {
         return new PlayerListS2CPacket.Entry(
             player.getUuid(),
             player.getGameProfile(),
