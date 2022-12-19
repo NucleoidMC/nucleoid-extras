@@ -62,7 +62,7 @@ public class PlayerListHelper {
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
-        updatePlayer(updatedPlayer, EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME));
+        updatePlayer(updatedPlayer, EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, PlayerListS2CPacket.Action.UPDATE_GAME_MODE));
     }
 
     private static void updatePlayer(ServerPlayerEntity updatedPlayer, EnumSet<PlayerListS2CPacket.Action> actions) {

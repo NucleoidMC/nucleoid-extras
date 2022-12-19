@@ -18,14 +18,7 @@ import java.util.*;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {
-
-    @Shadow @Nullable public abstract ServerPlayerEntity getPlayer(UUID uuid);
-
     @Shadow @Final private Map<UUID, ServerPlayerEntity> playerMap;
-
-    @Shadow
-    @Final
-    private List<ServerPlayerEntity> players;
 
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"))
     private void sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
