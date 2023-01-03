@@ -36,6 +36,7 @@ public final class RemoteCommandIntegration {
                 var command = body.get("command").getAsString();
                 var sender = body.get("sender").getAsString();
                 var discordRoles = body.get("roles").getAsJsonArray();
+                var silent = body.has("silent") && body.get("silent").getAsBoolean();
                 var roles = new ArrayList<String>();
                 roles.add(DISCORD_EVERYONE_ROLE);
                 var permissionLevel = 0;
@@ -50,7 +51,7 @@ public final class RemoteCommandIntegration {
                     }
                 }
 
-                integration.commandQueue.add(new RemoteCommand(command, sender, permissionLevel, roles));
+                integration.commandQueue.add(new RemoteCommand(command, sender, silent, permissionLevel, roles));
             });
 
             ServerTickEvents.END_SERVER_TICK.register(integration::tick);
@@ -71,12 +72,12 @@ public final class RemoteCommandIntegration {
         this.systemSender.send(body);
     }
 
-    record RemoteCommand(String command, String sender, int permissionLevel, List<String> roles) {
+    record RemoteCommand(String command, String sender, boolean silent, int permissionLevel, List<String> roles) {
         ServerCommandSource createCommandSource(MinecraftServer server, Consumer<Text> result) {
             var output = new CommandOutput() {
                 @Override
                 public void sendMessage(Text message) {
-                    result.accept(message);
+                    if (!silent) result.accept(message);
                 }
 
                 @Override
