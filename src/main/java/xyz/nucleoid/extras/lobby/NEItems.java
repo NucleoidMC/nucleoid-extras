@@ -38,6 +38,7 @@ public class NEItems {
             entries.add(NEItems.END_PORTAL);
             entries.add(NEItems.END_GATEWAY);
             entries.add(NEItems.SAFE_TNT);
+            entries.add(NEItems.LAUNCH_FEATHER);
             entries.add(NEItems.GOLD_LAUNCH_PAD);
             entries.add(NEItems.IRON_LAUNCH_PAD);
             entries.add(NEItems.INFINITE_DISPENSER);
@@ -652,6 +653,7 @@ public class NEItems {
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().maxDamage(0));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().maxCount(1));
+    public static final Item LAUNCH_FEATHER = new LaunchFeatherItem(new Item.Settings().maxCount(1));
 
     private static Item createHead(Block head) {
         return new LobbyHeadItem((PolymerHeadBlock) head, new Item.Settings());
@@ -978,6 +980,7 @@ public class NEItems {
         register("tater_box", TATER_BOX);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
         register("game_portal_opener", GAME_PORTAL_OPENER);
+        register("launch_feather", LAUNCH_FEATHER);
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
