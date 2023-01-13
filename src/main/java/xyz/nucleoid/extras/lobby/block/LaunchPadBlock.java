@@ -6,9 +6,11 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -30,18 +32,34 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (entity.isOnGround()) {
-            var blockEntity = world.getBlockEntity(pos);
+        var blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
-                entity.setVelocity(getVector(launchPad.getPitch(), entity.getYaw(0)).multiply(launchPad.getPower()));
-                if (entity instanceof ServerPlayerEntity player) {
-                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
-                    player.playSound(SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.5f, 1);
-                }
-                super.onEntityCollision(state, world, pos, entity);
-            }
+        if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
+            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, launchPad.getPitch(), launchPad.getPower());
         }
+
+        super.onEntityCollision(state, world, pos, entity);
+    }
+
+    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent sound, SoundCategory category, float pitch, float power) {
+        if (entity.isOnGround() && !(entity instanceof ArmorStandEntity)) {
+            entity.setVelocity(getVector(pitch, source.getYaw(0)).multiply(power));
+            if (entity instanceof ServerPlayerEntity player) {
+                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+                playLaunchSound(player, sound, category);
+            }
+            if (source != entity && source instanceof ServerPlayerEntity player) {
+                playLaunchSound(player, sound, category);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void playLaunchSound(ServerPlayerEntity player, SoundEvent sound, SoundCategory category) {
+        player.playSound(sound, category, 0.5f, 1);
     }
 
     private static Vec3d getVector(float pitch, float yaw) {
