@@ -11,7 +11,7 @@ import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 @Mixin(PlayerManager.class)
 public class PlayerManagerMixin {
     @Inject(method = "remove", at = @At("HEAD"))
-    private void onPlayerLeave(ServerPlayerEntity player, CallbackInfo ci) {
+    private void extras$onPlayerLeave(ServerPlayerEntity player, CallbackInfo ci) {
         if (player.world.getRegistryKey() == NucleoidSidebar.DIMENSION) {
             NucleoidSidebar.get().removePlayer(player);
         }

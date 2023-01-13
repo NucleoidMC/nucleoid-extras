@@ -17,7 +17,7 @@ public class EntityMixin {
      * This fixes fireworks shoot by creative players breaking invulnerable entities
      */
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
-    private void makeExceptionForExplosions(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+    private void extras$makeExceptionForExplosions(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         if (this.invulnerable && damageSource.isExplosive()) {
             cir.setReturnValue(true);
         }

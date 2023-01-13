@@ -18,7 +18,7 @@ public abstract class PlayerInteractionManagerMixin {
                     target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"
             )
     )
-    private void overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
+    private void extras$overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
         var player = playerManager.getPlayer(entry.profileId());
 

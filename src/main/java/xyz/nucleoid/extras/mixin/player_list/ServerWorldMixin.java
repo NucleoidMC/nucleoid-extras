@@ -24,12 +24,12 @@ public abstract class ServerWorldMixin extends World {
     }
 
     @Inject(method = "addPlayer", at = @At("RETURN"))
-    private void addPlayer(ServerPlayerEntity player, CallbackInfo ci) {
+    private void extras$addPlayer(ServerPlayerEntity player, CallbackInfo ci) {
         PlayerListHelper.updatePlayer(player);
     }
 
     @Inject(method = "removePlayer", at = @At("RETURN"))
-    private void removePlayer(ServerPlayerEntity player, Entity.RemovalReason reason, CallbackInfo ci) {
+    private void extras$removePlayer(ServerPlayerEntity player, Entity.RemovalReason reason, CallbackInfo ci) {
         PlayerListHelper.updatePlayer(player);
     }
 }

@@ -21,7 +21,7 @@ public abstract class PlayerManagerMixin {
     @Shadow @Final private Map<UUID, ServerPlayerEntity> playerMap;
 
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"))
-    private void sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
+    private void extras$sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
         var player = playerManager.getPlayer(entry.profileId());
 
@@ -37,7 +37,7 @@ public abstract class PlayerManagerMixin {
     }
 
     @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;entryFromPlayer(Ljava/util/Collection;)Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;", ordinal = 0))
-    private PlayerListS2CPacket sendOthersToJoining(Collection<ServerPlayerEntity> players, ClientConnection connection, ServerPlayerEntity target) {
+    private PlayerListS2CPacket extras$sendOthersToJoining(Collection<ServerPlayerEntity> players, ClientConnection connection, ServerPlayerEntity target) {
         var packet = PlayerListS2CPacket.entryFromPlayer(List.of());
 
         var entries = new ArrayList<PlayerListS2CPacket.Entry>();

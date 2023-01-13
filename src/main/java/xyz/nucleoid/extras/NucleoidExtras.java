@@ -14,6 +14,7 @@ import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.NEItems;
+import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
@@ -35,6 +36,8 @@ public final class NucleoidExtras implements ModInitializer {
         NucleoidIntegrations.register();
 
         ExtrasErrorReporter.register();
+
+        ExtraPlaceholders.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }

@@ -22,7 +22,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     }
 
     @Inject(method = "playerTick", at = @At("TAIL"))
-    private void playerTick(CallbackInfo ci) {
+    private void extras$playerTick(CallbackInfo ci) {
         ItemStack helmet = this.getEquippedStack(EquipmentSlot.HEAD);
         if (helmet.getItem() instanceof TaterBoxItem taterBox) {
             if (TaterBoxItem.getSelectedTater(helmet) instanceof TinyPotatoBlock tinyPotatoBlock) {
