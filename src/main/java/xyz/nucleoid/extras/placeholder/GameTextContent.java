@@ -1,10 +1,38 @@
 package xyz.nucleoid.extras.placeholder;
 
-import net.minecraft.text.TextContent;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.*;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
-import java.util.UUID;
-
 public record GameTextContent(GameSpace gameSpace) implements TextContent {
+    public Text toVanilla(@Nullable ServerPlayerEntity player, Text text) {
+        if (player == null) {
+            var out = Text.empty();
+            out.getSiblings().addAll(text.getSiblings());
+            return out;
+        }
+
+        var playerSpace = GameSpaceManager.get().byWorld(player.world);
+
+        if (playerSpace == gameSpace) {
+            var out = Text.empty();
+            out.getSiblings().addAll(text.getSiblings());
+            return out;
+        }
+
+        var out = Text.empty().append(
+            Text.literal("◆").setStyle(
+                Style.EMPTY
+                    .withColor(
+                        TextColor.fromRgb(gameSpace == null ? 0x800080 : (int) (gameSpace.getMetadata().id().getLeastSignificantBits() & 0xFFFFFF)))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                        gameSpace == null ? Text.literal("Lobby") : gameSpace.getMetadata().sourceConfig().name())))
+        ).append(" ");
+
+        out.getSiblings().addAll(text.getSiblings());
+
+        return out;
+    }
 }
