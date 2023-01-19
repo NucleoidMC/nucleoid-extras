@@ -36,7 +36,7 @@ public final class GameVersionResolver {
             ProtocolVersion protocolVersion = ProtocolVersion.getProtocol(maxVersion);
 
             return protocolVersion.getName();
-        } catch (IllegalArgumentException e) {
+        } catch (Throwable e) {
             // The ViaVersion API does not provide a way
             // to test whether the platform is loaded,
             // so the exception must be caught instead.

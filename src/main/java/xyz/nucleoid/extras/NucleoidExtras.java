@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
+import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.NECriteria;
@@ -36,8 +37,8 @@ public final class NucleoidExtras implements ModInitializer {
         NucleoidIntegrations.register();
 
         ExtrasErrorReporter.register();
-
         ExtraPlaceholders.register();
+        ExtrasGamePortals.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
     }
