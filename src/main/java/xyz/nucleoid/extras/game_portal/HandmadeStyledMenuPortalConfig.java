@@ -18,9 +18,11 @@ import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public record HandmadeStyledMenuPortalConfig(
         Text name,
+        Optional<Text> uiTitle,
         List<Text> description,
         ItemStack icon,
         Map<Point, MenuEntryConfig> entries,
@@ -30,23 +32,24 @@ public record HandmadeStyledMenuPortalConfig(
     public static final Codec<HandmadeStyledMenuPortalConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(HandmadeStyledMenuPortalConfig::name),
+                PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(HandmadeStyledMenuPortalConfig::uiTitle),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(HandmadeStyledMenuPortalConfig::description),
                 MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(HandmadeStyledMenuPortalConfig::icon),
                 Codec.unboundedMap(Point.CODEC, MenuEntryConfig.CODEC).fieldOf("entries").forGetter(HandmadeStyledMenuPortalConfig::entries),
-                CustomValuesConfig.CODEC.optionalFieldOf("custom", CustomValuesConfig.empty()).forGetter(config -> config.custom)
+                CustomValuesConfig.CODEC.optionalFieldOf("custom", CustomValuesConfig.empty()).forGetter(HandmadeStyledMenuPortalConfig::custom)
         ).apply(instance, HandmadeStyledMenuPortalConfig::new);
     });
 
     @Override
     public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
         Text name;
-        if (this.name != null) {
+        if (this.name != null && this.name != ScreenTexts.EMPTY) {
             name = this.name;
         } else {
             name = Text.literal(id.toString());
         }
 
-        return new HandmadeStyledMenuPortalBackend(name, description, icon, this.entries);
+        return new HandmadeStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon, this.entries);
     }
 
     @Override

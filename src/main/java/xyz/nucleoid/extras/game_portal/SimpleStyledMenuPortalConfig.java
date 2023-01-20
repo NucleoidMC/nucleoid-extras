@@ -18,9 +18,11 @@ import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public record SimpleStyledMenuPortalConfig(
         Text name,
+        Optional<Text> uiTitle,
         List<Text> description,
         ItemStack icon,
         List<MenuPortalConfig.Entry> games,
@@ -30,6 +32,7 @@ public record SimpleStyledMenuPortalConfig(
     public static final Codec<SimpleStyledMenuPortalConfig> CODEC = RecordCodecBuilder.create(instance -> {
         return instance.group(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(SimpleStyledMenuPortalConfig::name),
+                PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(SimpleStyledMenuPortalConfig::uiTitle),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(SimpleStyledMenuPortalConfig::description),
                 MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(SimpleStyledMenuPortalConfig::icon),
                 MenuPortalConfig.Entry.CODEC.listOf().fieldOf("games").forGetter(config -> config.games),
@@ -40,13 +43,13 @@ public record SimpleStyledMenuPortalConfig(
     @Override
     public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
         Text name;
-        if (this.name != null) {
+        if (this.name != null && this.name != ScreenTexts.EMPTY) {
             name = this.name;
         } else {
             name = Text.literal(id.toString());
         }
 
-        return new SimpleStyledMenuPortalBackend(name, description, icon, this.games);
+        return new SimpleStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon, this.games);
     }
 
     @Override

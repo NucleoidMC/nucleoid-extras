@@ -5,7 +5,7 @@ import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.plasmid.game.portal.GamePortalConfig;
 
 public class ExtrasGamePortals {
-    public static final boolean SHOW_INVALID = FabricLoader.getInstance().isDevelopmentEnvironment();
+    public static final boolean SHOW_INVALID = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     public static void register() {
         GamePortalConfig.register(NucleoidExtras.identifier("styled/advanced_menu"), AdvancedStyledMenuPortalConfig.CODEC);

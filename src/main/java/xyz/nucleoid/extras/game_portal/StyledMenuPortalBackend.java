@@ -19,12 +19,11 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.util.CommonGuiElements;
 import xyz.nucleoid.extras.util.PagedGui;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 import xyz.nucleoid.plasmid.game.player.GamePlayerJoiner;
 import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
 import xyz.nucleoid.plasmid.game.portal.GamePortalDisplay;
+import xyz.nucleoid.plasmid.game.portal.menu.InvalidMenuEntry;
 import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
-import xyz.nucleoid.plasmid.util.Guis;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,9 +42,11 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
     private final List<Text> description;
     private final ItemStack icon;
+    private final Text uiTitle;
 
-    public StyledMenuPortalBackend(Text name, List<Text> description, ItemStack icon) {
+    public StyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon) {
         this.name = name;
+        this.uiTitle = uiTitle;
         var hologramName = name.copy();
 
         if (hologramName.getStyle().getColor() == null) {
@@ -104,7 +105,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         var oldGui = GuiHelpers.getCurrentGui(player);
 
         var gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, player, false);
-        gui.setTitle(this.name);
+        gui.setTitle(this.uiTitle);
         var filler = new GuiElementBuilder(Items.PURPLE_STAINED_GLASS_PANE).setName(Text.empty());
 
         for (int i = 0; i < 9; i++) {
@@ -112,7 +113,10 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         }
 
         if (oldGui != null) {
-            gui.setSlot(5 * 9 + 8, new GuiElementBuilder(Items.STRUCTURE_VOID).setName(ScreenTexts.BACK).setCallback(() -> oldGui.open()));
+            gui.setSlot(5 * 9 + 8, new GuiElementBuilder(Items.STRUCTURE_VOID).setName(ScreenTexts.BACK).setCallback(() -> {
+                PagedGui.playClickSound(player);
+                oldGui.open();
+            }));
         }
         this.fill(player, gui, false);
 
@@ -192,7 +196,10 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 if (games.size() > pIndex) {
                     var portal = games.get(pIndex);
                     var m = portal.getMetadata().sourceConfig();
-                    gui.setSlot(index, createIconFor(m.icon(), m.name(), m.description(), portal.getPlayers().size(), (p) -> tryJoinGame(p, portal)));
+                    gui.setSlot(index, createIconFor(m.icon(), m.name(), m.description(), portal.getPlayers().size(), (p) -> {
+                        PagedGui.playClickSound(player);
+                        tryJoinGame(p, portal);
+                    }));
                 } else {
                     gui.clearSlot(index);
                 }
@@ -248,7 +255,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
         }
         var lastPage = pages - 1 == page.getValue();
-        var starterY = lastPage ? MathHelper.ceilDiv(GAMES_HEIGHT - MathHelper.ceilDiv(size - ((size / GAMES_PER_PAGE) * GAMES_PER_PAGE), GAMES_WIDTH), 2) : 0;
+        var starterY = lastPage ? Math.floorDiv(GAMES_HEIGHT - MathHelper.ceilDiv(size - ((size / GAMES_PER_PAGE) * GAMES_PER_PAGE), GAMES_WIDTH), 2) : 0;
 
         for (int y = starterY; y < GAMES_HEIGHT; y++) {
             for (int x = 0; x < GAMES_WIDTH; x++) {
@@ -267,7 +274,10 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     protected GuiElementBuilder createIconFor(MenuEntry entry) {
-        return createIconFor(entry.icon().copy(), entry.name(), entry.description(), entry.getPlayerCount(), entry::click);
+        return createIconFor(entry.icon().copy(), entry.name(), entry.description(), entry.getPlayerCount(), (player) -> {
+            PagedGui.playClickSound(player);
+            entry.click(player);
+        });
     }
 
     protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, int playerCount, Consumer<ServerPlayerEntity> click) {
@@ -298,5 +308,9 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         });
 
         return element;
+    }
+
+    protected boolean canShow(MenuEntry a) {
+        return ExtrasGamePortals.SHOW_INVALID || !(a instanceof InvalidMenuEntry);
     }
 }

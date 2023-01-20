@@ -1,14 +1,7 @@
 package xyz.nucleoid.extras.game_portal;
 
-import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-import org.apache.commons.lang3.mutable.MutableInt;
-import xyz.nucleoid.extras.util.CommonGuiElements;
-import xyz.nucleoid.extras.util.PagedGui;
 import xyz.nucleoid.plasmid.game.config.GameConfigs;
 import xyz.nucleoid.plasmid.game.portal.game.ConcurrentGamePortalBackend;
 import xyz.nucleoid.plasmid.game.portal.menu.*;
@@ -20,8 +13,8 @@ public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend
     private final List<MenuPortalConfig.Entry> configEntries;
     private List<MenuEntry> entries;
 
-    public SimpleStyledMenuPortalBackend(Text name, List<Text> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
-        super(name, description, icon);
+    public SimpleStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
+        super(name, uiTitle, description, icon);
         this.configEntries = config;
     }
 

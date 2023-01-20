@@ -5,22 +5,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.mutable.MutableInt;
-import xyz.nucleoid.plasmid.game.portal.menu.InvalidMenuEntry;
 import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
 import xyz.nucleoid.plasmid.game.portal.menu.MenuEntryConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
     private final Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> configEntries;
     private List<MenuEntry> entries;
     private List<Entry> guiEntries;
 
-    public HandmadeStyledMenuPortalBackend(Text name, List<Text> description, ItemStack icon, Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> config) {
-        super(name, description, icon);
+    public HandmadeStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> config) {
+        super(name, uiTitle, description, icon);
         this.configEntries = config;
     }
 
@@ -48,7 +46,7 @@ public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
             List<Entry> list = new ArrayList<>();
             for (Map.Entry<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> x : this.configEntries.entrySet()) {
                 var a = x.getValue().createEntry();
-                if (ExtrasGamePortals.SHOW_INVALID || !(a instanceof InvalidMenuEntry)) {
+                if (this.canShow(a)) {
                     var entry = new Entry(x.getKey().x() + x.getKey().y() * 9, a);
                     list.add(entry);
                 }
