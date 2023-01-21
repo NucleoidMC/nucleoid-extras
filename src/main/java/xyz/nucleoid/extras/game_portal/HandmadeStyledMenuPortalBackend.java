@@ -37,7 +37,7 @@ public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
     @Override
     protected void fillInterface(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
         for (var entry : this.getGuiEntries()) {
-            gui.setSlot(entry.pos, createIconFor(entry.entry));
+            gui.setSlot(entry.pos, entry.entry.createGuiElement());
         }
     }
 

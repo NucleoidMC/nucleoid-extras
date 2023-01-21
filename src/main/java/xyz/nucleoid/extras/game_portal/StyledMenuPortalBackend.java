@@ -264,20 +264,13 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
                 if (lastNonShift > pIndex) {
                     var portal = entries.get(pIndex);
-                    gui.setSlot(index, createIconFor(portal));
+                    gui.setSlot(index, portal.createGuiElement());
                 } else if (size > pIndex) {
                     var portal = entries.get(pIndex);
-                    gui.setSlot(shift + index, createIconFor(portal));
+                    gui.setSlot(shift + index, portal.createGuiElement());
                 }
             }
         }
-    }
-
-    protected GuiElementBuilder createIconFor(MenuEntry entry) {
-        return createIconFor(entry.icon().copy(), entry.name(), entry.description(), entry.getPlayerCount(), (player) -> {
-            PagedGui.playClickSound(player);
-            entry.click(player);
-        });
     }
 
     protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, int playerCount, Consumer<ServerPlayerEntity> click) {
