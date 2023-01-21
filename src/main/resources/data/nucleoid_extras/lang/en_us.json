@@ -20,7 +20,7 @@
   "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!",
 
   "nucleoid.navigator.all_games": "View Games",
-  "nucleoid.navigator.open_games": "View Currently Played",
+  "nucleoid.navigator.open_games": "View Active",
 
   "block.nucleoid_extras.end_portal": "End Portal (Lobby only!)",
   "block.nucleoid_extras.end_gateway": "End Gateway (Lobby only!)",
