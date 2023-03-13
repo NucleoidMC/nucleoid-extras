@@ -2,13 +2,11 @@ package xyz.nucleoid.extras.lobby.contributor;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -22,8 +20,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.JsonHelper;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
@@ -40,10 +36,6 @@ public final class ContributorData {
     );
 
     private static final String PEOPLE_KEY = "people";
-    private static final String NAME_KEY = "name";
-    private static final String SOCIALS_KEY = "socials";
-    private static final String MINECRAFT_KEY = "minecraft";
-    private static final String STATUE_NBT_KEY = "statue_nbt";
 
     private static final Map<String, Contributor> CONTRIBUTORS = new HashMap<>();
 
@@ -60,25 +52,15 @@ public final class ContributorData {
     // Methods for reloading data
 
     private static void addContributor(Entry<String, JsonElement> entry) {
-        try {
-            var contributorJson = entry.getValue().getAsJsonObject();
+        var result = Contributor.CODEC.decode(JsonOps.INSTANCE, entry.getValue());
 
-            var name = contributorJson.get(NAME_KEY).getAsString();
+        result.error().ifPresent(error -> {
+            LOGGER.warn("Failed to parse contributor '{}': {}", entry.getKey(), error.message());
+        });
 
-            var socials = contributorJson.getAsJsonObject(SOCIALS_KEY);
-            var minecraftUuidString = socials.get(MINECRAFT_KEY).getAsString();
-
-            var uuidInteger = new BigInteger(minecraftUuidString, 16);
-            var minecraftUuid = new UUID(uuidInteger.shiftRight(64).longValue(), uuidInteger.longValue());
-
-            var statueNbtJson = contributorJson.getAsJsonObject(STATUE_NBT_KEY);
-            var statueNbt = statueNbtJson == null ? null : JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, statueNbtJson);
-
-            var contributor = new Contributor(name, minecraftUuid, (NbtCompound) statueNbt);
-            CONTRIBUTORS.put(entry.getKey(), contributor);
-        } catch (Exception e) {
-            LOGGER.warn("Failed to parse contributor '{}'", entry.getKey(), e);
-        }
+        result.result().ifPresent(pair -> {
+            CONTRIBUTORS.put(entry.getKey(), pair.getFirst());
+        });
     }
 
     private static void refreshData() {
