@@ -79,7 +79,13 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     private static void handlePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender packetSender) {
-        var out = ByteStreams.newDataInput(buf.readByteArray());
+        var array = buf.readByteArray();
+
+        if (array.length == 0) {
+            return;
+        }
+
+        var out = ByteStreams.newDataInput(array);
 
         var type = out.readUTF();
 
