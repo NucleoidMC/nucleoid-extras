@@ -52,7 +52,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
-        super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, settings);
+        super(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, settings);
     }
 
     private ActionResult isOwner(ItemStack stack, PlayerEntity player) {
