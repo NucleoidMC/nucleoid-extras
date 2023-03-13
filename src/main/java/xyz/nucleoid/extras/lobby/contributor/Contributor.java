@@ -20,7 +20,7 @@ public record Contributor(String name, UUID minecraftUuid, NbtCompound statueNbt
         return Text.literal(this.name);
     }
 
-    private ItemStack createPlayerHead(MinecraftServer server) {
+    public ItemStack createPlayerHead(MinecraftServer server) {
         var playerHead = new ItemStack(Items.PLAYER_HEAD);
         var nbt = playerHead.getOrCreateNbt();
 

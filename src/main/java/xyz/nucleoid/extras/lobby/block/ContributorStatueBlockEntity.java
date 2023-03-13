@@ -13,6 +13,8 @@ import com.mojang.datafixers.util.Pair;
 import eu.pb4.holograms.api.elements.clickable.EntityHologramElement;
 import eu.pb4.holograms.api.holograms.AbstractHologram;
 import eu.pb4.holograms.api.holograms.WorldHologram;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -26,19 +28,27 @@ import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.StrayEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
+import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
+import xyz.nucleoid.extras.util.PagedGui;
 
 public class ContributorStatueBlockEntity extends BlockEntity {
     protected static final String CONTRIBUTOR_ID_KEY = "contributor_id";
+
+    private static final Text GUI_TITLE = Text.translatable("text.nucleoid_extras.contributor_statue.title");
 
     private static final List<Function<World, Entity>> SPOOKY_ENTITIES = ImmutableList.of(
         ZombieEntity::new,
@@ -99,6 +109,49 @@ public class ContributorStatueBlockEntity extends BlockEntity {
             this.hologram.hide();
             this.hologram = null;
         }
+    }
+
+    private void selectContributor(ServerPlayerEntity player, String id) {
+        if (this.contributorId.equals(id)) return;
+
+        this.contributorId = id;
+        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 1, 1);
+
+        this.removeHolograms();
+        this.spawnHolograms();
+
+        this.markDirty();
+    }
+
+    protected void openEditScreen(ServerPlayerEntity player) {
+        var server = player.getServer();
+
+        var elements = new ArrayList<GuiElementInterface>();
+
+        elements.add(new GuiElementBuilder(Items.BARRIER)
+            .setName(TaterBoxItem.NONE_TEXT)
+            .setCallback(() -> {
+                this.selectContributor(player, "");
+            })
+            .build());
+
+        for (var entry : ContributorData.getContributors()) {
+            var id = entry.getKey();
+            var contributor = entry.getValue();
+
+            var builder = GuiElementBuilder.from(contributor.createPlayerHead(server))
+                .setName(contributor.getName())
+                .setCallback(() -> {
+                    this.selectContributor(player, id);
+                });
+
+            elements.add(builder.build());
+        }
+
+        var gui = PagedGui.of(player, elements);
+        gui.setTitle(GUI_TITLE);
+
+        gui.open();
     }
 
     @Override
