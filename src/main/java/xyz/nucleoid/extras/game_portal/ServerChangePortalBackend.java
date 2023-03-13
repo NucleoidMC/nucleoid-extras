@@ -19,6 +19,10 @@ import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
 import xyz.nucleoid.plasmid.game.portal.GamePortalDisplay;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,30 +83,33 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     private static void handlePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender packetSender) {
-        var array = buf.readByteArray();
-
-        if (array.length == 0) {
-            return;
-        }
-
-        var out = ByteStreams.newDataInput(array);
-
-        var type = out.readUTF();
-
-        if (type.equals("PlayerCount")) {
-            var serverId = out.readUTF();
-            var count = out.readInt();
-
-            server.execute(() -> {
-                var x = ID_TO_PORTAL.get(serverId);
-
-                if (x != null) {
-                    for (var y : x) {
-                        y.setPlayerCount(count);
-                    }
-                    x.clear();
+        try {
+            var out = new DataInputStream(new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    return buf.readByte();
                 }
             });
+
+            var type = out.readUTF();
+
+            if (type.equals("PlayerCount")) {
+                var serverId = out.readUTF();
+                var count = out.readInt();
+
+                server.execute(() -> {
+                    var x = ID_TO_PORTAL.get(serverId);
+
+                    if (x != null) {
+                        for (var y : x) {
+                            y.setPlayerCount(count);
+                        }
+                        x.clear();
+                    }
+                });
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
