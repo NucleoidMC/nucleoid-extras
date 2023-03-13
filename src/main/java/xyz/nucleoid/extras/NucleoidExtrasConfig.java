@@ -30,6 +30,7 @@ public record NucleoidExtrasConfig(
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
+        @Nullable String contributorDataUrl,
         ErrorReportingConfig errorReporting,
         boolean devServer
 ) {
@@ -44,17 +45,18 @@ public record NucleoidExtrasConfig(
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
+                Codec.STRING.optionalFieldOf("contributor_data_url").forGetter(config -> Optional.ofNullable(config.contributorDataUrl())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
                 Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
-        ).apply(instance, (sidebar, gamePortalOpener, integrations, aliases, filter, errorReporting, devServer) ->
-            new NucleoidExtrasConfig(sidebar, gamePortalOpener, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), errorReporting, devServer)
+        ).apply(instance, (sidebar, gamePortalOpener, integrations, aliases, filter, contributorDataUrl, errorReporting, devServer) ->
+            new NucleoidExtrasConfig(sidebar, gamePortalOpener, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), contributorDataUrl.orElse(null), errorReporting, devServer)
         )
     );
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, Optional.empty(), null, null, null, ErrorReportingConfig.NONE, false);
+        this(false, Optional.empty(), null, null, null, null, ErrorReportingConfig.NONE, false);
     }
 
     @NotNull

@@ -11,6 +11,7 @@
     "TextSerializerMixin",
     "lobby.ArmorStandEntityAccessor",
     "lobby.ServerPlayerEntityMixin",
+    "lobby.ThreadedAnvilChunkStorageAccessor",
     "patches.EntityMixin",
     "patches.StatusEffectMixin",
     "player_list.PlayerInteractionManagerMixin",
