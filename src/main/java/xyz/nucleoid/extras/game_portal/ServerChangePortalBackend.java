@@ -68,7 +68,9 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
             buf.writeUTF("PlayerCount");
             buf.writeUTF(key);
 
-            random.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, (PacketByteBuf) PacketByteBufs.create().writeBytes(buf.toByteArray())));
+            var out = PacketByteBufs.create();
+            out.writeBytes(buf.toByteArray());
+            random.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, out));
         }
     }
 
@@ -151,6 +153,8 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
         buf.writeUTF(this.serverId);
 
 
-        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, (PacketByteBuf) PacketByteBufs.create().writeBytes(buf.toByteArray())));
+        var out = PacketByteBufs.create();
+        out.writeBytes(buf.toByteArray());
+        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, out));
     }
 }
