@@ -6,7 +6,7 @@ import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
+import net.minecraft.util.Nullables;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
@@ -22,7 +22,7 @@ public class PlayerListHelper {
 
     @Nullable
     private static PublicPlayerSession.Serialized getSession(ServerPlayerEntity player) {
-        return Util.map(player.getSession(), PublicPlayerSession::toSerialized);
+        return Nullables.map(player.getSession(), PublicPlayerSession::toSerialized);
     }
 
     public static GameMode getGameMode(ServerPlayerEntity player, boolean gray) {
