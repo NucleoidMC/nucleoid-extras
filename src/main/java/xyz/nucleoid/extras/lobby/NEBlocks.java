@@ -28,6 +28,7 @@ import xyz.nucleoid.extras.lobby.block.*;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDYzNzcxMTc2OSwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2JhYzc0MDBkZmNiOWEzODczNjFhM2FkN2MyOTY5NDNlYjg0MWE5YmRhMTNhZDg5NTU4ZTJkNmVmZWJmMTY3YmMiCiAgICB9CiAgfQp9");
+    public static final Block NUCLE_PAST_LOGO = createCornerTaterBlock(new DustParticleEffect(Vec3d.unpackRgb(0x52C471).toVector3f(), 1), "ewogICJ0aW1lc3RhbXAiIDogMTY3OTMzMTQxNTEyMCwKICAicHJvZmlsZUlkIiA6ICJmNTgyNGRmNGIwMTU0MDA4OGRhMzUyYTQxODU1MDQ0NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJGb3hHYW1lcjUzOTIiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjVlZDNlNGQ2ZWM0MmJkODRkMmI1ZTQ1MjA4N2Q0NTRhYWMxNDFhOTc4NTQwZjZkMjAwYmQ4YWE4NjNkNGRiOCIKICAgIH0KICB9Cn0=");
 
     public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
     public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
@@ -419,6 +420,10 @@ public class NEBlocks {
         return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
     }
 
+    private static Block createCornerTaterBlock(ParticleEffect effect, String texture) {
+        return new CornerTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+    }
+
     private static Block createLuckyTaterBlock(String texture, String cooldownTexture) {
         return new LuckyTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture, cooldownTexture);
     }
@@ -465,6 +470,7 @@ public class NEBlocks {
 
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
+        register("nucle_past_logo", NUCLE_PAST_LOGO);
 
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);

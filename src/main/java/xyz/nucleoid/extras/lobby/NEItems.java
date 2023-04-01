@@ -35,6 +35,7 @@ public class NEItems {
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
         .entries((enabledFeatures, entries, operatorEnabled) -> {
             entries.add(NEItems.NUCLEOID_LOGO);
+            entries.add(NEItems.NUCLE_PAST_LOGO);
             entries.add(NEItems.END_PORTAL);
             entries.add(NEItems.END_GATEWAY);
             entries.add(NEItems.SAFE_TNT);
@@ -337,6 +338,7 @@ public class NEItems {
         .build();
 
     public static final Item NUCLEOID_LOGO = createHead(NEBlocks.NUCLEOID_LOGO);
+    public static final Item NUCLE_PAST_LOGO = createHead(NEBlocks.NUCLE_PAST_LOGO);
 
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
     public static final Item END_GATEWAY = createSimple(NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
@@ -665,6 +667,7 @@ public class NEItems {
 
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
+        register("nucle_past_logo", NUCLE_PAST_LOGO);
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
         register("safe_tnt", SAFE_TNT);
