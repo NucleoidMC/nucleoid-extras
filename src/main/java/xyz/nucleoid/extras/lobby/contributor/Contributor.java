@@ -1,11 +1,14 @@
 package xyz.nucleoid.extras.lobby.contributor;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.block.entity.SkullBlockEntity;
+import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -15,6 +18,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
 public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) {
@@ -30,18 +34,9 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
         return Text.literal(this.name);
     }
 
-    public ItemStack createPlayerHead(MinecraftServer server) {
+    public ItemStack createPlayerHead(GameProfile profile) {
         var playerHead = new ItemStack(Items.PLAYER_HEAD);
-        var nbt = playerHead.getOrCreateNbt();
-
-        var profile = new GameProfile(this.socials.minecraft(), null);
-
-        if (profile.getId() != null && server != null) {
-            profile = server.getSessionService().fillProfileProperties(profile, false);
-            nbt.put("SkullOwner", NbtHelper.writeGameProfile(new NbtCompound(), profile));
-        } else {
-            nbt.putString("SkullOwner", profile.getName());
-        }
+        writeSkullOwner(playerHead, profile);
 
         return playerHead;
     }
@@ -56,12 +51,47 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
         entity.setCustomNameVisible(true);
 
         // Equipment
-        entity.equipStack(EquipmentSlot.HEAD, this.createPlayerHead(server));
+        var profile = this.createGameProfile(server);
+        var playerHead = this.createPlayerHead(profile);
+
+        entity.equipStack(EquipmentSlot.HEAD, playerHead);
+
+        this.loadGameProfileProperties(server, profile, fullProfile -> {
+            writeSkullOwner(playerHead, fullProfile);
+        });
 
         if (entity instanceof ArmorStandEntity) {
             var accessor = (ArmorStandEntityAccessor) (Object) entity;
             accessor.callSetHideBasePlate(true);
             accessor.callSetShowArms(true);
         }
+    }
+
+    public GameProfile createGameProfile(MinecraftServer server) {
+        var uuid = this.socials.minecraft();
+
+        return server.getUserCache().getByUuid(uuid).orElseGet(() -> {
+            return new GameProfile(uuid, null);
+        });
+    }
+
+    public void loadGameProfileProperties(MinecraftServer server, GameProfile profile, Consumer<GameProfile> callback) {
+        if (profile.isComplete() && profile.getProperties().containsKey(PlayerSkinProvider.TEXTURES)) {
+            return;
+        }
+
+        Util.getMainWorkerExecutor().execute(() -> {
+            GameProfile fullProfile = server.getSessionService().fillProfileProperties(profile, false);
+
+            server.getUserCache().add(fullProfile);
+            server.execute(() -> {
+                callback.accept(profile);
+            });
+        });
+    }
+
+    public static void writeSkullOwner(ItemStack stack, GameProfile profile) {
+        var nbt = stack.getOrCreateNbt();
+        nbt.put(SkullBlockEntity.SKULL_OWNER_KEY, NbtHelper.writeGameProfile(new NbtCompound(), profile));
     }
 }

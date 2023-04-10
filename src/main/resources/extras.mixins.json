@@ -10,6 +10,7 @@
     "ServerWorldAccessor",
     "TextSerializerMixin",
     "lobby.ArmorStandEntityAccessor",
+    "lobby.LivingEntityAccessor",
     "lobby.ServerPlayerEntityMixin",
     "lobby.ThreadedAnvilChunkStorageAccessor",
     "patches.EntityMixin",

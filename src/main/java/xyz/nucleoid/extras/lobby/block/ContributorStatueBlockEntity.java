@@ -41,8 +41,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.contributor.Contributor;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
+import xyz.nucleoid.extras.mixin.lobby.LivingEntityAccessor;
 import xyz.nucleoid.extras.util.PagedGui;
 
 public class ContributorStatueBlockEntity extends BlockEntity {
@@ -139,13 +141,21 @@ public class ContributorStatueBlockEntity extends BlockEntity {
             var id = entry.getKey();
             var contributor = entry.getValue();
 
-            var builder = GuiElementBuilder.from(contributor.createPlayerHead(server))
+            var profile = contributor.createGameProfile(server);
+
+            var builder = GuiElementBuilder.from(contributor.createPlayerHead(profile))
                 .setName(contributor.getName())
                 .setCallback(() -> {
                     this.selectContributor(player, id);
                 });
 
-            elements.add(builder.build());
+            var element = builder.build();
+
+            contributor.loadGameProfileProperties(server, profile, fullProfile -> {
+                Contributor.writeSkullOwner(element.getItemStack(), fullProfile);
+            });
+
+            elements.add(element);
         }
 
         var gui = PagedGui.of(player, elements);
@@ -204,6 +214,35 @@ public class ContributorStatueBlockEntity extends BlockEntity {
                 if (!equipmentList.isEmpty()) {
                     Packet<?> packet = new EntityEquipmentUpdateS2CPacket(this.entity.getId(), equipmentList);
                     player.networkHandler.sendPacket(packet);
+                }
+            }
+        }
+
+        @Override
+        public void onTick(AbstractHologram hologram) {
+            super.onTick(hologram);
+
+            if (this.entity instanceof LivingEntityAccessor accessor) {
+                var equipmentChanges = accessor.callGetEquipmentChanges();
+
+                if (equipmentChanges != null && !equipmentChanges.isEmpty()) {
+                    var list = new ArrayList<Pair<EquipmentSlot, ItemStack>>(equipmentChanges.size());
+
+                    equipmentChanges.forEach((slot, stack) -> {
+                        var stackCopy = stack.copy();
+                        list.add(Pair.of(slot, stackCopy));
+
+                        switch (slot.getType()) {
+                            case HAND -> accessor.callSetSyncedHandStack(slot, stackCopy);
+                            case ARMOR -> accessor.callSetSyncedArmorStack(slot, stackCopy);
+                        }
+                    });
+
+                    var packet = new EntityEquipmentUpdateS2CPacket(this.entity.getId(), list);
+
+                    for (ServerPlayerEntity player : hologram.getPlayerSet()) {
+                        player.networkHandler.sendPacket(packet);
+                    }
                 }
             }
         }

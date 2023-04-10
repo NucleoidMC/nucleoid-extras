@@ -116,7 +116,9 @@ public final class ContributorData {
             refreshData();
 
             if (!initial) {
-                refreshHolograms(server);
+                server.execute(() -> {
+                    refreshHolograms(server);
+                });
             }
         });
         
