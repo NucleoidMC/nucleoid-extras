@@ -2,7 +2,7 @@ package xyz.nucleoid.extras.mixin.player_list;
 
 import eu.pb4.polymer.core.mixin.entity.PlayerListS2CPacketAccessor;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,7 +20,7 @@ import java.util.*;
 public abstract class PlayerManagerMixin {
     @Shadow @Final private Map<UUID, ServerPlayerEntity> playerMap;
 
-    @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"))
+    @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/packet/Packet;)V"))
     private void extras$sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
         var player = playerManager.getPlayer(entry.profileId());

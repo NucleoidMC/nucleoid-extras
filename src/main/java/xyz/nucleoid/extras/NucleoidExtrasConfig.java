@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.util.Identifier;
+import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
 import xyz.nucleoid.extras.error.ErrorReportingConfig;
@@ -18,6 +19,7 @@ import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +32,7 @@ public record NucleoidExtrasConfig(
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
-        @Nullable String contributorDataUrl,
+        @Nullable URL contributorDataUrl,
         ErrorReportingConfig errorReporting,
         boolean devServer
 ) {
@@ -45,7 +47,7 @@ public record NucleoidExtrasConfig(
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
-                Codec.STRING.optionalFieldOf("contributor_data_url").forGetter(config -> Optional.ofNullable(config.contributorDataUrl())),
+                MoreCodecs.url("https").optionalFieldOf("contributor_data_url").forGetter(config -> Optional.ofNullable(config.contributorDataUrl())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
                 Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
         ).apply(instance, (sidebar, gamePortalOpener, integrations, aliases, filter, contributorDataUrl, errorReporting, devServer) ->

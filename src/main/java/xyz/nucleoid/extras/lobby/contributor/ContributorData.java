@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.lobby.contributor;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,7 +69,7 @@ public final class ContributorData {
             var config = NucleoidExtrasConfig.get();
             if (config.contributorDataUrl() == null) return;
 
-            var url = new URL(config.contributorDataUrl());
+            var url = config.contributorDataUrl();
             var connection = (HttpsURLConnection) url.openConnection();
 
             connection.setDoOutput(true);

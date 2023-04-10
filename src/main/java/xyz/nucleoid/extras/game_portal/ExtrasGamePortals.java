@@ -11,5 +11,6 @@ public class ExtrasGamePortals {
         GamePortalConfig.register(NucleoidExtras.identifier("styled/advanced_menu"), AdvancedStyledMenuPortalConfig.CODEC);
         GamePortalConfig.register(NucleoidExtras.identifier("styled/handmade_menu"), HandmadeStyledMenuPortalConfig.CODEC);
         GamePortalConfig.register(NucleoidExtras.identifier("styled/simple_menu"), SimpleStyledMenuPortalConfig.CODEC);
+        GamePortalConfig.register(NucleoidExtras.identifier("server_change"), ServerChangePortalConfig.CODEC);
     }
 }

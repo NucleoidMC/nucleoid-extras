@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.integrations.relay;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
@@ -206,7 +207,7 @@ public final class ChatRelayIntegration {
         boolean first = true;
 
         MessageBuilder(Text prefix) {
-            this.text = Text.empty().append(prefix).append(" ");
+            this.text = Text.empty().append(prefix).append(ScreenTexts.SPACE);
         }
 
         void append(MutableText text) {

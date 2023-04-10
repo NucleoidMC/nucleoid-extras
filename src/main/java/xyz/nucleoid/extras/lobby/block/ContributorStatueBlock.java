@@ -64,7 +64,7 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        var facing = context.getPlayerFacing().getOpposite();
+        var facing = context.getHorizontalPlayerFacing().getOpposite();
         return super.getPlacementState(context).with(FACING, facing);
     }
 

@@ -10,6 +10,7 @@ import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
+import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.NECriteria;
@@ -43,6 +44,7 @@ public final class NucleoidExtras implements ModInitializer {
         ExtrasGamePortals.register();
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
+        ServerChangePortalBackend.register();
     }
 
     private static void onServerTick(MinecraftServer server) {
@@ -56,6 +58,8 @@ public final class NucleoidExtras implements ModInitializer {
         if (integrations != null) {
             integrations.tick();
         }
+
+        ServerChangePortalBackend.tick(server);
     }
 
     public static Identifier identifier(String path) {

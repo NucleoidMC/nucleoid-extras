@@ -33,7 +33,7 @@ public class NEItems {
     public static final ItemGroup ITEM_GROUP = PolymerItemGroupUtils.builder(NucleoidExtras.identifier("general"))
         .displayName(Text.translatable("text.nucleoid_extras.name"))
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
-        .entries((enabledFeatures, entries, operatorEnabled) -> {
+        .entries((context, entries) -> {
             entries.add(NEItems.NUCLEOID_LOGO);
             entries.add(NEItems.END_PORTAL);
             entries.add(NEItems.END_GATEWAY);
