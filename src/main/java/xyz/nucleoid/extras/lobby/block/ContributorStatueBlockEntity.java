@@ -5,6 +5,7 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -128,35 +129,39 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     protected void openEditScreen(ServerPlayerEntity player) {
         var server = player.getServer();
 
-        var elements = new ArrayList<GuiElementInterface>();
+        List<GuiElementInterface> elements = ContributorData.getContributors()
+                .stream()
+                .sorted((a, b) -> {
+                    return a.getValue().compareTo(b.getValue());
+                })
+                .map(entry -> {
+                    var id = entry.getKey();
+                    var contributor = entry.getValue();
 
-        elements.add(new GuiElementBuilder(Items.BARRIER)
+                    var profile = contributor.createGameProfile(server);
+
+                    var builder = GuiElementBuilder.from(contributor.createPlayerHead(profile))
+                        .setName(contributor.getName())
+                        .setCallback(() -> {
+                            this.selectContributor(player, id);
+                        });
+
+                    var element = builder.build();
+
+                    contributor.loadGameProfileProperties(server, profile, fullProfile -> {
+                        Contributor.writeSkullOwner(element.getItemStack(), fullProfile);
+                    });
+
+                    return element;
+                })
+                .collect(Collectors.toList());
+
+        elements.add(0, new GuiElementBuilder(Items.BARRIER)
             .setName(TaterBoxItem.NONE_TEXT)
             .setCallback(() -> {
                 this.selectContributor(player, "");
             })
             .build());
-
-        for (var entry : ContributorData.getContributors()) {
-            var id = entry.getKey();
-            var contributor = entry.getValue();
-
-            var profile = contributor.createGameProfile(server);
-
-            var builder = GuiElementBuilder.from(contributor.createPlayerHead(profile))
-                .setName(contributor.getName())
-                .setCallback(() -> {
-                    this.selectContributor(player, id);
-                });
-
-            var element = builder.build();
-
-            contributor.loadGameProfileProperties(server, profile, fullProfile -> {
-                Contributor.writeSkullOwner(element.getItemStack(), fullProfile);
-            });
-
-            elements.add(element);
-        }
 
         var gui = PagedGui.of(player, elements);
         gui.setTitle(GUI_TITLE);

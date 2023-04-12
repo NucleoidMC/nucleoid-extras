@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.lobby.contributor;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +41,7 @@ public final class ContributorData {
 
     // Methods for accessing data
 
-    public static Iterable<Entry<String, Contributor>> getContributors() {
+    public static Collection<Entry<String, Contributor>> getContributors() {
         return CONTRIBUTORS.entrySet();
     }
 

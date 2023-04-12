@@ -21,7 +21,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
-public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) {
+public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) implements Comparable<Contributor> {
     protected static final Codec<Contributor> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
                 Codec.STRING.fieldOf("name").forGetter(Contributor::name),
@@ -88,6 +88,11 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
                 callback.accept(profile);
             });
         });
+    }
+
+    @Override
+    public int compareTo(Contributor o) {
+        return this.name.compareToIgnoreCase(o.name);
     }
 
     public static void writeSkullOwner(ItemStack stack, GameProfile profile) {
