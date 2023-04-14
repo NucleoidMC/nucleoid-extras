@@ -1,9 +1,7 @@
 {
     "nucleoid.sidebar.welcome": "Bienvenue sur Nucleoid !",
-    "nucleoid.sidebar.game": "%s: %s",
     "nucleoid.sidebar.game.player.1": "%s joueur",
     "nucleoid.sidebar.game.player.more": "%s joueurs",
-    "nucleoid.sidebar.compass": "ou utilisez la boussole !",
     "nucleoid.stop.scheduled": "Le redémarrage du serveur a été programmé ! Le serveur va redémarrer dans %s minutes, ou dès que tous les jeux seront terminés.",
     "nucleoid.stop.scheduled.already": "Un redémarrage du serveur a déjà été programmé.",
     "nucleoid.stop.game.open": "Impossible de rejoindre ce jeu : un redémarrage a été programmé !",
