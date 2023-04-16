@@ -28,6 +28,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.util.SkinEncoder;
 
 public class LuckyTaterBlock extends TinyPotatoBlock {
     private static final BooleanProperty COOLDOWN = BooleanProperty.of("cooldown");
@@ -40,7 +41,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
 
     public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
         super(settings, (ParticleEffect) null, texture);
-        this.cooldownTexture = cooldownTexture;
+        this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(COOLDOWN, false));
     }
