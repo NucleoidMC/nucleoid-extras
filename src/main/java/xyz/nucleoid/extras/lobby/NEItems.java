@@ -41,6 +41,7 @@ public class NEItems {
             entries.add(NEItems.LAUNCH_FEATHER);
             entries.add(NEItems.GOLD_LAUNCH_PAD);
             entries.add(NEItems.IRON_LAUNCH_PAD);
+            entries.add(NEItems.CONTRIBUTOR_STATUE);
             entries.add(NEItems.INFINITE_DISPENSER);
             entries.add(NEItems.INFINITE_DROPPER);
             entries.add(NEItems.SNAKE_BLOCK);
@@ -344,6 +345,8 @@ public class NEItems {
 
     public static final Item GOLD_LAUNCH_PAD = createSimple(NEBlocks.GOLD_LAUNCH_PAD, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Item IRON_LAUNCH_PAD = createSimple(NEBlocks.IRON_LAUNCH_PAD, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
+
+    public static final Item CONTRIBUTOR_STATUE = createSimple(NEBlocks.CONTRIBUTOR_STATUE, Items.SMOOTH_STONE);
 
     public static final Item INFINITE_DISPENSER = createSimple(NEBlocks.INFINITE_DISPENSER, Items.DISPENSER);
     public static final Item INFINITE_DROPPER = createSimple(NEBlocks.INFINITE_DROPPER, Items.DROPPER);
@@ -670,6 +673,7 @@ public class NEItems {
         register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
+        register("contributor_statue", CONTRIBUTOR_STATUE);
         register("infinite_dispenser", INFINITE_DISPENSER);
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
