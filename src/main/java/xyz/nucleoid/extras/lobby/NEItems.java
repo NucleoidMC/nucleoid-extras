@@ -327,6 +327,11 @@ public class NEItems {
             entries.add(NEItems.MUD_TATER);
             entries.add(NEItems.PACKED_MUD_TATER);
             entries.add(NEItems.STRIPPED_MANGROVE_LOG_TATER);
+            entries.add(NEItems.LUCY_AXOLOTL_TATER);
+            entries.add(NEItems.WILD_AXOLOTL_TATER);
+            entries.add(NEItems.GOLD_AXOLOTL_TATER);
+            entries.add(NEItems.CYAN_AXOLOTL_TATER);
+            entries.add(NEItems.BLUE_AXOLOTL_TATER);
             entries.add(NEItems.BRONZE_CAPSULE_TATER);
             entries.add(NEItems.SILVER_CAPSULE_TATER);
             entries.add(NEItems.GOLD_CAPSULE_TATER);
@@ -646,6 +651,12 @@ public class NEItems {
     public static final Item MUD_TATER = createHead(NEBlocks.MUD_TATER);
     public static final Item PACKED_MUD_TATER = createHead(NEBlocks.PACKED_MUD_TATER);
     public static final Item STRIPPED_MANGROVE_LOG_TATER = createHead(NEBlocks.STRIPPED_MANGROVE_LOG_TATER);
+
+    public static final Item LUCY_AXOLOTL_TATER = createHead(NEBlocks.LUCY_AXOLOTL_TATER);
+    public static final Item WILD_AXOLOTL_TATER = createHead(NEBlocks.WILD_AXOLOTL_TATER);
+    public static final Item GOLD_AXOLOTL_TATER = createHead(NEBlocks.GOLD_AXOLOTL_TATER);
+    public static final Item CYAN_AXOLOTL_TATER = createHead(NEBlocks.CYAN_AXOLOTL_TATER);
+    public static final Item BLUE_AXOLOTL_TATER = createHead(NEBlocks.BLUE_AXOLOTL_TATER);
 
     public static final Item BRONZE_CAPSULE_TATER = createHead(NEBlocks.BRONZE_CAPSULE_TATER);
     public static final Item SILVER_CAPSULE_TATER = createHead(NEBlocks.SILVER_CAPSULE_TATER);
@@ -975,6 +986,12 @@ public class NEItems {
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
 
+        register("lucy_axolotl_tater", LUCY_AXOLOTL_TATER);
+        register("wild_axolotl_tater", WILD_AXOLOTL_TATER);
+        register("gold_axolotl_tater", GOLD_AXOLOTL_TATER);
+        register("cyan_axolotl_tater", CYAN_AXOLOTL_TATER);
+        register("blue_axolotl_tater", BLUE_AXOLOTL_TATER);
+        
         register("bronze_capsule_tater", BRONZE_CAPSULE_TATER);
         register("silver_capsule_tater", SILVER_CAPSULE_TATER);
         register("gold_capsule_tater", GOLD_CAPSULE_TATER);
