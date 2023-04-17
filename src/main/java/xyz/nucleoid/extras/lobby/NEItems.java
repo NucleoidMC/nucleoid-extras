@@ -98,6 +98,8 @@ public class NEItems {
             entries.add(NEItems.BLUE_TATEROID);
             entries.add(NEItems.PURPLE_TATEROID);
             entries.add(NEItems.FLIPPED_TATER);
+            entries.add(NEItems.BACKWARD_TATER);
+            entries.add(NEItems.UPWARD_TATER);
             entries.add(NEItems.SANTA_HAT_TATER);
             entries.add(NEItems.GENDERFLUID_TATER);
             entries.add(NEItems.DEMISEXUAL_TATER);
@@ -411,6 +413,8 @@ public class NEItems {
     public static final Item BLUE_TATEROID = createHead(NEBlocks.BLUE_TATEROID);
     public static final Item PURPLE_TATEROID = createHead(NEBlocks.PURPLE_TATEROID);
     public static final Item FLIPPED_TATER = createHead(NEBlocks.FLIPPED_TATER);
+    public static final Item BACKWARD_TATER = createHead(NEBlocks.BACKWARD_TATER);
+    public static final Item UPWARD_TATER = createHead(NEBlocks.UPWARD_TATER);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
     public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
     public static final Item DEMISEXUAL_TATER = createHead(NEBlocks.DEMISEXUAL_TATER);
@@ -745,6 +749,8 @@ public class NEItems {
         register("blue_tateroid", BLUE_TATEROID);
         register("purple_tateroid", PURPLE_TATEROID);
         register("flipped_tater", FLIPPED_TATER);
+        register("backward_tater", BACKWARD_TATER);
+        register("upward_tater", UPWARD_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
