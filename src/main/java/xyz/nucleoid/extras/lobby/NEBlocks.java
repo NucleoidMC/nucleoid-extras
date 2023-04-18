@@ -80,6 +80,8 @@ public class NEBlocks {
     public static final Block TATER_OF_UNDYING = createTaterBlock(ParticleTypes.TOTEM_OF_UNDYING, "b526d93147825e2db444aaf4a9464b61ad4e4defb0adf944a2275543efc9192a");
     public static final Block CRYING_OBSIDIAN_TATER = createTaterBlock(ParticleTypes.DRIPPING_OBSIDIAN_TEAR, "70d151a2da83b4a0ec73be08a42c4bc8964ff1d3ae2106cc29b9b79cfccb8b9f");
     public static final Block FLIPPED_TATER = createTaterBlock(ParticleTypes.DAMAGE_INDICATOR, "9c1e33c4b7e6cb58e699aeb7ae412329f35cb443e50743c8896ed36dfb6a3588");
+    public static final Block BACKWARD_TATER = createTaterBlock(ParticleTypes.HEART, "c3d2eefca5fa2e0cc710fe067f4a7114df0f430eeaaa1d9c373e4c91c9ed0ea4");
+    public static final Block UPWARD_TATER = createTaterBlock(ParticleTypes.HEART, "60860143fea936066220eae3a31cdfe5aa9b4e525e194aa965c02272a01cb5c8");
     public static final Block SANTA_HAT_TATER = createTaterBlock(ParticleTypes.SNOWFLAKE, "7609f3510b29bfa1504b7d3d53f466e7628a1cebd102573601db33e1ced88c4e");
 
     public static final Block SKELETATER = createTaterBlock(Blocks.BONE_BLOCK, "f472e2fc36c7d8ef7cff8cfba71e7e238f89de01e8d44c21703f1ac6d2c47f1");
@@ -386,6 +388,12 @@ public class NEBlocks {
     public static final Block PACKED_MUD_TATER = createTaterBlock(Blocks.DIRT, "67a5911061c9497c1e888aabe97370d4d00f900ca798cb1ac8cf41fe7bb41532");
     public static final Block STRIPPED_MANGROVE_LOG_TATER = createTaterBlock(Blocks.STRIPPED_CRIMSON_STEM, "c03d0e7742fa66506b5739c98d0cf29411463608877fa667ce29c7b85793d18a");
 
+    public static final Block LUCY_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "721a824dcfa8d7503f008f59d7e4874a58ba6f6351750720c78a55eb24211fb6");
+    public static final Block WILD_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "861a7607987e0751e10c3d819775b58c45dba2911bd5222ca8111a8401248d56");
+    public static final Block GOLD_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "9e8dff1cf4f1e76c76993ab9316ef7904b229c37b8cbd1876ccb8c9bcbd36502");
+    public static final Block CYAN_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "9d61be444b360184cc39faecfac849359ba56843e1469a3c4687f004b9a7ae65");
+    public static final Block BLUE_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "88bc29626c5311e82f18a692d7b26bec5b841a0533ba633e5887a172c765bf05");
+
     public static final Block BRONZE_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0x764D22).toVector3f(), 90, "7391822504d79491186d42b5ab6fdd9615bfc1886324be5f5b613dcb03319677");
     public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xBFBFBF).toVector3f(), 9, "afdce3ea1399dd0b738faaecf89cc5bdcf179b8dc4f3d7964c8cd45c89257fd1");
     public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xF1A00E).toVector3f(), 1, "db5388834578ccb906e97d3e54aeb33edcc12d821f081b7eb04830cbd260ad81");
@@ -523,6 +531,8 @@ public class NEBlocks {
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
         register("flipped_tater", FLIPPED_TATER);
+        register("backward_tater", BACKWARD_TATER);
+        register("upward_tater", UPWARD_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
@@ -774,6 +784,12 @@ public class NEBlocks {
         register("mud_tater", MUD_TATER);
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
+
+        register("lucy_axolotl_tater", LUCY_AXOLOTL_TATER);
+        register("wild_axolotl_tater", WILD_AXOLOTL_TATER);
+        register("gold_axolotl_tater", GOLD_AXOLOTL_TATER);
+        register("cyan_axolotl_tater", CYAN_AXOLOTL_TATER);
+        register("blue_axolotl_tater", BLUE_AXOLOTL_TATER);
 
         register("bronze_capsule_tater", BRONZE_CAPSULE_TATER);
         register("silver_capsule_tater", SILVER_CAPSULE_TATER);
