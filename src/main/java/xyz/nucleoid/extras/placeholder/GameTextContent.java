@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.placeholder;
 
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +30,7 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
                         TextColor.fromRgb(gameSpace == null ? 0x800080 : (int) (gameSpace.getMetadata().id().getLeastSignificantBits() & 0xFFFFFF)))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         gameSpace == null ? Text.literal("Lobby") : gameSpace.getMetadata().sourceConfig().name())))
-        ).append(" ");
+        ).append(ScreenTexts.SPACE);
 
         out.getSiblings().addAll(text.getSiblings());
 

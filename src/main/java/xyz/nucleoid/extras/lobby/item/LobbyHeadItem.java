@@ -5,6 +5,7 @@ import eu.pb4.polymer.core.api.item.PolymerHeadBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -21,7 +22,7 @@ public class LobbyHeadItem extends PolymerHeadBlockItem {
 
     @Override
     public Text getName() {
-        return Text.empty().append(super.getName()).append(" ").append(Text.translatable("text.nucleoid_extras.lobby_only"));
+        return Text.empty().append(super.getName()).append(ScreenTexts.SPACE).append(Text.translatable("text.nucleoid_extras.lobby_only"));
     }
 
     @Override

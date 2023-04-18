@@ -41,7 +41,7 @@ import java.util.*;
 
 public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
-    private static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
+    public static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
 
     private static final String OWNER_KEY = "Owner";
     private static final String TATERS_KEY = "Taters";
@@ -52,7 +52,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
-        super(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, settings);
+        super(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, settings);
     }
 
     private ActionResult isOwner(ItemStack stack, PlayerEntity player) {

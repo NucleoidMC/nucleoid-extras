@@ -33,7 +33,7 @@ public class NEItems {
     public static final ItemGroup ITEM_GROUP = PolymerItemGroupUtils.builder(NucleoidExtras.identifier("general"))
         .displayName(Text.translatable("text.nucleoid_extras.name"))
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
-        .entries((enabledFeatures, entries, operatorEnabled) -> {
+        .entries((context, entries) -> {
             entries.add(NEItems.NUCLEOID_LOGO);
             entries.add(NEItems.NUCLE_PAST_LOGO);
             entries.add(NEItems.END_PORTAL);
@@ -42,6 +42,7 @@ public class NEItems {
             entries.add(NEItems.LAUNCH_FEATHER);
             entries.add(NEItems.GOLD_LAUNCH_PAD);
             entries.add(NEItems.IRON_LAUNCH_PAD);
+            entries.add(NEItems.CONTRIBUTOR_STATUE);
             entries.add(NEItems.INFINITE_DISPENSER);
             entries.add(NEItems.INFINITE_DROPPER);
             entries.add(NEItems.SNAKE_BLOCK);
@@ -98,6 +99,8 @@ public class NEItems {
             entries.add(NEItems.BLUE_TATEROID);
             entries.add(NEItems.PURPLE_TATEROID);
             entries.add(NEItems.FLIPPED_TATER);
+            entries.add(NEItems.BACKWARD_TATER);
+            entries.add(NEItems.UPWARD_TATER);
             entries.add(NEItems.SANTA_HAT_TATER);
             entries.add(NEItems.GENDERFLUID_TATER);
             entries.add(NEItems.DEMISEXUAL_TATER);
@@ -327,6 +330,11 @@ public class NEItems {
             entries.add(NEItems.MUD_TATER);
             entries.add(NEItems.PACKED_MUD_TATER);
             entries.add(NEItems.STRIPPED_MANGROVE_LOG_TATER);
+            entries.add(NEItems.LUCY_AXOLOTL_TATER);
+            entries.add(NEItems.WILD_AXOLOTL_TATER);
+            entries.add(NEItems.GOLD_AXOLOTL_TATER);
+            entries.add(NEItems.CYAN_AXOLOTL_TATER);
+            entries.add(NEItems.BLUE_AXOLOTL_TATER);
             entries.add(NEItems.BRONZE_CAPSULE_TATER);
             entries.add(NEItems.SILVER_CAPSULE_TATER);
             entries.add(NEItems.GOLD_CAPSULE_TATER);
@@ -346,6 +354,8 @@ public class NEItems {
 
     public static final Item GOLD_LAUNCH_PAD = createSimple(NEBlocks.GOLD_LAUNCH_PAD, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Item IRON_LAUNCH_PAD = createSimple(NEBlocks.IRON_LAUNCH_PAD, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
+
+    public static final Item CONTRIBUTOR_STATUE = createSimple(NEBlocks.CONTRIBUTOR_STATUE, Items.SMOOTH_STONE);
 
     public static final Item INFINITE_DISPENSER = createSimple(NEBlocks.INFINITE_DISPENSER, Items.DISPENSER);
     public static final Item INFINITE_DROPPER = createSimple(NEBlocks.INFINITE_DROPPER, Items.DROPPER);
@@ -405,6 +415,8 @@ public class NEItems {
     public static final Item BLUE_TATEROID = createHead(NEBlocks.BLUE_TATEROID);
     public static final Item PURPLE_TATEROID = createHead(NEBlocks.PURPLE_TATEROID);
     public static final Item FLIPPED_TATER = createHead(NEBlocks.FLIPPED_TATER);
+    public static final Item BACKWARD_TATER = createHead(NEBlocks.BACKWARD_TATER);
+    public static final Item UPWARD_TATER = createHead(NEBlocks.UPWARD_TATER);
     public static final Item SANTA_HAT_TATER = createHead(NEBlocks.SANTA_HAT_TATER);
     public static final Item GENDERFLUID_TATER = createHead(NEBlocks.GENDERFLUID_TATER);
     public static final Item DEMISEXUAL_TATER = createHead(NEBlocks.DEMISEXUAL_TATER);
@@ -646,6 +658,12 @@ public class NEItems {
     public static final Item PACKED_MUD_TATER = createHead(NEBlocks.PACKED_MUD_TATER);
     public static final Item STRIPPED_MANGROVE_LOG_TATER = createHead(NEBlocks.STRIPPED_MANGROVE_LOG_TATER);
 
+    public static final Item LUCY_AXOLOTL_TATER = createHead(NEBlocks.LUCY_AXOLOTL_TATER);
+    public static final Item WILD_AXOLOTL_TATER = createHead(NEBlocks.WILD_AXOLOTL_TATER);
+    public static final Item GOLD_AXOLOTL_TATER = createHead(NEBlocks.GOLD_AXOLOTL_TATER);
+    public static final Item CYAN_AXOLOTL_TATER = createHead(NEBlocks.CYAN_AXOLOTL_TATER);
+    public static final Item BLUE_AXOLOTL_TATER = createHead(NEBlocks.BLUE_AXOLOTL_TATER);
+
     public static final Item BRONZE_CAPSULE_TATER = createHead(NEBlocks.BRONZE_CAPSULE_TATER);
     public static final Item SILVER_CAPSULE_TATER = createHead(NEBlocks.SILVER_CAPSULE_TATER);
     public static final Item GOLD_CAPSULE_TATER = createHead(NEBlocks.GOLD_CAPSULE_TATER);
@@ -673,6 +691,7 @@ public class NEItems {
         register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
+        register("contributor_statue", CONTRIBUTOR_STATUE);
         register("infinite_dispenser", INFINITE_DISPENSER);
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
@@ -733,6 +752,8 @@ public class NEItems {
         register("blue_tateroid", BLUE_TATEROID);
         register("purple_tateroid", PURPLE_TATEROID);
         register("flipped_tater", FLIPPED_TATER);
+        register("backward_tater", BACKWARD_TATER);
+        register("upward_tater", UPWARD_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
@@ -974,6 +995,12 @@ public class NEItems {
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
 
+        register("lucy_axolotl_tater", LUCY_AXOLOTL_TATER);
+        register("wild_axolotl_tater", WILD_AXOLOTL_TATER);
+        register("gold_axolotl_tater", GOLD_AXOLOTL_TATER);
+        register("cyan_axolotl_tater", CYAN_AXOLOTL_TATER);
+        register("blue_axolotl_tater", BLUE_AXOLOTL_TATER);
+        
         register("bronze_capsule_tater", BRONZE_CAPSULE_TATER);
         register("silver_capsule_tater", SILVER_CAPSULE_TATER);
         register("gold_capsule_tater", GOLD_CAPSULE_TATER);

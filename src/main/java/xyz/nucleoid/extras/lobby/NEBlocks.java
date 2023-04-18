@@ -54,6 +54,8 @@ public class NEBlocks {
     public static final Block GOLD_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
     public static final Block IRON_LAUNCH_PAD = new LaunchPadBlock(AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
+    public static final Block CONTRIBUTOR_STATUE = new ContributorStatueBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE).strength(100));
+
     public static final Block INFINITE_DISPENSER = new InfiniteDispenserBlock(AbstractBlock.Settings.copy(Blocks.DISPENSER).strength(100));
     public static final Block INFINITE_DROPPER = new InfiniteDropperBlock(AbstractBlock.Settings.copy(Blocks.DROPPER).strength(100));
 
@@ -79,6 +81,8 @@ public class NEBlocks {
     public static final Block TATER_OF_UNDYING = createTaterBlock(ParticleTypes.TOTEM_OF_UNDYING, "ewogICJ0aW1lc3RhbXAiIDogMTYzNzg2MDQ4MDI5NCwKICAicHJvZmlsZUlkIiA6ICI3NTE0NDQ4MTkxZTY0NTQ2OGM5NzM5YTZlMzk1N2JlYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJUaGFua3NNb2phbmciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUyNmQ5MzE0NzgyNWUyZGI0NDRhYWY0YTk0NjRiNjFhZDRlNGRlZmIwYWRmOTQ0YTIyNzU1NDNlZmM5MTkyYSIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9CiAgfQp9");
     public static final Block CRYING_OBSIDIAN_TATER = createTaterBlock(ParticleTypes.DRIPPING_OBSIDIAN_TEAR, "ewogICJ0aW1lc3RhbXAiIDogMTYzODg4MzgyNzAwNiwKICAicHJvZmlsZUlkIiA6ICI5N2ViMDJkMWY5YmI0NjUwYmNmNzE2MTEzYjUzYjY4ZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJTQmNhY3R1cyIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS83MGQxNTFhMmRhODNiNGEwZWM3M2JlMDhhNDJjNGJjODk2NGZmMWQzYWUyMTA2Y2MyOWI5Yjc5Y2ZjY2I4YjlmIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=");
     public static final Block FLIPPED_TATER = createTaterBlock(ParticleTypes.DAMAGE_INDICATOR, "ewogICJ0aW1lc3RhbXAiIDogMTYxMDU1MjM5MTA3NywKICAicHJvZmlsZUlkIiA6ICI5MThhMDI5NTU5ZGQ0Y2U2YjE2ZjdhNWQ1M2VmYjQxMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJCZWV2ZWxvcGVyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzljMWUzM2M0YjdlNmNiNThlNjk5YWViN2FlNDEyMzI5ZjM1Y2I0NDNlNTA3NDNjODg5NmVkMzZkZmI2YTM1ODgiCiAgICB9CiAgfQp9");
+    public static final Block BACKWARD_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzNkMmVlZmNhNWZhMmUwY2M3MTBmZTA2N2Y0YTcxMTRkZjBmNDMwZWVhYWExZDljMzczZTRjOTFjOWVkMGVhNCJ9fX0=");
+    public static final Block UPWARD_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjA4NjAxNDNmZWE5MzYwNjYyMjBlYWUzYTMxY2RmZTVhYTliNGU1MjVlMTk0YWE5NjVjMDIyNzJhMDFjYjVjOCJ9fX0=");
     public static final Block SANTA_HAT_TATER = createTaterBlock(ParticleTypes.SNOWFLAKE, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDM3ODMyNzU2NywKICAicHJvZmlsZUlkIiA6ICJlMmVkYTM1YjMzZGU0M2UxOTVhZmRkNDgxNzQ4ZDlhOSIsCiAgInByb2ZpbGVOYW1lIiA6ICJDaGFsa19SaWNlR0kiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzYwOWYzNTEwYjI5YmZhMTUwNGI3ZDNkNTNmNDY2ZTc2MjhhMWNlYmQxMDI1NzM2MDFkYjMzZTFjZWQ4OGM0ZSIKICAgIH0KICB9Cn0=");
 
     public static final Block SKELETATER = createTaterBlock(Blocks.BONE_BLOCK, "ewogICJ0aW1lc3RhbXAiIDogMTY0MDcwMTgxODU1NCwKICAicHJvZmlsZUlkIiA6ICIzNmMxODk4ZjlhZGE0NjZlYjk0ZDFmZWFmMjQ0MTkxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJMdW5haWFuIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2Y0NzJlMmZjMzZjN2Q4ZWY3Y2ZmOGNmYmE3MWU3ZTIzOGY4OWRlMDFlOGQ0NGMyMTcwM2YxYWM2ZDJjNDdmMSIKICAgIH0KICB9Cn0=");
@@ -385,6 +389,12 @@ public class NEBlocks {
     public static final Block PACKED_MUD_TATER = createTaterBlock(Blocks.DIRT, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1NDgwOTk3NiwKICAicHJvZmlsZUlkIiA6ICI5MThhMDI5NTU5ZGQ0Y2U2YjE2ZjdhNWQ1M2VmYjQxMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJCZWV2ZWxvcGVyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzY3YTU5MTEwNjFjOTQ5N2MxZTg4OGFhYmU5NzM3MGQ0ZDAwZjkwMGNhNzk4Y2IxYWM4Y2Y0MWZlN2JiNDE1MzIiCiAgICB9CiAgfQp9");
     public static final Block STRIPPED_MANGROVE_LOG_TATER = createTaterBlock(Blocks.STRIPPED_CRIMSON_STEM, "ewogICJ0aW1lc3RhbXAiIDogMTY0NzQ1MDg2MjQ5NSwKICAicHJvZmlsZUlkIiA6ICJhYzM2YmVkZGQxNGQ0YjVmYmQyYzc5OThlMWMwOTg3ZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtYWlzYWthIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2MwM2QwZTc3NDJmYTY2NTA2YjU3MzljOThkMGNmMjk0MTE0NjM2MDg4NzdmYTY2N2NlMjljN2I4NTc5M2QxOGEiCiAgICB9CiAgfQp9");
 
+    public static final Block LUCY_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzIxYTgyNGRjZmE4ZDc1MDNmMDA4ZjU5ZDdlNDg3NGE1OGJhNmY2MzUxNzUwNzIwYzc4YTU1ZWIyNDIxMWZiNiJ9fX0=");
+    public static final Block WILD_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODYxYTc2MDc5ODdlMDc1MWUxMGMzZDgxOTc3NWI1OGM0NWRiYTI5MTFiZDUyMjJjYTgxMTFhODQwMTI0OGQ1NiJ9fX0=");
+    public static final Block GOLD_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWU4ZGZmMWNmNGYxZTc2Yzc2OTkzYWI5MzE2ZWY3OTA0YjIyOWMzN2I4Y2JkMTg3NmNjYjhjOWJjYmQzNjUwMiJ9fX0=");
+    public static final Block CYAN_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWQ2MWJlNDQ0YjM2MDE4NGNjMzlmYWVjZmFjODQ5MzU5YmE1Njg0M2UxNDY5YTNjNDY4N2YwMDRiOWE3YWU2NSJ9fX0=");
+    public static final Block BLUE_AXOLOTL_TATER = createTaterBlock(ParticleTypes.HEART, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODhiYzI5NjI2YzUzMTFlODJmMThhNjkyZDdiMjZiZWM1Yjg0MWEwNTMzYmE2MzNlNTg4N2ExNzJjNzY1YmYwNSJ9fX0=");
+
     public static final Block BRONZE_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0x764D22).toVector3f(), 90, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjU0MTQ1MiwKICAicHJvZmlsZUlkIiA6ICIzYWJkYjI5ZDI2MTU0YTAxOWEzZWQ3OGRlMzI4OWUxNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJFcmljSHViZXIiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM5MTgyMjUwNGQ3OTQ5MTE4NmQ0MmI1YWI2ZmRkOTYxNWJmYzE4ODYzMjRiZTVmNWI2MTNkY2IwMzMxOTY3NyIKICAgIH0KICB9Cn0");
     public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xBFBFBF).toVector3f(), 9, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUwMjk3MCwKICAicHJvZmlsZUlkIiA6ICJlN2IxNmI2MzM2OGM0ODIzYmUxZDcxOTg5ODE5YWI3NSIsCiAgInByb2ZpbGVOYW1lIiA6ICJTb3VyY2VXcml0ZXJzIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FmZGNlM2VhMTM5OWRkMGI3MzhmYWFlY2Y4OWNjNWJkY2YxNzliOGRjNGYzZDc5NjRjOGNkNDVjODkyNTdmZDEiCiAgICB9CiAgfQp9");
     public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xF1A00E).toVector3f(), 1, "ewogICJ0aW1lc3RhbXAiIDogMTY1OTk5MjUyMjQyMSwKICAicHJvZmlsZUlkIiA6ICI0MjEwNTYxMWQxZjM0NzAyOTQ4NjE3OTYzMDY3NjY2NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJUcmlraXRyYWthdGVsYXp6IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiNTM4ODgzNDU3OGNjYjkwNmU5N2QzZTU0YWViMzNlZGNjMTJkODIxZjA4MWI3ZWIwNDgzMGNiZDI2MGFkODEiCiAgICB9CiAgfQp9");
@@ -392,6 +402,7 @@ public class NEBlocks {
     public static final Block CORRUPTATER = new CorruptaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), 2);
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
+    public static final BlockEntityType<ContributorStatueBlockEntity> CONTRIBUTOR_STATUE_ENTITY = FabricBlockEntityTypeBuilder.create(ContributorStatueBlockEntity::new, CONTRIBUTOR_STATUE).build();
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID, RED_TATEROID, ORANGE_TATEROID, YELLOW_TATEROID, GREEN_TATEROID, BLUE_TATEROID, PURPLE_TATEROID).build();
     public static final BlockEntityType<DaylightDetectorTaterBlockEntity> DAYLIGHT_DETECTOR_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(DaylightDetectorTaterBlockEntity::new, DAYLIGHT_DETECTOR_TATER, INVERTED_DAYLIGHT_DETECTOR_TATER).build();
     public static final BlockEntityType<BellTaterBlockEntity> BELL_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(BellTaterBlockEntity::new, BELL_TATER).build();
@@ -477,6 +488,7 @@ public class NEBlocks {
         register("safe_tnt", SAFE_TNT);
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
+        register("contributor_statue", CONTRIBUTOR_STATUE);
         register("infinite_dispenser", INFINITE_DISPENSER);
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
@@ -525,6 +537,8 @@ public class NEBlocks {
         register("nonbinary_tater", NONBINARY_TATER);
         register("pan_tater", PAN_TATER);
         register("flipped_tater", FLIPPED_TATER);
+        register("backward_tater", BACKWARD_TATER);
+        register("upward_tater", UPWARD_TATER);
         register("santa_hat_tater", SANTA_HAT_TATER);
         register("genderfluid_tater", GENDERFLUID_TATER);
         register("demisexual_tater", DEMISEXUAL_TATER);
@@ -777,6 +791,12 @@ public class NEBlocks {
         register("packed_mud_tater", PACKED_MUD_TATER);
         register("stripped_mangrove_log_tater", STRIPPED_MANGROVE_LOG_TATER);
 
+        register("lucy_axolotl_tater", LUCY_AXOLOTL_TATER);
+        register("wild_axolotl_tater", WILD_AXOLOTL_TATER);
+        register("gold_axolotl_tater", GOLD_AXOLOTL_TATER);
+        register("cyan_axolotl_tater", CYAN_AXOLOTL_TATER);
+        register("blue_axolotl_tater", BLUE_AXOLOTL_TATER);
+
         register("bronze_capsule_tater", BRONZE_CAPSULE_TATER);
         register("silver_capsule_tater", SILVER_CAPSULE_TATER);
         register("gold_capsule_tater", GOLD_CAPSULE_TATER);
@@ -784,6 +804,7 @@ public class NEBlocks {
         register("corruptater", CORRUPTATER);
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
+        registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);
         registerBlockEntity("daylight_detector_tater", DAYLIGHT_DETECTOR_TATER_ENTITY);
         registerBlockEntity("bell_tater", BELL_TATER_ENTITY);

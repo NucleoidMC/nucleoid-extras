@@ -33,7 +33,7 @@ public class WardenTaterBlock extends TinyPotatoBlock {
 
     @Override
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
-        BlockPos pos = new BlockPos(player.getX(), player.getEyeY(), player.getZ());
+        BlockPos pos = BlockPos.ofFloored(player.getX(), player.getEyeY(), player.getZ());
         return getTaterVibrationParticleEffect(pos, new EntityPositionSource(player, 0), player.getWorld());
     }
 

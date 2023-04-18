@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.mixin.player_list;
 
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -15,7 +15,7 @@ public abstract class PlayerInteractionManagerMixin {
             method = "changeGameMode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"
+                    target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/packet/Packet;)V"
             )
     )
     private void extras$overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
