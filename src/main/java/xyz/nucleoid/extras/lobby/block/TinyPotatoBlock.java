@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.util.SkinEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class TinyPotatoBlock extends Block implements PolymerHeadBlock {
     public TinyPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture, int particleRate) {
         super(settings);
         this.particleEffect = particleEffect;
-        this.texture = texture;
+        this.texture = SkinEncoder.encode(texture);
         this.particleRate = particleRate;
 
         TATERS.add(this);
