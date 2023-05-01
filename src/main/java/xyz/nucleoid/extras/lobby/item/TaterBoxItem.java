@@ -99,7 +99,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return blockIds;
     }
 
-    private static Iterator<Identifier> getAllTaterIds() {
+    protected static Iterator<Identifier> getAllTaterIds() {
         return TinyPotatoBlock.TATERS.stream().map(Registries.BLOCK::getId).sorted().iterator();
     }
 

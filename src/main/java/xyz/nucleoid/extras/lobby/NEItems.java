@@ -339,6 +339,7 @@ public class NEItems {
             entries.add(NEItems.GOLD_CAPSULE_TATER);
             entries.add(NEItems.CORRUPTATER);
             TaterBoxItem.addToItemGroup(entries);
+            entries.add(NEItems.TATER_GUIDEBOOK);
             entries.add(NEItems.QUICK_ARMOR_STAND);
             entries.add(NEItems.GAME_PORTAL_OPENER);
         })
@@ -669,6 +670,7 @@ public class NEItems {
     public static final Item CORRUPTATER = createHead(NEBlocks.CORRUPTATER);
 
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().maxDamage(0));
+    public static final Item TATER_GUIDEBOOK = new TaterGuidebookItem(new Item.Settings().maxCount(1));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().maxCount(1));
     public static final Item LAUNCH_FEATHER = new LaunchFeatherItem(new Item.Settings().maxCount(1));
@@ -1005,6 +1007,7 @@ public class NEItems {
         register("corruptater", CORRUPTATER);
 
         register("tater_box", TATER_BOX);
+        register("tater_guidebook", TATER_GUIDEBOOK);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
         register("game_portal_opener", GAME_PORTAL_OPENER);
         register("launch_feather", LAUNCH_FEATHER);

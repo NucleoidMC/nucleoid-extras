@@ -340,6 +340,7 @@
   "item.nucleoid_extras.game_portal_opener": "Game Portal Opener",
   "item.nucleoid_extras.launch_feather": "Launch Feather",
   "item.nucleoid_extras.tater_box": "Tater Box",
+  "item.nucleoid_extras.tater_guidebook": "Tater Guidebook",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
 
   "entity.nucleoid_extras.quick_armor_stand": "Quick Armor Stand",
@@ -354,6 +355,9 @@
   "text.nucleoid_extras.tater_box.not_found": "Not Found Yet!",
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
+
+  "text.nucleoid_extras.tater_guidebook.recorded": "Recorded %d new tater positions in the Tater Guidebook!",
+  "text.nucleoid_extras.tater_guidebook.header": "%d tater positions",
 
   "text.nucleoid_extras.contributor_statue.title": "Select Contributor",
 
