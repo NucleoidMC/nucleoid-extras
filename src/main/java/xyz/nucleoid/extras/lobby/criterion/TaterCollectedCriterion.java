@@ -10,7 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
+import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
 	public static final Identifier ID = NucleoidExtras.identifier("tater_collected");
@@ -21,7 +21,7 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
 		if(tater != null && !Registries.BLOCK.containsId(tater)) {
 			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
 		}
-		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? TinyPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
+		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? CubicPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
 		return new Conditions(playerPredicate, tater, count);
 	}
 

@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
-public class TateroidBlock extends TinyPotatoBlock implements BlockEntityProvider {
+public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvider {
     private static final BooleanProperty POWERED = Properties.POWERED;
     private static final int FULL_DURATION = 15 * SharedConstants.TICKS_PER_SECOND;
 

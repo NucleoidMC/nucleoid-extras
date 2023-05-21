@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
@@ -28,7 +28,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-public class BellTaterBlock extends TinyPotatoBlock implements BlockEntityProvider {
+public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
 	public static final BooleanProperty POWERED = Properties.POWERED;
 
 	public BellTaterBlock(Settings settings, String texture) {

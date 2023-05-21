@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
-public class LuckyTaterBlock extends TinyPotatoBlock {
+public class LuckyTaterBlock extends CubicPotatoBlock {
     private static final BooleanProperty COOLDOWN = BooleanProperty.of("cooldown");
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
 
@@ -63,7 +63,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
 
         if (world instanceof ServerWorld serverWorld) {
             Block drop = this.getDrop(serverWorld);
-            if (drop instanceof TinyPotatoBlock taterDrop) {
+            if (drop instanceof CubicPotatoBlock taterDrop) {
                 BlockPos dropPos = this.getDropPos(serverWorld, state, pos);
                 if (dropPos != null) {
                     BlockState dropState = drop.getDefaultState();
@@ -122,7 +122,7 @@ public class LuckyTaterBlock extends TinyPotatoBlock {
 
         for (int i = 0; i < 3; i++) {
             BlockState dropState = world.getBlockState(dropPos);
-            if (dropState.getBlock() instanceof TinyPotatoBlock) {
+            if (dropState.getBlock() instanceof CubicPotatoBlock) {
                 return null;
             } else if (dropState.isAir()) {
                 return dropPos;

@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 
 import java.util.stream.Stream;
 
-public class ColorPatternTaterBlock extends TinyPotatoBlock {
+public class ColorPatternTaterBlock extends CubicPotatoBlock {
     private final ParticleEffect[] particleEffects;
 
     public ColorPatternTaterBlock(Settings settings, Vector3f[] pattern, String texture) {

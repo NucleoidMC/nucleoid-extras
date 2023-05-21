@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
@@ -18,7 +18,7 @@ import net.minecraft.world.event.BlockPositionSource;
 import net.minecraft.world.event.EntityPositionSource;
 import net.minecraft.world.event.PositionSource;
 
-public class WardenTaterBlock extends TinyPotatoBlock {
+public class WardenTaterBlock extends CubicPotatoBlock {
     private static final int BOX_SIZE = 16;
     private static final int ARRIVAL_TICKS = SharedConstants.TICKS_PER_SECOND;
 
@@ -69,6 +69,6 @@ public class WardenTaterBlock extends TinyPotatoBlock {
         }
 
         Block block = state.getBlock();
-        return block instanceof TinyPotatoBlock && !(block instanceof WardenTaterBlock);
+        return block instanceof CubicPotatoBlock && !(block instanceof WardenTaterBlock);
     }
 }

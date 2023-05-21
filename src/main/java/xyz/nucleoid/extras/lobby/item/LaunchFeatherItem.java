@@ -12,8 +12,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import xyz.nucleoid.extras.lobby.block.LaunchPadBlock;
-import xyz.nucleoid.extras.lobby.block.LaunchPadBlockEntity;
+import xyz.nucleoid.extras.lobby.block.tater.LaunchPadBlock;
+import xyz.nucleoid.extras.lobby.block.tater.LaunchPadBlockEntity;
 
 public class LaunchFeatherItem extends Item implements PolymerItem {
     public LaunchFeatherItem(Settings settings) {

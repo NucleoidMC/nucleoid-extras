@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

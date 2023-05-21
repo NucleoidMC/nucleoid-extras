@@ -51,6 +51,7 @@
   "block.nucleoid_extras.white_concrete_powder": "Floating White Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.yellow_concrete_powder": "Floating Yellow Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.tiny_potato": "Tiny Potato",
+  "block.nucleoid_extras.botanical_potato": "Botanical Tiny Potato",
   "block.nucleoid_extras.irritater": "Irritater",
   "block.nucleoid_extras.sad_tater": "Sad Tater",
   "block.nucleoid_extras.flowering_azalea_tater": "Flowering Azalea Tater",
@@ -354,6 +355,7 @@
   "text.nucleoid_extras.tater_box.not_found": "Not Found Yet!",
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
+  "text.nucleoid_extras.tater_box.updated": "Your Tater Box has been updated to new format! It will be safer than ever!",
 
   "text.nucleoid_extras.contributor_statue.title": "Select Contributor",
 

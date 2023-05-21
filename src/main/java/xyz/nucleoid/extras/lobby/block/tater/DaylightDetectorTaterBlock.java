@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
@@ -21,7 +21,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
-public class DaylightDetectorTaterBlock extends TinyPotatoBlock implements BlockEntityProvider {
+public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
 	public static final IntProperty POWER = Properties.POWER;
 
 	public final boolean inverted;

@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.particle.ParticleEffect;
@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public class RedstoneTaterBlock extends TinyPotatoBlock {
+public class RedstoneTaterBlock extends CubicPotatoBlock {
 	public RedstoneTaterBlock(Settings settings, ParticleEffect particleEffect, String texture) {
 		super(settings, particleEffect, texture);
 	}

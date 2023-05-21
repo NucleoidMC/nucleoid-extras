@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
@@ -23,7 +23,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class TargetTaterBlock extends TinyPotatoBlock {
+public class TargetTaterBlock extends CubicPotatoBlock {
 	private static final IntProperty POWER = Properties.POWER;
 	private static final int RECOVERABLE_POWER_DELAY = 20;
 	private static final int REGULAR_POWER_DELAY = 8;

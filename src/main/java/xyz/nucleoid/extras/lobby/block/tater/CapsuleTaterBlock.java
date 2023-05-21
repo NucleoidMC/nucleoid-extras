@@ -1,5 +1,6 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -14,7 +15,7 @@ public class CapsuleTaterBlock extends ColorTaterBlock implements LuckyTaterDrop
 
     private final int weight;
 
-    public CapsuleTaterBlock(Settings settings, Vector3f color, int weight, String texture) {
+    public CapsuleTaterBlock(AbstractBlock.Settings settings, Vector3f color, int weight, String texture) {
         super(settings, color, texture);
 
         this.weight = weight;

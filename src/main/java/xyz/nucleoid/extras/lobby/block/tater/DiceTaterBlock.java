@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block;
+package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
-public class DiceTaterBlock extends TinyPotatoBlock {
+public class DiceTaterBlock extends CubicPotatoBlock {
     private static final int ROLLING_FACE = 0;
     private static final int MAX_FACE = 6;
     private static final int ROLLING_TICKS = 8;

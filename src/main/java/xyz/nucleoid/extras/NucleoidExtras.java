@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras;
 
+import eu.pb4.playerdata.api.PlayerDataApi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
@@ -12,10 +13,7 @@ import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.extras.lobby.NEBlocks;
-import xyz.nucleoid.extras.lobby.NECriteria;
-import xyz.nucleoid.extras.lobby.NEEntities;
-import xyz.nucleoid.extras.lobby.NEItems;
+import xyz.nucleoid.extras.lobby.*;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
@@ -42,6 +40,8 @@ public final class NucleoidExtras implements ModInitializer {
         ExtrasErrorReporter.register();
         ExtraPlaceholders.register();
         ExtrasGamePortals.register();
+
+        PlayerDataApi.register(PlayerLobbyState.STORAGE);
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
         ServerChangePortalBackend.register();

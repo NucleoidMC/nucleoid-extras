@@ -25,6 +25,7 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
+import xyz.nucleoid.extras.lobby.block.tater.*;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
@@ -62,6 +63,10 @@ public class NEBlocks {
     public static final Block FAST_SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), Blocks.LIGHT_BLUE_CONCRETE, 4, 7);
 
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
+    public static final Block BOTANICAL_TINY_POTATO = createBotanicTaterBlock(ParticleTypes.HEART,
+        "39e878c52870c640b5985c67df70059120b61b26c77a5cf86042c04c13477d7b",
+        "582f367eabffc9ecd8ab870c9f5f5c8b43215d5eb922cfb193aed70fcf694e92"
+    );
     public static final Block IRRITATER = createTaterBlock(ParticleTypes.ANGRY_VILLAGER, "14b2cbfe1fd4d3123461081ad460acb6c0345bed3f3ce96d475b5f58f7b9030b");
     public static final Block SAD_TATER = createTaterBlock(ParticleTypes.FALLING_WATER, "7915f5ab6a3af5fd8e043bc98a5466acfc5d57c30dc9a1d2e4a32f7bfa1d35bf");
     public static final Block FLOWERING_AZALEA_TATER = createTaterBlock(Blocks.FLOWERING_AZALEA_LEAVES, "ab6c05d3be9369c69984513f281932622bca807008def997222a6d4f8cb71d83");
@@ -410,20 +415,24 @@ public class NEBlocks {
         return new SimplePolymerBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
     }
 
+    private static Block createBotanicTaterBlock(ParticleEffect effect, String textureUp, String textureDown) {
+        return new BotanicalPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), textureUp, textureDown, effect, 2);
+    }
+
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
     }
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
+        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
     }
 
     private static Block createTaterBlock(Item particleItem, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleItem, texture);
+        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleItem, texture);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture, int particleRate) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture, particleRate);
+        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture, particleRate);
     }
   
     private static Block createColorPatternTaterBlock(Vector3f[] pattern, String texture) {
@@ -506,6 +515,7 @@ public class NEBlocks {
         register("yellow_concrete_powder", YELLOW_CONCRETE_POWDER);
 
         register("tiny_potato", TINY_POTATO);
+        register("botanical_potato", BOTANICAL_TINY_POTATO);
         register("irritater", IRRITATER);
         register("sad_tater", SAD_TATER);
         register("flowering_azalea_tater", FLOWERING_AZALEA_TATER);
