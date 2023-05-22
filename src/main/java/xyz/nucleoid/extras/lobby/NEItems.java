@@ -69,6 +69,7 @@ public class NEItems {
             entries.add(NEItems.WHITE_CONCRETE_POWDER);
             entries.add(NEItems.YELLOW_CONCRETE_POWDER);
             entries.add(NEItems.GAME_PORTAL_OPENER);
+            entries.add(NEItems.TATER_BOX);
             TaterBoxItem.addToItemGroup(entries);
             TATERS.forEach(entries::add);
         })

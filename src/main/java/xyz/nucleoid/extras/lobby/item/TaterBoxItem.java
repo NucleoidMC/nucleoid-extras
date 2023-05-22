@@ -315,6 +315,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
         nbt.put(LEGACY_TATERS_KEY, taters);
 
+        fullStack.setCustomName(Text.literal("Unlocked Tater Box"));
+
         entries.add(fullStack);
     }
 }

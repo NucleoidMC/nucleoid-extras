@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.block.tater;
+package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.Block;

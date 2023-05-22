@@ -7,13 +7,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PlayerLobbyState {
 
     public static final PlayerDataStorage<PlayerLobbyState> STORAGE = new JsonDataStorage<>("nucleoid_extras", PlayerLobbyState.class);
-    public final List<TinyPotatoBlock> collectedTaters = new ArrayList<>();
+    public final Set<TinyPotatoBlock> collectedTaters = new HashSet<>();
 
     public static PlayerLobbyState get(PlayerEntity player) {
         if (!(player instanceof ServerPlayerEntity serverPlayer)) {

@@ -35,7 +35,7 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     };
 
     public DiceTaterBlock(Settings settings) {
-        super(settings, ParticleTypes.POOF, null);
+        super(settings, ParticleTypes.POOF, TEXTURES[6]);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(FACE, 1));
     }
