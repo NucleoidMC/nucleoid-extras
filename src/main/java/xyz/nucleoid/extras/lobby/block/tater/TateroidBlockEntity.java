@@ -48,6 +48,10 @@ public class TateroidBlockEntity extends BlockEntity {
         this.setDuration(duration, true);
     }
 
+    public double getParticleSpeed() {
+        return this.pitch / 24d;
+    }
+
     private RegistryEntry<SoundEvent> getSound() {
         if (this.sound != null) {
             return this.sound;
@@ -83,7 +87,7 @@ public class TateroidBlockEntity extends BlockEntity {
         this.world.playSound(null, x, y, z, sound, SoundCategory.RECORDS, 3, this.pitch / 24f, this.world.random.nextLong());
 
         if (this.world instanceof ServerWorld serverWorld) {
-            serverWorld.spawnParticles(ParticleTypes.NOTE, x, y, z, 0, 1, 0, 0, (double) this.pitch / 24d);
+            serverWorld.spawnParticles(ParticleTypes.NOTE, x, y, z, 0, 1, 0, 0, this.getParticleSpeed());
         }
     }
 
