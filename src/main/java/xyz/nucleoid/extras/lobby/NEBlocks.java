@@ -157,13 +157,13 @@ public class NEBlocks {
     public static final Block WARDEN_TATER = createWardenTaterBlock("52e411aa1501c72d99d738cb38e250a395c6604b8bccc9f29d7f26e9cacd8d6f");
     public static final Block VIRAL_TATER = createTaterBlock(ParticleTypes.SCRAPE, "b12f770c4542c9f26ba03aaee686e0946698d394a8e745d3eac6013383dcff29");
     public static final Block DICE_TATER = createDiceTaterBlock();
-    public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
-    public static final Block RED_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
-    public static final Block ORANGE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
-    public static final Block YELLOW_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
-    public static final Block GREEN_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BIT, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
-    public static final Block BLUE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
-    public static final Block PURPLE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
+    public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL, -1, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
+    public static final Block RED_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR, 7 / 24d, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
+    public static final Block ORANGE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 4 / 24d, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
+    public static final Block YELLOW_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 2.5 / 24d, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
+    public static final Block GREEN_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BIT, 21 / 24d, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
+    public static final Block BLUE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE, 17 / 24d, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
+    public static final Block PURPLE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, 11 / 24d, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
 
     public static final Block WHITE_TATER = createColorTaterBlock(DyeColor.WHITE, "73dab052d33ee467ba7fac9aa0e316db962e3e7ac6dbbff236667439e340392c");
     public static final Block ORANGE_TATER = createColorTaterBlock(DyeColor.ORANGE, "75b88126dbd4e860608965c044d0060ac03c26ebea1b652643fe03734ea1b12b");
@@ -453,8 +453,8 @@ public class NEBlocks {
         return new DiceTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100));
     }
 
-    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, String texture) {
-        return new TateroidBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), defaultSound, texture);
+    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
+        return new TateroidBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), defaultSound, particleColor, texture);
     }
 
     private static Block createColorTaterBlock(DyeColor color, String texture) {
