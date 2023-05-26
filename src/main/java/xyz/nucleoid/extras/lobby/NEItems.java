@@ -76,6 +76,7 @@ public class NEItems {
         .build();
 
     public static final Item NUCLEOID_LOGO = createHead(NEBlocks.NUCLEOID_LOGO);
+    public static final Item NUCLE_PAST_LOGO = createHead(NEBlocks.NUCLE_PAST_LOGO);
 
     public static final Item END_PORTAL = createSimple(NEBlocks.END_PORTAL, Items.BLACK_CARPET);
     public static final Item END_GATEWAY = createSimple(NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
@@ -448,6 +449,7 @@ public class NEItems {
         register("white_concrete_powder", WHITE_CONCRETE_POWDER);
         register("yellow_concrete_powder", YELLOW_CONCRETE_POWDER);
         registerTater("nucleoid_logo", NUCLEOID_LOGO);
+        registerTater("nucle_past_logo", NUCLE_PAST_LOGO);
 
         registerTater("tiny_potato", TINY_POTATO);
         registerTater("botanical_potato", BOTANICAL_TINY_POTATO);

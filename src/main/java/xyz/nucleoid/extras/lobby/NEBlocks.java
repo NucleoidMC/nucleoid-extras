@@ -64,6 +64,8 @@ public class NEBlocks {
     public static final Block SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIME_CONCRETE).strength(100), Blocks.LIME_CONCRETE, 8, 7);
     public static final Block FAST_SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), Blocks.LIGHT_BLUE_CONCRETE, 4, 7);
 
+    public static final Block NUCLE_PAST_LOGO = createTaterBlock(new DustParticleEffect(Vec3d.unpackRgb(0x52C471).toVector3f(), 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
+
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
     public static final Block BOTANICAL_TINY_POTATO = createBotanicTaterBlock(ParticleTypes.HEART,
         "39e878c52870c640b5985c67df70059120b61b26c77a5cf86042c04c13477d7b",
@@ -487,6 +489,7 @@ public class NEBlocks {
 
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
+        register("nucle_past_logo", NUCLE_PAST_LOGO);
 
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
