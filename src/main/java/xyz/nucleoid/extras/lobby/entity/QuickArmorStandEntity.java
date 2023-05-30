@@ -14,7 +14,7 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEn
     }
 
     public QuickArmorStandEntity(World world) {
-        super(NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE, world);
+        super(NEEntities.QUICK_ARMOR_STAND, world);
     }
 
     @Override
