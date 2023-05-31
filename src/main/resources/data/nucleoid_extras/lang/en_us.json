@@ -365,6 +365,9 @@
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
   "text.nucleoid_extras.statistics.stat": "%s: %s",
+  "text.nucleoid_extras.statistics.list_ui": "Your statistics",
+  "text.nucleoid_extras.statistics.waiting": "Waiting for statistics data",
+  "text.nucleoid_extras.seconds": "%s second(s)",
 
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",

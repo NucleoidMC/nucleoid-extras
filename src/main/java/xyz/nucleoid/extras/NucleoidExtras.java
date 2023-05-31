@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
+import xyz.nucleoid.extras.command.ExtraCommands;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
@@ -42,6 +43,7 @@ public final class NucleoidExtras implements ModInitializer {
         ExtrasErrorReporter.register();
         ExtraPlaceholders.register();
         ExtrasGamePortals.register();
+        ExtraCommands.register();
 
         PlayerDataApi.register(PlayerLobbyState.STORAGE);
 

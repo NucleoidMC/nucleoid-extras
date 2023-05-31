@@ -185,14 +185,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
 
     private ActionResult tryAdd(Block block, ItemStack stack, PlayerEntity player) {
         if (!(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
-
-        ActionResult owner = this.isOwner(stack, player);
-        if (owner == ActionResult.FAIL) {
-            player.sendMessage(NOT_OWNER_MESSAGE, true);
-            return ActionResult.FAIL;
-        } else if (owner == ActionResult.PASS) {
-            stack.getOrCreateNbt().putUuid(OWNER_KEY, player.getUuid());
-        }
+        stack.getOrCreateNbt().putUuid(OWNER_KEY, player.getUuid());
 
         var state = PlayerLobbyState.get(player);
 
@@ -263,7 +256,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     }
 
     private PlayerEntity getOwnerPlayer(ItemStack stack, World world) {
-        if (!stack.hasNbt() && !stack.getNbt().contains(OWNER_KEY)) {
+        if (!stack.hasNbt() || !stack.getNbt().contains(OWNER_KEY)) {
             return null;
         }
 

@@ -16,37 +16,53 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class NucleoidHttpClient {
+    private static final Codec<Map<String, Map<Identifier, Number>>> PLAYER_STATS_CODEC = Codec.unboundedMap(Codec.STRING, Codec.unboundedMap(Identifier.CODEC, (Codec<Number>) (Object) Codec.DOUBLE));
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     private static URI baseUri;
 
     public static CompletableFuture<List<LeaderboardEntry>> getLeaderboard(Identifier id) {
+        return sendSimple("/leaderboard/" + id.toString(), LeaderboardEntry.CODEC, List::of);
+    }
+
+    public static CompletableFuture<Map<Identifier, RankingsEntry>> getPlayerRankings(UUID uuid) {
+        return sendSimple("/player/" + uuid.toString() + "/rankings", RankingsEntry.CODEC, Map::of);
+    }
+
+    public static CompletableFuture<Map<String, Map<Identifier, Number>>> getPlayerStats(UUID uuid) {
+        return sendSimple("/stats/player/" + uuid.toString() + "/rankings", PLAYER_STATS_CODEC, Map::of);
+    }
+
+    private static <T> CompletableFuture<T> sendSimple(String path, Codec<T> codec, Supplier<T> fallback) {
         if (baseUri == null) {
-            return CompletableFuture.supplyAsync(List::of);
+            return CompletableFuture.supplyAsync(fallback);
         }
 
         var request = HttpRequest.newBuilder()
-            .uri(baseUri.resolve("/leaderboard/" + id.toString()))
+            .uri(baseUri.resolve(path))
             .GET()
             .timeout(Duration.of(10, SECONDS))
             .build();
 
-        return send(request, LeaderboardEntry.CODEC, List.of());
+        return send(request, codec, fallback);
+
     }
 
-
-    private static <T> CompletableFuture send(HttpRequest request, Codec<T> codec, T fallback) {
+    private static <T> CompletableFuture<T> send(HttpRequest request, Codec<T> codec, Supplier<T> fallback) {
         return CLIENT.sendAsync(request, codecHandler(codec)).handle((response, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
-                return fallback;
+                return fallback.get();
             } else if (response.statusCode() != 200) {
-                return fallback;
+                return fallback.get();
             }
             return response.body();
         });

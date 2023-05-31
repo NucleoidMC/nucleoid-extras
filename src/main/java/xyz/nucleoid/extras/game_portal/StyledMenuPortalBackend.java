@@ -106,17 +106,14 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
         var gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, player, false);
         gui.setTitle(this.uiTitle);
-        var filler = new GuiElementBuilder(Items.PURPLE_STAINED_GLASS_PANE).setName(Text.empty());
+        var filler = CommonGuiElements.purple();
 
         for (int i = 0; i < 9; i++) {
             gui.setSlot(5 * 9 + i, filler);
         }
 
         if (oldGui != null) {
-            gui.setSlot(5 * 9 + 8, new GuiElementBuilder(Items.STRUCTURE_VOID).setName(ScreenTexts.BACK).setCallback(() -> {
-                PagedGui.playClickSound(player);
-                oldGui.open();
-            }));
+            gui.setSlot(5 * 9 + 8, CommonGuiElements.back(oldGui::open));
         }
         this.fill(player, gui, false);
 
