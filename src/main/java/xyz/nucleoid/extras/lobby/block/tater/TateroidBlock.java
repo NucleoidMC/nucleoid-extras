@@ -91,7 +91,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 0, 1, 0, 0, this.particleColor);
+            player.getServerWorld().spawnParticles(particleEffect, x, y, z, 0, 1, 0, 0, this.particleColor);
         }
     }
 

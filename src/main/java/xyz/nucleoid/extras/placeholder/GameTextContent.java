@@ -15,7 +15,7 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
             return out;
         }
 
-        var playerSpace = GameSpaceManager.get().byWorld(player.world);
+        var playerSpace = GameSpaceManager.get().byWorld(player.getWorld());
 
         if (playerSpace == gameSpace) {
             var out = Text.empty();

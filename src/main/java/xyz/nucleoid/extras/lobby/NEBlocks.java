@@ -6,9 +6,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -33,7 +34,7 @@ public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
 
     public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
-    public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
+    public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.BLOCK).strength(100).noCollision());
     public static final Block SAFE_TNT = createSimple(Blocks.TNT);
 
     public static final Block BLACK_CONCRETE_POWDER = createSimple(Blocks.BLACK_CONCRETE_POWDER);
@@ -407,7 +408,7 @@ public class NEBlocks {
     public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xBFBFBF).toVector3f(), 9, "afdce3ea1399dd0b738faaecf89cc5bdcf179b8dc4f3d7964c8cd45c89257fd1");
     public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xF1A00E).toVector3f(), 1, "db5388834578ccb906e97d3e54aeb33edcc12d821f081b7eb04830cbd260ad81");
 
-    public static final Block CORRUPTATER = new CorruptaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), 2);
+    public static final Block CORRUPTATER = new CorruptaterBlock(createTaterBlockSettings(), 2);
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
     public static final BlockEntityType<ContributorStatueBlockEntity> CONTRIBUTOR_STATUE_ENTITY = FabricBlockEntityTypeBuilder.create(ContributorStatueBlockEntity::new, CONTRIBUTOR_STATUE).build();
@@ -419,72 +420,76 @@ public class NEBlocks {
         return new SimplePolymerBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
     }
 
+    private static AbstractBlock.Settings createTaterBlockSettings() {
+        return AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).strength(100);
+    }
+
     private static Block createBotanicTaterBlock(ParticleEffect effect, String textureUp, String textureDown) {
-        return new BotanicalPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), textureUp, textureDown, effect, 2);
+        return new BotanicalPotatoBlock(createTaterBlockSettings(), textureUp, textureDown, effect, 2);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
-        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture);
     }
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
-        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), particleBlock, texture);
     }
 
     private static Block createTaterBlock(Item particleItem, String texture) {
-        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleItem, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), particleItem, texture);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture, int particleRate) {
-        return new CubicPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture, particleRate);
+        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture, particleRate);
     }
   
     private static Block createColorPatternTaterBlock(Vector3f[] pattern, String texture) {
-        return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
+        return new ColorPatternTaterBlock(createTaterBlockSettings(), pattern, texture);
     }
 
     private static Block createLuckyTaterBlock(String texture, String cooldownTexture) {
-        return new LuckyTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture, cooldownTexture);
+        return new LuckyTaterBlock(createTaterBlockSettings(), texture, cooldownTexture);
     }
 
     private static Block createWardenTaterBlock(String texture) {
-        return new WardenTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new WardenTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createDiceTaterBlock() {
-        return new DiceTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100));
+        return new DiceTaterBlock(createTaterBlockSettings());
     }
 
     private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
-        return new TateroidBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), defaultSound, particleColor, texture);
+        return new TateroidBlock(createTaterBlockSettings(), defaultSound, particleColor, texture);
     }
 
     private static Block createColorTaterBlock(DyeColor color, String texture) {
-        return new ColorTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), color, texture);
+        return new ColorTaterBlock(createTaterBlockSettings(), color, texture);
     }
 
     private static Block createRedstoneTaterBlock(ParticleEffect effect, String texture) {
-        return new RedstoneTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+        return new RedstoneTaterBlock(createTaterBlockSettings(), effect, texture);
     }
 
     private static Block createDaylightDetectorTaterBlock(String texture, boolean inverted) {
-        return new DaylightDetectorTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture, inverted);
+        return new DaylightDetectorTaterBlock(createTaterBlockSettings(), texture, inverted);
     }
 
     private static Block createTargetTaterBlock(String texture) {
-        return new TargetTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new TargetTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createBellTaterBlock(String texture) {
-        return new BellTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new BellTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createElderGuardianParticleTaterBlock(String texture) {
-        return new ElderGuardianParticleTater(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new ElderGuardianParticleTater(createTaterBlockSettings(), texture);
     }
 
     private static Block createCapsuleTaterBlock(Vector3f color, int weight, String texture) {
-        return new CapsuleTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), color, weight, texture);
+        return new CapsuleTaterBlock(createTaterBlockSettings(), color, weight, texture);
     }
 
     public static void register() {

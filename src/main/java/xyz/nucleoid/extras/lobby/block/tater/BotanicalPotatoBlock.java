@@ -55,7 +55,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
     }
 
     @Override
-    public ElementHolder createElementHolder(BlockPos pos, BlockState initialBlockState) {
+    public ElementHolder createElementHolder(ServerWorld world, BlockPos pos, BlockState initialBlockState) {
         return new Model(initialBlockState);
     }
 

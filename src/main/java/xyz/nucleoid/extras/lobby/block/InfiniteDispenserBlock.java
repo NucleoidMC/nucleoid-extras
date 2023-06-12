@@ -28,7 +28,7 @@ public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlo
 
         if (slot < 0) {
             world.syncWorldEvent(WorldEvents.DISPENSER_FAILS, pos, 0);
-            world.emitGameEvent(GameEvent.DISPENSE_FAIL, pos, GameEvent.Emitter.of(pointer.getBlockState()));
+            world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(pointer.getBlockState()));
         } else {
             ItemStack stack = blockEntity.getStack(slot);
             DispenserBehavior behavior = this.getBehaviorForItem(stack);

@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.lobby;
 import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
@@ -36,7 +37,7 @@ import java.util.function.Consumer;
 public class NEItems {
     private static final List<Item> TATERS = new ArrayList<>();
 
-    public static final ItemGroup ITEM_GROUP = PolymerItemGroupUtils.builder(NucleoidExtras.identifier("general"))
+    public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
         .displayName(Text.translatable("text.nucleoid_extras.name"))
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
         .entries((context, entries) -> {
@@ -749,6 +750,8 @@ public class NEItems {
         register("quick_armor_stand", QUICK_ARMOR_STAND);
         register("game_portal_opener", GAME_PORTAL_OPENER);
         register("launch_feather", LAUNCH_FEATHER);
+
+        PolymerItemGroupUtils.registerPolymerItemGroup(NucleoidExtras.identifier("general"), ITEM_GROUP);
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
