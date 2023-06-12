@@ -36,7 +36,7 @@ public class CapsuleTaterBlock extends ColorTaterBlock implements LuckyTaterDrop
             double y = player.getBodyY(0.5);
             double centerAngle = player.getYaw() * Math.PI / 180;
 
-            this.spawnParticlesAround(player.getWorld(), particleEffect, player.getX(), radius, y, player.getZ(), radius, centerAngle);
+            this.spawnParticlesAround(player.getServerWorld(), particleEffect, player.getX(), radius, y, player.getZ(), radius, centerAngle);
         }
     }
 

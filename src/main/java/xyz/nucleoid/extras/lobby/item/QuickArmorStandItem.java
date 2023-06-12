@@ -34,10 +34,10 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target instanceof ArmorStandEntity armorStandEntity) {
-            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.world);
+            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
             quickArmorStand.readNbt(armorStandEntity.writeNbt(new NbtCompound()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
-            quickArmorStand.world.spawnEntity(quickArmorStand);
+            quickArmorStand.getWorld().spawnEntity(quickArmorStand);
             return true;
         }
         return false;

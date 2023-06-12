@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -21,7 +21,7 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
 	public static final Calendar CALENDAR = Calendar.getInstance();
 
 	@Override
-	protected WearTaterCriterion.Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+	protected WearTaterCriterion.Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
 		if(tater != null && !Registries.BLOCK.containsId(tater)) {
 			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
@@ -60,7 +60,7 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
 		private final Identifier tater;
 		private final Integer dayOfWeek;
 
-		public Conditions(EntityPredicate.Extended playerPredicate, Identifier tater, Integer dayOfWeek) {
+		public Conditions(LootContextPredicate playerPredicate, Identifier tater, Integer dayOfWeek) {
 			super(ID, playerPredicate);
 			this.tater = tater;
 			this.dayOfWeek = dayOfWeek;

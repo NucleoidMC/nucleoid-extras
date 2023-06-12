@@ -75,7 +75,7 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+            player.getServerWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
         }
     }
 
