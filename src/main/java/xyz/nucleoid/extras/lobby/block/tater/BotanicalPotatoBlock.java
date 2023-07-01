@@ -122,7 +122,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
                 mat.translate(wiggle, up, 0F);
                 mat.rotate(RotationAxis.POSITIVE_Z.rotationDegrees(rotZ));
             }
-
+            mat.rotateY(MathHelper.PI);
 
             this.upPart.setTransformation(mat);
             mat.translate(new Vector3f(0, -0.25f, 0));
