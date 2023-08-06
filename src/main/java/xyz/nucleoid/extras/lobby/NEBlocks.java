@@ -217,6 +217,7 @@ public class NEBlocks {
     public static final Block ACACIA_TATER = createTaterBlock(Blocks.ACACIA_PLANKS, "807d75cb114e057e5156af324517e87012d11566beb112152be4a94a65273535");
     public static final Block ANDESITE_TATER = createTaterBlock(Blocks.ANDESITE, "5b728494483d695a171affd93730b65271726a5c8840d96a1acbf64b4dbdb555");
     public static final Block BAMBOO_TATER = createTaterBlock(Blocks.BAMBOO, "acecf9447693e769f17469d67251cddb4b93e5b64efe7445d04ea286a50d8a3c");
+    public static final Block BARRIER_TATER = createMarkerTaterBlock(Blocks.BARRIER, "d7f155b1a7627408e8f8c670fbd302c8fc0e320e5320b4fc517abfcfe02ab046");
     public static final Block BEDROCK_TATER = createTaterBlock(Blocks.BEDROCK, "c782d793af7aa0ebf5f5c9fdde3f636f93683368bf1daa544a449342b48355b");
     public static final Block BIRCH_TATER = createTaterBlock(Blocks.BIRCH_PLANKS, "c66003fcb840ebcd18f300b9facd1b8b936ef82e1ea6c7ca26b2c5b2bda5f007");
     public static final Block BONE_TATER = createTaterBlock(Blocks.BONE_BLOCK, "72b59c778f6656bb8502810eac82997d3669563f4fdd6d24d5ac008d334e3172");
@@ -492,6 +493,10 @@ public class NEBlocks {
         return new CapsuleTaterBlock(createTaterBlockSettings(), color, weight, texture);
     }
 
+    private static Block createMarkerTaterBlock(Block particleBlock, String texture) {
+        return new MarkerTaterBlock(createTaterBlockSettings(), particleBlock, texture);
+    }
+
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
         register("nucle_past_logo", NUCLE_PAST_LOGO);
@@ -624,6 +629,7 @@ public class NEBlocks {
         register("acacia_tater", ACACIA_TATER);
         register("andesite_tater", ANDESITE_TATER);
         register("bamboo_tater", BAMBOO_TATER);
+        register("barrier_tater", BARRIER_TATER);
         register("bedrock_tater", BEDROCK_TATER);
         register("birch_tater", BIRCH_TATER);
         register("bone_tater", BONE_TATER);
