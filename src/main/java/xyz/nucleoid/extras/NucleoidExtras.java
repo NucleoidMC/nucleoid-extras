@@ -13,6 +13,7 @@ import xyz.nucleoid.extras.command.ExtraCommands;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
+import xyz.nucleoid.extras.game_portal.entry.ExtraMenuEntries;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.extras.lobby.*;
@@ -43,6 +44,7 @@ public final class NucleoidExtras implements ModInitializer {
         ExtrasErrorReporter.register();
         ExtraPlaceholders.register();
         ExtrasGamePortals.register();
+        ExtraMenuEntries.register();
         ExtraCommands.register();
 
         PlayerDataApi.register(PlayerLobbyState.STORAGE);

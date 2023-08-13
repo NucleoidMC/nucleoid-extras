@@ -370,6 +370,8 @@
   "text.nucleoid_extras.statistics.waiting": "Waiting for statistics data",
   "text.nucleoid_extras.seconds": "%s second(s)",
 
+  "text.nucleoid_extras.ui.action.more": "Right-Click for more...",
+
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",
   "advancements.nucleoid_extras.first_tater.title": "My First Tater",
