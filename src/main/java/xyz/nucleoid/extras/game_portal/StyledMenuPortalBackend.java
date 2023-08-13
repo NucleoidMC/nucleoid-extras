@@ -122,34 +122,21 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
     private void fill(ServerPlayerEntity player, SimpleGui gui, boolean viewOpen) {
         var page = new MutableInt();
-        var all = new GuiElementBuilder(Items.COMPASS);
-        if (!viewOpen) {
-            all.glow();
-        } else {
-            all.setCallback(() -> {
-                this.fill(player, gui, false);
-                PagedGui.playClickSound(player);
-            });
-        }
-
-        gui.setSlot(5 * 9 + 3, all.setName(Text.translatable("nucleoid.navigator.all_games")));
-
-        var open = new GuiElementBuilder(Items.REDSTONE_TORCH);
-        if (viewOpen) {
-            open.glow();
-        } else {
-            open.setCallback(() -> {
-                this.fill(player, gui, true);
-                PagedGui.playClickSound(player);
-            });
-        }
-        gui.setSlot(5 * 9 + 5, open.setName(Text.translatable("nucleoid.navigator.open_games")));
+        var filter = new GuiElementBuilder(viewOpen ? Items.SOUL_LANTERN : Items.LANTERN);
+        filter.setCallback(() -> {
+            this.fill(player, gui, !viewOpen);
+            PagedGui.playClickSound(player);
+        });
 
         if (viewOpen) {
+            filter.glow();
+            gui.setTitle(this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only")));
             this.fillOpen(player, gui, page);
         } else {
+            gui.setTitle(this.uiTitle);
             this.fillInterface(player, gui, page);
         }
+        gui.setSlot(5 * 9 + 4, filter.setName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")));
     }
 
     private void fillOpen(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {

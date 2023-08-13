@@ -19,8 +19,9 @@
   "nucleoid.stop.scheduled.already": "Server restart has already been scheduled.",
   "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!",
 
-  "nucleoid.navigator.all_games": "View Games",
-  "nucleoid.navigator.open_games": "View Active",
+  "nucleoid.navigator.all_games": "All Games",
+  "nucleoid.navigator.open_games": "Open Games",
+  "nucleoid.navigator.open_only": "(Open only)",
 
   "block.nucleoid_extras.end_portal": "End Portal (Lobby only!)",
   "block.nucleoid_extras.end_gateway": "End Gateway (Lobby only!)",
