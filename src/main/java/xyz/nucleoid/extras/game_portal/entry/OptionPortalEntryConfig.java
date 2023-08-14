@@ -30,7 +30,7 @@ public record OptionPortalEntryConfig(
 
     @Override
     public MenuEntry createEntry() {
-        var portal = GamePortalManager.INSTANCE.byId(this.detailPortal);
+        var portal = GamePortalManager.INSTANCE.byId(this.portal);
         var detailPortal = GamePortalManager.INSTANCE.byId(this.detailPortal);
 
         if (portal != null && detailPortal != null) {
