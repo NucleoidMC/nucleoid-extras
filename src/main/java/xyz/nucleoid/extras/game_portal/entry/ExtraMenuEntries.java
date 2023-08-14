@@ -5,6 +5,6 @@ import xyz.nucleoid.plasmid.game.portal.menu.MenuEntryConfig;
 
 public class ExtraMenuEntries {
     public static void register() {
-        MenuEntryConfig.register(NucleoidExtras.identifier("detailed_game"), DetailedGameEntryConfig.CODEC);
+        MenuEntryConfig.register(NucleoidExtras.identifier("portal/option"), OptionPortalEntryConfig.CODEC);
     }
 }

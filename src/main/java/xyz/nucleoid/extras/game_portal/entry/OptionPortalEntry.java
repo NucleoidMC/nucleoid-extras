@@ -11,14 +11,13 @@ import net.minecraft.util.Formatting;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.portal.GamePortal;
 import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.game.ConcurrentGamePortalBackend;
 import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public record DetailedGameEntry(
-        ConcurrentGamePortalBackend game,
+public record OptionPortalEntry(
+        GamePortal portal,
         GamePortal detailPortal,
         Text name,
         List<Text> description,
@@ -26,7 +25,7 @@ public record DetailedGameEntry(
 ) implements MenuEntry {
     @Override
     public void click(ServerPlayerEntity player) {
-        this.game.applyTo(player);
+        this.portal.requestJoin(player);
     }
 
     public void secondaryClick(ServerPlayerEntity player) {
@@ -35,17 +34,17 @@ public record DetailedGameEntry(
 
     @Override
     public int getPlayerCount() {
-        return this.game.getPlayerCount();
+        return this.portal.getPlayerCount();
     }
 
     @Override
     public void provideGameSpaces(Consumer<GameSpace> consumer) {
-        game.provideGameSpaces(consumer);
+        portal.provideGameSpaces(consumer);
     }
 
     @Override
     public GamePortalBackend.ActionType getActionType() {
-        return this.game.getActionType();
+        return this.portal.getBackend().getActionType();
     }
 
     public GuiElement createGuiElement() {
