@@ -44,7 +44,7 @@ public record QuickPortalEntry(
 
     @Override
     public GamePortalBackend.ActionType getActionType() {
-        return this.portal.getBackend().getActionType();
+        return this.quickPortal.getBackend().getActionType();
     }
 
     public GuiElement createGuiElement() {
