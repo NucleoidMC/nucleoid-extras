@@ -13,30 +13,30 @@ import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 import java.util.List;
 import java.util.Optional;
 
-public record OptionPortalEntryConfig(
+public record QuickPortalEntryConfig(
         Identifier portal,
-        Identifier detailPortal,
+        Identifier quickPortal,
         Optional<Text> name,
         Optional<List<Text>> description,
         Optional<ItemStack> icon
 ) implements MenuEntryConfig {
-    public static final Codec<OptionPortalEntryConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.fieldOf("portal").forGetter(OptionPortalEntryConfig::portal),
-            Identifier.CODEC.fieldOf("detail_portal").forGetter(OptionPortalEntryConfig::detailPortal),
-            PlasmidCodecs.TEXT.optionalFieldOf("name").forGetter(OptionPortalEntryConfig::name),
-            MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description").forGetter(OptionPortalEntryConfig::description),
-            MoreCodecs.ITEM_STACK.optionalFieldOf("icon").forGetter(OptionPortalEntryConfig::icon)
-    ).apply(instance, OptionPortalEntryConfig::new));
+    public static final Codec<QuickPortalEntryConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Identifier.CODEC.fieldOf("portal").forGetter(QuickPortalEntryConfig::portal),
+            Identifier.CODEC.fieldOf("quick_portal").forGetter(QuickPortalEntryConfig::quickPortal),
+            PlasmidCodecs.TEXT.optionalFieldOf("name").forGetter(QuickPortalEntryConfig::name),
+            MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description").forGetter(QuickPortalEntryConfig::description),
+            MoreCodecs.ITEM_STACK.optionalFieldOf("icon").forGetter(QuickPortalEntryConfig::icon)
+    ).apply(instance, QuickPortalEntryConfig::new));
 
     @Override
     public MenuEntry createEntry() {
         var portal = GamePortalManager.INSTANCE.byId(this.portal);
-        var detailPortal = GamePortalManager.INSTANCE.byId(this.detailPortal);
+        var quickPortal = GamePortalManager.INSTANCE.byId(this.quickPortal);
 
-        if (portal != null && detailPortal != null) {
-            return new OptionPortalEntry(
+        if (portal != null && quickPortal != null) {
+            return new QuickPortalEntry(
                     portal,
-                    detailPortal,
+                    quickPortal,
                     this.name.orElse(portal.getName()),
                     this.description.orElse(portal.getDescription()),
                     this.icon.orElse(portal.getIcon())

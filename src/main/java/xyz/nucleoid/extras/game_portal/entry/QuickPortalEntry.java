@@ -16,20 +16,20 @@ import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
 import java.util.List;
 import java.util.function.Consumer;
 
-public record OptionPortalEntry(
-        GamePortal portal,
-        GamePortal detailPortal,
-        Text name,
-        List<Text> description,
-        ItemStack icon
+public record QuickPortalEntry(
+    GamePortal portal,
+    GamePortal quickPortal,
+    Text name,
+    List<Text> description,
+    ItemStack icon
 ) implements MenuEntry {
     @Override
     public void click(ServerPlayerEntity player) {
-        this.portal.requestJoin(player);
+        this.quickPortal.requestJoin(player);
     }
 
     public void secondaryClick(ServerPlayerEntity player) {
-        this.detailPortal.requestJoin(player);
+        this.portal.requestJoin(player);
     }
 
     @Override
@@ -49,7 +49,7 @@ public record OptionPortalEntry(
 
     public GuiElement createGuiElement() {
         var element = GuiElementBuilder.from(this.icon().copy()).hideFlags()
-                .setName(Text.empty().append(this.name()));
+            .setName(Text.empty().append(this.name()));
 
         for (var line : this.description()) {
             var text = line.copy();
@@ -71,9 +71,9 @@ public record OptionPortalEntry(
                 allowSpace = false;
             }
             element.addLoreLine(Text.empty()
-                    .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
-                    .append(Text.translatable("text.plasmid.ui.game_join.players",
-                            Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
+                .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
+                .append(Text.translatable("text.plasmid.ui.game_join.players",
+                    Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
             );
         }
 
@@ -84,9 +84,9 @@ public record OptionPortalEntry(
             }
 
             element.addLoreLine(Text.empty()
-                    .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
-                    .append(Text.translatable("text.plasmid.ui.game_join.spectators",
-                            Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
+                .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
+                .append(Text.translatable("text.plasmid.ui.game_join.spectators",
+                    Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
             );
         }
 
@@ -94,12 +94,12 @@ public record OptionPortalEntry(
 
         if (actionType != GamePortalBackend.ActionType.NONE) {
             element.addLoreLine(Text.empty().append(Text.literal(" [ ").formatted(Formatting.GRAY))
-                    .append(actionType.text())
-                    .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x76ed6f)));
+                .append(actionType.text())
+                .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x76ed6f)));
         }
         element.addLoreLine(Text.empty().append(Text.literal(" [ ").formatted(Formatting.GRAY))
-                .append(Text.translatable("text.nucleoid_extras.ui.action.more"))
-                .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x5e8ad6)));
+            .append(Text.translatable("text.nucleoid_extras.ui.action.more"))
+            .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x5e8ad6)));
 
         element.setCallback((index, clickType, slotActionType, gui) -> {
             if (clickType.isRight) this.secondaryClick(gui.getPlayer());
