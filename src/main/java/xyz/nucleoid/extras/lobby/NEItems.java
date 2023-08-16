@@ -53,6 +53,18 @@ public class NEItems {
             entries.add(NEItems.INFINITE_DROPPER);
             entries.add(NEItems.SNAKE_BLOCK);
             entries.add(NEItems.FAST_SNAKE_BLOCK);
+            entries.add(NEItems.TRANSIENT_IRON_DOOR);
+            entries.add(NEItems.TRANSIENT_OAK_DOOR);
+            entries.add(NEItems.TRANSIENT_SPRUCE_DOOR);
+            entries.add(NEItems.TRANSIENT_BIRCH_DOOR);
+            entries.add(NEItems.TRANSIENT_JUNGLE_DOOR);
+            entries.add(NEItems.TRANSIENT_ACACIA_DOOR);
+            entries.add(NEItems.TRANSIENT_CHERRY_DOOR);
+            entries.add(NEItems.TRANSIENT_DARK_OAK_DOOR);
+            entries.add(NEItems.TRANSIENT_MANGROVE_DOOR);
+            entries.add(NEItems.TRANSIENT_BAMBOO_DOOR);
+            entries.add(NEItems.TRANSIENT_CRIMSON_DOOR);
+            entries.add(NEItems.TRANSIENT_WARPED_DOOR);
             entries.add(NEItems.BLACK_CONCRETE_POWDER);
             entries.add(NEItems.BLUE_CONCRETE_POWDER);
             entries.add(NEItems.BROWN_CONCRETE_POWDER);
@@ -92,6 +104,19 @@ public class NEItems {
     public static final Item INFINITE_DROPPER = createSimple(NEBlocks.INFINITE_DROPPER, Items.DROPPER);
     public static final Item SNAKE_BLOCK = createSimple(NEBlocks.SNAKE_BLOCK, Items.LIME_CONCRETE);
     public static final Item FAST_SNAKE_BLOCK = createSimple(NEBlocks.FAST_SNAKE_BLOCK, Items.LIGHT_BLUE_CONCRETE);
+
+    public static final Item TRANSIENT_IRON_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_IRON_DOOR, new Item.Settings(), Items.IRON_DOOR);
+    public static final Item TRANSIENT_OAK_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_OAK_DOOR, new Item.Settings(), Items.OAK_DOOR);
+    public static final Item TRANSIENT_SPRUCE_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_SPRUCE_DOOR, new Item.Settings(), Items.SPRUCE_DOOR);
+    public static final Item TRANSIENT_BIRCH_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_BIRCH_DOOR, new Item.Settings(), Items.BIRCH_DOOR);
+    public static final Item TRANSIENT_JUNGLE_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_JUNGLE_DOOR, new Item.Settings(), Items.JUNGLE_DOOR);
+    public static final Item TRANSIENT_ACACIA_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_ACACIA_DOOR, new Item.Settings(), Items.ACACIA_DOOR);
+    public static final Item TRANSIENT_CHERRY_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_CHERRY_DOOR, new Item.Settings(), Items.CHERRY_DOOR);
+    public static final Item TRANSIENT_DARK_OAK_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_DARK_OAK_DOOR, new Item.Settings(), Items.DARK_OAK_DOOR);
+    public static final Item TRANSIENT_MANGROVE_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_MANGROVE_DOOR, new Item.Settings(), Items.MANGROVE_DOOR);
+    public static final Item TRANSIENT_BAMBOO_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, new Item.Settings(), Items.BAMBOO_DOOR);
+    public static final Item TRANSIENT_CRIMSON_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, new Item.Settings(), Items.CRIMSON_DOOR);
+    public static final Item TRANSIENT_WARPED_DOOR = new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, new Item.Settings(), Items.WARPED_DOOR);
 
     public static final Item BLACK_CONCRETE_POWDER = createSimple(NEBlocks.BLACK_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER);
     public static final Item BLUE_CONCRETE_POWDER = createSimple(NEBlocks.BLUE_CONCRETE_POWDER, Items.BLUE_CONCRETE_POWDER);
@@ -433,6 +458,19 @@ public class NEItems {
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
         register("fast_snake_block", FAST_SNAKE_BLOCK);
+
+        register("transient_iron_door", TRANSIENT_IRON_DOOR);
+        register("transient_oak_door", TRANSIENT_OAK_DOOR);
+        register("transient_spruce_door", TRANSIENT_SPRUCE_DOOR);
+        register("transient_birch_door", TRANSIENT_BIRCH_DOOR);
+        register("transient_jungle_door", TRANSIENT_JUNGLE_DOOR);
+        register("transient_acacia_door", TRANSIENT_ACACIA_DOOR);
+        register("transient_cherry_door", TRANSIENT_CHERRY_DOOR);
+        register("transient_dark_oak_door", TRANSIENT_DARK_OAK_DOOR);
+        register("transient_mangrove_door", TRANSIENT_MANGROVE_DOOR);
+        register("transient_bamboo_door", TRANSIENT_BAMBOO_DOOR);
+        register("transient_crimson_door", TRANSIENT_CRIMSON_DOOR);
+        register("transient_warped_door", TRANSIENT_WARPED_DOOR);
 
         register("black_concrete_powder", BLACK_CONCRETE_POWDER);
         register("blue_concrete_powder", BLUE_CONCRETE_POWDER);

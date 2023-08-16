@@ -65,6 +65,19 @@ public class NEBlocks {
     public static final Block SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIME_CONCRETE).strength(100), Blocks.LIME_CONCRETE, 8, 7);
     public static final Block FAST_SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), Blocks.LIGHT_BLUE_CONCRETE, 4, 7);
 
+    public static final Block TRANSIENT_IRON_DOOR = new TransientDoorBlock(Blocks.IRON_DOOR);
+    public static final Block TRANSIENT_OAK_DOOR = new TransientDoorBlock(Blocks.OAK_DOOR);
+    public static final Block TRANSIENT_SPRUCE_DOOR = new TransientDoorBlock(Blocks.SPRUCE_DOOR);
+    public static final Block TRANSIENT_BIRCH_DOOR = new TransientDoorBlock(Blocks.BIRCH_DOOR);
+    public static final Block TRANSIENT_JUNGLE_DOOR = new TransientDoorBlock(Blocks.JUNGLE_DOOR);
+    public static final Block TRANSIENT_ACACIA_DOOR = new TransientDoorBlock(Blocks.ACACIA_DOOR);
+    public static final Block TRANSIENT_CHERRY_DOOR = new TransientDoorBlock(Blocks.CHERRY_DOOR);
+    public static final Block TRANSIENT_DARK_OAK_DOOR = new TransientDoorBlock(Blocks.DARK_OAK_DOOR);
+    public static final Block TRANSIENT_MANGROVE_DOOR = new TransientDoorBlock(Blocks.MANGROVE_DOOR);
+    public static final Block TRANSIENT_BAMBOO_DOOR = new TransientDoorBlock(Blocks.BAMBOO_DOOR);
+    public static final Block TRANSIENT_CRIMSON_DOOR = new TransientDoorBlock(Blocks.CRIMSON_DOOR);
+    public static final Block TRANSIENT_WARPED_DOOR = new TransientDoorBlock(Blocks.WARPED_DOOR);
+
     public static final Block NUCLE_PAST_LOGO = createTaterBlock(new DustParticleEffect(Vec3d.unpackRgb(0x52C471).toVector3f(), 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
 
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
@@ -511,6 +524,19 @@ public class NEBlocks {
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
         register("fast_snake_block", FAST_SNAKE_BLOCK);
+
+        register("transient_iron_door", TRANSIENT_IRON_DOOR);
+        register("transient_oak_door", TRANSIENT_OAK_DOOR);
+        register("transient_spruce_door", TRANSIENT_SPRUCE_DOOR);
+        register("transient_birch_door", TRANSIENT_BIRCH_DOOR);
+        register("transient_jungle_door", TRANSIENT_JUNGLE_DOOR);
+        register("transient_acacia_door", TRANSIENT_ACACIA_DOOR);
+        register("transient_cherry_door", TRANSIENT_CHERRY_DOOR);
+        register("transient_dark_oak_door", TRANSIENT_DARK_OAK_DOOR);
+        register("transient_mangrove_door", TRANSIENT_MANGROVE_DOOR);
+        register("transient_bamboo_door", TRANSIENT_BAMBOO_DOOR);
+        register("transient_crimson_door", TRANSIENT_CRIMSON_DOOR);
+        register("transient_warped_door", TRANSIENT_WARPED_DOOR);
 
         register("black_concrete_powder", BLACK_CONCRETE_POWDER);
         register("blue_concrete_powder", BLUE_CONCRETE_POWDER);
