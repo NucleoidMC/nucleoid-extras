@@ -16,6 +16,7 @@ import java.util.Optional;
 public record QuickPortalEntryConfig(
         Identifier portal,
         Identifier quickPortal,
+        Text message,
         Optional<Text> name,
         Optional<List<Text>> description,
         Optional<ItemStack> icon
@@ -23,6 +24,7 @@ public record QuickPortalEntryConfig(
     public static final Codec<QuickPortalEntryConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("portal").forGetter(QuickPortalEntryConfig::portal),
             Identifier.CODEC.fieldOf("quick_portal").forGetter(QuickPortalEntryConfig::quickPortal),
+            PlasmidCodecs.TEXT.fieldOf("message").orElse(Text.translatable("text.nucleoid_extras.ui.action.more")).forGetter(QuickPortalEntryConfig::message),
             PlasmidCodecs.TEXT.optionalFieldOf("name").forGetter(QuickPortalEntryConfig::name),
             MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description").forGetter(QuickPortalEntryConfig::description),
             MoreCodecs.ITEM_STACK.optionalFieldOf("icon").forGetter(QuickPortalEntryConfig::icon)
@@ -37,6 +39,7 @@ public record QuickPortalEntryConfig(
             return new QuickPortalEntry(
                     portal,
                     quickPortal,
+                    this.message,
                     this.name.orElse(portal.getName()),
                     this.description.orElse(portal.getDescription()),
                     this.icon.orElse(portal.getIcon())

@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public record QuickPortalEntry(
     GamePortal portal,
     GamePortal quickPortal,
+    Text message,
     Text name,
     List<Text> description,
     ItemStack icon
@@ -98,7 +99,7 @@ public record QuickPortalEntry(
                 .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x76ed6f)));
         }
         element.addLoreLine(Text.empty().append(Text.literal(" [ ").formatted(Formatting.GRAY))
-            .append(Text.translatable("text.nucleoid_extras.ui.action.more"))
+            .append(this.message().copy())
             .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x5e8ad6)));
 
         element.setCallback((index, clickType, slotActionType, gui) -> {
