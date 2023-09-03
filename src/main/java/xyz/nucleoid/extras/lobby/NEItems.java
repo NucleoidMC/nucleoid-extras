@@ -18,6 +18,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -813,8 +814,8 @@ public class NEItems {
         UseEntityCallback.EVENT.register(NEItems::onUseEntity);
     }
 
-    private static boolean tryOfferStack(ServerPlayNetworkHandler handler, Item item, Consumer<ItemStack> consumer) {
-        var inventory = handler.getPlayer().getInventory();
+    private static boolean tryOfferStack(ServerPlayerEntity player, Item item, Consumer<ItemStack> consumer) {
+        var inventory = player.getInventory();
 
         if (inventory.containsAny(Collections.singleton(item))) {
             return false;
@@ -823,21 +824,25 @@ public class NEItems {
         var stack = new ItemStack(item);
         consumer.accept(stack);
 
-        handler.getPlayer().getInventory().offer(stack, true);
+        player.getInventory().offer(stack, true);
         return true;
     }
 
-    private static boolean tryOfferStack(ServerPlayNetworkHandler handler, Item item) {
-        return tryOfferStack(handler, item, stack -> {});
+    private static boolean tryOfferStack(ServerPlayerEntity player, Item item) {
+        return tryOfferStack(player, item, stack -> {});
     }
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+        giveLobbyItems(handler.getPlayer());
+    }
+
+    public static void giveLobbyItems(ServerPlayerEntity player) {
         var config = NucleoidExtrasConfig.get();
 
-        tryOfferStack(handler, TATER_BOX);
+        tryOfferStack(player, TATER_BOX);
 
         config.gamePortalOpener().ifPresent(gamePortal -> {
-            tryOfferStack(handler, GAME_PORTAL_OPENER, stack -> {
+            tryOfferStack(player, GAME_PORTAL_OPENER, stack -> {
                 GamePortalOpenerItem.setGamePortalId(stack, gamePortal);
             });
         });
