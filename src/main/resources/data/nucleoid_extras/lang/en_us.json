@@ -34,6 +34,18 @@
   "block.nucleoid_extras.snake_block": "Snake Block (Lobby only!)",
   "block.nucleoid_extras.fast_snake_block": "Fast Snake Block (Lobby only!)",
 
+  "block.nucleoid_extras.transient_iron_door": "Transient Iron Door (Lobby only!)",
+  "block.nucleoid_extras.transient_oak_door": "Transient Oak Door (Lobby only!)",
+  "block.nucleoid_extras.transient_spruce_door": "Transient Spruce Door (Lobby only!)",
+  "block.nucleoid_extras.transient_birch_door": "Transient Birch Door (Lobby only!)",
+  "block.nucleoid_extras.transient_jungle_door": "Transient Jungle Door (Lobby only!)",
+  "block.nucleoid_extras.transient_acacia_door": "Transient Acacia Door (Lobby only!)",
+  "block.nucleoid_extras.transient_cherry_door": "Transient Cherry Door (Lobby only!)",
+  "block.nucleoid_extras.transient_mangrove_door": "Transient Mangrove Door (Lobby only!)",
+  "block.nucleoid_extras.transient_bamboo_door": "Transient Bamboo Door (Lobby only!)",
+  "block.nucleoid_extras.transient_crimson_door": "Transient Crimson Door (Lobby only!)",
+  "block.nucleoid_extras.transient_warped_door": "Transient Warped Door (Lobby only!)",
+
   "block.nucleoid_extras.black_concrete_powder": "Floating Black Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.blue_concrete_powder": "Floating Blue Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.brown_concrete_powder": "Floating Brown Concrete Powder (Lobby only!)",
