@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -20,6 +21,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -795,6 +797,7 @@ public class NEItems {
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 
+        UseBlockCallback.EVENT.register(NEItems::onUseBlock);
         UseEntityCallback.EVENT.register(NEItems::onUseEntity);
     }
 
@@ -828,15 +831,29 @@ public class NEItems {
         });
     }
 
+    private static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
+        if (!player.getWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
+            ItemStack stack = player.getStackInHand(hand);
+            BlockPos pos = hitResult.getBlockPos();
+
+            PlayerLobbyState state = PlayerLobbyState.get(player);
+            ActionResult result = state.collectTaterFromBlock(world, pos, stack, player);
+
+            return result;
+        }
+
+        return ActionResult.PASS;
+    }
+
     private static ActionResult onUseEntity(PlayerEntity player, World world, Hand hand, Entity entity, EntityHitResult hitResult) {
         if (!player.getWorld().isClient() && hitResult != null) {
             ItemStack stack = player.getStackInHand(hand);
-            if (stack.getItem() instanceof TaterBoxItem taterBox) {
-                Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
-                ActionResult result = taterBox.tryAdd(entity, hitPos, stack, player);
+            Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
 
-                return result.isAccepted() ? result : ActionResult.FAIL;
-            }
+            PlayerLobbyState state = PlayerLobbyState.get(player);
+            ActionResult result = state.collectTaterFromEntity(entity, hitPos, stack, player);
+
+            return result;
         }
 
         return ActionResult.PASS;

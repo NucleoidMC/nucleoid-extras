@@ -4,11 +4,7 @@ import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
@@ -22,21 +18,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
-import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
 import java.util.*;
 
@@ -44,13 +33,13 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
     public static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
 
-    private static final String OWNER_KEY = "Owner";
+    public static final String OWNER_KEY = "Owner";
     private static final String LEGACY_TATERS_KEY = "Taters";
     private static final String SELECTED_TATER_KEY = "SelectedTater";
     private static final int COLOR = 0xCEADAA;
 
     private static final Identifier VIRAL_TATERS_ID = NucleoidExtras.identifier("viral_taters");
-    private static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
+    public static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
         super(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, settings);
@@ -78,7 +67,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        TypedActionResult<ItemStack> result = TypedActionResult.success(stack, world.isClient());
 
         if (!world.isClient()) {
             if (stack.hasNbt() && stack.getNbt().contains(LEGACY_TATERS_KEY)) {
@@ -95,29 +83,24 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
                 user.sendMessage(Text.translatable("text.nucleoid_extras.tater_box.updated"));
             }
 
-            BlockHitResult hit = Item.raycast(world, user, RaycastContext.FluidHandling.NONE);
-            if (hit.getType() == HitResult.Type.BLOCK) {
-                result = new TypedActionResult<>(this.tryAdd(world, hit.getBlockPos(), stack, user), stack);
-            } else {
-                var state = PlayerLobbyState.get(user);
-                List<GuiElementInterface> taters = new ArrayList<>();
+            var state = PlayerLobbyState.get(user);
+            List<GuiElementInterface> taters = new ArrayList<>();
 
-                taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
+            taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
 
-                for (var tater : TinyPotatoBlock.TATERS) {
-                    boolean found = state.collectedTaters.contains(tater);
+            for (var tater : TinyPotatoBlock.TATERS) {
+                boolean found = state.collectedTaters.contains(tater);
 
-                    taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), Registries.BLOCK.getId(tater), found));
-                }
-
-                var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters);
-                ui.setHideUnfound(true);
-                ui.setTitle(this.getTitle((ServerPlayerEntity) user));
-                ui.open();
+                taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), Registries.BLOCK.getId(tater), found));
             }
+
+            var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters);
+            ui.setHideUnfound(true);
+            ui.setTitle(this.getTitle((ServerPlayerEntity) user));
+            ui.open();
         }
 
-        return result;
+        return TypedActionResult.success(stack, world.isClient());
     }
 
     private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text text, Identifier taterId, boolean found) {
@@ -134,76 +117,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         });
         if(Objects.equals(getSelectedTaterId(stack), taterId)) guiElementBuilder.glow();
         return guiElementBuilder.build();
-    }
-
-    private ActionResult tryAdd(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
-        BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
-
-        ActionResult result = this.tryAdd(block, stack, player);
-
-        if (isFickle(result, block, player)) {
-            world.breakBlock(pos, false);
-        }
-
-        return result;
-    }
-
-    public ActionResult tryAdd(Entity entity, Vec3d hitPos, ItemStack stack, PlayerEntity player) {
-        if (entity instanceof ArmorStandEntity armorStand) {
-            EquipmentSlot slot = ((ArmorStandEntityAccessor) (Object) armorStand).callSlotFromPosition(hitPos);
-            return this.tryAdd(armorStand.getEquippedStack(slot), stack, player);
-        } else if (entity instanceof PlayerEntity targetPlayer) {
-            ItemStack targetStack = targetPlayer.getEquippedStack(EquipmentSlot.HEAD);
-            
-            if (targetStack.getItem() instanceof TaterBoxItem) {
-                Block targetTater = TaterBoxItem.getSelectedTater(targetStack);
-
-                if (targetTater != null && targetTater.getDefaultState().isIn(VIRAL_TATERS)) {
-                    return this.tryAdd(targetTater, stack, player);
-                }
-            }
-        }
-
-        return ActionResult.PASS;
-    }
-
-    private ActionResult tryAdd(ItemStack slotStack, ItemStack stack, PlayerEntity player) {
-        if (!slotStack.isEmpty() && slotStack.getItem() instanceof BlockItem slotItem) {
-            Block block = slotItem.getBlock();
-            ActionResult result = this.tryAdd(block, stack, player);
-
-            if (isFickle(result, block, player)) {
-                slotStack.setCount(0);
-            }
-
-            return result;
-        }
-
-        return ActionResult.PASS;
-    }
-
-    private ActionResult tryAdd(Block block, ItemStack stack, PlayerEntity player) {
-        if (!(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
-        stack.getOrCreateNbt().putUuid(OWNER_KEY, player.getUuid());
-
-        var state = PlayerLobbyState.get(player);
-
-        boolean alreadyAdded = state.collectedTaters.contains(tater);
-        Text message;
-
-        if (alreadyAdded) {
-            message = Text.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
-        } else {
-            state.collectedTaters.add(tater);
-
-            message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
-        }
-
-        player.sendMessage(message, true);
-        TaterBoxItem.triggerCriterion((ServerPlayerEntity) player, Registries.BLOCK.getId(tater), state.collectedTaters.size());
-
-        return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
 
     @Override
@@ -281,10 +194,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         return Registries.BLOCK.get(id);
     }
 
-    private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {
-        return result.isAccepted() && block instanceof TinyPotatoBlock tater && tater.isFickle() && !player.isCreative();
-    }
-
     public static void setSelectedTater(ItemStack stack, @Nullable Identifier selectedTaterId) {
         NbtCompound tag = stack.getOrCreateNbt();
         if(selectedTaterId == null) {
@@ -292,10 +201,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         } else {
             tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
         }
-    }
-
-    public static void triggerCriterion(ServerPlayerEntity player, Identifier taterId, int count) {
-        NECriteria.TATER_COLLECTED.trigger(player, taterId, count);
     }
 
     public static void addToItemGroup(ItemGroup.Entries entries) {
