@@ -839,9 +839,7 @@ public class NEItems {
             BlockPos pos = hitResult.getBlockPos();
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            ActionResult result = state.collectTaterFromBlock(world, pos, stack, player);
-
-            return result;
+            state.collectTaterFromBlock(world, pos, stack, player);
         }
 
         return ActionResult.PASS;
@@ -853,9 +851,7 @@ public class NEItems {
             Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            ActionResult result = state.collectTaterFromEntity(entity, hitPos, stack, player);
-
-            return result;
+            state.collectTaterFromEntity(entity, hitPos, stack, player);
         }
 
         return ActionResult.PASS;
