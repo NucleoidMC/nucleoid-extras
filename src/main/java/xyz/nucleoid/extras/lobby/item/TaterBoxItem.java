@@ -6,6 +6,7 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -67,7 +69,22 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
+        this.openTaterBox(world, user, stack, hand);
 
+        return TypedActionResult.success(stack, world.isClient());
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType == ClickType.RIGHT) {
+            this.openTaterBox(player.getWorld(), player, stack, null);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void openTaterBox(World world, PlayerEntity user, ItemStack stack, Hand hand) {
         if (!world.isClient()) {
             if (stack.hasNbt() && stack.getNbt().contains(LEGACY_TATERS_KEY)) {
                 var data = PlayerLobbyState.get(user);
@@ -99,8 +116,6 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             ui.setTitle(this.getTitle((ServerPlayerEntity) user));
             ui.open();
         }
-
-        return TypedActionResult.success(stack, world.isClient());
     }
 
     private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text text, Identifier taterId, boolean found) {
@@ -109,7 +124,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         guiElementBuilder.setFound(found);
         guiElementBuilder.hideFlags();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
-            ItemStack newStack = user.getStackInHand(hand);
+            ItemStack newStack = hand == null ? stack : user.getStackInHand(hand);
             if (found && this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
                 TaterBoxItem.setSelectedTater(newStack, taterId);
                 gui.close();
