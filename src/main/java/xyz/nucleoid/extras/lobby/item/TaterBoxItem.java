@@ -5,6 +5,7 @@ import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
@@ -17,6 +18,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.*;
@@ -31,7 +33,7 @@ import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 
 import java.util.*;
 
-public class TaterBoxItem extends ArmorItem implements PolymerItem {
+public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
     public static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
 
@@ -44,7 +46,7 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
     public static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
-        super(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, settings);
+        super(settings);
     }
 
     private ActionResult isOwner(ItemStack stack, PlayerEntity player) {
@@ -115,6 +117,8 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
             ui.setHideUnfound(true);
             ui.setTitle(this.getTitle((ServerPlayerEntity) user));
             ui.open();
+
+            ((ServerPlayerEntity) user).playSound(this.getEquipSound(), SoundCategory.PLAYERS, 0.8f, 1);
         }
     }
 
@@ -157,6 +161,11 @@ public class TaterBoxItem extends ArmorItem implements PolymerItem {
         }
 
         return out;
+    }
+
+    @Override
+    public EquipmentSlot getSlotType() {
+        return EquipmentSlot.HEAD;
     }
 
     @Override
