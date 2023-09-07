@@ -18,13 +18,17 @@ public class MarkerTaterBlock extends CubicPotatoBlock {
         this(settings, particleBlock.getDefaultState(), texture);
     }
 
+    public double getPlayerParticleYOffset() {
+        return 0.5;
+    }
+
     @Override
     public void spawnPlayerParticles(ServerPlayerEntity player) {
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
 
         if (particleEffect != null) {
             double x = player.getX();
-            double y = player.getY() + 0.5;
+            double y = player.getY() + this.getPlayerParticleYOffset();
             double z = player.getZ();
 
             player.getServerWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
