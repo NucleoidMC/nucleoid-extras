@@ -44,7 +44,7 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.Contributor;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
-import xyz.nucleoid.extras.lobby.item.TaterBoxItem;
+import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.mixin.lobby.LivingEntityAccessor;
 import xyz.nucleoid.extras.util.PagedGui;
 
