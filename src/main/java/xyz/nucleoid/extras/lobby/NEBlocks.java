@@ -323,6 +323,7 @@ public class NEBlocks {
     public static final Block JUNGLE_LOG_TATER = createTaterBlock(Blocks.JUNGLE_LOG, "fd9658650626b1c63fe8fa5f10e5a981a400532de45153cfe481f302d8980818");
     public static final Block MAGMA_CUBE_TATER = createTaterBlock(ParticleTypes.DRIPPING_LAVA, "b34a0d09a2721e18afd3f4c1f2abf630734566e5e04054cc086945dd3af4a1b3");
     public static final Block MOOBLOOM_TATER = createTaterBlock(ParticleTypes.COMPOSTER, "a5a022dae96e419275a0bf5dfabde2d1c4dd073376d52265bee5dd67776ee5a2");
+    public static final Block MOOLIP_TATER = createTaterBlock(ParticleTypes.CHERRY_LEAVES, "271e15bc807ccf8ecdd594bac37680c06aeb7ec46ce071f225cf207d718654a2");
     public static final Block MUDDY_PIG_TATER = createTaterBlock(ParticleTypes.HEART, "70137b92b07e1c24c6d3042daa2997a871383c7278d88e3ecf1964e4b75ff993");
     public static final Block MUSHROOM_STEM_TATER = createTaterBlock(Blocks.MUSHROOM_STEM, "104dd3bad53758af4eb92be90e78277a6201e63d63614c463c5156d210a61c11");
     public static final Block NETHER_BRICK_TATER = createTaterBlock(Blocks.NETHER_BRICKS, "751534292b1f5e13c8cea2d4f4f653c9f46cb63f5e2ad480c24fc98f22a027c0");
@@ -753,6 +754,7 @@ public class NEBlocks {
         register("jungle_log_tater", JUNGLE_LOG_TATER);
         register("magma_cube_tater", MAGMA_CUBE_TATER);
         register("moobloom_tater", MOOBLOOM_TATER);
+        register("moolip_tater", MOOLIP_TATER);
         register("muddy_pig_tater", MUDDY_PIG_TATER);
         register("mushroom_stem_tater", MUSHROOM_STEM_TATER);
         register("nether_brick_tater", NETHER_BRICK_TATER);

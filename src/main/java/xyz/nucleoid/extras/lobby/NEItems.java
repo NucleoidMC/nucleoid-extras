@@ -329,6 +329,7 @@ public class NEItems {
     public static final Item JUNGLE_LOG_TATER = createHead(NEBlocks.JUNGLE_LOG_TATER);
     public static final Item MAGMA_CUBE_TATER = createHead(NEBlocks.MAGMA_CUBE_TATER);
     public static final Item MOOBLOOM_TATER = createHead(NEBlocks.MOOBLOOM_TATER);
+    public static final Item MOOLIP_TATER = createHead(NEBlocks.MOOLIP_TATER);
     public static final Item MUDDY_PIG_TATER = createHead(NEBlocks.MUDDY_PIG_TATER);
     public static final Item MUSHROOM_STEM_TATER = createHead(NEBlocks.MUSHROOM_STEM_TATER);
     public static final Item NETHER_BRICK_TATER = createHead(NEBlocks.NETHER_BRICK_TATER);
@@ -688,6 +689,7 @@ public class NEItems {
         registerTater("jungle_log_tater", JUNGLE_LOG_TATER);
         registerTater("magma_cube_tater", MAGMA_CUBE_TATER);
         registerTater("moobloom_tater", MOOBLOOM_TATER);
+        registerTater("moolip_tater", MOOLIP_TATER);
         registerTater("muddy_pig_tater", MUDDY_PIG_TATER);
         registerTater("mushroom_stem_tater", MUSHROOM_STEM_TATER);
         registerTater("nether_brick_tater", NETHER_BRICK_TATER);
