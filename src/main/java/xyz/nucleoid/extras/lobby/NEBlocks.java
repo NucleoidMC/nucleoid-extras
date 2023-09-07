@@ -254,6 +254,7 @@ public class NEBlocks {
     public static final Block HONEYCOMB_TATER = createTaterBlock(ParticleTypes.LANDING_HONEY, "e917928e35f2fac59aa1d14d80c478f38d14e2f66ee59d4eb9d025605406481");
     public static final Block HORN_CORAL_TATER = createTaterBlock(ParticleTypes.BUBBLE, "3e17f4d2977dafce018ac06163f2a7c5672855d198da86fa050f27a7c45b2da4");
     public static final Block JUNGLE_TATER = createTaterBlock(Blocks.JUNGLE_PLANKS, "b9105eebf99ec35ac08aaa2ed8ac721590adbdb1eb3a158a82c11e71e76d28aa");
+    public static final Block LIGHT_TATER = createLightTaterBlock("640ed4ea72aed9503c0519d3380ac480a20f9155c428d0571ad767eb4e8973b4");
     public static final Block MYCELIUM_TATER = createTaterBlock(ParticleTypes.MYCELIUM, "f3447bbb99321b399b7a1913d9bc4e90e8b0fc9b9520af45a8f59a1540d4b620");
     public static final Block NETHER_WART_TATER = createTaterBlock(ParticleTypes.CRIMSON_SPORE, "81c05e8c91a4ca83120799053270dfd7fdf1376988a1a393645140ae89eb6762");
     public static final Block OAK_TATER = createTaterBlock(Blocks.OAK_PLANKS, "28cfc208966e2f5206b1aba0489e5fdb3f05e6d94befbc618ad80e74eb1016d2");
@@ -510,6 +511,10 @@ public class NEBlocks {
         return new MarkerTaterBlock(createTaterBlockSettings(), particleBlock, texture);
     }
 
+    private static Block createLightTaterBlock(String texture) {
+        return new LightTaterBlock(createTaterBlockSettings(), texture);
+    }
+
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
         register("nucle_past_logo", NUCLE_PAST_LOGO);
@@ -679,6 +684,7 @@ public class NEBlocks {
         register("honeycomb_tater", HONEYCOMB_TATER);
         register("horn_coral_tater", HORN_CORAL_TATER);
         register("jungle_tater", JUNGLE_TATER);
+        register("light_tater", LIGHT_TATER);
         register("mycelium_tater", MYCELIUM_TATER);
         register("nether_wart_tater", NETHER_WART_TATER);
         register("oak_tater", OAK_TATER);
