@@ -357,6 +357,7 @@
   "item.nucleoid_extras.game_portal_opener": "Game Portal Opener",
   "item.nucleoid_extras.launch_feather": "Launch Feather",
   "item.nucleoid_extras.tater_box": "Tater Box",
+  "item.nucleoid_extras.creative_tater_box": "Creative Tater Box",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
 
   "entity.nucleoid_extras.quick_armor_stand": "Quick Armor Stand",
@@ -372,6 +373,9 @@
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
   "text.nucleoid_extras.tater_box.updated": "Your Tater Box has been updated to new format! It will be safer than ever!",
+
+  "text.nucleoid_extras.creative_tater_box.collect_all": "Collect All",
+  "text.nucleoid_extras.creative_tater_box.reset": "Reset",
 
   "text.nucleoid_extras.contributor_statue.title": "Select Contributor",
 

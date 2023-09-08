@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.lobby.item;
+package xyz.nucleoid.extras.lobby.item.tater;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
@@ -11,8 +11,6 @@ import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -25,7 +23,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
@@ -113,7 +110,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
                 taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), Registries.BLOCK.getId(tater), found));
             }
 
-            var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters);
+            var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters, this.isCreative());
             ui.setHideUnfound(true);
             ui.setTitle(this.getTitle((ServerPlayerEntity) user));
             ui.open();
@@ -138,6 +135,17 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         return guiElementBuilder.build();
     }
 
+    /**
+     * {@return the color used for the empty leather helmet appearance}
+     */
+    protected int getEmptyColor() {
+        return COLOR;
+    }
+
+    protected boolean isCreative() {
+        return false;
+    }
+
     @Override
     public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
         if (TaterBoxItem.getSelectedTater(itemStack) != null) {
@@ -156,7 +164,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
             NbtCompound skullOwner = PolymerUtils.createSkullOwner(potatoBlock.getItemTexture());
             out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
         } else {
-            out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, COLOR);
+            out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, this.getEmptyColor());
             out.getOrCreateNbt().putBoolean("Unbreakable", true);
         }
 
@@ -225,20 +233,5 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         } else {
             tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
         }
-    }
-
-    public static void addToItemGroup(ItemGroup.Entries entries) {
-        ItemStack fullStack = new ItemStack(NEItems.TATER_BOX);
-
-        NbtCompound nbt = fullStack.getOrCreateNbt();
-        NbtList taters = nbt.getList(LEGACY_TATERS_KEY, NbtElement.STRING_TYPE);
-
-        TinyPotatoBlock.TATERS.forEach((tater) -> taters.add(NbtString.of(Registries.BLOCK.getId(tater).toString())));
-
-        nbt.put(LEGACY_TATERS_KEY, taters);
-
-        fullStack.setCustomName(Text.literal("Unlocked Tater Box"));
-
-        entries.add(fullStack);
     }
 }
