@@ -28,8 +28,6 @@ import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
 import xyz.nucleoid.extras.lobby.block.tater.*;
 
-import java.util.Comparator;
-
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
 
@@ -862,8 +860,6 @@ public class NEBlocks {
         registerBlockEntity("tateroid", TATEROID_ENTITY);
         registerBlockEntity("daylight_detector_tater", DAYLIGHT_DETECTOR_TATER_ENTITY);
         registerBlockEntity("bell_tater", BELL_TATER_ENTITY);
-
-        TinyPotatoBlock.TATERS.sort(Comparator.comparing(x -> Registries.BLOCK.getId(x).getPath()));
     }
 
     private static <T extends Block> T register(String id, T block) {

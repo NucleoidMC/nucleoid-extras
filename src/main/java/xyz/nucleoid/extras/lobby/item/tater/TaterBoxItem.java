@@ -24,9 +24,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
+import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
+import xyz.nucleoid.server.translations.api.Localization;
 
 import java.util.*;
 
@@ -68,22 +70,25 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        this.openTaterBox(world, user, stack, hand);
+
+        if (!user.getWorld().isClient()) {
+            this.openTaterBox(world, (ServerPlayerEntity) user, stack, hand);
+        }
 
         return TypedActionResult.success(stack, world.isClient());
     }
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType == ClickType.RIGHT) {
-            this.openTaterBox(player.getWorld(), player, stack, null);
+        if (clickType == ClickType.RIGHT && !player.getWorld().isClient()) {
+            this.openTaterBox(player.getWorld(), (ServerPlayerEntity) player, stack, null);
             return true;
         }
 
         return false;
     }
 
-    private void openTaterBox(World world, PlayerEntity user, ItemStack stack, Hand hand) {
+    private void openTaterBox(World world, ServerPlayerEntity user, ItemStack stack, Hand hand) {
         if (!world.isClient()) {
             if (stack.hasNbt() && stack.getNbt().contains(LEGACY_TATERS_KEY)) {
                 var data = PlayerLobbyState.get(user);
@@ -104,11 +109,24 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
 
             taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
 
-            for (var tater : TinyPotatoBlock.TATERS) {
-                boolean found = state.collectedTaters.contains(tater);
+            TinyPotatoBlock.TATERS.stream()
+                .sorted(Comparator.comparing(tater -> {
+                    if (!(tater instanceof CorruptaterBlock)) {
+                        var name = tater.getName();
 
-                taters.add(createGuiElement(stack, user, hand, tater, tater.getName(), Registries.BLOCK.getId(tater), found));
-            }
+                        if (name != null) {
+                            return Localization.text(name, user).getString();
+                        }
+                    }
+
+                    return Registries.BLOCK.getId(tater).getPath();
+                }, String.CASE_INSENSITIVE_ORDER))
+                .map(tater -> {
+                    boolean found = state.collectedTaters.contains(tater);
+
+                    return createGuiElement(stack, user, hand, tater, tater.getName(), Registries.BLOCK.getId(tater), found);
+                })
+                .forEachOrdered(taters::add);
 
             var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters, this.isCreative());
             ui.setHideUnfound(true);
