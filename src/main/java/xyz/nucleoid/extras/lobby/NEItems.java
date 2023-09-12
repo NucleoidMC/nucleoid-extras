@@ -280,6 +280,7 @@ public class NEItems {
     public static final Item SPONGE_TATER = createHead(NEBlocks.SPONGE_TATER);
     public static final Item SPRUCE_TATER = createHead(NEBlocks.SPRUCE_TATER);
     public static final Item STONE_BRICK_TATER = createHead(NEBlocks.STONE_BRICK_TATER);
+    public static final Item STRUCTURE_VOID_TATER = createHead(NEBlocks.STRUCTURE_VOID_TATER);
     public static final Item TARGET_TATER = createHead(NEBlocks.TARGET_TATER);
     public static final Item TERRACOTTA_TATER = createHead(NEBlocks.TERRACOTTA_TATER);
     public static final Item TNTATER = createHead(NEBlocks.TNTATER);
@@ -642,6 +643,7 @@ public class NEItems {
         registerTater("sponge_tater", SPONGE_TATER);
         registerTater("spruce_tater", SPRUCE_TATER);
         registerTater("stone_brick_tater", STONE_BRICK_TATER);
+        registerTater("structure_void_tater", STRUCTURE_VOID_TATER);
         registerTater("target_tater", TARGET_TATER);
         registerTater("terracotta_tater", TERRACOTTA_TATER);
         registerTater("tntater", TNTATER);
