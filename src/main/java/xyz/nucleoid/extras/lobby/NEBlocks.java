@@ -272,6 +272,7 @@ public class NEBlocks {
     public static final Block SPONGE_TATER = createTaterBlock(ParticleTypes.DRIPPING_WATER, "697a4102627b55490614f475d4fde0df51a8d0c45e9573799d198f4deca33a14");
     public static final Block SPRUCE_TATER = createTaterBlock(Blocks.SPRUCE_PLANKS, "fe400308900536545f886084d9f465f17311a41b7410cfaba323a5ac3b1b9a9c");
     public static final Block STONE_BRICK_TATER = createTaterBlock(Blocks.STONE_BRICKS, "bdf3cdb5266539c34485d439c6a07baa3fbe5556d980ef14483cd6f5271b089b");
+    public static final Block STRUCTURE_VOID_TATER = createMarkerTaterBlock(Blocks.STRUCTURE_VOID, "94903af59c0a5529ac3c9135683f7671090a403c641e5cbde8b21abe4a1e114c");
     public static final Block TARGET_TATER = createTargetTaterBlock("386b52ed3d2b2a682b4c6f1d40a9ceabf72e7c5b60b8d92d2dcee97a8799450f");
     public static final Block TERRACOTTA_TATER = createTaterBlock(Blocks.TERRACOTTA, "57f120d92f3f076352b682345fdb82204b920e59d226c4c6d2c64d5abc6860e1");
     public static final Block TNTATER = createTaterBlock(ParticleTypes.EXPLOSION, "440d175ded62ff7b3cf9de979196e7b95da8a25e9e888c4bed06f5c011dc54a8", 10);
@@ -703,6 +704,7 @@ public class NEBlocks {
         register("sponge_tater", SPONGE_TATER);
         register("spruce_tater", SPRUCE_TATER);
         register("stone_brick_tater", STONE_BRICK_TATER);
+        register("structure_void_tater", STRUCTURE_VOID_TATER);
         register("target_tater", TARGET_TATER);
         register("terracotta_tater", TERRACOTTA_TATER);
         register("tntater", TNTATER);
