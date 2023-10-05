@@ -65,9 +65,9 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
     public void spawnPlayerParticles(ServerPlayerEntity player) {
         Box box = player.getBoundingBox();
 
-        double deltaX = box.getXLength() / 2d;
-        double deltaY = box.getYLength() / 2d;
-        double deltaZ = box.getZLength() / 2d;
+        double deltaX = box.getLengthX() / 2d;
+        double deltaY = box.getLengthY() / 2d;
+        double deltaZ = box.getLengthZ() / 2d;
 
         double x = player.getX();
         double y = player.getY();

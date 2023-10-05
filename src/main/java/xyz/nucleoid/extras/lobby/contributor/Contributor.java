@@ -8,7 +8,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.entity.SkullBlockEntity;
-import net.minecraft.client.texture.PlayerSkinProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -18,8 +17,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+import xyz.nucleoid.extras.mixin.lobby.SkullBlockEntityAccessor;
 
 public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) implements Comparable<Contributor> {
     protected static final Codec<Contributor> CODEC = RecordCodecBuilder.create(instance ->
@@ -76,16 +75,10 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
     }
 
     public void loadGameProfileProperties(MinecraftServer server, GameProfile profile, Consumer<GameProfile> callback) {
-        if (profile.isComplete() && profile.getProperties().containsKey(PlayerSkinProvider.TEXTURES)) {
-            return;
-        }
-
-        Util.getMainWorkerExecutor().execute(() -> {
-            GameProfile fullProfile = server.getSessionService().fillProfileProperties(profile, false);
-
-            server.getUserCache().add(fullProfile);
-            server.execute(() -> {
-                callback.accept(profile);
+        SkullBlockEntityAccessor.callFetchProfileWithTextures(profile).thenAccept(optional -> {
+            optional.ifPresent(fullProfile -> {
+                server.getUserCache().add(fullProfile);
+                callback.accept(fullProfile);
             });
         });
     }

@@ -162,7 +162,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         Block selectedTater = TaterBoxItem.getSelectedTater(itemStack);
         if (selectedTater instanceof TinyPotatoBlock potatoBlock) {
             NbtCompound skullOwner = PolymerUtils.createSkullOwner(potatoBlock.getItemTexture());
-            out.getOrCreateNbt().put(SkullItem.SKULL_OWNER_KEY, skullOwner);
+            out.getOrCreateNbt().put(PlayerHeadItem.SKULL_OWNER_KEY, skullOwner);
         } else {
             out.getOrCreateSubNbt(DyeableItem.DISPLAY_KEY).putInt(DyeableItem.COLOR_KEY, this.getEmptyColor());
             out.getOrCreateNbt().putBoolean("Unbreakable", true);

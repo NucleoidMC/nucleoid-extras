@@ -104,6 +104,6 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return BlockWithEntityAccessor.checkType(type, NEBlocks.BELL_TATER_ENTITY, world.isClient ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
+		return BlockWithEntityAccessor.validateTicker(type, NEBlocks.BELL_TATER_ENTITY, world.isClient ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
 	}
 }
