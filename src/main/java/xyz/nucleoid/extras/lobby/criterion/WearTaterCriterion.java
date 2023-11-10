@@ -9,19 +9,17 @@ import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import xyz.nucleoid.extras.NucleoidExtras;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 
 public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Conditions> {
-	public static final Identifier ID = NucleoidExtras.identifier("wear_tater");
-
 	public static final Calendar CALENDAR = Calendar.getInstance();
 
 	@Override
-	protected WearTaterCriterion.Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+	protected WearTaterCriterion.Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
 		if(tater != null && !Registries.BLOCK.containsId(tater)) {
 			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
@@ -31,11 +29,6 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
 			throw new JsonSyntaxException("Invalid day of week specified!");
 		}
 		return new Conditions(playerPredicate, tater, dayOfWeek);
-	}
-
-	@Override
-	public Identifier getId() {
-		return ID;
 	}
 
 	public void trigger(ServerPlayerEntity player, Identifier tater) {
@@ -60,8 +53,8 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
 		private final Identifier tater;
 		private final Integer dayOfWeek;
 
-		public Conditions(LootContextPredicate playerPredicate, Identifier tater, Integer dayOfWeek) {
-			super(ID, playerPredicate);
+		public Conditions(Optional<LootContextPredicate> playerPredicate, Identifier tater, Integer dayOfWeek) {
+			super(playerPredicate);
 			this.tater = tater;
 			this.dayOfWeek = dayOfWeek;
 		}

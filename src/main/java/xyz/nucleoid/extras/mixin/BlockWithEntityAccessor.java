@@ -10,8 +10,8 @@ import net.minecraft.block.entity.BlockEntityType;
 
 @Mixin(BlockWithEntity.class)
 public interface BlockWithEntityAccessor {
-    @Invoker("checkType")
-	static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+    @Invoker("validateTicker")
+	static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> validateTicker(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
         throw new AssertionError();
     }
 }

@@ -81,9 +81,9 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
 
         Box box = player.getBoundingBox();
 
-        double deltaX = box.getXLength() / 2d;
-        double deltaY = box.getYLength() / 2d;
-        double deltaZ = box.getZLength() / 2d;
+        double deltaX = box.getLengthX() / 2d;
+        double deltaY = box.getLengthY() / 2d;
+        double deltaZ = box.getLengthZ() / 2d;
 
         double x = player.getX() + (player.getRandom().nextGaussian() * deltaX);
         double y = player.getY() + (player.getRandom().nextGaussian() * deltaY);
@@ -152,6 +152,6 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient() ? null : BlockWithEntityAccessor.checkType(type, NEBlocks.TATEROID_ENTITY, TateroidBlockEntity::serverTick);
+        return world.isClient() ? null : BlockWithEntityAccessor.validateTicker(type, NEBlocks.TATEROID_ENTITY, TateroidBlockEntity::serverTick);
     }
 }

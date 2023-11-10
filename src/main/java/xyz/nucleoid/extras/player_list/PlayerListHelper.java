@@ -34,7 +34,7 @@ public class PlayerListHelper {
             player.getUuid(),
             player.getGameProfile(),
             true,
-            player.pingMilliseconds,
+            player.networkHandler.getLatency(),
             getGameMode(player, gray),
             getDisplayName(player, gray),
             getSession(player)

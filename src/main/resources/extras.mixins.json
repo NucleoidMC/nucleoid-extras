@@ -12,6 +12,7 @@
     "lobby.ArmorStandEntityAccessor",
     "lobby.LivingEntityAccessor",
     "lobby.ServerPlayerEntityMixin",
+    "lobby.SkullBlockEntityAccessor",
     "lobby.ThreadedAnvilChunkStorageAccessor",
     "patches.EntityMixin",
     "patches.StatusEffectMixin",
