@@ -8,7 +8,9 @@ import net.minecraft.util.profiler.PerformanceLog;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.integrations.status.HasTickPerformanceLog;
 import xyz.nucleoid.extras.integrations.status.ServerLifecycleIntegration;
@@ -30,11 +32,11 @@ public class MinecraftServerMixin implements HasTickPerformanceLog {
         return report;
     }
 
-    @WrapOperation(
-            method = "tick",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;tickTickLog(J)V")
+    @Inject(
+            method = "tickTickLog",
+            at = @At(value = "HEAD")
     )
-    public void pushTickPerformanceLog(MinecraftServer server, long nanos, Operation<Void> operation) {
+    public void pushTickPerformanceLog(long nanos, CallbackInfo ci) {
         this.extras$tickPerformanceLog.push(nanos);
     }
 
