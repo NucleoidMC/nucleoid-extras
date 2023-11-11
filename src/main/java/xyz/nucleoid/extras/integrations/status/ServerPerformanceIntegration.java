@@ -70,11 +70,15 @@ public final class ServerPerformanceIntegration {
     }
 
     private static float getAverageTickMs(PerformanceLog log) {
-        long total = 0;
-        for (int index = 0; index < log.size(); index++) {
-            total += log.get(index);
+        try {
+            long total = 0;
+            for (int index = 0; index < log.size(); index++) {
+                total += log.get(index);
+            }
+            double averageTickNs = (double) total / log.size();
+            return (float) (averageTickNs / 1000000.0);
+        } catch (Throwable e) {
+            return 0;
         }
-        double averageTickNs = (double) total / log.size();
-        return (float) (averageTickNs / 1000000.0);
     }
 }
