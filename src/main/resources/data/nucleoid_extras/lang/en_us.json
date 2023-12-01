@@ -391,6 +391,8 @@
 
   "text.nucleoid_extras.ui.action.more": "Right-click for more...",
 
+  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
+
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",
   "advancements.nucleoid_extras.first_tater.title": "My First Tater",
