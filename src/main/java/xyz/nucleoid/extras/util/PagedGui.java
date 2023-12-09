@@ -13,12 +13,14 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 public abstract class PagedGui extends SimpleGui {
     private static final Object2IntMap<ScreenHandlerType<?>> TYPE_TO_SIZE = new Object2IntOpenHashMap<>();
@@ -26,7 +28,10 @@ public abstract class PagedGui extends SimpleGui {
     protected int page = 0;
 
     public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements) {
-        return new FromList(ScreenHandlerType.GENERIC_9X6, player, false, elements);
+        return of(player, elements, null);
+    }
+    public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements, @Nullable IntFunction<GuiElementInterface> navbar) {
+        return new FromList(ScreenHandlerType.GENERIC_9X6, player, false, elements, navbar);
     }
 
     public PagedGui(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots) {
@@ -173,18 +178,31 @@ public abstract class PagedGui extends SimpleGui {
         }
     }
 
+    public static void playSound(ServerPlayerEntity player, SoundEvent sound) {
+        player.playSound(sound, SoundCategory.MASTER, 1, 1);
+    }
+
     public static void playClickSound(ServerPlayerEntity player) {
-        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 1, 1);
+        playSound(player, SoundEvents.UI_BUTTON_CLICK.value());
     }
 
     public static class FromList extends PagedGui {
 
         protected final List<GuiElementInterface> list;
+        @Nullable
+        private final IntFunction<GuiElementInterface> navbar;
 
-        public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces) {
+        public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, IntFunction<GuiElementInterface> navbar) {
             super(type, player, includePlayerInventorySlots);
             this.list = guiElementInterfaces;
+            this.navbar = navbar;
             this.updateDisplay();
+        }
+
+        @Override
+        protected DisplayElement getNavElement(int id) {
+            var x = navbar != null ? navbar.apply(id) : null;
+            return x != null ? DisplayElement.of(x) : super.getNavElement(id);
         }
 
         protected List<GuiElementInterface> getList() {

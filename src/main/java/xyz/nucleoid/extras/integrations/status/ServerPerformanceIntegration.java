@@ -3,7 +3,7 @@ package xyz.nucleoid.extras.integrations.status;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.MetricsData;
+import net.minecraft.util.profiler.PerformanceLog;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -36,7 +36,7 @@ public final class ServerPerformanceIntegration {
         if (time - this.lastSendTime > SEND_INTERVAL_MS) {
             this.lastSendTime = time;
 
-            float averageTickMs = getAverageTickMs(server.getMetricsData());
+            float averageTickMs = getAverageTickMs(((HasTickPerformanceLog) server).getTickPerformanceLog());
             int tps = averageTickMs != 0 ? (int) Math.min(1000.0F / averageTickMs, 20) : 20;
 
             int dimensions = 0;
@@ -69,13 +69,16 @@ public final class ServerPerformanceIntegration {
         }
     }
 
-    private static float getAverageTickMs(MetricsData data) {
-        long[] samples = data.getSamples();
-        long total = 0;
-        for (long sample : samples) {
-            total += sample;
+    private static float getAverageTickMs(PerformanceLog log) {
+        try {
+            long total = 0;
+            for (int index = 0; index < log.size(); index++) {
+                total += log.get(index);
+            }
+            double averageTickNs = (double) total / log.size();
+            return (float) (averageTickNs / 1000000.0);
+        } catch (Throwable e) {
+            return 0;
         }
-        double averageTickNs = (double) total / samples.length;
-        return (float) (averageTickNs / 1000000.0);
     }
 }

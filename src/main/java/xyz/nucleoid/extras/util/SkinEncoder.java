@@ -10,6 +10,10 @@ public class SkinEncoder {
      */
     public static String encode(String hash) {
         if (hash == null) return null;
+        if (hash.length() > 80) {
+            return hash;
+        }
+
         return encodeUrl("http://textures.minecraft.net/texture/" + hash);
     }
 

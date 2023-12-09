@@ -6,9 +6,10 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -25,12 +26,13 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
+import xyz.nucleoid.extras.lobby.block.tater.*;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
 
     public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
-    public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.of(Material.PORTAL).strength(100).noCollision());
+    public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.BLOCK).strength(100).noCollision());
     public static final Block SAFE_TNT = createSimple(Blocks.TNT);
 
     public static final Block BLACK_CONCRETE_POWDER = createSimple(Blocks.BLACK_CONCRETE_POWDER);
@@ -61,7 +63,26 @@ public class NEBlocks {
     public static final Block SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIME_CONCRETE).strength(100), Blocks.LIME_CONCRETE, 8, 7);
     public static final Block FAST_SNAKE_BLOCK = new SnakeBlock(AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), Blocks.LIGHT_BLUE_CONCRETE, 4, 7);
 
+    public static final Block TRANSIENT_IRON_DOOR = new TransientDoorBlock(Blocks.IRON_DOOR);
+    public static final Block TRANSIENT_OAK_DOOR = new TransientDoorBlock(Blocks.OAK_DOOR);
+    public static final Block TRANSIENT_SPRUCE_DOOR = new TransientDoorBlock(Blocks.SPRUCE_DOOR);
+    public static final Block TRANSIENT_BIRCH_DOOR = new TransientDoorBlock(Blocks.BIRCH_DOOR);
+    public static final Block TRANSIENT_JUNGLE_DOOR = new TransientDoorBlock(Blocks.JUNGLE_DOOR);
+    public static final Block TRANSIENT_ACACIA_DOOR = new TransientDoorBlock(Blocks.ACACIA_DOOR);
+    public static final Block TRANSIENT_CHERRY_DOOR = new TransientDoorBlock(Blocks.CHERRY_DOOR);
+    public static final Block TRANSIENT_DARK_OAK_DOOR = new TransientDoorBlock(Blocks.DARK_OAK_DOOR);
+    public static final Block TRANSIENT_MANGROVE_DOOR = new TransientDoorBlock(Blocks.MANGROVE_DOOR);
+    public static final Block TRANSIENT_BAMBOO_DOOR = new TransientDoorBlock(Blocks.BAMBOO_DOOR);
+    public static final Block TRANSIENT_CRIMSON_DOOR = new TransientDoorBlock(Blocks.CRIMSON_DOOR);
+    public static final Block TRANSIENT_WARPED_DOOR = new TransientDoorBlock(Blocks.WARPED_DOOR);
+
+    public static final Block NUCLE_PAST_LOGO = createTaterBlock(new DustParticleEffect(Vec3d.unpackRgb(0x52C471).toVector3f(), 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
+
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
+    public static final Block BOTANICAL_TINY_POTATO = createBotanicTaterBlock(ParticleTypes.HEART,
+        "39e878c52870c640b5985c67df70059120b61b26c77a5cf86042c04c13477d7b",
+        "582f367eabffc9ecd8ab870c9f5f5c8b43215d5eb922cfb193aed70fcf694e92"
+    );
     public static final Block IRRITATER = createTaterBlock(ParticleTypes.ANGRY_VILLAGER, "14b2cbfe1fd4d3123461081ad460acb6c0345bed3f3ce96d475b5f58f7b9030b");
     public static final Block SAD_TATER = createTaterBlock(ParticleTypes.FALLING_WATER, "7915f5ab6a3af5fd8e043bc98a5466acfc5d57c30dc9a1d2e4a32f7bfa1d35bf");
     public static final Block FLOWERING_AZALEA_TATER = createTaterBlock(Blocks.FLOWERING_AZALEA_LEAVES, "ab6c05d3be9369c69984513f281932622bca807008def997222a6d4f8cb71d83");
@@ -150,13 +171,13 @@ public class NEBlocks {
     public static final Block WARDEN_TATER = createWardenTaterBlock("52e411aa1501c72d99d738cb38e250a395c6604b8bccc9f29d7f26e9cacd8d6f");
     public static final Block VIRAL_TATER = createTaterBlock(ParticleTypes.SCRAPE, "b12f770c4542c9f26ba03aaee686e0946698d394a8e745d3eac6013383dcff29");
     public static final Block DICE_TATER = createDiceTaterBlock();
-    public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
-    public static final Block RED_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
-    public static final Block ORANGE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
-    public static final Block YELLOW_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
-    public static final Block GREEN_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BIT, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
-    public static final Block BLUE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
-    public static final Block PURPLE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
+    public static final Block TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BELL, -1, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
+    public static final Block RED_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_GUITAR, 7 / 24d, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
+    public static final Block ORANGE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 4 / 24d, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
+    public static final Block YELLOW_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 2.5 / 24d, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
+    public static final Block GREEN_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_BIT, 21 / 24d, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
+    public static final Block BLUE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE, 17 / 24d, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
+    public static final Block PURPLE_TATEROID = createTateroidBlock(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, 11 / 24d, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
 
     public static final Block WHITE_TATER = createColorTaterBlock(DyeColor.WHITE, "73dab052d33ee467ba7fac9aa0e316db962e3e7ac6dbbff236667439e340392c");
     public static final Block ORANGE_TATER = createColorTaterBlock(DyeColor.ORANGE, "75b88126dbd4e860608965c044d0060ac03c26ebea1b652643fe03734ea1b12b");
@@ -207,6 +228,7 @@ public class NEBlocks {
     public static final Block ACACIA_TATER = createTaterBlock(Blocks.ACACIA_PLANKS, "807d75cb114e057e5156af324517e87012d11566beb112152be4a94a65273535");
     public static final Block ANDESITE_TATER = createTaterBlock(Blocks.ANDESITE, "5b728494483d695a171affd93730b65271726a5c8840d96a1acbf64b4dbdb555");
     public static final Block BAMBOO_TATER = createTaterBlock(Blocks.BAMBOO, "acecf9447693e769f17469d67251cddb4b93e5b64efe7445d04ea286a50d8a3c");
+    public static final Block BARRIER_TATER = createMarkerTaterBlock(Blocks.BARRIER, "d7f155b1a7627408e8f8c670fbd302c8fc0e320e5320b4fc517abfcfe02ab046");
     public static final Block BEDROCK_TATER = createTaterBlock(Blocks.BEDROCK, "c782d793af7aa0ebf5f5c9fdde3f636f93683368bf1daa544a449342b48355b");
     public static final Block BIRCH_TATER = createTaterBlock(Blocks.BIRCH_PLANKS, "c66003fcb840ebcd18f300b9facd1b8b936ef82e1ea6c7ca26b2c5b2bda5f007");
     public static final Block BONE_TATER = createTaterBlock(Blocks.BONE_BLOCK, "72b59c778f6656bb8502810eac82997d3669563f4fdd6d24d5ac008d334e3172");
@@ -230,6 +252,7 @@ public class NEBlocks {
     public static final Block HONEYCOMB_TATER = createTaterBlock(ParticleTypes.LANDING_HONEY, "e917928e35f2fac59aa1d14d80c478f38d14e2f66ee59d4eb9d025605406481");
     public static final Block HORN_CORAL_TATER = createTaterBlock(ParticleTypes.BUBBLE, "3e17f4d2977dafce018ac06163f2a7c5672855d198da86fa050f27a7c45b2da4");
     public static final Block JUNGLE_TATER = createTaterBlock(Blocks.JUNGLE_PLANKS, "b9105eebf99ec35ac08aaa2ed8ac721590adbdb1eb3a158a82c11e71e76d28aa");
+    public static final Block LIGHT_TATER = createLightTaterBlock("640ed4ea72aed9503c0519d3380ac480a20f9155c428d0571ad767eb4e8973b4");
     public static final Block MYCELIUM_TATER = createTaterBlock(ParticleTypes.MYCELIUM, "f3447bbb99321b399b7a1913d9bc4e90e8b0fc9b9520af45a8f59a1540d4b620");
     public static final Block NETHER_WART_TATER = createTaterBlock(ParticleTypes.CRIMSON_SPORE, "81c05e8c91a4ca83120799053270dfd7fdf1376988a1a393645140ae89eb6762");
     public static final Block OAK_TATER = createTaterBlock(Blocks.OAK_PLANKS, "28cfc208966e2f5206b1aba0489e5fdb3f05e6d94befbc618ad80e74eb1016d2");
@@ -247,6 +270,7 @@ public class NEBlocks {
     public static final Block SPONGE_TATER = createTaterBlock(ParticleTypes.DRIPPING_WATER, "697a4102627b55490614f475d4fde0df51a8d0c45e9573799d198f4deca33a14");
     public static final Block SPRUCE_TATER = createTaterBlock(Blocks.SPRUCE_PLANKS, "fe400308900536545f886084d9f465f17311a41b7410cfaba323a5ac3b1b9a9c");
     public static final Block STONE_BRICK_TATER = createTaterBlock(Blocks.STONE_BRICKS, "bdf3cdb5266539c34485d439c6a07baa3fbe5556d980ef14483cd6f5271b089b");
+    public static final Block STRUCTURE_VOID_TATER = createMarkerTaterBlock(Blocks.STRUCTURE_VOID, "94903af59c0a5529ac3c9135683f7671090a403c641e5cbde8b21abe4a1e114c");
     public static final Block TARGET_TATER = createTargetTaterBlock("386b52ed3d2b2a682b4c6f1d40a9ceabf72e7c5b60b8d92d2dcee97a8799450f");
     public static final Block TERRACOTTA_TATER = createTaterBlock(Blocks.TERRACOTTA, "57f120d92f3f076352b682345fdb82204b920e59d226c4c6d2c64d5abc6860e1");
     public static final Block TNTATER = createTaterBlock(ParticleTypes.EXPLOSION, "440d175ded62ff7b3cf9de979196e7b95da8a25e9e888c4bed06f5c011dc54a8", 10);
@@ -298,6 +322,7 @@ public class NEBlocks {
     public static final Block JUNGLE_LOG_TATER = createTaterBlock(Blocks.JUNGLE_LOG, "fd9658650626b1c63fe8fa5f10e5a981a400532de45153cfe481f302d8980818");
     public static final Block MAGMA_CUBE_TATER = createTaterBlock(ParticleTypes.DRIPPING_LAVA, "b34a0d09a2721e18afd3f4c1f2abf630734566e5e04054cc086945dd3af4a1b3");
     public static final Block MOOBLOOM_TATER = createTaterBlock(ParticleTypes.COMPOSTER, "a5a022dae96e419275a0bf5dfabde2d1c4dd073376d52265bee5dd67776ee5a2");
+    public static final Block MOOLIP_TATER = createTaterBlock(ParticleTypes.CHERRY_LEAVES, "271e15bc807ccf8ecdd594bac37680c06aeb7ec46ce071f225cf207d718654a2");
     public static final Block MUDDY_PIG_TATER = createTaterBlock(ParticleTypes.HEART, "70137b92b07e1c24c6d3042daa2997a871383c7278d88e3ecf1964e4b75ff993");
     public static final Block MUSHROOM_STEM_TATER = createTaterBlock(Blocks.MUSHROOM_STEM, "104dd3bad53758af4eb92be90e78277a6201e63d63614c463c5156d210a61c11");
     public static final Block NETHER_BRICK_TATER = createTaterBlock(Blocks.NETHER_BRICKS, "751534292b1f5e13c8cea2d4f4f653c9f46cb63f5e2ad480c24fc98f22a027c0");
@@ -398,7 +423,7 @@ public class NEBlocks {
     public static final Block SILVER_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xBFBFBF).toVector3f(), 9, "afdce3ea1399dd0b738faaecf89cc5bdcf179b8dc4f3d7964c8cd45c89257fd1");
     public static final Block GOLD_CAPSULE_TATER = createCapsuleTaterBlock(Vec3d.unpackRgb(0xF1A00E).toVector3f(), 1, "db5388834578ccb906e97d3e54aeb33edcc12d821f081b7eb04830cbd260ad81");
 
-    public static final Block CORRUPTATER = new CorruptaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), 2);
+    public static final Block CORRUPTATER = new CorruptaterBlock(createTaterBlockSettings(), 2);
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
     public static final BlockEntityType<ContributorStatueBlockEntity> CONTRIBUTOR_STATUE_ENTITY = FabricBlockEntityTypeBuilder.create(ContributorStatueBlockEntity::new, CONTRIBUTOR_STATUE).build();
@@ -410,72 +435,89 @@ public class NEBlocks {
         return new SimplePolymerBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
     }
 
+    private static AbstractBlock.Settings createTaterBlockSettings() {
+        return AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).strength(100);
+    }
+
+    private static Block createBotanicTaterBlock(ParticleEffect effect, String textureUp, String textureDown) {
+        return new BotanicalPotatoBlock(createTaterBlockSettings(), textureUp, textureDown, effect, 2);
+    }
+
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture);
     }
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleBlock, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), particleBlock, texture);
     }
 
     private static Block createTaterBlock(Item particleItem, String texture) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), particleItem, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), particleItem, texture);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture, int particleRate) {
-        return new TinyPotatoBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture, particleRate);
+        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture, particleRate);
     }
   
     private static Block createColorPatternTaterBlock(Vector3f[] pattern, String texture) {
-        return new ColorPatternTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), pattern, texture);
+        return new ColorPatternTaterBlock(createTaterBlockSettings(), pattern, texture);
     }
 
     private static Block createLuckyTaterBlock(String texture, String cooldownTexture) {
-        return new LuckyTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture, cooldownTexture);
+        return new LuckyTaterBlock(createTaterBlockSettings(), texture, cooldownTexture);
     }
 
     private static Block createWardenTaterBlock(String texture) {
-        return new WardenTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new WardenTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createDiceTaterBlock() {
-        return new DiceTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100));
+        return new DiceTaterBlock(createTaterBlockSettings());
     }
 
-    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, String texture) {
-        return new TateroidBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), defaultSound, texture);
+    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
+        return new TateroidBlock(createTaterBlockSettings(), defaultSound, particleColor, texture);
     }
 
     private static Block createColorTaterBlock(DyeColor color, String texture) {
-        return new ColorTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), color, texture);
+        return new ColorTaterBlock(createTaterBlockSettings(), color, texture);
     }
 
     private static Block createRedstoneTaterBlock(ParticleEffect effect, String texture) {
-        return new RedstoneTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), effect, texture);
+        return new RedstoneTaterBlock(createTaterBlockSettings(), effect, texture);
     }
 
     private static Block createDaylightDetectorTaterBlock(String texture, boolean inverted) {
-        return new DaylightDetectorTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture, inverted);
+        return new DaylightDetectorTaterBlock(createTaterBlockSettings(), texture, inverted);
     }
 
     private static Block createTargetTaterBlock(String texture) {
-        return new TargetTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new TargetTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createBellTaterBlock(String texture) {
-        return new BellTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new BellTaterBlock(createTaterBlockSettings(), texture);
     }
 
     private static Block createElderGuardianParticleTaterBlock(String texture) {
-        return new ElderGuardianParticleTater(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), texture);
+        return new ElderGuardianParticleTater(createTaterBlockSettings(), texture);
     }
 
     private static Block createCapsuleTaterBlock(Vector3f color, int weight, String texture) {
-        return new CapsuleTaterBlock(AbstractBlock.Settings.of(Material.SOLID_ORGANIC).strength(100), color, weight, texture);
+        return new CapsuleTaterBlock(createTaterBlockSettings(), color, weight, texture);
+    }
+
+    private static Block createMarkerTaterBlock(Block particleBlock, String texture) {
+        return new MarkerTaterBlock(createTaterBlockSettings(), particleBlock, texture);
+    }
+
+    private static Block createLightTaterBlock(String texture) {
+        return new LightTaterBlock(createTaterBlockSettings(), texture);
     }
 
     public static void register() {
         register("nucleoid_logo", NUCLEOID_LOGO);
+        register("nucle_past_logo", NUCLE_PAST_LOGO);
 
         register("end_portal", END_PORTAL);
         register("end_gateway", END_GATEWAY);
@@ -487,6 +529,19 @@ public class NEBlocks {
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
         register("fast_snake_block", FAST_SNAKE_BLOCK);
+
+        register("transient_iron_door", TRANSIENT_IRON_DOOR);
+        register("transient_oak_door", TRANSIENT_OAK_DOOR);
+        register("transient_spruce_door", TRANSIENT_SPRUCE_DOOR);
+        register("transient_birch_door", TRANSIENT_BIRCH_DOOR);
+        register("transient_jungle_door", TRANSIENT_JUNGLE_DOOR);
+        register("transient_acacia_door", TRANSIENT_ACACIA_DOOR);
+        register("transient_cherry_door", TRANSIENT_CHERRY_DOOR);
+        register("transient_dark_oak_door", TRANSIENT_DARK_OAK_DOOR);
+        register("transient_mangrove_door", TRANSIENT_MANGROVE_DOOR);
+        register("transient_bamboo_door", TRANSIENT_BAMBOO_DOOR);
+        register("transient_crimson_door", TRANSIENT_CRIMSON_DOOR);
+        register("transient_warped_door", TRANSIENT_WARPED_DOOR);
 
         register("black_concrete_powder", BLACK_CONCRETE_POWDER);
         register("blue_concrete_powder", BLUE_CONCRETE_POWDER);
@@ -506,6 +561,7 @@ public class NEBlocks {
         register("yellow_concrete_powder", YELLOW_CONCRETE_POWDER);
 
         register("tiny_potato", TINY_POTATO);
+        register("botanical_potato", BOTANICAL_TINY_POTATO);
         register("irritater", IRRITATER);
         register("sad_tater", SAD_TATER);
         register("flowering_azalea_tater", FLOWERING_AZALEA_TATER);
@@ -604,6 +660,7 @@ public class NEBlocks {
         register("acacia_tater", ACACIA_TATER);
         register("andesite_tater", ANDESITE_TATER);
         register("bamboo_tater", BAMBOO_TATER);
+        register("barrier_tater", BARRIER_TATER);
         register("bedrock_tater", BEDROCK_TATER);
         register("birch_tater", BIRCH_TATER);
         register("bone_tater", BONE_TATER);
@@ -627,6 +684,7 @@ public class NEBlocks {
         register("honeycomb_tater", HONEYCOMB_TATER);
         register("horn_coral_tater", HORN_CORAL_TATER);
         register("jungle_tater", JUNGLE_TATER);
+        register("light_tater", LIGHT_TATER);
         register("mycelium_tater", MYCELIUM_TATER);
         register("nether_wart_tater", NETHER_WART_TATER);
         register("oak_tater", OAK_TATER);
@@ -644,6 +702,7 @@ public class NEBlocks {
         register("sponge_tater", SPONGE_TATER);
         register("spruce_tater", SPRUCE_TATER);
         register("stone_brick_tater", STONE_BRICK_TATER);
+        register("structure_void_tater", STRUCTURE_VOID_TATER);
         register("target_tater", TARGET_TATER);
         register("terracotta_tater", TERRACOTTA_TATER);
         register("tntater", TNTATER);
@@ -695,6 +754,7 @@ public class NEBlocks {
         register("jungle_log_tater", JUNGLE_LOG_TATER);
         register("magma_cube_tater", MAGMA_CUBE_TATER);
         register("moobloom_tater", MOOBLOOM_TATER);
+        register("moolip_tater", MOOLIP_TATER);
         register("muddy_pig_tater", MUDDY_PIG_TATER);
         register("mushroom_stem_tater", MUSHROOM_STEM_TATER);
         register("nether_brick_tater", NETHER_BRICK_TATER);

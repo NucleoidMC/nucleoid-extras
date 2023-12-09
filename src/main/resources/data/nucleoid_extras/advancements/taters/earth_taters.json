@@ -22,6 +22,12 @@
         "tater": "nucleoid_extras:moobloom_tater"
       }
     },
+    "get_moolip_tater": {
+      "trigger": "nucleoid_extras:tater_collected",
+      "conditions": {
+        "tater": "nucleoid_extras:moolip_tater"
+      }
+    },
     "get_glow_squid_tater": {
       "trigger": "nucleoid_extras:tater_collected",
       "conditions": {

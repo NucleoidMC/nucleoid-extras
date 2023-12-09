@@ -5,29 +5,23 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.extras.lobby.block.TinyPotatoBlock;
+import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
+
+import java.util.Optional;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
-	public static final Identifier ID = NucleoidExtras.identifier("tater_collected");
-
 	@Override
-	protected TaterCollectedCriterion.Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+	protected TaterCollectedCriterion.Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
 		if(tater != null && !Registries.BLOCK.containsId(tater)) {
 			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
 		}
-		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? TinyPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
+		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? CubicPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
 		return new Conditions(playerPredicate, tater, count);
-	}
-
-	@Override
-	public Identifier getId() {
-		return ID;
 	}
 
 	public void trigger(ServerPlayerEntity player, Identifier tater, int count) {
@@ -38,8 +32,8 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
 		private final Identifier tater;
 		private final Integer count;
 
-		public Conditions(EntityPredicate.Extended playerPredicate, Identifier tater, Integer count) {
-			super(ID, playerPredicate);
+		public Conditions(Optional<LootContextPredicate> playerPredicate, Identifier tater, Integer count) {
+			super(playerPredicate);
 			this.tater = tater;
 			this.count = count;
 		}

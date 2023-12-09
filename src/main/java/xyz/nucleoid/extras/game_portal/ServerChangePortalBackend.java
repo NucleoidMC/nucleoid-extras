@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -74,7 +73,7 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
 
             var out = PacketByteBufs.create();
             out.writeBytes(buf.toByteArray());
-            random.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, out));
+            random.networkHandler.sendPacket(ServerPlayNetworking.createS2CPacket(PACKET_ID, out));
         }
     }
 
@@ -168,6 +167,6 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
 
         var out = PacketByteBufs.create();
         out.writeBytes(buf.toByteArray());
-        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(PACKET_ID, out));
+        player.networkHandler.sendPacket(ServerPlayNetworking.createS2CPacket(PACKET_ID, out));
     }
 }

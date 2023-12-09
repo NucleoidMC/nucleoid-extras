@@ -19,8 +19,9 @@
   "nucleoid.stop.scheduled.already": "Server restart has already been scheduled.",
   "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!",
 
-  "nucleoid.navigator.all_games": "View Games",
-  "nucleoid.navigator.open_games": "View Active",
+  "nucleoid.navigator.all_games": "All Games",
+  "nucleoid.navigator.open_games": "Open Games",
+  "nucleoid.navigator.open_only": "(Open only)",
 
   "block.nucleoid_extras.end_portal": "End Portal (Lobby only!)",
   "block.nucleoid_extras.end_gateway": "End Gateway (Lobby only!)",
@@ -33,6 +34,18 @@
   "block.nucleoid_extras.infinite_dropper": "Infinite Dropper (Lobby only!)",
   "block.nucleoid_extras.snake_block": "Snake Block (Lobby only!)",
   "block.nucleoid_extras.fast_snake_block": "Fast Snake Block (Lobby only!)",
+
+  "block.nucleoid_extras.transient_iron_door": "Transient Iron Door (Lobby only!)",
+  "block.nucleoid_extras.transient_oak_door": "Transient Oak Door (Lobby only!)",
+  "block.nucleoid_extras.transient_spruce_door": "Transient Spruce Door (Lobby only!)",
+  "block.nucleoid_extras.transient_birch_door": "Transient Birch Door (Lobby only!)",
+  "block.nucleoid_extras.transient_jungle_door": "Transient Jungle Door (Lobby only!)",
+  "block.nucleoid_extras.transient_acacia_door": "Transient Acacia Door (Lobby only!)",
+  "block.nucleoid_extras.transient_cherry_door": "Transient Cherry Door (Lobby only!)",
+  "block.nucleoid_extras.transient_mangrove_door": "Transient Mangrove Door (Lobby only!)",
+  "block.nucleoid_extras.transient_bamboo_door": "Transient Bamboo Door (Lobby only!)",
+  "block.nucleoid_extras.transient_crimson_door": "Transient Crimson Door (Lobby only!)",
+  "block.nucleoid_extras.transient_warped_door": "Transient Warped Door (Lobby only!)",
 
   "block.nucleoid_extras.black_concrete_powder": "Floating Black Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.blue_concrete_powder": "Floating Blue Concrete Powder (Lobby only!)",
@@ -51,6 +64,7 @@
   "block.nucleoid_extras.white_concrete_powder": "Floating White Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.yellow_concrete_powder": "Floating Yellow Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.tiny_potato": "Tiny Potato",
+  "block.nucleoid_extras.botanical_potato": "Botanical Tiny Potato",
   "block.nucleoid_extras.irritater": "Irritater",
   "block.nucleoid_extras.sad_tater": "Sad Tater",
   "block.nucleoid_extras.flowering_azalea_tater": "Flowering Azalea Tater",
@@ -142,6 +156,7 @@
   "block.nucleoid_extras.acacia_tater": "Acacia Tater",
   "block.nucleoid_extras.andesite_tater": "Andesite Tater",
   "block.nucleoid_extras.bamboo_tater": "Bamboo Tater",
+  "block.nucleoid_extras.barrier_tater": "Barrier Tater",
   "block.nucleoid_extras.bedrock_tater": "Bedrock Tater",
   "block.nucleoid_extras.birch_tater": "Birch Tater",
   "block.nucleoid_extras.bone_tater": "Bone Tater",
@@ -165,6 +180,7 @@
   "block.nucleoid_extras.honeycomb_tater": "Honeycomb Tater",
   "block.nucleoid_extras.horn_coral_tater": "Horn Coral Tater",
   "block.nucleoid_extras.jungle_tater": "Jungle Tater",
+  "block.nucleoid_extras.light_tater": "Light Tater",
   "block.nucleoid_extras.mycelium_tater": "Mycelium Tater",
   "block.nucleoid_extras.nether_wart_tater": "Nether Wart Tater",
   "block.nucleoid_extras.oak_tater": "Oak Tater",
@@ -182,6 +198,7 @@
   "block.nucleoid_extras.sponge_tater": "Sponge Tater",
   "block.nucleoid_extras.spruce_tater": "Spruce Tater",
   "block.nucleoid_extras.stone_brick_tater": "Stone Brick Tater",
+  "block.nucleoid_extras.structure_void_tater": "Structure Void Tater",
   "block.nucleoid_extras.target_tater": "Target Tater",
   "block.nucleoid_extras.terracotta_tater": "Terracotta Tater",
   "block.nucleoid_extras.tntater": "TNTater",
@@ -232,6 +249,7 @@
   "block.nucleoid_extras.jungle_log_tater": "Jungle Log Tater",
   "block.nucleoid_extras.magma_cube_tater": "Magma Cube Tater",
   "block.nucleoid_extras.moobloom_tater": "Moobloom Tater",
+  "block.nucleoid_extras.moolip_tater": "Moolip Tater",
   "block.nucleoid_extras.muddy_pig_tater": "Muddy Pig Tater",
   "block.nucleoid_extras.mushroom_stem_tater": "Mushroom Stem Tater",
   "block.nucleoid_extras.nether_brick_tater": "Nether Brick Tater",
@@ -340,6 +358,7 @@
   "item.nucleoid_extras.game_portal_opener": "Game Portal Opener",
   "item.nucleoid_extras.launch_feather": "Launch Feather",
   "item.nucleoid_extras.tater_box": "Tater Box",
+  "item.nucleoid_extras.creative_tater_box": "Creative Tater Box",
   "item.nucleoid_extras.tater_guidebook": "Tater Guidebook",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
 
@@ -355,6 +374,10 @@
   "text.nucleoid_extras.tater_box.not_found": "Not Found Yet!",
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
+  "text.nucleoid_extras.tater_box.updated": "Your Tater Box has been updated to new format! It will be safer than ever!",
+
+  "text.nucleoid_extras.creative_tater_box.collect_all": "Collect All",
+  "text.nucleoid_extras.creative_tater_box.reset": "Reset",
 
   "text.nucleoid_extras.tater_guidebook.recorded": "Recorded %d new tater positions in the Tater Guidebook!",
   "text.nucleoid_extras.tater_guidebook.header": "%d tater positions",
@@ -367,6 +390,13 @@
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
   "text.nucleoid_extras.statistics.stat": "%s: %s",
+  "text.nucleoid_extras.statistics.list_ui": "Your statistics",
+  "text.nucleoid_extras.statistics.waiting": "Waiting for statistics data",
+  "text.nucleoid_extras.seconds": "%s second(s)",
+
+  "text.nucleoid_extras.ui.action.more": "Right-click for more...",
+
+  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
 
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",

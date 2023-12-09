@@ -34,10 +34,10 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target instanceof ArmorStandEntity armorStandEntity) {
-            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.world);
+            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
             quickArmorStand.readNbt(armorStandEntity.writeNbt(new NbtCompound()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
-            quickArmorStand.world.spawnEntity(quickArmorStand);
+            quickArmorStand.getWorld().spawnEntity(quickArmorStand);
             return true;
         }
         return false;
@@ -54,10 +54,10 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
             BlockPos blockPos = itemPlacementContext.getBlockPos();
             ItemStack itemStack = context.getStack();
             Vec3d vec3d = Vec3d.ofBottomCenter(blockPos);
-            Box box = NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
+            Box box = NEEntities.QUICK_ARMOR_STAND.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
             if (world.isSpaceEmpty(box) && world.getOtherEntities(null, box).isEmpty()) {
                 if (world instanceof ServerWorld serverWorld) {
-                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE.spawnFromItemStack(serverWorld, itemStack, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
+                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND.spawnFromItemStack(serverWorld, itemStack, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
                     if (armorStandEntity == null) {
                         return ActionResult.FAIL;
                     }

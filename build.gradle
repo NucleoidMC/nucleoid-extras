@@ -24,11 +24,10 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.5+1.19.4-rc2-SNAPSHOT'
-	modImplementation include('xyz.nucleoid:more-codecs:0.3.1+1.19.4')
+	modImplementation 'xyz.nucleoid:plasmid:0.5.102-SNAPSHOT+1.20.2'
 
-	modCompileOnly "com.viaversion:viaversion-api:4.5.1-SNAPSHOT"
-	modCompileOnly "dev.gegy:player-roles-api:1.6.0"
+	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
+	modCompileOnly "dev.gegy:player-roles-api:1.6.5"
 }
 
 processResources {

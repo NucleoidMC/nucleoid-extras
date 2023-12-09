@@ -16,9 +16,12 @@ import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
 import xyz.nucleoid.extras.error.ErrorReportingConfig;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
+import xyz.nucleoid.extras.lobby.LobbySpawnConfig;
+import xyz.nucleoid.extras.util.ExtraCodecs;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,12 +32,14 @@ import java.util.Optional;
 public record NucleoidExtrasConfig(
         boolean sidebar,
         Optional<Identifier> gamePortalOpener,
+        @Nullable LobbySpawnConfig lobbySpawn,
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
         @Nullable URL contributorDataUrl,
         ErrorReportingConfig errorReporting,
-        boolean devServer
+        boolean devServer,
+        URI httpApi
 ) {
     private static final Path PATH = Paths.get("config/nucleoid.json");
 
@@ -44,21 +49,23 @@ public record NucleoidExtrasConfig(
         instance.group(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(NucleoidExtrasConfig::sidebar),
                 Identifier.CODEC.optionalFieldOf("game_portal_opener").forGetter(NucleoidExtrasConfig::gamePortalOpener),
+                LobbySpawnConfig.CODEC.optionalFieldOf("lobby_spawn").forGetter(config -> Optional.ofNullable(config.lobbySpawn())),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
                 MoreCodecs.url("https").optionalFieldOf("contributor_data_url").forGetter(config -> Optional.ofNullable(config.contributorDataUrl())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
-                Codec.BOOL.optionalFieldOf("devServer", false).forGetter(NucleoidExtrasConfig::devServer)
-        ).apply(instance, (sidebar, gamePortalOpener, integrations, aliases, filter, contributorDataUrl, errorReporting, devServer) ->
-            new NucleoidExtrasConfig(sidebar, gamePortalOpener, integrations.orElse(null), aliases.orElse(null), filter.orElse(null), contributorDataUrl.orElse(null), errorReporting, devServer)
+                Codec.BOOL.optionalFieldOf("dev_server", false).forGetter(NucleoidExtrasConfig::devServer),
+                ExtraCodecs.URI.optionalFieldOf("http_api").forGetter(config -> Optional.ofNullable(config.httpApi()))
+            ).apply(instance, (sidebar, gamePortalOpener, lobbySpawn, integrations, aliases, filter, contributorDataUrl, errorReporting, devServer, httpApiUrl) ->
+            new NucleoidExtrasConfig(sidebar, gamePortalOpener, lobbySpawn.orElse(null), integrations.orElse(null), aliases.orElse(null), filter.orElse(null), contributorDataUrl.orElse(null), errorReporting, devServer, httpApiUrl.orElse(null))
         )
     );
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, Optional.empty(), null, null, null, null, ErrorReportingConfig.NONE, false);
+        this(false, Optional.empty(), null, null, null, null, null, ErrorReportingConfig.NONE, false, null);
     }
 
     @NotNull
