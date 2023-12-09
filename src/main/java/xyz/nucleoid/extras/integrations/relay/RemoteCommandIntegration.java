@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public final class RemoteCommandIntegration {
     private static final String DISCORD_EVERYONE_ROLE = "discord_everyone";
+    private static final int MAX_RESULT_LINES = 5;
 
     private final ConcurrentLinkedQueue<RemoteCommand> commandQueue = new ConcurrentLinkedQueue<>();
 
@@ -61,14 +63,26 @@ public final class RemoteCommandIntegration {
     private void tick(MinecraftServer server) {
         RemoteCommand command;
         while ((command = this.commandQueue.poll()) != null) {
-            var commandSource = command.createCommandSource(server, this::sendCommandResult);
+            var results = new ArrayList<Text>();
+            var commandSource = command.createCommandSource(server, results::add);
             server.getCommandManager().executeWithPrefix(commandSource, command.command);
+            sendCommandResults(results);
         }
     }
 
-    private void sendCommandResult(Text text) {
+    private void sendCommandResults(List<Text> results) {
+        if (results.isEmpty()) {
+            return;
+        }
+        var content = results.stream()
+            .limit(MAX_RESULT_LINES)
+            .map(Text::getString)
+            .collect(Collectors.joining("\n"));
+        if (results.size() > MAX_RESULT_LINES) {
+            content += "\n...and " + (results.size() - MAX_RESULT_LINES) + " more lines";
+        }
         var body = new JsonObject();
-        body.addProperty("content", text.getString());
+        body.addProperty("content", content);
         this.systemSender.send(body);
     }
 
