@@ -2,40 +2,43 @@ package xyz.nucleoid.extras.lobby.criterion;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.advancement.criterion.AbstractCriterionConditions;
-import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
+import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Optional;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
-	@Override
-	protected TaterCollectedCriterion.Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
-		if(tater != null && !Registries.BLOCK.containsId(tater)) {
-			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
-		}
-		Integer count = obj.has("count") ? obj.get("count").getAsString().equals("all") ? CubicPotatoBlock.TATERS.size() : obj.get("count").getAsInt() : null;
-		return new Conditions(playerPredicate, tater, count);
-	}
-
 	public void trigger(ServerPlayerEntity player, Identifier tater, int count) {
 		this.trigger(player, conditions -> conditions.matches(tater, count));
 	}
 
-	public static class Conditions extends AbstractCriterionConditions {
-		private final Identifier tater;
-		private final Integer count;
+    @Override
+    public Codec<Conditions> getConditionsCodec() {
+        return Conditions.CODEC;
+    }
 
-		public Conditions(Optional<LootContextPredicate> playerPredicate, Identifier tater, Integer count) {
-			super(playerPredicate);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static class Conditions implements AbstractCriterion.Conditions {
+        public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Identifier.CODEC.fieldOf("tater").forGetter(Conditions::getTater),
+            Codec.INT.optionalFieldOf("count").forGetter(i -> i.optionalCount)
+        ).apply(instance, Conditions::new));
+
+        private final Identifier tater;
+		private final Integer count;
+        private final Optional<Integer> optionalCount;
+
+        public Conditions(Identifier tater, Optional<Integer> count) {
 			this.tater = tater;
-			this.count = count;
+			this.count = count.orElse(TinyPotatoBlock.TATERS.size());
+            this.optionalCount = count;
 		}
 
 		public Identifier getTater() {
@@ -51,5 +54,10 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
 			boolean countMatches = getCount() == null || getCount() <= count;
 			return taterMatches && countMatches;
 		}
-	}
+
+        @Override
+        public Optional<LootContextPredicate> player() {
+            return Optional.empty();
+        }
+    }
 }

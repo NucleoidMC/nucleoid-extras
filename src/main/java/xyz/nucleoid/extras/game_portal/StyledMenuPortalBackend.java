@@ -24,6 +24,7 @@ import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
 import xyz.nucleoid.plasmid.game.portal.GamePortalDisplay;
 import xyz.nucleoid.plasmid.game.portal.menu.InvalidMenuEntry;
 import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
+import xyz.nucleoid.plasmid.util.IdentityHashStrategy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -77,7 +78,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     @Override
     public int getPlayerCount() {
         int count = 0;
-        var list = new ObjectOpenCustomHashSet<GameSpace>(Util.identityHashStrategy());
+        var list = new ObjectOpenCustomHashSet<GameSpace>(IdentityHashStrategy.INSTANCE);
         provideGameSpaces(list::add);
         for (var entry : list) {
             count += Math.max(0, entry.getPlayers().size());
@@ -140,7 +141,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     private void fillOpen(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
-        var gamesTemp = new ObjectOpenCustomHashSet<GameSpace>(Util.identityHashStrategy());
+        var gamesTemp = new ObjectOpenCustomHashSet<GameSpace>(IdentityHashStrategy.INSTANCE);
         this.provideGameSpaces(gamesTemp::add);
         var games = new ArrayList<>(gamesTemp);
         games.sort(Comparator.comparingInt(space -> -space.getPlayers().size()));

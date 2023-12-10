@@ -8,7 +8,7 @@
     "MinecraftServerMixin",
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
-    "TextSerializerMixin",
+    "TextCodecMixin",
     "lobby.ArmorStandEntityAccessor",
     "lobby.LivingEntityAccessor",
     "lobby.ServerPlayerEntityMixin",

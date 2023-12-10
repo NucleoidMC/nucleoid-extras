@@ -75,12 +75,12 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
     }
 
     public void loadGameProfileProperties(MinecraftServer server, GameProfile profile, Consumer<GameProfile> callback) {
-        SkullBlockEntityAccessor.callFetchProfileWithTextures(profile).thenAccept(optional -> {
+        /*SkullBlockEntityAccessor.callFetchProfileWithTextures(profile).thenAccept(optional -> {
             optional.ifPresent(fullProfile -> {
                 server.getUserCache().add(fullProfile);
                 callback.accept(fullProfile);
             });
-        });
+        });*/
     }
 
     @Override

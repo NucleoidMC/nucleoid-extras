@@ -47,6 +47,8 @@ public final class NucleoidSidebar {
 
     private static final Text SIZE_FORCING_TEXT = Text.literal(" ".repeat(34));
 
+    private final boolean enabled = NucleoidExtrasConfig.get().sidebar();
+
     private static Text[] createAnimatedTitle(String string, Text append, Style leftStyle, Style middleStyle, Style rightStyle) {
         List<Text> texts = new ArrayList<>();
 
@@ -162,10 +164,14 @@ public final class NucleoidSidebar {
     }
 
     public void addPlayer(ServerPlayerEntity player) {
-        this.widget.addPlayer(player);
+        if (this.enabled) {
+            this.widget.addPlayer(player);
+        }
     }
 
     public void removePlayer(ServerPlayerEntity player) {
-        this.widget.removePlayer(player);
+        if (this.enabled) {
+            this.widget.removePlayer(player);
+        }
     }
 }

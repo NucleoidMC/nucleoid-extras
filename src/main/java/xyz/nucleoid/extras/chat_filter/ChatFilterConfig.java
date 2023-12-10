@@ -14,6 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public final class ChatFilterConfig {
         instance.group(
                 Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
                 Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
-                Codecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
+                PlasmidCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
                 Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
         ).apply(instance, ChatFilterConfig::new)
     );
