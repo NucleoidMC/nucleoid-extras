@@ -16,18 +16,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
+import xyz.nucleoid.extras.lobby.block.TreeDecorationBlockEntity;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.*;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
@@ -53,6 +58,7 @@ public class NEItems {
             entries.add(NEItems.GOLD_LAUNCH_PAD);
             entries.add(NEItems.IRON_LAUNCH_PAD);
             entries.add(NEItems.CONTRIBUTOR_STATUE);
+            entries.add(NEItems.TREE_DECORATION);
             entries.add(NEItems.INFINITE_DISPENSER);
             entries.add(NEItems.INFINITE_DROPPER);
             entries.add(NEItems.SNAKE_BLOCK);
@@ -103,6 +109,7 @@ public class NEItems {
     public static final Item IRON_LAUNCH_PAD = createSimple(NEBlocks.IRON_LAUNCH_PAD, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
     public static final Item CONTRIBUTOR_STATUE = createSimple(NEBlocks.CONTRIBUTOR_STATUE, Items.SMOOTH_STONE);
+    public static final Item TREE_DECORATION = createSimple(NEBlocks.TREE_DECORATION, Items.COARSE_DIRT);
 
     public static final Item INFINITE_DISPENSER = createSimple(NEBlocks.INFINITE_DISPENSER, Items.DISPENSER);
     public static final Item INFINITE_DROPPER = createSimple(NEBlocks.INFINITE_DROPPER, Items.DROPPER);
@@ -462,6 +469,7 @@ public class NEItems {
         register("gold_launch_pad", GOLD_LAUNCH_PAD);
         register("iron_launch_pad", IRON_LAUNCH_PAD);
         register("contributor_statue", CONTRIBUTOR_STATUE);
+        register("tree_decoration", TREE_DECORATION);
         register("infinite_dispenser", INFINITE_DISPENSER);
         register("infinite_dropper", INFINITE_DROPPER);
         register("snake_block", SNAKE_BLOCK);
@@ -843,11 +851,25 @@ public class NEItems {
 
     private static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
         if (!player.getWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
-            ItemStack stack = player.getStackInHand(hand);
-            BlockPos pos = hitResult.getBlockPos();
+            var stack = player.getStackInHand(hand);
+            var pos = hitResult.getBlockPos();
 
-            PlayerLobbyState state = PlayerLobbyState.get(player);
-            state.collectTaterFromBlock(world, pos, stack, player);
+            var lobbyState = PlayerLobbyState.get(player);
+
+            if (lobbyState.collectTaterFromBlock(world, pos, stack, player) == ActionResult.PASS && !(stack.getItem() instanceof TaterBoxItem) && hitResult.getSide() != Direction.UP) {
+                var state = world.getBlockState(pos);
+
+                if (state.isIn(BlockTags.LEAVES)) {
+                    var serverWorld = (ServerWorld) world;
+                    var blockEntity = TreeDecorationBlockEntity.findNearestTreeDecoration(serverWorld, pos);
+
+                    if (blockEntity.isPresent() && blockEntity.get().placeOrnament((ServerPlayerEntity) player, serverWorld, hand, hitResult)) {
+                        return ActionResult.SUCCESS;
+                    }
+                }
+
+                return ActionResult.PASS;
+            }
         }
 
         return ActionResult.PASS;

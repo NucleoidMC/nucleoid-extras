@@ -23,6 +23,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
@@ -232,6 +233,30 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
             tag.remove(SELECTED_TATER_KEY);
         } else {
             tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
+        }
+    }
+
+    public static Block getPrimaryCollectedTater(ServerPlayerEntity player) {
+        var inventory = player.getInventory();
+
+        // Check any tater boxes in the inventory for a selected tater
+        for (int slot = 0; slot < inventory.size(); slot++) {
+            var stack = inventory.getStack(slot);
+
+            if (stack.getItem() instanceof TaterBoxItem) {
+                var selectedTater = getSelectedTater(stack);
+                if (selectedTater != null) return selectedTater;
+            }
+        }
+
+        var collectedTaters = new ArrayList<>(PlayerLobbyState.get(player).collectedTaters);
+
+        if (collectedTaters.isEmpty()) {
+            // If no taters collected at all, fall back to tiny potato
+            return NEBlocks.TINY_POTATO;
+        } else {
+            // Use a random tater that has already been collected
+            return Util.getRandom(collectedTaters, player.getRandom());
         }
     }
 }
