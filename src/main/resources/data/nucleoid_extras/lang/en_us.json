@@ -30,6 +30,7 @@
   "block.nucleoid_extras.contributor_statue": "Contributor Statue (Lobby only!)",
   "block.nucleoid_extras.contributor_statue.contributor": "Contributor: %s",
   "block.nucleoid_extras.contributor_statue.contributor_id": "Contributor ID: %s",
+  "block.nucleoid_extras.tree_decoration": "Tree Decoration (Lobby only!)",
   "block.nucleoid_extras.infinite_dispenser": "Infinite Dispenser (Lobby only!)",
   "block.nucleoid_extras.infinite_dropper": "Infinite Dropper (Lobby only!)",
   "block.nucleoid_extras.snake_block": "Snake Block (Lobby only!)",
@@ -381,6 +382,8 @@
 
   "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!",
   "text.nucleoid_extras.lobby_only": "(Lobby Only!)",
+
+  "text.nucleoid_extras.ornament.details": "This %s ornament was placed by %s",
 
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",

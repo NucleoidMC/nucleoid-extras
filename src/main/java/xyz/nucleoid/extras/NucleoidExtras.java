@@ -40,6 +40,7 @@ public final class NucleoidExtras implements ModInitializer {
         NEItems.register();
         NEEntities.register();
         NECriteria.register();
+        NEPointOfInterestTypes.register();
 
         ChatFilter.register();
         CommandAliases.register();
