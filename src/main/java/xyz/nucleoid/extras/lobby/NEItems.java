@@ -857,18 +857,12 @@ public class NEItems {
             var lobbyState = PlayerLobbyState.get(player);
 
             if (lobbyState.collectTaterFromBlock(world, pos, stack, player) == ActionResult.PASS && !(stack.getItem() instanceof TaterBoxItem)) {
-                var state = world.getBlockState(pos);
+                var serverWorld = (ServerWorld) world;
+                var blockEntity = TreeDecorationBlockEntity.findNearestTreeDecoration(serverWorld, pos);
 
-                if (state.isIn(BlockTags.LEAVES)) {
-                    var serverWorld = (ServerWorld) world;
-                    var blockEntity = TreeDecorationBlockEntity.findNearestTreeDecoration(serverWorld, pos);
-
-                    if (blockEntity.isPresent() && blockEntity.get().placeOrnament((ServerPlayerEntity) player, serverWorld, hand, hitResult)) {
-                        return ActionResult.SUCCESS;
-                    }
+                if (blockEntity.isPresent() && blockEntity.get().placeOrnament((ServerPlayerEntity) player, serverWorld, hand, hitResult)) {
+                    return ActionResult.SUCCESS;
                 }
-
-                return ActionResult.PASS;
             }
         }
 

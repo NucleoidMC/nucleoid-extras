@@ -97,13 +97,17 @@ public class TreeDecorationBlockEntity extends BlockEntity {
         var item = TaterBoxItem.getPrimaryCollectedTater(player).asItem();
         if (item == Items.AIR) return false;
 
+        var blockPos = hitResult.getBlockPos();
+
+        var state = world.getBlockState(blockPos);
+        if (!state.isIn(this.data.getSupportedBlocks())) return false;
+
         var pos = hitResult.getPos();
         var side = hitResult.getSide();
 
         if (side == Direction.UP) {
             return false;
         } else if (side != Direction.DOWN) {
-            var blockPos = hitResult.getBlockPos();
             var belowPos = blockPos.add(side.getOffsetX(), side.getOffsetY() - 1, side.getOffsetZ());
 
             if (world.getBlockState(belowPos).isFullCube(world, belowPos)) {

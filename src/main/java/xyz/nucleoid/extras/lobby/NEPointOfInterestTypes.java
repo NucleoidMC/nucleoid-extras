@@ -4,8 +4,8 @@ import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper
 import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import net.minecraft.world.poi.PointOfInterestType;
+import xyz.nucleoid.extras.NucleoidExtras;
 
 public class NEPointOfInterestTypes {
     public static final RegistryKey<PointOfInterestType> TREE_DECORATION = of("tree_decoration");
@@ -15,7 +15,7 @@ public class NEPointOfInterestTypes {
     }
 
     private static RegistryKey<PointOfInterestType> of(String id) {
-        return RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, new Identifier(id));
+        return RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, NucleoidExtras.identifier(id));
     }
 
     private static PointOfInterestType register(RegistryKey<PointOfInterestType> key, int ticketCount, int searchDistance, Block... blocks) {
