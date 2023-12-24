@@ -6,8 +6,14 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement.InteractionHandler;
+import net.minecraft.block.Block;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 import xyz.nucleoid.extras.lobby.block.TreeDecorationBlockEntity;
 
@@ -47,10 +53,32 @@ public final class OrnamentModel implements InteractionHandler {
         this.updateTransformations(true);
     }
 
+    private void wobble(ServerPlayerEntity player, boolean careful) {
+        this.wobbleTicks = 10;
+        this.wobbleStrength = Math.min(this.wobbleStrength + 10, careful ? 20 : 60);
+
+        var pos = this.blockEntity.getPos().toCenterPos().add(this.ornament.offset());
+        float pitch = 1.3f + player.getRandom().nextFloat() * 0.2f;
+
+        player.getWorld().playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_CHAIN_HIT, SoundCategory.BLOCKS, 0.5f, pitch);
+    }
+
+    @Override
+    public void interact(ServerPlayerEntity player, Hand hand) {
+        this.wobble(player, true);
+
+        MinecraftServer server = this.blockEntity.getWorld().getServer();
+        Text ownerName = this.ornament.getOwnerName(server);
+
+        Block block = Block.getBlockFromItem(this.ornament.item());
+        Text itemName = block.getName();
+
+        player.sendMessage(Text.translatable("text.nucleoid_extras.ornament.details", itemName, ownerName), true);
+    }
+
     @Override
     public void attack(ServerPlayerEntity player) {
-        this.wobbleTicks = 10;
-        this.wobbleStrength = Math.min(this.wobbleStrength + 10, 60);
+        this.wobble(player, false);
 
         if (this.ornament.canBeRemovedBy(player) && this.wobbleStrength > 40) {
             this.blockEntity.removeOrnament(ornament);
