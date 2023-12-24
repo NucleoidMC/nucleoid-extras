@@ -25,7 +25,7 @@ public final class TreeDecoration {
     }
 
     public TreeDecoration withOrnament(Ornament ornament) {
-        List<Ornament> ornaments = new ArrayList<>(this.ornaments);
+        var ornaments = new ArrayList<>(this.ornaments);
 
         // Remove existing ornaments with the same owner
         ornaments.removeIf(ornamentx -> {
@@ -33,6 +33,14 @@ public final class TreeDecoration {
         });
 
         ornaments.add(ornament);
+
+        return new TreeDecoration(ornaments);
+    }
+
+    public TreeDecoration exceptOrnament(Ornament ornament) {
+        var ornaments = new ArrayList<>(this.ornaments);
+
+        ornaments.remove(ornament);
 
         return new TreeDecoration(ornaments);
     }

@@ -59,7 +59,7 @@ public class TreeDecorationBlockEntity extends BlockEntity {
         // Add models that have been added to the data
         for (var ornament : data.getOrnaments()) {
             if (!this.ornamentsToModels.containsKey(ornament)) {
-                var model = new OrnamentModel(ornament, world.getTime());
+                var model = new OrnamentModel(this, ornament);
 
                 model.addToHolder(this.holder);
                 this.ornamentsToModels.put(ornament, model);
@@ -80,6 +80,16 @@ public class TreeDecorationBlockEntity extends BlockEntity {
     private void addOrnament(Ornament ornament) {
         this.setData(this.data.withOrnament(ornament));
         this.markDirty();
+    }
+
+    public void removeOrnament(Ornament ornament) {
+        this.setData(this.data.exceptOrnament(ornament));
+        this.markDirty();
+
+        var pos = this.pos.toCenterPos().add(ornament.offset());
+
+        float pitch = 1.3f + world.getRandom().nextFloat() * 0.2f;
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.BLOCKS, 0.5f, pitch);
     }
 
     public boolean placeOrnament(ServerPlayerEntity player, ServerWorld world, Hand hand, BlockHitResult hitResult) {
@@ -132,7 +142,7 @@ public class TreeDecorationBlockEntity extends BlockEntity {
 
     public static void tick(World world, BlockPos pos, BlockState state, TreeDecorationBlockEntity blockEntity) {
         for (var model : blockEntity.ornamentsToModels.values()) {
-            model.updateTransformations(world.getTime(), false);
+            model.tick();
         }
 
         if (blockEntity.attachment == null && world instanceof ServerWorld serverWorld) {
