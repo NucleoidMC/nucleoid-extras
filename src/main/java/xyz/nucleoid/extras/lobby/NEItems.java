@@ -856,7 +856,7 @@ public class NEItems {
 
             var lobbyState = PlayerLobbyState.get(player);
 
-            if (lobbyState.collectTaterFromBlock(world, pos, stack, player) == ActionResult.PASS && !(stack.getItem() instanceof TaterBoxItem) && hitResult.getSide() != Direction.UP) {
+            if (lobbyState.collectTaterFromBlock(world, pos, stack, player) == ActionResult.PASS && !(stack.getItem() instanceof TaterBoxItem)) {
                 var state = world.getBlockState(pos);
 
                 if (state.isIn(BlockTags.LEAVES)) {

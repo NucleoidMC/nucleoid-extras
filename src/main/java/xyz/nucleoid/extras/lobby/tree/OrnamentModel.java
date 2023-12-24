@@ -15,9 +15,13 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.block.TreeDecorationBlockEntity;
 
 public final class OrnamentModel implements InteractionHandler {
+    public static final float WIDTH = 8 / 16f;
+    public static final float HEIGHT = 11 / 16f;
+
     private final TreeDecorationBlockEntity blockEntity;
     private final Ornament ornament;
 
@@ -48,7 +52,7 @@ public final class OrnamentModel implements InteractionHandler {
         this.interaction = new InteractionElement(this);
 
         this.interaction.setOffset(ornament.offset().subtract(0, 0.6, 0));
-        this.interaction.setSize(8 / 16f, 11 / 16f);
+        this.interaction.setSize(WIDTH, HEIGHT);
 
         this.updateTransformations(true);
     }
@@ -85,8 +89,14 @@ public final class OrnamentModel implements InteractionHandler {
         }
     }
 
+    private long getTime() {
+        World world = this.blockEntity.getWorld();
+
+        return world == null ? 0 : world.getTime();
+    }
+
     private void updateTransformations(boolean initial) {
-        long time = this.blockEntity.getWorld().getTime();
+        long time = this.getTime();
         float rotation;
 
         if (this.wobbleTicks > 0) {
