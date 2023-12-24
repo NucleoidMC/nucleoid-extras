@@ -16,7 +16,7 @@ public class NEEntities {
     public static final EntityType<QuickArmorStandEntity> QUICK_ARMOR_STAND =
             FabricEntityTypeBuilder.<QuickArmorStandEntity>create(SpawnGroup.MISC, QuickArmorStandEntity::new)
                     .dimensions(EntityDimensions.fixed(0.5f, 1.975f))
-                    .trackRangeChunks(2)
+                    .trackRangeChunks(4)
                     .trackedUpdateRate(10)
                     .build();
     public static final EntityType<LeaderboardDisplayEntity> LEADERBOARD_DISPLAY =

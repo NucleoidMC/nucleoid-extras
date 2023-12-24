@@ -22,6 +22,7 @@ public final class OrnamentModel implements InteractionHandler {
     public static final float WIDTH = 8 / 16f;
     public static final float HEIGHT = 11 / 16f;
 
+    private static final Matrix4f mat = new Matrix4f();
     private final TreeDecorationBlockEntity blockEntity;
     private final Ornament ornament;
 
@@ -108,7 +109,7 @@ public final class OrnamentModel implements InteractionHandler {
         float hookRotationY = -this.ornament.hookYaw() * MathHelper.RADIANS_PER_DEGREE + MathHelper.PI;
         float rotationY = -this.ornament.yaw() * MathHelper.RADIANS_PER_DEGREE + MathHelper.PI;
 
-        var hookTransformation = new Matrix4f()
+        var hookTransformation = mat.identity()
                 .rotateZ(rotation)
                 .rotateY(hookRotationY)
                 .scale(0.5f)
@@ -116,14 +117,14 @@ public final class OrnamentModel implements InteractionHandler {
 
         this.hook.setTransformation(hookTransformation);
 
-        var itemTransformation = new Matrix4f()
+        var itemTransformation = mat.identity()
                 .rotateZ(rotation)
                 .rotateY(rotationY)
                 .translate(0, -3 / 32f, 0);
 
         this.item.setTransformation(itemTransformation);
 
-        if (!initial) {
+        if (!initial && this.hook.isDirty()) {
             this.hook.startInterpolation();
             this.item.startInterpolation();
         }

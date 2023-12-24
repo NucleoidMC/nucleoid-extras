@@ -36,6 +36,7 @@ public class NEBlocks {
     public static final Block END_PORTAL = createSimple(Blocks.END_PORTAL);
     public static final Block END_GATEWAY = new VirtualEndGatewayBlock(AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.BLOCK).strength(100).noCollision());
     public static final Block SAFE_TNT = createSimple(Blocks.TNT);
+    public static final Block INVISIBLE_PORTAL = new InvisiblePortalBlock(AbstractBlock.Settings.copy(Blocks.BARRIER));
 
     public static final Block BLACK_CONCRETE_POWDER = createSimple(Blocks.BLACK_CONCRETE_POWDER);
     public static final Block BLUE_CONCRETE_POWDER = createSimple(Blocks.BLUE_CONCRETE_POWDER);
@@ -433,6 +434,7 @@ public class NEBlocks {
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID, RED_TATEROID, ORANGE_TATEROID, YELLOW_TATEROID, GREEN_TATEROID, BLUE_TATEROID, PURPLE_TATEROID).build();
     public static final BlockEntityType<DaylightDetectorTaterBlockEntity> DAYLIGHT_DETECTOR_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(DaylightDetectorTaterBlockEntity::new, DAYLIGHT_DETECTOR_TATER, INVERTED_DAYLIGHT_DETECTOR_TATER).build();
     public static final BlockEntityType<BellTaterBlockEntity> BELL_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(BellTaterBlockEntity::new, BELL_TATER).build();
+    public static final BlockEntityType<InvisiblePortalBlockEntity> INVISIBLE_PORTAL_ENTITY = FabricBlockEntityTypeBuilder.create(InvisiblePortalBlockEntity::new, INVISIBLE_PORTAL).build();
 
     private static Block createSimple(Block virtual) {
         return new SimplePolymerBlock(AbstractBlock.Settings.copy(virtual).strength(100), virtual);
@@ -859,6 +861,7 @@ public class NEBlocks {
         register("gold_capsule_tater", GOLD_CAPSULE_TATER);
 
         register("corruptater", CORRUPTATER);
+        register("invisible_portal", INVISIBLE_PORTAL);
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
@@ -866,6 +869,7 @@ public class NEBlocks {
         registerBlockEntity("tateroid", TATEROID_ENTITY);
         registerBlockEntity("daylight_detector_tater", DAYLIGHT_DETECTOR_TATER_ENTITY);
         registerBlockEntity("bell_tater", BELL_TATER_ENTITY);
+        registerBlockEntity("invisible_portal", INVISIBLE_PORTAL_ENTITY);
 
         TinyPotatoBlock.TATERS.sort(Comparator.comparing(x -> Registries.BLOCK.getId(x).getPath()));
     }
