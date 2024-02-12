@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.sidebar;
 import eu.pb4.sidebars.api.Sidebar;
 import eu.pb4.sidebars.api.lines.LineBuilder;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.scoreboard.number.BlankNumberFormat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
@@ -67,6 +68,7 @@ public final class NucleoidSidebar {
 
     private NucleoidSidebar() {
         this.widget = new Sidebar(TITLE_MAIN, Sidebar.Priority.LOW);
+        this.widget.setDefaultNumberFormat(BlankNumberFormat.INSTANCE);
         this.widget.show();
     }
 

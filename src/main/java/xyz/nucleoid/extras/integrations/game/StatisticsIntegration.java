@@ -101,14 +101,14 @@ public class StatisticsIntegration {
             var seconds = number.doubleValue() / 20;
             var text = Text.empty();
             if (seconds > 60) {
-               text.append(Text.translatable("gui.minutes", MathHelper.floor(seconds / 60)));
+               text.append(Text.stringifiedTranslatable("gui.minutes", MathHelper.floor(seconds / 60)));
             }
 
             if (seconds % 60 > 0.01 || text.getSiblings().isEmpty()) {
                 if (!text.getSiblings().isEmpty()) {
                     text.append(" ");
                 }
-                text.append(Text.translatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
+                text.append(Text.stringifiedTranslatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
             }
             return text;
         }
