@@ -3,18 +3,17 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.VibrationParticleEffect;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.event.BlockPositionSource;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class WardenTaterBlock extends CubicPotatoBlock {
     private static final int BOX_SIZE = 16;
@@ -80,11 +79,6 @@ public class WardenTaterBlock extends CubicPotatoBlock {
     }
 
     private static boolean isVibrationTater(BlockState state) {
-        if (state.isIn(BlockTags.OCCLUDES_VIBRATION_SIGNALS)) {
-            return false;
-        }
-
-        Block block = state.getBlock();
-        return block instanceof CubicPotatoBlock && !(block instanceof WardenTaterBlock);
+        return state.getBlock() instanceof TinyPotatoBlock && !state.isIn(NEBlockTags.NON_VIBRATING_TATERS);
     }
 }

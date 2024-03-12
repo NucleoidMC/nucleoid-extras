@@ -7,9 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -19,7 +17,6 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +24,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
 public class LuckyTaterBlock extends CubicPotatoBlock {
@@ -35,9 +32,6 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
 
     private static final int COURAGE_TICKS = 5;
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
-
-    private static final Identifier LUCKY_TATER_DROPS_ID = NucleoidExtras.identifier("lucky_tater_drops");
-    private static final TagKey<Block> LUCKY_TATER_DROPS = TagKey.of(RegistryKeys.BLOCK, LUCKY_TATER_DROPS_ID);
 
     private final String cooldownTexture;
 
@@ -101,7 +95,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     }
 
     private Block getDrop(ServerWorld world) {
-        var drops = Registries.BLOCK.getEntryList(LUCKY_TATER_DROPS);
+        var drops = Registries.BLOCK.getEntryList(NEBlockTags.LUCKY_TATER_DROPS);
 
         if (drops.isEmpty()) {
             return null;

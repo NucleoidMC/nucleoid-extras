@@ -12,8 +12,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -22,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
@@ -39,9 +36,6 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     private static final String LEGACY_TATERS_KEY = "Taters";
     private static final String SELECTED_TATER_KEY = "SelectedTater";
     private static final int COLOR = 0xCEADAA;
-
-    private static final Identifier VIRAL_TATERS_ID = NucleoidExtras.identifier("viral_taters");
-    public static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
 
     public TaterBoxItem(Settings settings) {
         super(settings);

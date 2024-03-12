@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class PlayerLobbyState {
             if (targetStack.getItem() instanceof TaterBoxItem) {
                 Block targetTater = TaterBoxItem.getSelectedTater(targetStack);
 
-                if (targetTater != null && targetTater.getDefaultState().isIn(TaterBoxItem.VIRAL_TATERS)) {
+                if (targetTater != null && targetTater.getDefaultState().isIn(NEBlockTags.VIRAL_TATERS)) {
                     return this.collectTater(targetTater, stack, player);
                 }
             }
