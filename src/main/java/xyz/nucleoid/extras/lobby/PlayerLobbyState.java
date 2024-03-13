@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.lobby;
 import eu.pb4.playerdata.api.PlayerDataApi;
 import eu.pb4.playerdata.api.storage.JsonDataStorage;
 import eu.pb4.playerdata.api.storage.PlayerDataStorage;
+import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -82,10 +83,6 @@ public class PlayerLobbyState {
     private ActionResult collectTater(Block block, ItemStack stack, PlayerEntity player) {
         if (!(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
 
-        if (stack.getItem() instanceof TaterBoxItem) {
-            stack.getOrCreateNbt().putUuid(TaterBoxItem.OWNER_KEY, player.getUuid());
-        }
-
         boolean alreadyAdded = this.collectedTaters.contains(tater);
         Text message;
 
@@ -93,6 +90,9 @@ public class PlayerLobbyState {
             message = Text.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
         } else {
             this.collectedTaters.add(tater);
+
+            // Update the tooltip of tater boxes in player's inventory
+            PolymerUtils.reloadInventory((ServerPlayerEntity) player);
 
             message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
         }
