@@ -19,6 +19,7 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 public abstract class PagedGui extends SimpleGui {
     private static final Object2IntMap<ScreenHandlerType<?>> TYPE_TO_SIZE = new Object2IntOpenHashMap<>();
@@ -26,7 +27,10 @@ public abstract class PagedGui extends SimpleGui {
     protected int page = 0;
 
     public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements) {
-        return new FromList(ScreenHandlerType.GENERIC_9X6, player, false, elements);
+        return of(player, elements, null);
+    }
+    public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements, @Nullable IntFunction<GuiElementInterface> navbar) {
+        return new FromList(ScreenHandlerType.GENERIC_9X6, player, false, elements, navbar);
     }
 
     public PagedGui(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots) {
@@ -110,9 +114,9 @@ public abstract class PagedGui extends SimpleGui {
     public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
         private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(
-                new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE)
-                        .setName(Text.empty())
-                        .hideFlags()
+            new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE)
+                .setName(Text.empty())
+                .hideFlags()
         );
 
         public static DisplayElement of(GuiElementInterface element) {
@@ -130,21 +134,17 @@ public abstract class PagedGui extends SimpleGui {
         public static DisplayElement nextPage(PagedGui gui) {
             if (gui.canNextPage()) {
                 return DisplayElement.of(
-                        new GuiElementBuilder(Items.PLAYER_HEAD)
-                                .setName(Text.translatable("spectatorMenu.next_page").formatted(Formatting.WHITE))
-                                .hideFlags()
-                                .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg2MTg1YjFkNTE5YWRlNTg1ZjE4NGMzNGYzZjNlMjBiYjY0MWRlYjg3OWU4MTM3OGU0ZWFmMjA5Mjg3In19fQ")
-                                .setCallback((x, y, z) -> {
-                                    playClickSound(gui.player);
-                                    gui.nextPage();
-                                })
+                    CommonGuiElements.nextPage().setCallback((x, y, z) -> {
+                        playClickSound(gui.player);
+                        gui.nextPage();
+                    })
                 );
             } else {
                 return DisplayElement.of(
-                        new GuiElementBuilder(Items.PLAYER_HEAD)
-                                .setName(Text.translatable("spectatorMenu.next_page").formatted(Formatting.DARK_GRAY))
-                                .hideFlags()
-                                .setSkullOwner("ewogICJ0aW1lc3RhbXAiIDogMTY0MDYxNjExMDQ4OCwKICAicHJvZmlsZUlkIiA6ICIxZjEyNTNhYTVkYTQ0ZjU5YWU1YWI1NmFhZjRlNTYxNyIsCiAgInByb2ZpbGVOYW1lIiA6ICJOb3RNaUt5IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzdlNTc3MjBhNDg3OGM4YmNhYjBlOWM5YzQ3ZDllNTUxMjhjY2Q3N2JhMzQ0NWE1NGE5MWUzZTFlMWEyNzM1NmUiLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfQogIH0KfQ==")
+                    new GuiElementBuilder(Items.PLAYER_HEAD)
+                        .setName(Text.translatable("spectatorMenu.next_page").formatted(Formatting.DARK_GRAY))
+                        .hideFlags()
+                        .setSkullOwner(SkinEncoder.encode("7e57720a4878c8bcab0e9c9c47d9e55128ccd77ba3445a54a91e3e1e1a27356e"))
                 );
             }
         }
@@ -152,21 +152,18 @@ public abstract class PagedGui extends SimpleGui {
         public static DisplayElement previousPage(PagedGui gui) {
             if (gui.canPreviousPage()) {
                 return DisplayElement.of(
-                        new GuiElementBuilder(Items.PLAYER_HEAD)
-                                .setName(Text.translatable("spectatorMenu.previous_page").formatted(Formatting.WHITE))
-                                .hideFlags()
-                                .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzEwODI5OGZmMmIyNjk1MWQ2ODNlNWFkZTQ2YTQyZTkwYzJmN2M3ZGQ0MWJhYTkwOGJjNTg1MmY4YzMyZTU4MyJ9fX0")
-                                .setCallback((x, y, z) -> {
-                                    playClickSound(gui.player);
-                                    gui.previousPage();
-                                })
+                    CommonGuiElements.previousPage()
+                        .setCallback((x, y, z) -> {
+                            playClickSound(gui.player);
+                            gui.previousPage();
+                        })
                 );
             } else {
                 return DisplayElement.of(
-                        new GuiElementBuilder(Items.PLAYER_HEAD)
-                                .setName(Text.translatable("spectatorMenu.previous_page").formatted(Formatting.DARK_GRAY))
-                                .hideFlags()
-                                .setSkullOwner("ewogICJ0aW1lc3RhbXAiIDogMTY0MDYxNjE5MjE0MiwKICAicHJvZmlsZUlkIiA6ICJmMjc0YzRkNjI1MDQ0ZTQxOGVmYmYwNmM3NWIyMDIxMyIsCiAgInByb2ZpbGVOYW1lIiA6ICJIeXBpZ3NlbCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81MDgyMGY3NmUzZTA0MWM3NWY3NmQwZjMwMTIzMmJkZjQ4MzIxYjUzNGZlNmE4NTljY2I4NzNkMjk4MWE5NjIzIiwKICAgICAgIm1ldGFkYXRhIiA6IHsKICAgICAgICAibW9kZWwiIDogInNsaW0iCiAgICAgIH0KICAgIH0KICB9Cn0=")
+                    new GuiElementBuilder(Items.PLAYER_HEAD)
+                        .setName(Text.translatable("spectatorMenu.previous_page").formatted(Formatting.DARK_GRAY))
+                        .hideFlags()
+                        .setSkullOwner(SkinEncoder.encode("50820f76e3e041c75f76d0f301232bdf48321b534fe6a859ccb873d2981a9623"))
                 );
             }
         }
@@ -181,17 +178,26 @@ public abstract class PagedGui extends SimpleGui {
     }
 
     public static void playClickSound(ServerPlayerEntity player) {
-        player.playSound(SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1, 1);
+        player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 1, 1);
     }
 
     public static class FromList extends PagedGui {
 
         protected final List<GuiElementInterface> list;
+        @Nullable
+        private final IntFunction<GuiElementInterface> navbar;
 
-        public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces) {
+        public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, IntFunction<GuiElementInterface> navbar) {
             super(type, player, includePlayerInventorySlots);
             this.list = guiElementInterfaces;
+            this.navbar = navbar;
             this.updateDisplay();
+        }
+
+        @Override
+        protected DisplayElement getNavElement(int id) {
+            var x = navbar != null ? navbar.apply(id) : null;
+            return x != null ? DisplayElement.of(x) : super.getNavElement(id);
         }
 
         protected List<GuiElementInterface> getList() {

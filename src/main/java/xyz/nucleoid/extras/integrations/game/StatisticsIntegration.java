@@ -4,7 +4,10 @@ import com.google.gson.JsonObject;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
@@ -14,6 +17,7 @@ import xyz.nucleoid.plasmid.event.GameEvents;
 import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.stats.GameStatisticBundle;
+import xyz.nucleoid.plasmid.game.stats.StatisticKey;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +50,7 @@ public class StatisticsIntegration {
                 stats.visitAllStatistics((key, value) -> {
                     if (!key.hidden()) {
                         player.sendMessage(Text.translatable("text.nucleoid_extras.statistics.stat",
-                                Text.translatable(key.getTranslationKey()), roundForDisplay(value)), false);
+                                Text.translatable(key.getTranslationKey()), convertForDisplay(key.id(), value)), false);
                     }
                 });
 
@@ -90,14 +94,34 @@ public class StatisticsIntegration {
         }
     }
 
-    private static String roundForDisplay(Number number) {
-        if (number instanceof Double d) {
-            return String.format("%.2f", d);
-        } else if (number instanceof Float f) {
-            return String.format("%.2f", f);
-        } else {
-            return String.format("%s", number);
+    public static Text convertForDisplay(Identifier key, Number number) {
+        String base;
+
+        if (key.getPath().endsWith("_time")) {
+            var seconds = number.doubleValue() / 20;
+            var text = Text.empty();
+            if (seconds > 60) {
+               text.append(Text.translatable("gui.minutes", MathHelper.floor(seconds / 60)));
+            }
+
+            if (seconds % 60 > 0.01 || text.getSiblings().isEmpty()) {
+                if (!text.getSiblings().isEmpty()) {
+                    text.append(" ");
+                }
+                text.append(Text.translatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
+            }
+            return text;
         }
+
+        var doubleDisplay = Math.abs(number.doubleValue() - number.intValue()) >= 0.005;
+
+        if (doubleDisplay) {
+            base = String.format("%.2f", number.doubleValue());
+        } else {
+            base = Integer.toString(number.intValue());
+        }
+
+        return Text.literal(base);
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {

@@ -1,21 +1,19 @@
 package xyz.nucleoid.extras.lobby.criterion;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
-import xyz.nucleoid.extras.NucleoidExtras;
-
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import xyz.nucleoid.extras.NucleoidExtras;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Conditions> {
 	public static final Identifier ID = NucleoidExtras.identifier("wear_tater");
@@ -25,7 +23,7 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
 	@Override
 	protected WearTaterCriterion.Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
 		Identifier tater = obj.has("tater") ? new Identifier(obj.get("tater").getAsString()) : null;
-		if(tater != null && !Registry.BLOCK.containsId(tater)) {
+		if(tater != null && !Registries.BLOCK.containsId(tater)) {
 			throw new JsonSyntaxException("No tater exists with ID "+tater+"!");
 		}
 		Integer dayOfWeek = obj.has("day_of_week") ? dayOfWeekToInt(obj.get("day_of_week").getAsString()) : null;

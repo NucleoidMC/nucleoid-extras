@@ -14,7 +14,7 @@ public class MinecraftServerMixin {
             method = "runServer",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setCrashReport(Lnet/minecraft/util/crash/CrashReport;)V")
     )
-    private CrashReport onServerCrash(CrashReport report) {
+    private CrashReport extras$onServerCrash(CrashReport report) {
         if (report != null) {
             ExtrasErrorReporter.onServerCrash(report);
             ServerLifecycleIntegration.setCrashed();

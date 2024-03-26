@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.mixin.player_list;
 
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -12,15 +12,15 @@ import xyz.nucleoid.extras.player_list.PlayerListHelper;
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class PlayerInteractionManagerMixin {
     @Redirect(
-            method = "setGameMode(Lnet/minecraft/world/GameMode;Lnet/minecraft/world/GameMode;)V",
+            method = "changeGameMode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/Packet;)V"
+                    target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/packet/Packet;)V"
             )
     )
-    private void overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
+    private void extras$overrideGameModeListUpdate(PlayerManager playerManager, Packet<?> whitePacket) {
         var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
-        var player = playerManager.getPlayer(entry.getProfile().getId());
+        var player = playerManager.getPlayer(entry.profileId());
 
         if (player == null) return;
 

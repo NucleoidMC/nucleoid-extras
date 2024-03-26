@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.1.+'
 	id 'maven-publish'
 }
 
@@ -24,10 +24,10 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.5+1.19.1-SNAPSHOT'
-	modImplementation include('xyz.nucleoid:more-codecs:0.2.2+1.18')
+	modImplementation 'xyz.nucleoid:plasmid:0.5+1.19.4-SNAPSHOT'
+	modImplementation include('xyz.nucleoid:more-codecs:0.3.1+1.19.4')
 
-	modCompileOnly "com.viaversion:viaversion-api:4.4.1"
+	//modCompileOnly "com.viaversion:viaversion-api:4.5.1-SNAPSHOT"
 	modCompileOnly "dev.gegy:player-roles-api:1.6.0"
 }
 

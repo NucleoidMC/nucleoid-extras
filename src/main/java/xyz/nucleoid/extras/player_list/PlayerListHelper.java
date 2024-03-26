@@ -1,14 +1,19 @@
 package xyz.nucleoid.extras.player_list;
 
-import net.minecraft.network.encryption.PlayerPublicKey;
+import eu.pb4.polymer.core.mixin.entity.PlayerListS2CPacketAccessor;
+import net.minecraft.network.encryption.PublicPlayerSession;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
+import net.minecraft.util.Nullables;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class PlayerListHelper {
     public static Text getDisplayName(ServerPlayerEntity player, boolean gray) {
@@ -16,26 +21,39 @@ public class PlayerListHelper {
     }
 
     @Nullable
-    private static PlayerPublicKey.PublicKeyData getPublicKey(ServerPlayerEntity player) {
-        return Util.map(player.getPublicKey(), PlayerPublicKey::data);
+    private static PublicPlayerSession.Serialized getSession(ServerPlayerEntity player) {
+        return Nullables.map(player.getSession(), PublicPlayerSession::toSerialized);
     }
 
     public static GameMode getGameMode(ServerPlayerEntity player, boolean gray) {
         return gray ? GameMode.SPECTATOR : player.interactionManager.getGameMode();
     }
 
-    public static PlayerListS2CPacket getUpdatePacket(ServerPlayerEntity player, PlayerListS2CPacket.Action action, boolean gray) {
-        var packet = new PlayerListS2CPacket(action);
-        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), getDisplayName(player, gray), null));
+    public static PlayerListS2CPacket.Entry createEntry(ServerPlayerEntity player,  boolean gray) {
+        return new PlayerListS2CPacket.Entry(
+            player.getUuid(),
+            player.getGameProfile(),
+            true,
+            player.pingMilliseconds,
+            getGameMode(player, gray),
+            getDisplayName(player, gray),
+            getSession(player)
+        );
+    }
 
+    private static PlayerListS2CPacket createPacket(EnumSet<PlayerListS2CPacket.Action> actions, List<PlayerListS2CPacket.Entry> entries) {
+        PlayerListS2CPacket packet = new PlayerListS2CPacket(actions, List.of());
+        ((PlayerListS2CPacketAccessor) packet).setEntries(entries);
         return packet;
     }
 
-    public static PlayerListS2CPacket getAddPlayerPacket(ServerPlayerEntity player, boolean gray) {
-        var packet = new PlayerListS2CPacket(PlayerListS2CPacket.Action.ADD_PLAYER);
-        packet.getEntries().add(new PlayerListS2CPacket.Entry(player.getGameProfile(), 0, getGameMode(player, gray), getDisplayName(player, gray), getPublicKey(player)));
+    public static PlayerListS2CPacket createPacket(ServerPlayerEntity player, EnumSet<PlayerListS2CPacket.Action> actions, boolean gray) {
+        return createPacket(actions, List.of(createEntry(player, gray)));
+    }
 
-        return packet;
+    public static PlayerListS2CPacket createAddPacket(ServerPlayerEntity player, boolean gray) {
+        final EnumSet<PlayerListS2CPacket.Action> actions = EnumSet.of(PlayerListS2CPacket.Action.ADD_PLAYER, PlayerListS2CPacket.Action.INITIALIZE_CHAT, PlayerListS2CPacket.Action.UPDATE_GAME_MODE, PlayerListS2CPacket.Action.UPDATE_LISTED, PlayerListS2CPacket.Action.UPDATE_LATENCY, PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
+        return createPacket(player, actions, gray);
     }
 
     public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
@@ -44,32 +62,24 @@ public class PlayerListHelper {
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
-        updatePlayer(updatedPlayer, PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
-        updatePlayer(updatedPlayer, PlayerListS2CPacket.Action.UPDATE_GAME_MODE);
+        updatePlayer(updatedPlayer, EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, PlayerListS2CPacket.Action.UPDATE_GAME_MODE));
     }
 
-    private static void updatePlayer(ServerPlayerEntity updatedPlayer, PlayerListS2CPacket.Action action) {
+    private static void updatePlayer(ServerPlayerEntity updatedPlayer, EnumSet<PlayerListS2CPacket.Action> actions) {
         var server = updatedPlayer.server;
 
-        var normalPacket = PlayerListHelper.getUpdatePacket(updatedPlayer, action, false);
-        var grayPacket = PlayerListHelper.getUpdatePacket(updatedPlayer, action, true);
+        var normalPacket = PlayerListHelper.createPacket(updatedPlayer, actions, false);
+        var grayPacket = PlayerListHelper.createPacket(updatedPlayer, actions, true);
 
-        var updateJoined = new PlayerListS2CPacket(action);
+        var updateJoined = new ArrayList<PlayerListS2CPacket.Entry>();
 
         for (var player : server.getPlayerManager().getPlayerList()) {
             boolean gray = PlayerListHelper.shouldGray(player, updatedPlayer);
 
             player.networkHandler.sendPacket(gray ? grayPacket : normalPacket);
-            var entry = new PlayerListS2CPacket.Entry(
-                    player.getGameProfile(),
-                    0,
-                    getGameMode(player, gray),
-                    PlayerListHelper.getDisplayName(player, gray),
-                    getPublicKey(player)
-            );
-            updateJoined.getEntries().add(entry);
+            updateJoined.add(createEntry(player, gray));
         }
 
-        updatedPlayer.networkHandler.sendPacket(updateJoined);
+        updatedPlayer.networkHandler.sendPacket(createPacket(actions, updateJoined));
     }
 }

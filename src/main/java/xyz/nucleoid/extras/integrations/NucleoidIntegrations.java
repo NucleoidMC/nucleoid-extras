@@ -11,6 +11,7 @@ import xyz.nucleoid.extras.integrations.connection.IntegrationsConnection;
 import xyz.nucleoid.extras.integrations.connection.IntegrationsProxy;
 import xyz.nucleoid.extras.integrations.game.GameStatusIntegration;
 import xyz.nucleoid.extras.integrations.game.StatisticsIntegration;
+import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.extras.integrations.relay.ChatRelayIntegration;
 import xyz.nucleoid.extras.integrations.relay.RemoteCommandIntegration;
 import xyz.nucleoid.extras.integrations.status.PlayerStatusIntegration;

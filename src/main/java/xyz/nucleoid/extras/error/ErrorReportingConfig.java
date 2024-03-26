@@ -2,19 +2,21 @@ package xyz.nucleoid.extras.error;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import joptsimple.internal.Strings;
+import xyz.nucleoid.codecs.MoreCodecs;
+import java.net.URL;
+import java.util.Optional;
 import org.jetbrains.annotations.Nullable;
 
 public record ErrorReportingConfig(
-        String discordWebhookUrl
+        Optional<URL> discordWebhookUrl
 ) {
     public static final Codec<ErrorReportingConfig> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
-                Codec.STRING.optionalFieldOf("discord_webhook_url", "").forGetter(config -> config.discordWebhookUrl)
+                MoreCodecs.url("https").optionalFieldOf("discord_webhook_url").forGetter(config -> config.discordWebhookUrl)
         ).apply(instance, ErrorReportingConfig::new)
     );
 
-    public static final ErrorReportingConfig NONE = new ErrorReportingConfig(null);
+    public static final ErrorReportingConfig NONE = new ErrorReportingConfig(Optional.empty());
 
     @Nullable
     public DiscordGameErrorHandler openErrorHandler(String source) {
@@ -25,13 +27,6 @@ public record ErrorReportingConfig(
     @Nullable
     public DiscordWebhook openDiscordWebhook() {
         var url = this.discordWebhookUrl();
-        return url != null ? DiscordWebhook.open(url) : null;
-    }
-
-    @Override
-    @Nullable
-    public String discordWebhookUrl() {
-        var url = this.discordWebhookUrl;
-        return !Strings.isNullOrEmpty(url) ? url : null;
+        return url.map(DiscordWebhook::open).orElse(null);
     }
 }

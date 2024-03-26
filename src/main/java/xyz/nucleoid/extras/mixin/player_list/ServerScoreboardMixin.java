@@ -19,7 +19,7 @@ public class ServerScoreboardMixin {
     private MinecraftServer server;
 
     @Inject(method = "addPlayerToTeam", at = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/ServerScoreboard;runUpdateListeners()V", shift = At.Shift.AFTER))
-    private void updatePlayerAfterJoining(String playerName, Team team, CallbackInfoReturnable<Boolean> cir) {
+    private void extras$updatePlayerAfterJoining(String playerName, Team team, CallbackInfoReturnable<Boolean> cir) {
         var player = this.server.getPlayerManager().getPlayer(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
@@ -27,7 +27,7 @@ public class ServerScoreboardMixin {
     }
 
     @Inject(method = "removePlayerFromTeam", at = @At("TAIL"))
-    private void updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
+    private void extras$updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
         var player = this.server.getPlayerManager().getPlayer(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
@@ -35,7 +35,7 @@ public class ServerScoreboardMixin {
     }
 
     @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
-    private void updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
+    private void extras$updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
         for (var playerName : team.getPlayerList()) {
             var player = this.server.getPlayerManager().getPlayer(playerName);
             if (player != null) {

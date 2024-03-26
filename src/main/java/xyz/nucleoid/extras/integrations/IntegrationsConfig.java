@@ -3,10 +3,15 @@ package xyz.nucleoid.extras.integrations;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.codecs.MoreCodecs;
+import xyz.nucleoid.extras.util.ExtraCodecs;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 public record IntegrationsConfig(
         String channel,
