@@ -73,7 +73,7 @@ public class StatisticsIntegration {
         body.add("bundle", bundleObject);
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
-        space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url", gameId)
+        space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url")
                 .formatted(Formatting.GRAY, Formatting.ITALIC)
                 .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
                         "https://stats.nucleoid.xyz/games/" + gameId))));
