@@ -1,15 +1,14 @@
 package xyz.nucleoid.extras.lobby.criterion;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.criterion.AbstractCriterion;
+import net.minecraft.block.Block;
 import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.dynamic.Codecs;
+import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +18,7 @@ import java.util.Optional;
 public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Conditions> {
 	public static final Calendar CALENDAR = Calendar.getInstance();
 
-	public void trigger(ServerPlayerEntity player, Identifier tater) {
+	public void trigger(ServerPlayerEntity player, TinyPotatoBlock tater) {
 		CALENDAR.setTime(new Date());
 		this.trigger(player, conditions -> conditions.matches(tater, CALENDAR.get(Calendar.DAY_OF_WEEK)));
 	}
@@ -55,16 +54,17 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
         return Conditions.CODEC;
     }
 
-    public record Conditions(Identifier tater, int dayOfWeek) implements AbstractCriterion.Conditions {
+    public record Conditions(Optional<RegistryEntry<Block>> tater, Optional<Integer> dayOfWeek) implements AbstractCriterion.Conditions {
+        private static final Codec<Integer> DAY_OF_WEEK_CODEC = Codec.STRING.xmap(WearTaterCriterion::dayOfWeekToInt, WearTaterCriterion::dayOfWeekToString);
+
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.fieldOf("tater").forGetter(Conditions::tater),
-            Codec.STRING.xmap(WearTaterCriterion::dayOfWeekToInt, WearTaterCriterion::dayOfWeekToString)
-                .fieldOf("day_of_week").forGetter(Conditions::dayOfWeek)
+            Codecs.createStrictOptionalFieldCodec(TinyPotatoBlock.ENTRY_CODEC, "tater").forGetter(Conditions::tater),
+            Codecs.createStrictOptionalFieldCodec(DAY_OF_WEEK_CODEC, "day_of_week").forGetter(Conditions::dayOfWeek)
         ).apply(instance, Conditions::new));
 
-        public boolean matches(Identifier tater, int dayOfWeek) {
-            boolean taterMatches = tater() == null || tater().equals(tater);
-            boolean dayOfWeekMatches = dayOfWeek() == dayOfWeek;
+        public boolean matches(TinyPotatoBlock tater, int dayOfWeek) {
+            boolean taterMatches = this.tater.isEmpty() || this.tater.get().value() == tater;
+            boolean dayOfWeekMatches = this.dayOfWeek.isEmpty() || this.dayOfWeek.get() == dayOfWeek;
             return taterMatches && dayOfWeekMatches;
         }
 

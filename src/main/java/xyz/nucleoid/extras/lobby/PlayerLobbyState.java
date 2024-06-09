@@ -99,13 +99,13 @@ public class PlayerLobbyState {
         }
 
         player.sendMessage(message, true);
-        triggerCollectCriterion((ServerPlayerEntity) player, Registries.BLOCK.getId(tater), this.collectedTaters.size());
+        triggerCollectCriterion((ServerPlayerEntity) player, tater, this.collectedTaters.size());
 
         return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
 
-    private static void triggerCollectCriterion(ServerPlayerEntity player, Identifier taterId, int count) {
-        NECriteria.TATER_COLLECTED.trigger(player, taterId, count);
+    private static void triggerCollectCriterion(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {
+        NECriteria.TATER_COLLECTED.trigger(player, tater, count);
     }
 
     private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {
