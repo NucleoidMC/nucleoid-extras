@@ -9,6 +9,7 @@
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
     "TextCodecMixin",
+    "debug.EntityMixin",
     "lobby.ArmorStandEntityAccessor",
     "lobby.LivingEntityAccessor",
     "lobby.ServerPlayerEntityMixin",
