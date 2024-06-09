@@ -1,16 +1,19 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -21,6 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
+    public static final Codec<RegistryEntry<Block>> ENTRY_CODEC = Codecs.validate(Registries.BLOCK.createEntryCodec(), block -> {
+        if (block.value() instanceof TinyPotatoBlock) {
+            return DataResult.success(block);
+        }
+
+        return DataResult.error(() -> "Not a tater: " + block);
+    });
+
     public static final List<TinyPotatoBlock> TATERS = new ArrayList<>();
 
     private final ParticleEffect particleEffect;
