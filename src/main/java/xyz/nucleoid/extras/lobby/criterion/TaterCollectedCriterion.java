@@ -1,21 +1,19 @@
 package xyz.nucleoid.extras.lobby.criterion;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.criterion.AbstractCriterion;
+import net.minecraft.block.Block;
 import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
+import net.minecraft.util.dynamic.Codecs;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Optional;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
-	public void trigger(ServerPlayerEntity player, Identifier tater, int count) {
+	public void trigger(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {
 		this.trigger(player, conditions -> conditions.matches(tater, count));
 	}
 
@@ -27,33 +25,23 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static class Conditions implements AbstractCriterion.Conditions {
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Identifier.CODEC.fieldOf("tater").forGetter(Conditions::getTater),
-            Codec.INT.optionalFieldOf("count").forGetter(i -> i.optionalCount)
+            Codecs.createStrictOptionalFieldCodec(TinyPotatoBlock.ENTRY_CODEC, "tater").forGetter(i -> i.tater),
+            Codecs.createStrictOptionalFieldCodec(TaterCount.CODEC, "count").forGetter(i -> i.count)
         ).apply(instance, Conditions::new));
 
-        private final Identifier tater;
-		private final Integer count;
-        private final Optional<Integer> optionalCount;
+        private final Optional<RegistryEntry<Block>> tater;
+        private final Optional<TaterCount> count;
 
-        public Conditions(Identifier tater, Optional<Integer> count) {
-			this.tater = tater;
-			this.count = count.orElse(TinyPotatoBlock.TATERS.size());
-            this.optionalCount = count;
-		}
+        public Conditions(Optional<RegistryEntry<Block>> tater, Optional<TaterCount> count) {
+            this.tater = tater;
+            this.count = count;
+        }
 
-		public Identifier getTater() {
-			return tater;
-		}
-
-		public Integer getCount() {
-			return count;
-		}
-
-		public boolean matches(Identifier tater, int count) {
-			boolean taterMatches = getTater() == null || getTater().equals(tater);
-			boolean countMatches = getCount() == null || getCount() <= count;
-			return taterMatches && countMatches;
-		}
+        public boolean matches(TinyPotatoBlock tater, int count) {
+            boolean taterMatches = this.tater.isEmpty() || this.tater.get().value() == tater;
+            boolean countMatches = this.count.isEmpty() || this.count.get().matches(count);
+            return taterMatches && countMatches;
+        }
 
         @Override
         public Optional<LootContextPredicate> player() {
