@@ -66,9 +66,12 @@ public final class ExtrasErrorReporter {
     public static void reportCustom(CustomErrorType type, Throwable throwable) {
         var now = Instant.now();
         var lastReport = LAST_REPORT.get(type);
-        var timeSinceLastReport = Duration.between(lastReport, now);
-        if (timeSinceLastReport.compareTo(type.reportInterval) < 0) {
-            return;
+
+        if (lastReport != null) {
+            var timeSinceLastReport = Duration.between(lastReport, now);
+            if (timeSinceLastReport.compareTo(type.reportInterval) < 0) {
+                return;
+            }
         }
 
         if (!LAST_REPORT.replace(type, lastReport, now)) {
