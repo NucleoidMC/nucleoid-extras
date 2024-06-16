@@ -36,6 +36,7 @@ public record NucleoidExtrasConfig(
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
         @Nullable ChatFilterConfig chatFilter,
+        @Nullable RulesConfig rules,
         @Nullable URL contributorDataUrl,
         ErrorReportingConfig errorReporting,
         boolean devServer,
@@ -53,19 +54,20 @@ public record NucleoidExtrasConfig(
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),
                 ChatFilterConfig.CODEC.optionalFieldOf("chat_filter").forGetter(config -> Optional.ofNullable(config.chatFilter())),
+                RulesConfig.CODEC.optionalFieldOf("rules").forGetter(config -> Optional.ofNullable(config.rules())),
                 MoreCodecs.url("https").optionalFieldOf("contributor_data_url").forGetter(config -> Optional.ofNullable(config.contributorDataUrl())),
                 ErrorReportingConfig.CODEC.optionalFieldOf("error_reporting", ErrorReportingConfig.NONE).forGetter(NucleoidExtrasConfig::errorReporting),
                 Codec.BOOL.optionalFieldOf("dev_server", false).forGetter(NucleoidExtrasConfig::devServer),
                 ExtraCodecs.URI.optionalFieldOf("http_api").forGetter(config -> Optional.ofNullable(config.httpApi()))
-            ).apply(instance, (sidebar, gamePortalOpener, lobbySpawn, integrations, aliases, filter, contributorDataUrl, errorReporting, devServer, httpApiUrl) ->
-            new NucleoidExtrasConfig(sidebar, gamePortalOpener, lobbySpawn.orElse(null), integrations.orElse(null), aliases.orElse(null), filter.orElse(null), contributorDataUrl.orElse(null), errorReporting, devServer, httpApiUrl.orElse(null))
+            ).apply(instance, (sidebar, gamePortalOpener, lobbySpawn, integrations, aliases, filter, rules, contributorDataUrl, errorReporting, devServer, httpApiUrl) ->
+            new NucleoidExtrasConfig(sidebar, gamePortalOpener, lobbySpawn.orElse(null), integrations.orElse(null), aliases.orElse(null), filter.orElse(null), rules.orElse(null), contributorDataUrl.orElse(null), errorReporting, devServer, httpApiUrl.orElse(null))
         )
     );
 
     private static NucleoidExtrasConfig instance;
 
     private NucleoidExtrasConfig() {
-        this(false, Optional.empty(), null, null, null, null, null, ErrorReportingConfig.NONE, false, null);
+        this(false, Optional.empty(), null, null, null, null, null, null, ErrorReportingConfig.NONE, false, null);
     }
 
     @NotNull
