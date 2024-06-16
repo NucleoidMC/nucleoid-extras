@@ -22,6 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +31,13 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.extras.lobby.item.*;
+import xyz.nucleoid.extras.lobby.item.GamePortalOpenerItem;
+import xyz.nucleoid.extras.lobby.item.LaunchFeatherItem;
+import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
+import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
+import xyz.nucleoid.extras.lobby.item.LobbyTallBlockItem;
+import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
+import xyz.nucleoid.extras.lobby.item.RuleBookItem;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 
@@ -443,6 +450,8 @@ public class NEItems {
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().maxCount(1));
     public static final Item LAUNCH_FEATHER = new LaunchFeatherItem(new Item.Settings().maxCount(1));
 
+    public static final Item RULE_BOOK = new RuleBookItem(new Item.Settings().rarity(Rarity.EPIC));
+
     private static Item createHead(Block head) {
         if (head instanceof TinyPotatoBlock tinyPotatoBlock) {
             return new LobbyHeadItem(head, new Item.Settings(), tinyPotatoBlock.getItemTexture());
@@ -805,6 +814,7 @@ public class NEItems {
         register("quick_armor_stand", QUICK_ARMOR_STAND);
         register("game_portal_opener", GAME_PORTAL_OPENER);
         register("launch_feather", LAUNCH_FEATHER);
+        register("rule_book", RULE_BOOK);
 
         PolymerItemGroupUtils.registerPolymerItemGroup(NucleoidExtras.identifier("general"), ITEM_GROUP);
 
@@ -840,6 +850,10 @@ public class NEItems {
         var config = NucleoidExtrasConfig.get();
 
         tryOfferStack(player, TATER_BOX);
+
+        if (config.rules() != null) {
+            tryOfferStack(player, RULE_BOOK);
+        }
 
         config.gamePortalOpener().ifPresent(gamePortal -> {
             tryOfferStack(player, GAME_PORTAL_OPENER, stack -> {

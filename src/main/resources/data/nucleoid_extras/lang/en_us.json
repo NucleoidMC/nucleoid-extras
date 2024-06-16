@@ -361,6 +361,8 @@
   "item.nucleoid_extras.tater_box": "Tater Box",
   "item.nucleoid_extras.creative_tater_box": "Creative Tater Box",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
+  "item.nucleoid_extras.rule_book": "Rule Book",
+  "item.nucleoid_extras.rule_book.author": "Server admins",
 
   "entity.nucleoid_extras.quick_armor_stand": "Quick Armor Stand",
 
