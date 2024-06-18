@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.chat_filter;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.base.Splitter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -10,50 +10,46 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 public final class ChatFilterConfig {
-    public static final Codec<ChatFilterConfig> CODEC = RecordCodecBuilder.create(instance ->
-        instance.group(
-                Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
-                Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
-                PlasmidCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
-                Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
-        ).apply(instance, ChatFilterConfig::new)
-    );
+    private static final Codec<String> WORD_CODEC = Codec.STRING.xmap(s -> s.toLowerCase(Locale.ROOT), s -> s.toLowerCase(Locale.ROOT));
+    private static final Codec<Set<String>> WORD_SET_CODEC = WORD_CODEC.listOf().xmap(Set::copyOf, List::copyOf);
+
+    public static final Codec<ChatFilterConfig> CODEC = RecordCodecBuilder.create(i -> i.group(
+        WORD_SET_CODEC.optionalFieldOf("illegal_words", Set.of()).forGetter(c -> c.illegalWords),
+        WORD_CODEC.listOf().optionalFieldOf("contains_illegal_text", List.of()).forGetter(c -> c.containsIllegalText),
+        PlasmidCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
+        Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
+    ).apply(i, ChatFilterConfig::new));
+
+    private static final Splitter WORD_SPLITTER = Splitter.onPattern("\\s");
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;
     private final @Nullable Text feedbackMessage;
     private final @Nullable RegistryEntry<SoundEvent> feedbackSound;
 
-    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<RegistryEntry<SoundEvent>> feedbackSound) {
-        this.illegalWords = illegalWords.stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toSet());
-        this.containsIllegalText = containsIllegalText.stream()
-                .map(s -> s.toLowerCase(Locale.ROOT))
-                .collect(Collectors.toList());
+    private ChatFilterConfig(Set<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<RegistryEntry<SoundEvent>> feedbackSound) {
+        this.illegalWords = illegalWords;
+        this.containsIllegalText = containsIllegalText;
 
         this.feedbackMessage = feedbackMessage.map(ChatFilterConfig::formatFeedback).orElse(null);
         this.feedbackSound = feedbackSound.orElse(null);
     }
 
     private static MutableText formatFeedback(Text text) {
-        return text.copy().styled(style -> {
-            if (style.getColor() == null) {
-                return style.withColor(Formatting.RED);
-            } else {
-                return style;
-            }
-        });
+        return Texts.setStyleIfAbsent(text.copy(), Style.EMPTY.withColor(Formatting.RED));
     }
 
     public boolean test(String message) {
@@ -65,10 +61,8 @@ public final class ChatFilterConfig {
             }
         }
 
-        var words = message.split("\\s");
-
         var illegalWords = this.illegalWords;
-        for (var word : words) {
+        for (var word : WORD_SPLITTER.split(message)) {
             if (illegalWords.contains(word)) {
                 return true;
             }
