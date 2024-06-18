@@ -33,7 +33,7 @@ public final class ChatFilterConfig {
         Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
     ).apply(i, ChatFilterConfig::new));
 
-    private static final Splitter WORD_SPLITTER = Splitter.onPattern("\\s");
+    private static final Splitter WORD_SPLITTER = Splitter.onPattern("\\W");
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;
