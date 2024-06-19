@@ -201,12 +201,9 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
                 if (item == null) continue;
 
                 var list = nbt.getList(key, NbtElement.COMPOUND_TYPE);
-                if (list == null) continue;
 
                 for (int index = 0; index < list.size(); index++) {
                     var pos = list.getCompound(index);
-                    if (pos == null) continue;
-
                     map.put(item, NbtHelper.toBlockPos(pos));
                 }
             }
