@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.lobby;
 import eu.pb4.playerdata.api.PlayerDataApi;
 import eu.pb4.playerdata.api.storage.JsonDataStorage;
 import eu.pb4.playerdata.api.storage.PlayerDataStorage;
+import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +57,7 @@ public class PlayerLobbyState {
             if (targetStack.getItem() instanceof TaterBoxItem) {
                 Block targetTater = TaterBoxItem.getSelectedTater(targetStack);
 
-                if (targetTater != null && targetTater.getDefaultState().isIn(TaterBoxItem.VIRAL_TATERS)) {
+                if (targetTater != null && targetTater.getDefaultState().isIn(NEBlockTags.VIRAL_TATERS)) {
                     return this.collectTater(targetTater, stack, player);
                 }
             }
@@ -82,10 +84,6 @@ public class PlayerLobbyState {
     private ActionResult collectTater(Block block, ItemStack stack, PlayerEntity player) {
         if (!(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
 
-        if (stack.getItem() instanceof TaterBoxItem) {
-            stack.getOrCreateNbt().putUuid(TaterBoxItem.OWNER_KEY, player.getUuid());
-        }
-
         boolean alreadyAdded = this.collectedTaters.contains(tater);
         Text message;
 
@@ -94,17 +92,20 @@ public class PlayerLobbyState {
         } else {
             this.collectedTaters.add(tater);
 
+            // Update the tooltip of tater boxes in player's inventory
+            PolymerUtils.reloadInventory((ServerPlayerEntity) player);
+
             message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
         }
 
         player.sendMessage(message, true);
-        triggerCollectCriterion((ServerPlayerEntity) player, Registries.BLOCK.getId(tater), this.collectedTaters.size());
+        triggerCollectCriterion((ServerPlayerEntity) player, tater, this.collectedTaters.size());
 
         return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
 
-    private static void triggerCollectCriterion(ServerPlayerEntity player, Identifier taterId, int count) {
-        NECriteria.TATER_COLLECTED.trigger(player, taterId, count);
+    private static void triggerCollectCriterion(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {
+        NECriteria.TATER_COLLECTED.trigger(player, tater, count);
     }
 
     private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {

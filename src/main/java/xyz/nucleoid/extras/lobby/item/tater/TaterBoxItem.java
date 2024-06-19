@@ -12,8 +12,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -22,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
@@ -37,27 +34,12 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
     public static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
 
-    public static final String OWNER_KEY = "Owner";
     private static final String LEGACY_TATERS_KEY = "Taters";
     private static final String SELECTED_TATER_KEY = "SelectedTater";
     private static final int COLOR = 0xCEADAA;
 
-    private static final Identifier VIRAL_TATERS_ID = NucleoidExtras.identifier("viral_taters");
-    public static final TagKey<Block> VIRAL_TATERS = TagKey.of(RegistryKeys.BLOCK, VIRAL_TATERS_ID);
-
     public TaterBoxItem(Settings settings) {
         super(settings);
-    }
-
-    private ActionResult isOwner(ItemStack stack, PlayerEntity player) {
-        NbtCompound tag = stack.getNbt();
-        if (tag == null) return ActionResult.PASS;
-        
-        if (!tag.contains(OWNER_KEY, NbtElement.LIST_TYPE)) return ActionResult.PASS;
-        UUID uuid = tag.getUuid(OWNER_KEY);
-        if (uuid == null) return ActionResult.PASS;
-
-        return player.getUuid().equals(uuid) ? ActionResult.SUCCESS : ActionResult.FAIL;
     }
 
     private MutableText getTitle(ServerPlayerEntity player) {
@@ -134,7 +116,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         guiElementBuilder.hideFlags();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
             ItemStack newStack = hand == null ? stack : user.getStackInHand(hand);
-            if (found && this == newStack.getItem() && this.isOwner(newStack, user) != ActionResult.FAIL) {
+            if (found && this == newStack.getItem()) {
                 TaterBoxItem.setSelectedTater(newStack, taterId);
                 gui.close();
             }
@@ -188,7 +170,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        var owner = getOwnerPlayer(stack, world);
+        var owner = PolymerUtils.getPlayerContext();
 
         Block selectedBlock = getSelectedTater(stack);
         Text selectedName;
@@ -206,16 +188,6 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         String percent = String.format("%.2f", count / (double) max * 100);
 
         tooltip.add(Text.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
-    }
-
-    private PlayerEntity getOwnerPlayer(ItemStack stack, World world) {
-        if (!stack.hasNbt() || !stack.getNbt().contains(OWNER_KEY)) {
-            return null;
-        }
-
-        var owner = stack.getNbt().getUuid(OWNER_KEY);
-
-        return world.getPlayerByUuid(owner);
     }
 
     @Nullable

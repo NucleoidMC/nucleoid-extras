@@ -8,7 +8,8 @@
   "license": "LGPLv3",
   "environment": "*",
   "entrypoints": {
-    "main": ["xyz.nucleoid.extras.NucleoidExtras"]
+    "main": ["xyz.nucleoid.extras.NucleoidExtras"],
+    "fabric-datagen": ["xyz.nucleoid.extras.data.NEDatagen"]
   },
   "mixins": ["extras.mixins.json"],
   "depends": {

@@ -73,7 +73,7 @@ public class StatisticsIntegration {
         body.add("bundle", bundleObject);
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
-        space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url", gameId)
+        space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url")
                 .formatted(Formatting.GRAY, Formatting.ITALIC)
                 .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
                         "https://stats.nucleoid.xyz/games/" + gameId))));
@@ -101,14 +101,14 @@ public class StatisticsIntegration {
             var seconds = number.doubleValue() / 20;
             var text = Text.empty();
             if (seconds > 60) {
-               text.append(Text.translatable("gui.minutes", MathHelper.floor(seconds / 60)));
+               text.append(Text.stringifiedTranslatable("gui.minutes", MathHelper.floor(seconds / 60)));
             }
 
             if (seconds % 60 > 0.01 || text.getSiblings().isEmpty()) {
                 if (!text.getSiblings().isEmpty()) {
                     text.append(" ");
                 }
-                text.append(Text.translatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
+                text.append(Text.stringifiedTranslatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
             }
             return text;
         }

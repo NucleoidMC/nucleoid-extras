@@ -10,8 +10,5 @@ import java.util.concurrent.CompletableFuture;
 
 @Mixin(SkullBlockEntity.class)
 public class SkullBlockEntityAccessor {
-    @Invoker
-    public static CompletableFuture<Optional<GameProfile>> callFetchProfileWithTextures(GameProfile profile) {
-        throw new AssertionError();
-    }
+
 }

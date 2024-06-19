@@ -42,6 +42,7 @@
   "block.nucleoid_extras.transient_jungle_door": "Transient Jungle Door (Lobby only!)",
   "block.nucleoid_extras.transient_acacia_door": "Transient Acacia Door (Lobby only!)",
   "block.nucleoid_extras.transient_cherry_door": "Transient Cherry Door (Lobby only!)",
+  "block.nucleoid_extras.transient_dark_oak_door": "Transient Dark Oak Door (Lobby only!)",
   "block.nucleoid_extras.transient_mangrove_door": "Transient Mangrove Door (Lobby only!)",
   "block.nucleoid_extras.transient_bamboo_door": "Transient Bamboo Door (Lobby only!)",
   "block.nucleoid_extras.transient_crimson_door": "Transient Crimson Door (Lobby only!)",
@@ -361,6 +362,8 @@
   "item.nucleoid_extras.creative_tater_box": "Creative Tater Box",
   "item.nucleoid_extras.tater_guidebook": "Tater Guidebook",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
+  "item.nucleoid_extras.rule_book": "Rule Book",
+  "item.nucleoid_extras.rule_book.author": "Server admins",
 
   "entity.nucleoid_extras.quick_armor_stand": "Quick Armor Stand",
 
@@ -397,6 +400,26 @@
   "text.nucleoid_extras.ui.action.more": "Right-click for more...",
 
   "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
+
+  "text.nucleoid_extras.rules.continued_title": "%s (cont.)",
+  "text.nucleoid_extras.rules.welcome": "Welcome to %s!\n\nWe're building open-source minigames.",
+  "text.nucleoid_extras.rules.links": "You can find us at %s, or join our Discord at %s.",
+  "text.nucleoid_extras.rules.guidelines": "We have a couple of guidelines to keep in mind while playing on the following pages.",
+  "text.nucleoid_extras.rules.contact": "If you do encounter any behavior that you would like to report, feel free to join our Discord and message @NucleMail, or send us an email at contact@nucleoid.xyz.",
+  "text.nucleoid_extras.rules.friendly_environment.title": "1. A friendly environment",
+  "text.nucleoid_extras.rules.friendly_environment.1": "We're all here to have fun! Let's create an inclusive environment where we all feel comfortable to play and share the joy of creating together.",
+  "text.nucleoid_extras.rules.friendly_environment.2": "Treat all players, regardless of their background, with respect and kindness. Any kind of discrimination or harassment is prohibited.",
+  "text.nucleoid_extras.rules.suitable_content.title": "2. Suitable content",
+  "text.nucleoid_extras.rules.suitable_content.1": "We want our community to be friendly to everyone. Not-safe-for-work content is prohibited, and please avoid excessive use of inappropriate language.",
+  "text.nucleoid_extras.rules.suitable_content.2": "The server makes use of a basic profanity filter to let you know when your messages are not appropriate: do not try to work around it.",
+  "text.nucleoid_extras.rules.keeping_it_fair.title": "3. Keeping it fair",
+  "text.nucleoid_extras.rules.keeping_it_fair.1": "Cheats ruin the fun! Use of cheats or hacked clients on the server is not allowed. If you suspect another player to be making use of hacks, please report it to us by messaging @NucleMail on Discord with any evidence you can collect.",
+  "text.nucleoid_extras.rules.breaking_things.title": "4. Breaking things",
+  "text.nucleoid_extras.rules.breaking_things.1": "Do not intentionally try to lag or break the server. If you do however find an issue or exploit, please report it so that we can address the issue.",
+  "text.nucleoid_extras.rules.keeping_it_fun.title": "5. Keeping it fun",
+  "text.nucleoid_extras.rules.keeping_it_fun.1": "We're a small server, so we're happy for you to play games as you want. If you want to make teams in a game where there wouldn't normally be, please do so! However, make sure that everyone in the game is on board with that before you do.",
+  "text.nucleoid_extras.rules.keep_in_mind.title": "6. Keep in mind...",
+  "text.nucleoid_extras.rules.keep_in_mind.1": "If you're working on a cool project, we'd love to see it - especially if it's related to the Nucleoid project! However, this server is not a place for unsolicited spam or advertisement. If you're not sure, ask a moderator!",
 
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",

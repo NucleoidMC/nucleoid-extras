@@ -24,7 +24,7 @@ public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
     private final Block polymerBlock;
 
     public TransientDoorBlock(Block block) {
-        super(AbstractBlock.Settings.copy(block), block instanceof DoorBlock door ? door.getBlockSetType() : BlockSetType.OAK);
+        super(block instanceof DoorBlock door ? door.getBlockSetType() : BlockSetType.OAK, AbstractBlock.Settings.copy(block));
         this.polymerBlock = block;
     }
 

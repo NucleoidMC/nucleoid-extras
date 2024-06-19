@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.block;
 
+import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
@@ -103,5 +104,10 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     protected void appendProperties(Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(ACTIVE);
+    }
+
+    @Override
+    protected MapCodec<? extends FacingBlock> getCodec() {
+        return null;
     }
 }

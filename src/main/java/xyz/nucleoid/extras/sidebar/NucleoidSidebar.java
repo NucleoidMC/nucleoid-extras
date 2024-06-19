@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.sidebar;
 import eu.pb4.sidebars.api.Sidebar;
 import eu.pb4.sidebars.api.lines.LineBuilder;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.scoreboard.number.BlankNumberFormat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
@@ -47,6 +48,8 @@ public final class NucleoidSidebar {
 
     private static final Text SIZE_FORCING_TEXT = Text.literal(" ".repeat(34));
 
+    private final boolean enabled = NucleoidExtrasConfig.get().sidebar();
+
     private static Text[] createAnimatedTitle(String string, Text append, Style leftStyle, Style middleStyle, Style rightStyle) {
         List<Text> texts = new ArrayList<>();
 
@@ -65,6 +68,7 @@ public final class NucleoidSidebar {
 
     private NucleoidSidebar() {
         this.widget = new Sidebar(TITLE_MAIN, Sidebar.Priority.LOW);
+        this.widget.setDefaultNumberFormat(BlankNumberFormat.INSTANCE);
         this.widget.show();
     }
 
@@ -162,10 +166,14 @@ public final class NucleoidSidebar {
     }
 
     public void addPlayer(ServerPlayerEntity player) {
-        this.widget.addPlayer(player);
+        if (this.enabled) {
+            this.widget.addPlayer(player);
+        }
     }
 
     public void removePlayer(ServerPlayerEntity player) {
-        this.widget.removePlayer(player);
+        if (this.enabled) {
+            this.widget.removePlayer(player);
+        }
     }
 }

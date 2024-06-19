@@ -1,11 +1,14 @@
 package xyz.nucleoid.extras.placeholder;
 
+import com.mojang.serialization.*;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
+
+import java.util.stream.Stream;
 
 public record GameTextContent(GameSpace gameSpace) implements TextContent {
     public Text toVanilla(@Nullable ServerPlayerEntity player, Text text) {
@@ -35,5 +38,10 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
         out.getSiblings().addAll(text.getSiblings());
 
         return out;
+    }
+
+    @Override
+    public Type<?> getType() {
+        return null;
     }
 }

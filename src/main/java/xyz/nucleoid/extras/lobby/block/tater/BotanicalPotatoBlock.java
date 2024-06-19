@@ -91,10 +91,16 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
 
             this.upPart.setModelTransformation(ModelTransformationMode.FIXED);
             this.downPart.setModelTransformation(ModelTransformationMode.FIXED);
+
             this.upPart.setInterpolationDuration(1);
             this.downPart.setInterpolationDuration(1);
+
+            this.upPart.setInvisible(true);
+            this.downPart.setInvisible(true);
+
             this.state = state;
             this.updateAnimation();
+
             this.addElement(this.upPart);
             this.addElement(this.downPart);
         }

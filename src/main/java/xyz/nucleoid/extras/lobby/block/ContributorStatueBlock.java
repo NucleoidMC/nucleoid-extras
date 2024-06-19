@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.block;
 
 import java.util.List;
 
+import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,6 +37,11 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
         super(settings);
 
         this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 
     @Override
