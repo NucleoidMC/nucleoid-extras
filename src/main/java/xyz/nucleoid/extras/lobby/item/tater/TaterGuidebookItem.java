@@ -75,7 +75,6 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     private static void recordToGuidebook(ServerPlayerEntity player, SetMultimap<Item, BlockPos> taterPositions, ItemStack stack) {
         int initialCount = taterPositions.size();
 
-        var pos = new BlockPos.Mutable();
         var chunkManager = player.getServerWorld().getChunkManager();
 
         var chunkStorage = chunkManager.threadedAnvilChunkStorage;
@@ -85,7 +84,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
             var chunk = holder.getWorldChunk();
 
             if (chunk != null) {
-                recordChunk(chunk, pos, taterPositions);
+                recordChunk(chunk, taterPositions);
             }
         }
 
@@ -97,19 +96,12 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
         player.sendMessage(Text.translatable("text.nucleoid_extras.tater_guidebook.recorded", difference), true);
     }
 
-    private static void recordChunk(Chunk chunk, BlockPos.Mutable pos, SetMultimap<Item, BlockPos> taterPositions) {
-        for (int z = 0; z < 16; z++) {
-            for (int y = chunk.getBottomY(); y < chunk.getTopY(); y++) {
-                for (int x = 0; x < 16; x++) {
-                    pos.set(x, y, z);
-                    var state = chunk.getBlockState(pos);
-
-                    if (state.getBlock() instanceof TinyPotatoBlock taterBlock) {
-                        taterPositions.put(taterBlock.asItem(), chunk.getPos().getBlockPos(x, y, z));
-                    }
-                }
-            }
-        }
+    private static void recordChunk(Chunk chunk, SetMultimap<Item, BlockPos> taterPositions) {
+        chunk.forEachBlockMatchingPredicate(state -> {
+            return state.getBlock() instanceof TinyPotatoBlock;
+        }, (pos, state) -> {
+            taterPositions.put(state.getBlock().asItem(), pos.toImmutable());
+        });
     }
 
     private static void showGuidebook(ServerPlayerEntity player, SetMultimap<Item, BlockPos> taterPositionMap, ItemStack stack) {
