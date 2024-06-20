@@ -40,6 +40,7 @@ import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 import xyz.nucleoid.extras.lobby.item.RuleBookItem;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
+import xyz.nucleoid.extras.lobby.item.tater.TaterGuidebookItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,6 +97,7 @@ public class NEItems {
             entries.add(NEItems.GAME_PORTAL_OPENER);
             entries.add(NEItems.TATER_BOX);
             entries.add(NEItems.CREATIVE_TATER_BOX);
+            entries.add(NEItems.TATER_GUIDEBOOK);
             TATERS.forEach(entries::add);
         })
         .build();
@@ -446,6 +448,7 @@ public class NEItems {
     public static final Item TATER_BOX = new TaterBoxItem(new Item.Settings().maxDamage(0));
     public static final Item CREATIVE_TATER_BOX = new CreativeTaterBoxItem(new Item.Settings().maxDamage(0));
 
+    public static final Item TATER_GUIDEBOOK = new TaterGuidebookItem(new Item.Settings().maxCount(1));
     public static final Item QUICK_ARMOR_STAND = new QuickArmorStandItem(new Item.Settings());
     public static final Item GAME_PORTAL_OPENER = new GamePortalOpenerItem(new Item.Settings().maxCount(1));
     public static final Item LAUNCH_FEATHER = new LaunchFeatherItem(new Item.Settings().maxCount(1));
@@ -811,6 +814,7 @@ public class NEItems {
         register("tater_box", TATER_BOX);
         register("creative_tater_box", CREATIVE_TATER_BOX);
 
+        register("tater_guidebook", TATER_GUIDEBOOK);
         register("quick_armor_stand", QUICK_ARMOR_STAND);
         register("game_portal_opener", GAME_PORTAL_OPENER);
         register("launch_feather", LAUNCH_FEATHER);

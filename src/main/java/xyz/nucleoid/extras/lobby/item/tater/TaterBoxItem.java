@@ -28,6 +28,7 @@ import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 import xyz.nucleoid.server.translations.api.Localization;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
@@ -91,18 +92,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
 
             taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
 
-            TinyPotatoBlock.TATERS.stream()
-                .sorted(Comparator.comparing(tater -> {
-                    if (!(tater instanceof CorruptaterBlock)) {
-                        var name = tater.getName();
-
-                        if (name != null) {
-                            return Localization.text(name, user).getString();
-                        }
-                    }
-
-                    return Registries.BLOCK.getId(tater).getPath();
-                }, String.CASE_INSENSITIVE_ORDER))
+            getSortedTaterStream(user)
                 .map(tater -> {
                     boolean found = state.collectedTaters.contains(tater);
 
@@ -223,5 +213,20 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
         } else {
             tag.putString(SELECTED_TATER_KEY, selectedTaterId.toString());
         }
+    }
+
+    public static Stream<TinyPotatoBlock> getSortedTaterStream(ServerPlayerEntity player) {
+        return TinyPotatoBlock.TATERS.stream()
+            .sorted(Comparator.comparing(tater -> {
+                if (!(tater instanceof CorruptaterBlock)) {
+                    var name = tater.getName();
+
+                    if (name != null) {
+                        return Localization.text(name, player).getString();
+                    }
+                }
+
+                return Registries.BLOCK.getId(tater).getPath();
+            }, String.CASE_INSENSITIVE_ORDER));
     }
 }
