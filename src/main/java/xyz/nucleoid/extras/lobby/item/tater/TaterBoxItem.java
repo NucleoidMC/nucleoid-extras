@@ -20,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
@@ -72,7 +73,7 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
     }
 
     private void openTaterBox(World world, ServerPlayerEntity user, ItemStack stack, Hand hand) {
-        if (!world.isClient()) {
+        if (NEItems.canUseTaters(user)) {
             if (stack.hasNbt() && stack.getNbt().contains(LEGACY_TATERS_KEY)) {
                 var data = PlayerLobbyState.get(user);
 
@@ -100,12 +101,12 @@ public class TaterBoxItem extends Item implements PolymerItem, Equipment {
                 })
                 .forEachOrdered(taters::add);
 
-            var ui = TaterBoxGui.of((ServerPlayerEntity) user, taters, this.isCreative());
+            var ui = TaterBoxGui.of(user, taters, this.isCreative());
             ui.setHideUnfound(true);
-            ui.setTitle(this.getTitle((ServerPlayerEntity) user));
+            ui.setTitle(this.getTitle(user));
             ui.open();
 
-            ((ServerPlayerEntity) user).playSound(this.getEquipSound(), SoundCategory.PLAYERS, 0.8f, 1);
+            user.playSound(this.getEquipSound(), SoundCategory.PLAYERS, 0.8f, 1);
         }
     }
 

@@ -34,7 +34,7 @@ public class PlayerLobbyState {
     public static final PlayerDataStorage<PlayerLobbyState> STORAGE = new JsonDataStorage<>("nucleoid_extras", PlayerLobbyState.class);
     public final Set<TinyPotatoBlock> collectedTaters = new HashSet<>();
 
-    public ActionResult collectTaterFromBlock(World world, BlockPos pos, ItemStack stack, PlayerEntity player) {
+    public ActionResult collectTaterFromBlock(World world, BlockPos pos, ItemStack stack, ServerPlayerEntity player) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
@@ -47,7 +47,7 @@ public class PlayerLobbyState {
         return result;
     }
 
-    public ActionResult collectTaterFromEntity(Entity entity, Vec3d hitPos, ItemStack stack, PlayerEntity player) {
+    public ActionResult collectTaterFromEntity(Entity entity, Vec3d hitPos, ItemStack stack, ServerPlayerEntity player) {
         if (entity instanceof ArmorStandEntity armorStand) {
             EquipmentSlot slot = ((ArmorStandEntityAccessor) (Object) armorStand).callSlotFromPosition(hitPos);
             return this.collectTaterFromSlot(armorStand.getEquippedStack(slot), stack, player);
@@ -66,7 +66,7 @@ public class PlayerLobbyState {
         return ActionResult.PASS;
     }
 
-    private ActionResult collectTaterFromSlot(ItemStack slotStack, ItemStack stack, PlayerEntity player) {
+    private ActionResult collectTaterFromSlot(ItemStack slotStack, ItemStack stack, ServerPlayerEntity player) {
         if (!slotStack.isEmpty() && slotStack.getItem() instanceof BlockItem slotItem) {
             Block block = slotItem.getBlock();
             ActionResult result = this.collectTater(block, stack, player);
@@ -81,8 +81,8 @@ public class PlayerLobbyState {
         return ActionResult.PASS;
     }
 
-    private ActionResult collectTater(Block block, ItemStack stack, PlayerEntity player) {
-        if (!(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
+    private ActionResult collectTater(Block block, ItemStack stack, ServerPlayerEntity player) {
+        if (!NEItems.canUseTaters(player) || !(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
 
         boolean alreadyAdded = this.collectedTaters.contains(tater);
         Text message;
@@ -93,13 +93,13 @@ public class PlayerLobbyState {
             this.collectedTaters.add(tater);
 
             // Update the tooltip of tater boxes in player's inventory
-            PolymerUtils.reloadInventory((ServerPlayerEntity) player);
+            PolymerUtils.reloadInventory(player);
 
             message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
         }
 
         player.sendMessage(message, true);
-        triggerCollectCriterion((ServerPlayerEntity) player, tater, this.collectedTaters.size());
+        triggerCollectCriterion(player, tater, this.collectedTaters.size());
 
         return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
     }
@@ -108,7 +108,7 @@ public class PlayerLobbyState {
         NECriteria.TATER_COLLECTED.trigger(player, tater, count);
     }
 
-    private static boolean isFickle(ActionResult result, Block block, PlayerEntity player) {
+    private static boolean isFickle(ActionResult result, Block block, ServerPlayerEntity player) {
         return result.isAccepted() && block instanceof TinyPotatoBlock tater && tater.isFickle() && !player.isCreative();
     }
 
