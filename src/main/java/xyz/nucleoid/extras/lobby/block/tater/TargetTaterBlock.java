@@ -7,6 +7,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 
 public class TargetTaterBlock extends CubicPotatoBlock {
 	private static final IntProperty POWER = Properties.POWER;
@@ -29,7 +32,7 @@ public class TargetTaterBlock extends CubicPotatoBlock {
 	private static final int REGULAR_POWER_DELAY = 8;
 
 	public TargetTaterBlock(Settings settings, String texture) {
-		super(settings, Blocks.TARGET, texture);
+		super(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.TARGET.getDefaultState())), texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
 	}
 

@@ -8,11 +8,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
@@ -21,10 +18,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.particle.TateroidParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvider {
@@ -32,13 +29,11 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     private static final int FULL_DURATION = 15 * SharedConstants.TICKS_PER_SECOND;
 
     private final RegistryEntry<SoundEvent> defaultSound;
-    private final double particleColor;
 
-    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
-        super(settings, ParticleTypes.NOTE, texture);
+    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
+        super(settings, new TateroidParticleSpawner(ParticleTypes.NOTE, defaultParticleColor), texture);
 
         this.defaultSound = defaultSound;
-        this.particleColor = particleColor;
 
         this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
     }
@@ -61,38 +56,6 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
         }
 
         return (int) (FULL_DURATION * (power / (float) Properties.LEVEL_15_MAX));
-    }
-
-    @Override
-    public void spawnBlockParticles(ServerWorld world, BlockPos pos, ParticleEffect particleEffect) {
-        if (particleEffect != null && world.getRandom().nextInt(getBlockParticleChance()) == 0) {
-            world.getBlockEntity(pos, NEBlocks.TATEROID_ENTITY).ifPresent(blockEntity -> {
-                world.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 1, 0, 0, blockEntity.getParticleSpeed());
-            });
-        }
-    }
-
-    @Override
-    public void spawnPlayerParticles(ServerPlayerEntity player) {
-        if (this.particleColor == -1) {
-            super.spawnPlayerParticles(player);
-            return;
-        }
-
-        Box box = player.getBoundingBox();
-
-        double deltaX = box.getLengthX() / 2d;
-        double deltaY = box.getLengthY() / 2d;
-        double deltaZ = box.getLengthZ() / 2d;
-
-        double x = player.getX() + (player.getRandom().nextGaussian() * deltaX);
-        double y = player.getY() + (player.getRandom().nextGaussian() * deltaY);
-        double z = player.getZ() + (player.getRandom().nextGaussian() * deltaZ);
-
-        ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
-        if (particleEffect != null) {
-            player.getServerWorld().spawnParticles(particleEffect, x, y, z, 0, 1, 0, 0, this.particleColor);
-        }
     }
 
     @Override

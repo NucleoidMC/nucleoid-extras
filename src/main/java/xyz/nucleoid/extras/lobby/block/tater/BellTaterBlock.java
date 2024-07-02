@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.block.tater;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 import net.minecraft.block.Block;
@@ -32,7 +33,7 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	public static final BooleanProperty POWERED = Properties.POWERED;
 
 	public BellTaterBlock(Settings settings, String texture) {
-		super(settings, ParticleTypes.NOTE, texture);
+		super(settings, new SimpleTaterParticleSpawner(ParticleTypes.NOTE), texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
 	}
 

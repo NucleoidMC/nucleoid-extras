@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
 public class DiceTaterBlock extends CubicPotatoBlock {
@@ -35,7 +36,7 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     };
 
     public DiceTaterBlock(Settings settings) {
-        super(settings, ParticleTypes.POOF, TEXTURES[6]);
+        super(settings, new SimpleTaterParticleSpawner(ParticleTypes.POOF), TEXTURES[6]);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(FACE, 1));
     }

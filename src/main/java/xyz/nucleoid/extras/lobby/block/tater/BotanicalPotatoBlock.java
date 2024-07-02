@@ -13,7 +13,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
@@ -27,14 +26,15 @@ import net.minecraft.util.math.RotationPropertyHelper;
 import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
 public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithElementHolder {
     private final ItemStack upStack;
     private final ItemStack downStack;
 
-    public BotanicalPotatoBlock(Settings settings, String upperTexture, String lowerTexture, ParticleEffect particleEffect, int particleRate) {
-        super(settings.nonOpaque(), upperTexture, particleEffect, particleRate);
+    public BotanicalPotatoBlock(Settings settings, TaterParticleSpawner particleSpawner, String upperTexture, String lowerTexture) {
+        super(settings.nonOpaque(), particleSpawner, upperTexture);
         this.upStack = PolymerUtils.createPlayerHead(this.getItemTexture());
         this.downStack = PolymerUtils.createPlayerHead(SkinEncoder.encode(lowerTexture));
     }

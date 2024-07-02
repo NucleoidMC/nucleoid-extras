@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.block.tater;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 import net.minecraft.block.Block;
@@ -11,6 +12,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -27,7 +30,7 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 	public final boolean inverted;
 
 	public DaylightDetectorTaterBlock(Settings settings, String texture, boolean inverted) {
-		super(settings, Blocks.DAYLIGHT_DETECTOR.getDefaultState().with(Properties.INVERTED, inverted), texture);
+		super(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DAYLIGHT_DETECTOR.getDefaultState().with(Properties.INVERTED, inverted))), texture);
 		this.inverted = inverted;
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
 	}

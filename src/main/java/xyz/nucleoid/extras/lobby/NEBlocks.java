@@ -11,9 +11,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
@@ -27,6 +29,7 @@ import org.joml.Vector3f;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
 import xyz.nucleoid.extras.lobby.block.tater.*;
+import xyz.nucleoid.extras.lobby.particle.*;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = createTaterBlock(ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
@@ -76,7 +79,7 @@ public class NEBlocks {
     public static final Block TRANSIENT_CRIMSON_DOOR = new TransientDoorBlock(Blocks.CRIMSON_DOOR);
     public static final Block TRANSIENT_WARPED_DOOR = new TransientDoorBlock(Blocks.WARPED_DOOR);
 
-    public static final Block NUCLE_PAST_LOGO = createTaterBlock(new DustParticleEffect(Vec3d.unpackRgb(0x52C471).toVector3f(), 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
+    public static final Block NUCLE_PAST_LOGO = createColorTaterBlock(Vec3d.unpackRgb(0x52C471).toVector3f(), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
 
     public static final Block TINY_POTATO = createTaterBlock(ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
     public static final Block BOTANICAL_TINY_POTATO = createBotanicTaterBlock(ParticleTypes.HEART,
@@ -204,7 +207,7 @@ public class NEBlocks {
     public static final Block LAPIS_TATER = createTaterBlock(Blocks.LAPIS_BLOCK, "58d5cbda5c5046bf0b0f0d447c2fcc5e468707b6a4837c083af8e109aba9ce1c");
     public static final Block NETHERITE_TATER = createTaterBlock(Blocks.NETHERITE_BLOCK, "664dce4fade8e5f352001eff6900d9d4b142935ebed303106539f7ad0193621f");
     public static final Block QUARTZ_TATER = createTaterBlock(Blocks.QUARTZ_BLOCK, "7e7b4561d09d1a726fec3607706c9e3c77e8fc9b8c7e9c3637ca80ea0c86be21");
-    public static final Block REDSTONE_TATER = createRedstoneTaterBlock(new DustParticleEffect(DustParticleEffect.RED, 1), "c47dd2536f5a5eb2bdb1ea4389d3af8ca2fd9d5d2c97c660fc5bf4d970c974de");
+    public static final Block REDSTONE_TATER = createRedstoneTaterBlock(DustParticleEffect.RED, "c47dd2536f5a5eb2bdb1ea4389d3af8ca2fd9d5d2c97c660fc5bf4d970c974de");
 
     public static final Block COPPER_TATER = createTaterBlock(ParticleTypes.SCRAPE, "18207c7cf4007222691750b0783d6959261ddf72980483f7c9fcf96c2cba85b1");
     public static final Block EXPOSED_COPPER_TATER = createTaterBlock(ParticleTypes.SCRAPE, "bd5020090643edb5ec25d87cb1f408aad4f6018ec4bbe83d25a031ef1e705e4d");
@@ -440,27 +443,33 @@ public class NEBlocks {
     }
 
     private static Block createBotanicTaterBlock(ParticleEffect effect, String textureUp, String textureDown) {
-        return new BotanicalPotatoBlock(createTaterBlockSettings(), textureUp, textureDown, effect, 2);
+        return new BotanicalPotatoBlock(createTaterBlockSettings(), new SimpleTaterParticleSpawner(effect), textureUp, textureDown);
+    }
+
+    private static Block createTaterBlock(TaterParticleSpawner particleSpawner, String texture) {
+        return new CubicPotatoBlock(createTaterBlockSettings(), particleSpawner, texture);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture) {
-        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture);
+        return createTaterBlock(new SimpleTaterParticleSpawner(effect), texture);
     }
 
     private static Block createTaterBlock(Block particleBlock, String texture) {
-        return new CubicPotatoBlock(createTaterBlockSettings(), particleBlock, texture);
+        var effect = new BlockStateParticleEffect(ParticleTypes.BLOCK, particleBlock.getDefaultState());
+        return createTaterBlock(effect, texture);
     }
 
     private static Block createTaterBlock(Item particleItem, String texture) {
-        return new CubicPotatoBlock(createTaterBlockSettings(), particleItem, texture);
+        var effect = new ItemStackParticleEffect(ParticleTypes.ITEM, new ItemStack(particleItem));
+        return createTaterBlock(effect, texture);
     }
 
     private static Block createTaterBlock(ParticleEffect effect, String texture, int particleRate) {
-        return new CubicPotatoBlock(createTaterBlockSettings(), effect, texture, particleRate);
+        return createTaterBlock(new SimpleTaterParticleSpawner(effect, particleRate), texture);
     }
   
     private static Block createColorPatternTaterBlock(Vector3f[] pattern, String texture) {
-        return new ColorPatternTaterBlock(createTaterBlockSettings(), pattern, texture);
+        return new CubicPotatoBlock(createTaterBlockSettings(), new ColorPatternTaterParticleSpawner(pattern), texture);
     }
 
     private static Block createLuckyTaterBlock(String texture, String cooldownTexture) {
@@ -468,23 +477,27 @@ public class NEBlocks {
     }
 
     private static Block createWardenTaterBlock(String texture) {
-        return new WardenTaterBlock(createTaterBlockSettings(), texture);
+        return createTaterBlock(new WardenTaterParticleSpawner(), texture);
     }
 
     private static Block createDiceTaterBlock() {
         return new DiceTaterBlock(createTaterBlockSettings());
     }
 
-    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
-        return new TateroidBlock(createTaterBlockSettings(), defaultSound, particleColor, texture);
+    private static Block createTateroidBlock(RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
+        return new TateroidBlock(createTaterBlockSettings(), defaultSound, defaultParticleColor, texture);
+    }
+
+    private static Block createColorTaterBlock(Vector3f color, String texture) {
+        return createTaterBlock(SimpleTaterParticleSpawner.ofDust(color), texture);
     }
 
     private static Block createColorTaterBlock(DyeColor color, String texture) {
-        return new ColorTaterBlock(createTaterBlockSettings(), color, texture);
+        return createTaterBlock(SimpleTaterParticleSpawner.ofDust(color), texture);
     }
 
-    private static Block createRedstoneTaterBlock(ParticleEffect effect, String texture) {
-        return new RedstoneTaterBlock(createTaterBlockSettings(), effect, texture);
+    private static Block createRedstoneTaterBlock(Vector3f color, String texture) {
+        return new RedstoneTaterBlock(createTaterBlockSettings(), SimpleTaterParticleSpawner.ofDust(color), texture);
     }
 
     private static Block createDaylightDetectorTaterBlock(String texture, boolean inverted) {
@@ -500,19 +513,19 @@ public class NEBlocks {
     }
 
     private static Block createElderGuardianParticleTaterBlock(String texture) {
-        return new ElderGuardianParticleTater(createTaterBlockSettings(), texture);
+        return createTaterBlock(new SimpleTaterParticleSpawner(ParticleTypes.ELDER_GUARDIAN, 10000, 50), texture);
     }
 
     private static Block createCapsuleTaterBlock(Vector3f color, int weight, String texture) {
-        return new CapsuleTaterBlock(createTaterBlockSettings(), color, weight, texture);
+        return new CapsuleTaterBlock(createTaterBlockSettings(), RingTaterParticleSpawner.ofDust(color), weight, texture);
     }
 
     private static Block createMarkerTaterBlock(Block particleBlock, String texture) {
-        return new MarkerTaterBlock(createTaterBlockSettings(), particleBlock, texture);
+        return createTaterBlock(new SimpleMarkerTaterParticleSpawner(particleBlock), texture);
     }
 
     private static Block createLightTaterBlock(String texture) {
-        return new LightTaterBlock(createTaterBlockSettings(), texture);
+        return createTaterBlock(LightTaterParticleSpawner.INSTANCE, texture);
     }
 
     public static void register() {
