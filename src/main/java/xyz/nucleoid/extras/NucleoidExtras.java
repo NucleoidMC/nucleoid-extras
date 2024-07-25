@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras;
 
+import eu.pb4.playerdata.api.PlayerDataApi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
@@ -8,12 +9,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
+import xyz.nucleoid.extras.command.ExtraCommands;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
+import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
+import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.extras.lobby.NEBlocks;
-import xyz.nucleoid.extras.lobby.NECriteria;
-import xyz.nucleoid.extras.lobby.NEEntities;
-import xyz.nucleoid.extras.lobby.NEItems;
+import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
+import xyz.nucleoid.extras.lobby.*;
+import xyz.nucleoid.extras.lobby.contributor.ContributorData;
+import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
@@ -33,10 +37,18 @@ public final class NucleoidExtras implements ModInitializer {
         ScheduledStop.register();
 
         NucleoidIntegrations.register();
+        NucleoidHttpClient.register();
+        ContributorData.register();
 
         ExtrasErrorReporter.register();
+        ExtraPlaceholders.register();
+        ExtrasGamePortals.register();
+        ExtraCommands.register();
+
+        PlayerDataApi.register(PlayerLobbyState.STORAGE);
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
+        ServerChangePortalBackend.register();
     }
 
     private static void onServerTick(MinecraftServer server) {
@@ -50,6 +62,8 @@ public final class NucleoidExtras implements ModInitializer {
         if (integrations != null) {
             integrations.tick();
         }
+
+        ServerChangePortalBackend.tick(server);
     }
 
     public static Identifier identifier(String path) {

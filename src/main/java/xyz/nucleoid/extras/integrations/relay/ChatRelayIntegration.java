@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.integrations.relay;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
@@ -79,7 +80,7 @@ public final class ChatRelayIntegration {
     private static String parseUserId(JsonObject user) {
         var name = user.get("name").getAsString();
         int discriminator = user.get("discriminator").getAsInt();
-        return name + "#" + discriminator;
+        return name + "#" + String.format("%04d", discriminator);
     }
 
     @NotNull
@@ -206,7 +207,7 @@ public final class ChatRelayIntegration {
         boolean first = true;
 
         MessageBuilder(Text prefix) {
-            this.text = Text.empty().append(prefix).append(" ");
+            this.text = Text.empty().append(prefix).append(ScreenTexts.SPACE);
         }
 
         void append(MutableText text) {

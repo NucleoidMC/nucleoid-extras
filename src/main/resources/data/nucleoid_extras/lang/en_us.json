@@ -19,10 +19,16 @@
   "nucleoid.stop.scheduled.already": "Server restart has already been scheduled.",
   "nucleoid.stop.game.open": "Cannot join this game: a server stop has been scheduled!",
 
+  "nucleoid.navigator.all_games": "View Games",
+  "nucleoid.navigator.open_games": "View Active",
+
   "block.nucleoid_extras.end_portal": "End Portal (Lobby only!)",
   "block.nucleoid_extras.end_gateway": "End Gateway (Lobby only!)",
   "block.nucleoid_extras.gold_launch_pad": "Gold Launch Pad (Lobby only!)",
   "block.nucleoid_extras.iron_launch_pad": "Iron Launch Pad (Lobby only!)",
+  "block.nucleoid_extras.contributor_statue": "Contributor Statue (Lobby only!)",
+  "block.nucleoid_extras.contributor_statue.contributor": "Contributor: %s",
+  "block.nucleoid_extras.contributor_statue.contributor_id": "Contributor ID: %s",
   "block.nucleoid_extras.infinite_dispenser": "Infinite Dispenser (Lobby only!)",
   "block.nucleoid_extras.infinite_dropper": "Infinite Dropper (Lobby only!)",
   "block.nucleoid_extras.snake_block": "Snake Block (Lobby only!)",
@@ -45,6 +51,7 @@
   "block.nucleoid_extras.white_concrete_powder": "Floating White Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.yellow_concrete_powder": "Floating Yellow Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.tiny_potato": "Tiny Potato",
+  "block.nucleoid_extras.botanical_potato": "Botanical Tiny Potato",
   "block.nucleoid_extras.irritater": "Irritater",
   "block.nucleoid_extras.sad_tater": "Sad Tater",
   "block.nucleoid_extras.flowering_azalea_tater": "Flowering Azalea Tater",
@@ -82,6 +89,8 @@
   "block.nucleoid_extras.blue_tateroid": "Blue Tateroid",
   "block.nucleoid_extras.purple_tateroid": "Purple Tateroid",
   "block.nucleoid_extras.flipped_tater": "Flipped Tater",
+  "block.nucleoid_extras.backward_tater": "Backward Tater",
+  "block.nucleoid_extras.upward_tater": "Upward Tater",
   "block.nucleoid_extras.santa_hat_tater": "Tiny Potato with Santa Hat",
   "block.nucleoid_extras.skeletater": "Skeletater",
   "block.nucleoid_extras.wither_skeletater": "Wither Skeletater",
@@ -309,6 +318,11 @@
   "block.nucleoid_extras.mud_tater": "Mud Tater",
   "block.nucleoid_extras.packed_mud_tater": "Packed Mud Tater",
   "block.nucleoid_extras.stripped_mangrove_log_tater": "Stripped Mangrove Log Tater",
+  "block.nucleoid_extras.lucy_axolotl_tater": "Leucistic Axolotl Tater",
+  "block.nucleoid_extras.wild_axolotl_tater": "Brown Axolotl Tater",
+  "block.nucleoid_extras.gold_axolotl_tater": "Gold Axolotl Tater",
+  "block.nucleoid_extras.cyan_axolotl_tater": "Cyan Axolotl Tater",
+  "block.nucleoid_extras.blue_axolotl_tater": "Blue Axolotl Tater",
   "block.nucleoid_extras.bronze_capsule_tater": "Bronze Capsule Tater",
   "block.nucleoid_extras.silver_capsule_tater": "Silver Capsule Tater",
   "block.nucleoid_extras.gold_capsule_tater": "Golden Capsule Tater",
@@ -325,6 +339,7 @@
   "block.nucleoid_extras.safe_tnt": "Safe TNT (Lobby only!)",
 
   "item.nucleoid_extras.game_portal_opener": "Game Portal Opener",
+  "item.nucleoid_extras.launch_feather": "Launch Feather",
   "item.nucleoid_extras.tater_box": "Tater Box",
   "item.nucleoid_extras.quick_armor_stand": "Quick Armor Stand (Lobby only!)",
 
@@ -340,6 +355,9 @@
   "text.nucleoid_extras.tater_box.not_found": "Not Found Yet!",
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
+  "text.nucleoid_extras.tater_box.updated": "Your Tater Box has been updated to new format! It will be safer than ever!",
+
+  "text.nucleoid_extras.contributor_statue.title": "Select Contributor",
 
   "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!",
   "text.nucleoid_extras.lobby_only": "(Lobby Only!)",
@@ -347,6 +365,9 @@
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
   "text.nucleoid_extras.statistics.stat": "%s: %s",
+  "text.nucleoid_extras.statistics.list_ui": "Your statistics",
+  "text.nucleoid_extras.statistics.waiting": "Waiting for statistics data",
+  "text.nucleoid_extras.seconds": "%s second(s)",
 
   "advancements.nucleoid_extras.root.title": "Nucleoid",
   "advancements.nucleoid_extras.root.description": "Advancements for Nucleoid",
@@ -395,6 +416,8 @@
   "advancements.nucleoid_extras.raw_taters.description": "Collect all Raw Ore Taters in your Tater Box.",
   "advancements.nucleoid_extras.ice_taters.title": "Frozen Potatoes",
   "advancements.nucleoid_extras.ice_taters.description": "Collect all Ice Taters in your Tater Box.",
+  "advancements.nucleoid_extras.axolotl_taters.title": "A-xo-LOT of Taters",
+  "advancements.nucleoid_extras.axolotl_taters.description": "Collect all Axolotl Taters in your Tater Box.",
 
   "advancements.nucleoid_extras.pre_classic_taters.title": "Prehistoric Taters",
   "advancements.nucleoid_extras.pre_classic_taters.description": "Collect all Minecraft Pre-Classic Taters in your Tater Box.",

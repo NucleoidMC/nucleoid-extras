@@ -2,8 +2,8 @@ package xyz.nucleoid.extras.util;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.viaversion.viaversion.api.Via;
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+//import com.viaversion.viaversion.api.Via;
+//import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
@@ -32,15 +32,15 @@ public final class GameVersionResolver {
     @Nullable
     private static String getViaVersionHighestSupportedVersion() {
         try {
-            int maxVersion = (int) Via.getAPI().getSupportedVersions().last();
-            ProtocolVersion protocolVersion = ProtocolVersion.getProtocol(maxVersion);
+            //int maxVersion = (int) Via.getAPI().getSupportedVersions().last();
+            //ProtocolVersion protocolVersion = ProtocolVersion.getProtocol(maxVersion);
 
-            return protocolVersion.getName();
-        } catch (IllegalArgumentException e) {
+            //return protocolVersion.getName();
+        } catch (Throwable e) {
             // The ViaVersion API does not provide a way
             // to test whether the platform is loaded,
             // so the exception must be caught instead.
-            return null;
         }
+        return null;
     }
 }
