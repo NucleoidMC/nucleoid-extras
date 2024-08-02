@@ -41,6 +41,7 @@ import xyz.nucleoid.extras.lobby.item.RuleBookItem;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterGuidebookItem;
+import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -866,13 +867,17 @@ public class NEItems {
         });
     }
 
+    public static boolean canUseTaters(ServerPlayerEntity player) {
+        return !GameSpaceManager.get().inGame(player);
+    }
+
     private static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
         if (!player.getWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
             ItemStack stack = player.getStackInHand(hand);
             BlockPos pos = hitResult.getBlockPos();
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            state.collectTaterFromBlock(world, pos, stack, player);
+            state.collectTaterFromBlock(world, pos, stack, (ServerPlayerEntity) player);
         }
 
         return ActionResult.PASS;
@@ -884,7 +889,7 @@ public class NEItems {
             Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            state.collectTaterFromEntity(entity, hitPos, stack, player);
+            state.collectTaterFromEntity(entity, hitPos, stack, (ServerPlayerEntity) player);
         }
 
         return ActionResult.PASS;
