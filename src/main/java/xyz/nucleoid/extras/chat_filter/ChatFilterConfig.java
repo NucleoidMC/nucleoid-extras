@@ -14,8 +14,9 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.util.PlasmidCodecs;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +31,7 @@ public final class ChatFilterConfig {
         WORD_SET_CODEC.optionalFieldOf("illegal_words", Set.of()).forGetter(c -> c.illegalWords),
         WORD_CODEC.listOf().optionalFieldOf("contains_illegal_text", List.of()).forGetter(c -> c.containsIllegalText),
         PlasmidCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
-        Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
+        Registries.SOUND_EVENT.getEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
     ).apply(i, ChatFilterConfig::new));
 
     private static final Splitter WORD_SPLITTER = Splitter.onPattern("\\W");

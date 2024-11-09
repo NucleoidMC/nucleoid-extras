@@ -24,7 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.JsonHelper;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.block.ContributorStatueBlockEntity;
-import xyz.nucleoid.extras.mixin.lobby.ThreadedAnvilChunkStorageAccessor;
+import xyz.nucleoid.extras.mixin.lobby.ServerChunkLoadingManagerAccessor;
 
 public final class ContributorData {
     private static final Logger LOGGER = LogManager.getLogger(ContributorData.class);
@@ -94,8 +94,8 @@ public final class ContributorData {
         for (var world : server.getWorlds()) {
             var chunkManager = world.getChunkManager();
 
-            var chunkStorage = chunkManager.threadedAnvilChunkStorage;
-            var accessor = (ThreadedAnvilChunkStorageAccessor) (Object) chunkStorage;
+            var chunkStorage = chunkManager.chunkLoadingManager;
+            var accessor = (ServerChunkLoadingManagerAccessor) (Object) chunkStorage;
 
             for (var holder : accessor.callEntryIterator()) {
                 var chunk = holder.getWorldChunk();
@@ -103,8 +103,7 @@ public final class ContributorData {
                 if (chunk != null) {
                     for (var entity : chunk.getBlockEntities().values()) {
                         if (entity instanceof ContributorStatueBlockEntity statue) {
-                            statue.removeHolograms();
-                            statue.spawnHolograms();
+                            statue.updateModel();
                         }
                     }
                 }

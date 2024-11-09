@@ -3,17 +3,18 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Random;
 
 public final class CorruptaterBlock extends CubicPotatoBlock {
     private final Random random = new Random();
     public CorruptaterBlock(AbstractBlock.Settings settings, int particleRate) {
-        super(settings, ParticleTypes.ENTITY_EFFECT, PolymerUtils.NO_TEXTURE_HEAD_VALUE, particleRate);
+        super(settings, EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 0), PolymerUtils.NO_TEXTURE_HEAD_VALUE, particleRate);
     }
 
     @Override
@@ -22,9 +23,9 @@ public final class CorruptaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
         var tater = getTater();
-        return tater.getPolymerSkinValue(tater.getDefaultState(), pos, player);
+        return tater.getPolymerSkinValue(tater.getDefaultState(), pos, context);
     }
 
     private CubicPotatoBlock getTater() {

@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.sound.SoundCategory;
@@ -133,7 +134,7 @@ public class BellTaterBlockEntity extends BlockEntity {
 				double h = (double)(l >> 16 & 0xFF) / 255.0;
 				double m = (double)(l >> 8 & 0xFF) / 255.0;
 				double n = (double)(l & 0xFF) / 255.0;
-				world.addParticle(ParticleTypes.ENTITY_EFFECT, e, (float)pos.getY() + 0.5f, g, h, m, n);
+				world.addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, -1), e, (float)pos.getY() + 0.5f, g, h, m, n);
 			}
 		});
 	}

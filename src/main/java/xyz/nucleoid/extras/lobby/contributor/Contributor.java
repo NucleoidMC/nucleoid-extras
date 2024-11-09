@@ -7,18 +7,18 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.block.entity.SkullBlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
-import xyz.nucleoid.extras.mixin.lobby.SkullBlockEntityAccessor;
 
 public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) implements Comparable<Contributor> {
     protected static final Codec<Contributor> CODEC = RecordCodecBuilder.create(instance ->
@@ -53,7 +53,11 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
         var profile = this.createGameProfile(server);
         var playerHead = this.createPlayerHead(profile);
 
-        entity.equipStack(EquipmentSlot.HEAD, playerHead);
+        if (entity instanceof MobEntity mob) {
+            mob.equipStack(EquipmentSlot.HEAD, playerHead);
+        } else if (entity instanceof ArmorStandEntity armorStand) {
+            armorStand.equipStack(EquipmentSlot.HEAD, playerHead);
+        }
 
         this.loadGameProfileProperties(server, profile, fullProfile -> {
             writeSkullOwner(playerHead, fullProfile);
@@ -89,7 +93,6 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
     }
 
     public static void writeSkullOwner(ItemStack stack, GameProfile profile) {
-        var nbt = stack.getOrCreateNbt();
-        nbt.put(SkullBlockEntity.SKULL_OWNER_KEY, NbtHelper.writeGameProfile(new NbtCompound(), profile));
+        stack.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
     }
 }

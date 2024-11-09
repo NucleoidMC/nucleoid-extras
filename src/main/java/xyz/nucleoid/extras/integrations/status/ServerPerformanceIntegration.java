@@ -3,7 +3,7 @@ package xyz.nucleoid.extras.integrations.status;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.profiler.PerformanceLog;
+import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -69,13 +69,13 @@ public final class ServerPerformanceIntegration {
         }
     }
 
-    private static float getAverageTickMs(PerformanceLog log) {
+    private static float getAverageTickMs(MultiValueDebugSampleLog log) {
         try {
             long total = 0;
-            for (int index = 0; index < log.size(); index++) {
+            for (int index = 0; index < log.getLength(); index++) {
                 total += log.get(index);
             }
-            double averageTickNs = (double) total / log.size();
+            double averageTickNs = (double) total / log.getLength();
             return (float) (averageTickNs / 1000000.0);
         } catch (Throwable e) {
             return 0;

@@ -12,8 +12,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
-    public static final Codec<RegistryEntry<Block>> ENTRY_CODEC = Codecs.validate(Registries.BLOCK.createEntryCodec(), block -> {
+    public static final Codec<RegistryEntry<Block>> ENTRY_CODEC = Registries.BLOCK.getEntryCodec().validate(block -> {
         if (block.value() instanceof TinyPotatoBlock) {
             return DataResult.success(block);
         }
@@ -50,7 +48,7 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
         return this.particleEffect;
     }
 
-    public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         return this.getParticleEffect(world.getServer().getTicks());
     }
 
@@ -103,13 +101,9 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand == Hand.OFF_HAND) {
-            return ActionResult.FAIL;
-        }
-
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world instanceof ServerWorld serverWorld) {
-            ParticleEffect particleEffect = this.getBlockParticleEffect(state, serverWorld, pos, player, hand, hit);
+            ParticleEffect particleEffect = this.getBlockParticleEffect(state, serverWorld, pos, player, hit);
             this.spawnBlockParticles(serverWorld, pos, particleEffect);
         }
 

@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.mutable.MutableInt;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntryConfig;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 
 import java.util.ArrayList;
 import java.util.List;

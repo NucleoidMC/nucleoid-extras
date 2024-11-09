@@ -6,7 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -16,16 +16,15 @@ import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DataPool;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LuckyTaterBlock extends CubicPotatoBlock {
     private static final EnumProperty<LuckyTaterPhase> PHASE = EnumProperty.of("phase", LuckyTaterPhase.class);
@@ -48,14 +47,14 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
         int toColor = LuckyTaterBlock.getRandomColor(player.getRandom());
 
         int scale = player.getRandom().nextInt(3);
-        return new DustColorTransitionParticleEffect(Vec3d.unpackRgb(fromColor).toVector3f(), Vec3d.unpackRgb(toColor).toVector3f(), scale);
+        return new DustColorTransitionParticleEffect(fromColor, toColor, scale);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         LuckyTaterPhase phase = state.get(PHASE);
 
-        if (hand == Hand.OFF_HAND || phase != LuckyTaterPhase.READY) {
+        if (phase != LuckyTaterPhase.READY) {
             return ActionResult.FAIL;
         }
 
@@ -77,7 +76,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
                     world.setBlockState(allowed.pos(), dropState);
 
                     // Spawn particles
-                    ParticleEffect particleEffect = taterDrop.getBlockParticleEffect(taterDrop.getDefaultState(), serverWorld, pos, player, hand, hit);
+                    ParticleEffect particleEffect = taterDrop.getBlockParticleEffect(taterDrop.getDefaultState(), serverWorld, pos, player, hit);
                     this.spawnBlockParticles(serverWorld, pos, particleEffect);
 
                     // Play sound
@@ -95,7 +94,9 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     }
 
     private Block getDrop(ServerWorld world) {
-        var drops = Registries.BLOCK.getEntryList(NEBlockTags.LUCKY_TATER_DROPS);
+        var drops = world.getRegistryManager()
+                .getOrThrow(RegistryKeys.BLOCK)
+                .getOptional(NEBlockTags.LUCKY_TATER_DROPS);
 
         if (drops.isEmpty()) {
             return null;
@@ -171,8 +172,8 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
-        return state.get(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, player);
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
+        return state.get(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, context);
     }
 
     private static int getRandomColor(Random random) {

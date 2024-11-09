@@ -18,7 +18,7 @@ import xyz.nucleoid.extras.integrations.game.StatisticsIntegration;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.extras.util.CommonGuiElements;
 import xyz.nucleoid.extras.util.PagedGui;
-import xyz.nucleoid.plasmid.game.stats.GameStatisticBundle;
+import xyz.nucleoid.plasmid.api.game.stats.GameStatisticBundle;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -65,7 +65,7 @@ public class StatsCommand {
         var list = new ArrayList<GuiElementInterface>();
         for (var entry : stats.entrySet()) {
             var builder = new GuiElementBuilder(Items.PAPER);
-            builder.setName(Text.translatable(GameStatisticBundle.getTranslationKey(entry.getKey())));
+            builder.setItemName(Text.translatable(GameStatisticBundle.getTranslationKey(entry.getKey()))).hideDefaultTooltip();
             builder.setCallback((a, b, c, d) -> {
                 PagedGui.playClickSound(player);
                 openTargetStats(entry.getKey(), entry.getValue(), player);
@@ -83,7 +83,7 @@ public class StatsCommand {
         var list = new ArrayList<GuiElementInterface>();
         for (var entry : value.entrySet()) {
             var builder = new GuiElementBuilder(Items.NAME_TAG);
-            builder.setName(Text.empty().append(Util.createTranslationKey("statistic", entry.getKey())).append(": ").append(StatisticsIntegration.convertForDisplay(entry.getKey(), entry.getValue())));
+            builder.setItemName(Text.empty().append(Util.createTranslationKey("statistic", entry.getKey())).append(": ").append(StatisticsIntegration.convertForDisplay(entry.getKey(), entry.getValue()))).hideDefaultTooltip();
             list.add(builder.build());
         }
         list.sort(Comparator.comparing(x -> x.getItemStack().getName().getString()));

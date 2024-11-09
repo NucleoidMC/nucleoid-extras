@@ -4,7 +4,7 @@ import eu.pb4.sgui.api.GuiHelpers;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
-import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
@@ -13,18 +13,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.util.CommonGuiElements;
 import xyz.nucleoid.extras.util.PagedGui;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.player.GamePlayerJoiner;
-import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.GamePortalDisplay;
-import xyz.nucleoid.plasmid.game.portal.menu.InvalidMenuEntry;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
-import xyz.nucleoid.plasmid.util.IdentityHashStrategy;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.player.GamePlayerJoiner;
+import xyz.nucleoid.plasmid.api.game.player.JoinIntent;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalDisplay;
+import xyz.nucleoid.plasmid.impl.portal.menu.InvalidMenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -78,7 +77,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     @Override
     public int getPlayerCount() {
         int count = 0;
-        var list = new ObjectOpenCustomHashSet<GameSpace>(IdentityHashStrategy.INSTANCE);
+        var list = new ReferenceOpenHashSet<GameSpace>();
         provideGameSpaces(list::add);
         for (var entry : list) {
             count += Math.max(0, entry.getPlayers().size());
@@ -102,7 +101,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public void applyTo(ServerPlayerEntity player) {
+    public void applyTo(ServerPlayerEntity player, boolean alt) {
         var oldGui = GuiHelpers.getCurrentGui(player);
 
         var gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, player, false);
@@ -137,11 +136,11 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             gui.setTitle(this.uiTitle);
             this.fillInterface(player, gui, page);
         }
-        gui.setSlot(5 * 9 + 4, filter.setName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")));
+        gui.setSlot(5 * 9 + 4, filter.setItemName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")).hideDefaultTooltip());
     }
 
     private void fillOpen(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
-        var gamesTemp = new ObjectOpenCustomHashSet<GameSpace>(IdentityHashStrategy.INSTANCE);
+        var gamesTemp = new ReferenceOpenHashSet<GameSpace>();
         this.provideGameSpaces(gamesTemp::add);
         var games = new ArrayList<>(gamesTemp);
         games.sort(Comparator.comparingInt(space -> -space.getPlayers().size()));
@@ -180,10 +179,10 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
                 if (games.size() > pIndex) {
                     var portal = games.get(pIndex);
-                    var m = portal.getMetadata().sourceConfig();
+                    var m = portal.getMetadata().sourceConfig().value();
                     gui.setSlot(index, createIconFor(m.icon(), m.name(), m.description(), portal.getPlayers().size(), (p) -> {
                         PagedGui.playClickSound(player);
-                        tryJoinGame(p, portal);
+                        tryJoinGame(p, portal, JoinIntent.PLAY);
                     }));
                 } else {
                     gui.clearSlot(index);
@@ -192,10 +191,12 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         }
     }
 
-    private static void tryJoinGame(ServerPlayerEntity player, GameSpace gameSpace) {
+    private static void tryJoinGame(ServerPlayerEntity player, GameSpace gameSpace, JoinIntent intent) {
         player.server.submit(() -> {
-            var results = GamePlayerJoiner.tryJoin(player, gameSpace);
-            results.sendErrorsTo(player);
+            var result = GamePlayerJoiner.tryJoin(player, gameSpace, intent);
+            if (result.isError()) {
+                player.sendMessage(result.errorCopy().formatted(Formatting.RED));
+            }
         });
     }
 
@@ -259,8 +260,9 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, int playerCount, Consumer<ServerPlayerEntity> click) {
-            var element = GuiElementBuilder.from(icon).hideFlags()
-                .setName(name);
+            var element = GuiElementBuilder.from(icon)
+                .setItemName(name)
+                .hideDefaultTooltip();
 
         for (var line : description) {
             var text = line.copy();

@@ -12,17 +12,16 @@ import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.component.NEDataComponentTypes;
+import xyz.nucleoid.extras.component.TaterSelectionComponent;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
@@ -53,11 +52,12 @@ public class PlayerLobbyState {
             return this.collectTaterFromSlot(armorStand.getEquippedStack(slot), stack, player);
         } else if (entity instanceof PlayerEntity targetPlayer) {
             ItemStack targetStack = targetPlayer.getEquippedStack(EquipmentSlot.HEAD);
+            TaterSelectionComponent taterSelection = targetStack.get(NEDataComponentTypes.TATER_SELECTION);
             
-            if (targetStack.getItem() instanceof TaterBoxItem) {
-                Block targetTater = TaterBoxItem.getSelectedTater(targetStack);
+            if (taterSelection != null && taterSelection.allowViralCollection() && taterSelection.tater().isPresent()) {
+                Block targetTater = taterSelection.tater().get().value();
 
-                if (targetTater != null && targetTater.getDefaultState().isIn(NEBlockTags.VIRAL_TATERS)) {
+                if (targetTater.getDefaultState().isIn(NEBlockTags.VIRAL_TATERS)) {
                     return this.collectTater(targetTater, stack, player);
                 }
             }

@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.game_portal;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -9,11 +9,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.codecs.MoreCodecs;
-import xyz.nucleoid.plasmid.game.config.CustomValuesConfig;
-import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.GamePortalConfig;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntryConfig;
-import xyz.nucleoid.plasmid.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalConfig;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +28,7 @@ public record AdvancedStyledMenuPortalConfig(
         CustomValuesConfig custom
 ) implements GamePortalConfig {
 
-    public static final Codec<AdvancedStyledMenuPortalConfig> CODEC = RecordCodecBuilder.create(instance -> {
+    public static final MapCodec<AdvancedStyledMenuPortalConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(AdvancedStyledMenuPortalConfig::name),
                 PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(AdvancedStyledMenuPortalConfig::uiTitle),
@@ -52,7 +52,7 @@ public record AdvancedStyledMenuPortalConfig(
     }
 
     @Override
-    public Codec<? extends GamePortalConfig> codec() {
+    public MapCodec<? extends GamePortalConfig> codec() {
         return CODEC;
     }
 }
