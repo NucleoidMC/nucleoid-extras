@@ -2,9 +2,8 @@ package xyz.nucleoid.extras.game_portal;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import xyz.nucleoid.plasmid.game.config.GameConfigs;
-import xyz.nucleoid.plasmid.game.portal.game.ConcurrentGamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.menu.*;
+import xyz.nucleoid.plasmid.impl.portal.game.ConcurrentGamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.menu.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend
             this.entries = new ArrayList<>(this.configEntries.size());
             for (var configEntry : configEntries) {
                 var game = new ConcurrentGamePortalBackend(configEntry.game());
-                var gameConfig = GameConfigs.get(configEntry.game());
+                var gameConfig = configEntry.game().value();
 
                 if (gameConfig != null) {
                     this.entries.add(new GameMenuEntry(

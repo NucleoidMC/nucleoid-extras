@@ -3,14 +3,15 @@ package xyz.nucleoid.extras.integrations.game;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.plasmid.game.config.GameConfig;
-import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
+import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
+import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +82,8 @@ public final class GameStatusIntegration {
             this.games.clear();
         }
 
-        void addGame(GameConfig<?> game, int playerCount) {
-            this.games.add(new GameEntry(game.name().getString(), game.type().id(), playerCount));
+        void addGame(RegistryEntry<GameConfig<?>> game, int playerCount) {
+            this.games.add(new GameEntry(game.value().name().getString(), game.value().type().id(), playerCount));
         }
 
         JsonObject serialize() {

@@ -15,19 +15,21 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.component.LauncherComponent;
+import xyz.nucleoid.packettweaker.PacketContext;
 import org.jetbrains.annotations.Nullable;
 
 public class LaunchPadBlock extends Block implements BlockEntityProvider, PolymerBlock {
-    private final Block virtualBlock;
+    private final BlockState virtualBlockState;
 
-    public LaunchPadBlock(Settings settings, Block virtualBlock) {
+    public LaunchPadBlock(Settings settings, BlockState virtualBlockState) {
         super(settings);
-        this.virtualBlock = virtualBlock;
+        this.virtualBlockState = virtualBlockState;
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return this.virtualBlock;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return this.virtualBlockState;
     }
 
     @Override
@@ -35,15 +37,15 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
         var blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
-            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, launchPad.getPitch(), launchPad.getPower());
+            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower()));
         }
 
         super.onEntityCollision(state, world, pos, entity);
     }
 
-    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent sound, SoundCategory category, float pitch, float power) {
-        if (entity.isOnGround() && !(entity instanceof ArmorStandEntity)) {
-            entity.setVelocity(getVector(pitch, source.getYaw(0)).multiply(power));
+    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent sound, SoundCategory category, LauncherComponent launcher) {
+        if (launcher != null && entity.isOnGround() && !(entity instanceof ArmorStandEntity)) {
+            entity.setVelocity(getVector(launcher.pitch(), source.getYaw(0)).multiply(launcher.power()));
             if (entity instanceof ServerPlayerEntity player) {
                 player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
                 playLaunchSound(player, sound, category);
@@ -59,7 +61,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
     }
 
     public static void playLaunchSound(ServerPlayerEntity player, SoundEvent sound, SoundCategory category) {
-        player.playSound(sound, category, 0.5f, 1);
+        player.playSoundToPlayer(sound, category, 0.5f, 1);
     }
 
     private static Vec3d getVector(float pitch, float yaw) {

@@ -11,8 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
-import xyz.nucleoid.plasmid.game.manager.ManagedGameSpace;
+import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
+import xyz.nucleoid.plasmid.impl.game.manager.ManagedGameSpace;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -150,7 +150,7 @@ public final class NucleoidSidebar {
                 .limit(4);
 
         games.forEach(game -> {
-            var name = game.getMetadata().sourceConfig().shortName();
+            var name = game.getMetadata().sourceConfig().value().shortName();
 
             int players = game.getPlayers().size();
             var playersText = Text.translatable("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);

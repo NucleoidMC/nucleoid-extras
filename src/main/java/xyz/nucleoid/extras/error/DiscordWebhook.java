@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import xyz.nucleoid.plasmid.Plasmid;
+import xyz.nucleoid.plasmid.impl.Plasmid;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;

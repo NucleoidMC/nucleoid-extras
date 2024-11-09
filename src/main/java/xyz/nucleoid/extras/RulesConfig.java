@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.text.Text;
 import xyz.nucleoid.codecs.MoreCodecs;
-import xyz.nucleoid.plasmid.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
 
 import java.util.List;
 

@@ -8,10 +8,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.portal.GamePortal;
-import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.impl.portal.GamePortal;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -25,12 +25,12 @@ public record QuickPortalEntry(
     ItemStack icon
 ) implements MenuEntry {
     @Override
-    public void click(ServerPlayerEntity player) {
-        this.quickPortal.requestJoin(player);
+    public void click(ServerPlayerEntity player, boolean alt) {
+        this.quickPortal.requestJoin(player, alt);
     }
 
     public void secondaryClick(ServerPlayerEntity player) {
-        this.portal.requestJoin(player);
+        this.portal.requestJoin(player, false);
     }
 
     @Override
@@ -49,8 +49,9 @@ public record QuickPortalEntry(
     }
 
     public GuiElement createGuiElement() {
-        var element = GuiElementBuilder.from(this.icon().copy()).hideFlags()
-            .setName(Text.empty().append(this.name()));
+        var element = GuiElementBuilder.from(this.icon().copy())
+            .setItemName(Text.empty().append(this.name()))
+            .hideDefaultTooltip();
 
         for (var line : this.description()) {
             var text = line.copy();
@@ -104,7 +105,7 @@ public record QuickPortalEntry(
 
         element.setCallback((index, clickType, slotActionType, gui) -> {
             if (clickType.isRight) this.secondaryClick(gui.getPlayer());
-            else this.click(gui.getPlayer());
+            else this.click(gui.getPlayer(), false);
         });
 
         return element.build();

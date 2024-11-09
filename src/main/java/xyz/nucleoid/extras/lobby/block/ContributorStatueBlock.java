@@ -4,34 +4,38 @@ import java.util.List;
 
 import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
+import xyz.nucleoid.packettweaker.PacketContext;
 
-public class ContributorStatueBlock extends BlockWithEntity implements PolymerBlock {
-    protected static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+public class ContributorStatueBlock extends BlockWithEntity implements PolymerBlock, BlockWithElementHolder {
+    protected static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
     public ContributorStatueBlock(Settings settings) {
         super(settings);
@@ -45,7 +49,7 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient() && player.isCreativeLevelTwoOp()) {
             var blockEntity = world.getBlockEntity(pos, NEBlocks.CONTRIBUTOR_STATUE_ENTITY);
 
@@ -59,13 +63,13 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return Blocks.SMOOTH_STONE;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.SMOOTH_STONE.getDefaultState();
     }
 
     @Override
-    public void onPolymerBlockSend(BlockState state, BlockPos.Mutable pos, ServerPlayerEntity player) {
-        player.getWorld().getBlockEntity(pos, NEBlocks.CONTRIBUTOR_STATUE_ENTITY).ifPresent(ContributorStatueBlockEntity::spawnHolograms);
+    public ElementHolder createElementHolder(ServerWorld world, BlockPos pos, BlockState initialBlockState) {
+        return new ContributorStatueModel();
     }
 
     @Override
@@ -79,11 +83,12 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
         builder.add(FACING);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext options) {
-        super.appendTooltip(stack, world, tooltip, options);
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
 
-        var nbt = BlockItem.getBlockEntityNbt(stack);
+        var nbt = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
 
         if (nbt != null) {
             var contributorId = nbt.getString(ContributorStatueBlockEntity.CONTRIBUTOR_ID_KEY);
@@ -93,7 +98,7 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
                 tooltip.add(Text.translatable("block.nucleoid_extras.contributor_statue.contributor", contributor.getName()).formatted(Formatting.GRAY));
             }
 
-            if (options.isAdvanced()) {
+            if (type.isAdvanced()) {
                 tooltip.add(Text.translatable("block.nucleoid_extras.contributor_statue.contributor_id", contributorId).formatted(Formatting.GRAY));
             }
         }

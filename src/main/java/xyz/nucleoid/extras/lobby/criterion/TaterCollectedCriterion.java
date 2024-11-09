@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.dynamic.Codecs;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Optional;
@@ -25,8 +24,8 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static class Conditions implements AbstractCriterion.Conditions {
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codecs.createStrictOptionalFieldCodec(TinyPotatoBlock.ENTRY_CODEC, "tater").forGetter(i -> i.tater),
-            Codecs.createStrictOptionalFieldCodec(TaterCount.CODEC, "count").forGetter(i -> i.count)
+            TinyPotatoBlock.ENTRY_CODEC.optionalFieldOf("tater").forGetter(i -> i.tater),
+            TaterCount.CODEC.optionalFieldOf("count").forGetter(i -> i.count)
         ).apply(instance, Conditions::new));
 
         private final Optional<RegistryEntry<Block>> tater;

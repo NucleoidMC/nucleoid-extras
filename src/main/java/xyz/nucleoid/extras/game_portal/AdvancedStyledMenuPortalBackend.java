@@ -2,8 +2,8 @@ package xyz.nucleoid.extras.game_portal;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntry;
-import xyz.nucleoid.plasmid.game.portal.menu.MenuEntryConfig;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,7 @@ import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import java.util.function.Function;
 
 public sealed interface TaterCount {
-    static final Codec<TaterCount> CODEC = Codecs.either(Value.CODEC, All.CODEC).xmap(either -> {
+    static final Codec<TaterCount> CODEC = Codec.either(Value.CODEC, All.CODEC).xmap(either -> {
         return either.map(Function.identity(), Function.identity());
     }, count -> {
         return count instanceof Value ? Either.left((Value) count) : Either.right((All) count);
@@ -22,7 +22,7 @@ public sealed interface TaterCount {
     }
 
     record Value(int count) implements TaterCount {
-        private static final Codec<Value> CODEC = Codecs.NONNEGATIVE_INT.xmap(Value::new, Value::count);
+        private static final Codec<Value> CODEC = Codecs.NON_NEGATIVE_INT.xmap(Value::new, Value::count);
 
         public Value {
             if (count < 0) {

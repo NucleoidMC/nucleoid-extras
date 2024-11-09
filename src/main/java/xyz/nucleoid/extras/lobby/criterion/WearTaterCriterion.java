@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.dynamic.Codecs;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Calendar;
@@ -58,8 +57,8 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
         private static final Codec<Integer> DAY_OF_WEEK_CODEC = Codec.STRING.xmap(WearTaterCriterion::dayOfWeekToInt, WearTaterCriterion::dayOfWeekToString);
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codecs.createStrictOptionalFieldCodec(TinyPotatoBlock.ENTRY_CODEC, "tater").forGetter(Conditions::tater),
-            Codecs.createStrictOptionalFieldCodec(DAY_OF_WEEK_CODEC, "day_of_week").forGetter(Conditions::dayOfWeek)
+            TinyPotatoBlock.ENTRY_CODEC.optionalFieldOf("tater").forGetter(Conditions::tater),
+            DAY_OF_WEEK_CODEC.optionalFieldOf("day_of_week").forGetter(Conditions::dayOfWeek)
         ).apply(instance, Conditions::new));
 
         public boolean matches(TinyPotatoBlock tater, int dayOfWeek) {

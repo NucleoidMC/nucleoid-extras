@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -92,28 +93,28 @@ public class TateroidBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.writeNbt(nbt, registries);
 
         nbt.putInt(DURATION_KEY, this.duration);
         nbt.putInt(TEMPO_KEY, this.tempo);
         nbt.putInt(PITCH_KEY, this.pitch);
 
         if (sound != null) {
-            Registries.SOUND_EVENT.createEntryCodec().encodeStart(NbtOps.INSTANCE, sound).result()
+            Registries.SOUND_EVENT.getEntryCodec().encodeStart(NbtOps.INSTANCE, sound).result()
                     .ifPresent(sound -> nbt.put(SOUND_KEY, sound));
         }
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+        super.readNbt(nbt, registries);
 
         this.duration = nbt.getInt(DURATION_KEY);
         this.tempo = nbt.getInt(TEMPO_KEY);
         this.pitch = nbt.getInt(PITCH_KEY);
 
-        Registries.SOUND_EVENT.createEntryCodec().parse(NbtOps.INSTANCE, nbt.get(SOUND_KEY)).result()
+        Registries.SOUND_EVENT.getEntryCodec().parse(NbtOps.INSTANCE, nbt.get(SOUND_KEY)).result()
             .ifPresent(entry -> this.sound = entry);
     }
 

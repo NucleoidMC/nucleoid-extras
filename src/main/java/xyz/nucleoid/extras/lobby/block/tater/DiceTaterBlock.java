@@ -4,20 +4,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.util.SkinEncoder;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class DiceTaterBlock extends CubicPotatoBlock {
     private static final int ROLLING_FACE = 0;
@@ -45,8 +44,8 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand == Hand.OFF_HAND || this.isRolling(state)) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (this.isRolling(state)) {
             return ActionResult.FAIL;
         }
 
@@ -87,7 +86,7 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
         int face = state.get(FACE);
         return TEXTURES[face];
     }

@@ -5,8 +5,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEEntities;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEntity {
     public QuickArmorStandEntity(EntityType<? extends ArmorStandEntity> entityType, World world) {
@@ -18,17 +20,17 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEn
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayerEntity player) {
+    public EntityType<?> getPolymerEntityType(PacketContext context) {
         return EntityType.ARMOR_STAND;
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource damageSource) {
+    public boolean isInvulnerableTo(ServerWorld world, DamageSource damageSource) {
         var attacker = damageSource.getAttacker();
         if (attacker instanceof ServerPlayerEntity player && player.interactionManager.isSurvivalLike()) {
             return true;
         }
-        return super.isInvulnerableTo(damageSource);
+        return super.isInvulnerableTo(world, damageSource);
     }
 
     @Override

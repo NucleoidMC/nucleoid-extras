@@ -1,6 +1,5 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.dispenser.DispenserBehavior;
@@ -9,6 +8,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.DropperBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class InfiniteDropperBlock extends InfiniteDispenserBlock {
     private static final DispenserBehavior BEHAVIOR = new ItemDispenserBehavior();
@@ -18,7 +19,7 @@ public class InfiniteDropperBlock extends InfiniteDispenserBlock {
     }
     
     @Override
-    protected DispenserBehavior getBehaviorForItem(ItemStack stack) {
+    protected DispenserBehavior getBehaviorForItem(World world, ItemStack stack) {
         return BEHAVIOR;
     }
 
@@ -28,7 +29,7 @@ public class InfiniteDropperBlock extends InfiniteDispenserBlock {
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return Blocks.DROPPER;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.DROPPER.getDefaultState();
     }
 }

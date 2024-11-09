@@ -16,18 +16,20 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.block.WireOrientation;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class SnakeBlock extends FacingBlock implements PolymerBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
 
-    private final Block virtualBlock;
+    private final BlockState virtualBlockState;
     private final int delay;
     private final int length;
 
-    public SnakeBlock(Settings settings, Block virtualBlock, int delay, int length) {
+    public SnakeBlock(Settings settings, BlockState virtualBlockState, int delay, int length) {
         super(settings);
 
-        this.virtualBlock = virtualBlock;
+        this.virtualBlockState = virtualBlockState;
         this.delay = delay;
         this.length = length;
 
@@ -41,8 +43,8 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return this.isActive(state) ? this.virtualBlock : Blocks.BROWN_MUSHROOM;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return this.isActive(state) ? this.virtualBlockState : Blocks.BROWN_MUSHROOM.getDefaultState();
     }
     
     @Override
@@ -66,7 +68,7 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
         boolean powered = world.isReceivingRedstonePower(pos);
         boolean active = this.isActive(state);
         if (powered && !active) {

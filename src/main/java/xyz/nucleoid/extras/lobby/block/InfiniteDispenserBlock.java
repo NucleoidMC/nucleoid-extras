@@ -1,7 +1,6 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
@@ -14,6 +13,7 @@ import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import xyz.nucleoid.packettweaker.PacketContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +40,7 @@ public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlo
                 world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(blockEntity.getCachedState()));
             } else {
                 ItemStack stack = blockEntity.getStack(slot);
-                DispenserBehavior behavior = this.getBehaviorForItem(stack);
+                DispenserBehavior behavior = this.getBehaviorForItem(world, stack);
 
                 if (behavior != DispenserBehavior.NOOP) {
                     behavior.dispense(pointer, stack.copy());
@@ -50,13 +50,8 @@ public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlo
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return Blocks.DISPENSER;
-    }
-
-    @Override
-    public BlockState getPolymerBlockState(BlockState state) {
-        return PolymerBlock.super.getPolymerBlockState(state)
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.DISPENSER.getDefaultState()
             .with(FACING, state.get(FACING))
             .with(TRIGGERED, state.get(TRIGGERED));
     }
