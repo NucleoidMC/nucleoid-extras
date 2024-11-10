@@ -85,23 +85,19 @@ public class PlayerLobbyState {
         if (!NEItems.canUseTaters(player) || !(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
 
         boolean alreadyAdded = this.collectedTaters.contains(tater);
-        Text message;
 
-        if (alreadyAdded) {
-            message = Text.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()).formatted(Formatting.RED);
-        } else {
+        if (!alreadyAdded) {
             this.collectedTaters.add(tater);
 
             // Update the tooltip of tater boxes in player's inventory
             PolymerUtils.reloadInventory(player);
 
-            message = Text.translatable("text.nucleoid_extras.tater_box.added", block.getName());
+            player.sendMessage(Text.translatable("text.nucleoid_extras.tater_box.added", block.getName()), true);
         }
 
-        player.sendMessage(message, true);
         triggerCollectCriterion(player, tater, this.collectedTaters.size());
 
-        return alreadyAdded ? ActionResult.FAIL : ActionResult.SUCCESS;
+        return alreadyAdded ? ActionResult.PASS : ActionResult.SUCCESS_SERVER;
     }
 
     private static void triggerCollectCriterion(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {

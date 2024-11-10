@@ -107,6 +107,6 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
             this.spawnBlockParticles(serverWorld, pos, particleEffect);
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 }

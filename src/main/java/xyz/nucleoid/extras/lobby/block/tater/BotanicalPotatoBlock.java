@@ -72,7 +72,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
             model.jumpTime = 20;
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 
     private class Model extends ElementHolder {

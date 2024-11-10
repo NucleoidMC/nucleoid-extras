@@ -34,7 +34,7 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
             portal.requestJoin((ServerPlayerEntity) user, false);
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
 
             if (blockEntity.isPresent()) {
                 blockEntity.get().openEditScreen((ServerPlayerEntity) player);
-                return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS_SERVER;
             }
         }
 

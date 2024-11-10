@@ -70,7 +70,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
                 }
 
                 itemStack.decrement(1);
-                return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS_SERVER;
             } else {
                 return ActionResult.FAIL;
             }

@@ -50,7 +50,7 @@ public class RuleBookItem extends Item implements PolymerItem {
             serverPlayer.networkHandler.sendPacket(new OpenWrittenBookS2CPacket(hand));
         }
         user.incrementStat(Stats.USED.getOrCreateStat(this));
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 
     @Override

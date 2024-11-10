@@ -70,7 +70,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
             this.openTaterBox(world, (ServerPlayerEntity) user, stack, hand);
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 
     @Override

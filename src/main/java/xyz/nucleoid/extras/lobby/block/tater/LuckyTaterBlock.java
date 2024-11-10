@@ -90,7 +90,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
             }
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 
     private Block getDrop(ServerWorld world) {

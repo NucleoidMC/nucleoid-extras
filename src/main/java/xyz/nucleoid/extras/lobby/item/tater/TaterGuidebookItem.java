@@ -60,7 +60,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
                     showGuidebook(player, taterPositionMap.positions(), stack);
                 }
 
-                return ActionResult.SUCCESS;
+                return ActionResult.SUCCESS_SERVER;
             }
         }
 

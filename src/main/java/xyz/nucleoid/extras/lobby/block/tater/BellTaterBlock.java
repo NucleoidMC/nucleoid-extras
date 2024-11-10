@@ -57,7 +57,7 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
 		super.onUse(state, world, pos, player, hit);
-		return this.ring(world, hit, player) ? ActionResult.SUCCESS : ActionResult.PASS;
+		return this.ring(world, hit, player) ? ActionResult.SUCCESS_SERVER : ActionResult.PASS;
 	}
 
 	public boolean ring(World world, BlockHitResult hitResult, @Nullable PlayerEntity player) {
