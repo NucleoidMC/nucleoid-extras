@@ -53,6 +53,10 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     public static void tick(MinecraftServer server) {
+        if (true) {
+            return;
+        }
+
         var players = server.getPlayerManager().getPlayerList();
 
         if (players.isEmpty() || server.getTicks() % 100 != 0) {
