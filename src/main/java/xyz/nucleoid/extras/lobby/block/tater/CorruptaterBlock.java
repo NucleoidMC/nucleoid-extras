@@ -3,9 +3,7 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.packettweaker.PacketContext;
 
@@ -14,7 +12,7 @@ import java.util.Random;
 public final class CorruptaterBlock extends CubicPotatoBlock {
     private final Random random = new Random();
     public CorruptaterBlock(AbstractBlock.Settings settings, int particleRate) {
-        super(settings, EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 0), PolymerUtils.NO_TEXTURE_HEAD_VALUE, particleRate);
+        super(settings, null, PolymerUtils.NO_TEXTURE_HEAD_VALUE, particleRate);
     }
 
     @Override
