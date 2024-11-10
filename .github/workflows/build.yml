@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/loom-cache
@@ -17,7 +17,7 @@ jobs:
           restore-keys: |
             gradle-
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -32,7 +32,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: build/libs
