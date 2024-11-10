@@ -14,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
@@ -286,7 +285,7 @@ public class NEBlocks {
 
     public static final Block ACACIA_LOG_TATER = registerTaterBlock("acacia_log_tater", Blocks.ACACIA_LOG, "3b185be7121801b5a956ce462583c55928b31cbea74e4aae82e7330317a1ae60");
     public static final Block ANGRY_BEE_TATER = registerTaterBlock("angry_bee_tater", ParticleTypes.ANGRY_VILLAGER, "21004dc20ce74adbcc31f1588f268b4cb431b501679e1db7451869bd04779b4b");
-    public static final Block BEACON_TATER = registerTaterBlock("beacon_tater", EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, -1), "6f7fd952ec5da74a25208853161a15d2f6d022835afe881bd271c710ba25935e");
+    public static final Block BEACON_TATER = registerEntityEffectTaterBlock("beacon_tater", "6f7fd952ec5da74a25208853161a15d2f6d022835afe881bd271c710ba25935e");
     public static final Block BEE_NEST_TATER = registerTaterBlock("bee_nest_tater", ParticleTypes.DRIPPING_HONEY, "37b0b38538fac97d26241bf51212a26667596b1b14f1307432c3dcef033af1d0");
     public static final Block BEE_TATER = registerTaterBlock("bee_tater", ParticleTypes.FALLING_HONEY, "80480b902bb32e2b145bb5262629ad7a920d3600365d3101936efc35aad830bd");
     public static final Block BEEHIVE_TATER = registerTaterBlock("beehive_tater", ParticleTypes.DRIPPING_HONEY, "f508a30a1bbc65fbfc58da5dc15d4e930b23b1b48afe72923c506a27cbe06366");
@@ -365,7 +364,7 @@ public class NEBlocks {
     public static final Block FLOWER_POT_TATER = registerTaterBlock("flower_pot_tater", ParticleTypes.COMPOSTER, "5378b1804af0875cb00fd350e6116bfd2165db209ed8b8e0c48f984669553f45");
     public static final Block GUARDIAN_TATER = registerTaterBlock("guardian_tater", Blocks.PRISMARINE, "c152df6875886f29a0f1f110c2a54820248ceef688fe150797dde4e9d4863c0e");
     public static final Block ILLAGER_TATER = registerTaterBlock("illager_tater", ParticleTypes.ANGRY_VILLAGER, "522c1190fb561f1dfc994b281eb145955e2e439511c83aaf64fed1ab09ec1316");
-    public static final Block ILLUSIONER_TATER = registerTaterBlock("illusioner_tater", EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, -1), "6c31b980a02847d5ac948663e95604e754e0b736d4593c7841332833144f2782");
+    public static final Block ILLUSIONER_TATER = registerEntityEffectTaterBlock("illusioner_tater", "6c31b980a02847d5ac948663e95604e754e0b736d4593c7841332833144f2782");
     public static final Block JUKEBOX_TATER = registerTaterBlock("jukebox_tater", ParticleTypes.NOTE, "75f6f61e3a9035a758174979ca664b26e47ca9b273f324f0921b5ad58bdb5835");
     public static final Block LANTERN_TATER = registerTaterBlock("lantern_tater", ParticleTypes.FLASH, "16c275f657bac1363333abf1db0d18bfabf087fbf3df356ec7f41258bc16b76d", 20);
     public static final Block PIGLIN_TATER = registerTaterBlock("piglin_tater", Blocks.GOLD_BLOCK, "4df6290ac1aff8b179420f2a05baa3c721a5cf49f3bd8f9928a0a57c0cf369e");
@@ -383,7 +382,7 @@ public class NEBlocks {
     public static final Block WANDERING_TRADER_TATER = registerTaterBlock("wandering_trader_tater", ParticleTypes.HAPPY_VILLAGER, "860592fc5385f74ffe8c3e3e9f1ad16a5a865bcfa33697483ff7a5da3a784392");
     public static final Block WARM_FROG_TATER = registerTaterBlock("warm_frog_tater", ParticleTypes.SPLASH, "7ea9de371ba4a3edfe8260a559c7cc25564d2cdbb7097d0d3575908a8b627f10");
     public static final Block WAX_TATER = registerTaterBlock("wax_tater", ParticleTypes.LANDING_HONEY, "acc39045a9f072a3adce91f7dd75ce2385cf6c8c251adb5d7e98ae999ae81777");
-    public static final Block WITCH_TATER = registerTaterBlock("witch_tater", EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 0), "1a02c42db26bda231513924f916c1a37abe89255ab3cb77d7da95469052917f3");
+    public static final Block WITCH_TATER = registerEntityEffectTaterBlock("witch_tater", "1a02c42db26bda231513924f916c1a37abe89255ab3cb77d7da95469052917f3");
     public static final Block ZOMBIE_VILLAGER_TATER = registerTaterBlock("zombie_villager_tater", Items.ROTTEN_FLESH, "7e37fe7abf9ee78de2889993e24d3fc7784269f03ae65da2d8ab7a59e0d1516f");
     public static final Block ZOMBIFIED_PIGLIN_TATER = registerTaterBlock("zombified_piglin_tater", Items.ROTTEN_FLESH, "248b2a6973bbeb1a3e48c8e0b695d733d5a4e25272a639d248d89cf4129cc2e9");
 
@@ -466,6 +465,10 @@ public class NEBlocks {
   
     private static Block registerColorPatternTaterBlock(String id, int[] pattern, String texture) {
         return register(id, createTaterBlockSettings(), settings -> new ColorPatternTaterBlock(settings, pattern, texture));
+    }
+
+    private static Block registerEntityEffectTaterBlock(String id, String texture) {
+        return register(id, createTaterBlockSettings(), settings -> new EntityEffectTaterBlock(settings, texture));
     }
 
     private static Block registerLuckyTaterBlock(String id, String texture, String cooldownTexture) {
