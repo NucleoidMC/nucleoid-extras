@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.game_portal;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 import xyz.nucleoid.plasmid.impl.portal.game.ConcurrentGamePortalBackend;
 import xyz.nucleoid.plasmid.impl.portal.menu.*;
 
@@ -23,14 +24,14 @@ public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend
             this.entries = new ArrayList<>(this.configEntries.size());
             for (var configEntry : configEntries) {
                 var game = new ConcurrentGamePortalBackend(configEntry.game());
-                var gameConfig = configEntry.game().value();
+                var gameConfig = configEntry.game();
 
                 if (gameConfig != null) {
                     this.entries.add(new GameMenuEntry(
                         game,
-                        configEntry.name().orElse(gameConfig.name()),
-                        configEntry.description().orElse(gameConfig.description()),
-                        configEntry.icon().orElse(gameConfig.icon())
+                        configEntry.name().orElse(GameConfig.name(gameConfig)),
+                        configEntry.description().orElse(gameConfig.value().description()),
+                        configEntry.icon().orElse(gameConfig.value().icon())
                     ));
                 } else if (ExtrasGamePortals.SHOW_INVALID) {
                     this.entries.add(new InvalidMenuEntry(game.getName()));

@@ -18,6 +18,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.util.CommonGuiElements;
 import xyz.nucleoid.extras.util.PagedGui;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.GameSpaceState;
+import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 import xyz.nucleoid.plasmid.api.game.player.GamePlayerJoiner;
 import xyz.nucleoid.plasmid.api.game.player.JoinIntent;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
@@ -180,7 +182,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 if (games.size() > pIndex) {
                     var portal = games.get(pIndex);
                     var m = portal.getMetadata().sourceConfig().value();
-                    gui.setSlot(index, createIconFor(m.icon(), m.name(), m.description(), portal.getPlayers().size(), (p) -> {
+                    gui.setSlot(index, createIconFor(m.icon(), GameConfig.name(portal.getMetadata().sourceConfig()), m.description(), portal.getState(), (p) -> {
                         PagedGui.playClickSound(player);
                         tryJoinGame(p, portal, JoinIntent.PLAY);
                     }));
@@ -259,7 +261,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         }
     }
 
-    protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, int playerCount, Consumer<ServerPlayerEntity> click) {
+    protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, GameSpaceState state, Consumer<ServerPlayerEntity> click) {
             var element = GuiElementBuilder.from(icon)
                 .setItemName(name)
                 .hideDefaultTooltip();
@@ -274,14 +276,35 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             element.addLoreLine(text);
         }
 
-        if (playerCount > -1) {
+        int playerCount = state.players();
+        int maxPlayerCount = state.maxPlayers();
+        int spectatorCount = state.spectators();
+        boolean allowSpace = true;
+        var stateText = state.state().display();
+        if (stateText != null) {
             element.addLoreLine(ScreenTexts.EMPTY);
-            element.addLoreLine(Text.empty()
-                    .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
-                    .append(Text.translatable("text.plasmid.ui.game_join.players",
-                            Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
-            );
+            element.addLoreLine(Text.literal(" ").append(stateText).formatted(Formatting.WHITE));
+            allowSpace = false;
         }
+
+        if (playerCount > -1) {
+            if (allowSpace) {
+                element.addLoreLine(ScreenTexts.EMPTY);
+                allowSpace = false;
+            }
+
+            element.addLoreLine(Text.empty().append(Text.literal("» ").formatted(Formatting.DARK_GRAY)).append(Text.translatable("text.plasmid.ui.game_join.players", new Object[]{Text.literal("" + playerCount + (maxPlayerCount > 0 ? " / " + maxPlayerCount : "")).formatted(Formatting.YELLOW)}).formatted(Formatting.GOLD)));
+        }
+
+        if (spectatorCount > 0) {
+            if (allowSpace) {
+                element.addLoreLine(ScreenTexts.EMPTY);
+                allowSpace = false;
+            }
+
+            element.addLoreLine(Text.empty().append(Text.literal("» ").formatted(Formatting.DARK_GRAY)).append(Text.translatable("text.plasmid.ui.game_join.spectators", new Object[]{Text.literal("" + spectatorCount).formatted(Formatting.YELLOW)}).formatted(Formatting.GOLD)));
+        }
+
 
         element.setCallback((a, b, c, gui) -> {
             click.accept(gui.getPlayer());

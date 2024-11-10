@@ -11,6 +11,7 @@ import xyz.nucleoid.plasmid.api.game.GameCloseReason;
 import xyz.nucleoid.plasmid.api.game.GameLifecycle;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
+import xyz.nucleoid.plasmid.api.game.config.GameConfigs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,7 +53,7 @@ public final class ExtrasErrorReporter {
     }
 
     private static String sourceName(RegistryEntry<GameConfig<?>> game) {
-        var name = game.value().name().getString();
+        var name = GameConfig.name(game).getString();
         return name + " (" + GameConfig.sourceName(game) + ")";
     }
 
