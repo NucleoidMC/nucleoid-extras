@@ -72,7 +72,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
             model.jumpTime = 20;
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return super.onUse(state, world, pos, player, hit);
     }
 
     private class Model extends ElementHolder {
