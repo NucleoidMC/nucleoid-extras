@@ -12,8 +12,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
-import xyz.nucleoid.plasmid.impl.game.manager.ManagedGameSpace;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -143,11 +143,11 @@ public final class NucleoidSidebar {
         });
     }
 
-    private void writeGamesToSidebar(LineBuilder builder, Collection<ManagedGameSpace> openGames) {
+    private void writeGamesToSidebar(LineBuilder builder, Collection<GameSpace> openGames) {
         builder.add(Text.translatable("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
-                .sorted(Comparator.comparingInt((ManagedGameSpace space) -> space.getPlayers().size()).reversed())
+                .sorted(Comparator.comparingInt(GameSpace space) -> space.getPlayers().size()).reversed())
                 .limit(4);
 
         games.forEach(game -> {
