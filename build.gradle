@@ -35,7 +35,7 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.6.+'
+	modImplementation 'xyz.nucleoid:plasmid:0.6.0-SNAPSHOT+1.21.3'
 
 	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
 	modCompileOnly "dev.gegy:player-roles-api:1.6.13"
