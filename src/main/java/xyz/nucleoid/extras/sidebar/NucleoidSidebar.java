@@ -147,7 +147,7 @@ public final class NucleoidSidebar {
         builder.add(Text.translatable("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
-                .sorted(Comparator.comparingInt(GameSpace space) -> space.getPlayers().size()).reversed())
+                .sorted(Comparator.comparingInt((GameSpace space) -> space.getPlayers().size()).reversed())
                 .limit(4);
 
         games.forEach(game -> {
