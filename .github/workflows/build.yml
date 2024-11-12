@@ -27,7 +27,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Data Generation
-        run: ./gradlew runDatagen --refresh-dependencies
+        run: ./gradlew runDatagen
 
       - name: Build with Gradle
         run: ./gradlew build
