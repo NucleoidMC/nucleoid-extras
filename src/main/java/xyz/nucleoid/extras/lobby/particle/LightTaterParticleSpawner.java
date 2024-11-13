@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.particle;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LightBlock;
@@ -10,12 +11,17 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 
 public class LightTaterParticleSpawner extends MarkerTaterParticleSpawner {
-    public static final LightTaterParticleSpawner INSTANCE = new LightTaterParticleSpawner();
+    public static final LightTaterParticleSpawner DEFAULT = new LightTaterParticleSpawner(MARKER_PLAYER_PARTICLE_RATE, DEFAULT_BLOCK_PARTICLE_CHANCE);
 
-    public static final MapCodec<LightTaterParticleSpawner> CODEC = MapCodec.unit(INSTANCE);
+    public static final MapCodec<LightTaterParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                PLAYER_PARTICLE_RATE_CODEC.forGetter(LightTaterParticleSpawner::getPlayerParticleRate),
+                BLOCK_PARTICLE_CHANCE_CODEC.forGetter(LightTaterParticleSpawner::getBlockParticleChance)
+        ).apply(instance, LightTaterParticleSpawner::new)
+    );
 
-    private LightTaterParticleSpawner() {
-        super();
+    public LightTaterParticleSpawner(int playerParticleRate, int blockParticleChance) {
+        super(playerParticleRate, blockParticleChance);
     }
 
     @Override

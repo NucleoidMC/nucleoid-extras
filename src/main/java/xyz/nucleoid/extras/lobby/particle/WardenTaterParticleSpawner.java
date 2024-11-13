@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.particle;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.SharedConstants;
@@ -14,13 +15,23 @@ import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class WardenTaterParticleSpawner extends DynamicTaterParticleSpawner {
-    public static final MapCodec<WardenTaterParticleSpawner> CODEC = MapCodec.unit(WardenTaterParticleSpawner::new);
+    public static final int WARDEN_PLAYER_PARTICLE_RATE = SharedConstants.TICKS_PER_SECOND;
+
+    public static final MapCodec<WardenTaterParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                PLAYER_PARTICLE_RATE_CODEC.forGetter(WardenTaterParticleSpawner::getPlayerParticleRate),
+                BLOCK_PARTICLE_CHANCE_CODEC.forGetter(WardenTaterParticleSpawner::getBlockParticleChance)
+        ).apply(instance, WardenTaterParticleSpawner::new)
+    );
 
     private static final int BOX_SIZE = 16;
-    private static final int ARRIVAL_TICKS = SharedConstants.TICKS_PER_SECOND;
+
+    public WardenTaterParticleSpawner(int playerParticleRate, int blockParticleChance) {
+        super(playerParticleRate, blockParticleChance);
+    }
 
     public WardenTaterParticleSpawner() {
-        super(ARRIVAL_TICKS);
+        this(WARDEN_PLAYER_PARTICLE_RATE, DEFAULT_BLOCK_PARTICLE_CHANCE);
     }
 
     @Override

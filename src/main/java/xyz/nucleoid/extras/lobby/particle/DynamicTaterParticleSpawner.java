@@ -4,8 +4,8 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.util.dynamic.Codecs;
 
 public abstract class DynamicTaterParticleSpawner extends TaterParticleSpawner {
-    protected static final int DEFAULT_PLAYER_PARTICLE_RATE = 2;
-    protected static final int DEFAULT_BLOCK_PARTICLE_CHANCE = 1;
+    public static final int DEFAULT_PLAYER_PARTICLE_RATE = 2;
+    public static final int DEFAULT_BLOCK_PARTICLE_CHANCE = 1;
 
     protected static final MapCodec<Integer> PLAYER_PARTICLE_RATE_CODEC = Codecs.POSITIVE_INT.optionalFieldOf("player_particle_rate", DEFAULT_PLAYER_PARTICLE_RATE);
     protected static final MapCodec<Integer> BLOCK_PARTICLE_CHANCE_CODEC = Codecs.POSITIVE_INT.optionalFieldOf("block_particle_chance", DEFAULT_BLOCK_PARTICLE_CHANCE);
@@ -16,14 +16,6 @@ public abstract class DynamicTaterParticleSpawner extends TaterParticleSpawner {
     public DynamicTaterParticleSpawner(int playerParticleRate, int blockParticleChance) {
         this.playerParticleRate = playerParticleRate;
         this.blockParticleChance = blockParticleChance;
-    }
-
-    public DynamicTaterParticleSpawner(int playerParticleRate) {
-        this(playerParticleRate, DEFAULT_BLOCK_PARTICLE_CHANCE);
-    }
-
-    public DynamicTaterParticleSpawner() {
-        this(DEFAULT_PLAYER_PARTICLE_RATE);
     }
 
     protected final int getPlayerParticleRate() {

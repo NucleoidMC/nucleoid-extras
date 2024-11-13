@@ -10,7 +10,9 @@ import net.minecraft.util.math.MathHelper;
 public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
     public static final MapCodec<RingTaterParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-                PARTICLE_CODEC.forGetter(RingTaterParticleSpawner::getParticleEffect)
+                PARTICLE_CODEC.forGetter(RingTaterParticleSpawner::getParticleEffect),
+                PLAYER_PARTICLE_RATE_CODEC.forGetter(RingTaterParticleSpawner::getPlayerParticleRate),
+                BLOCK_PARTICLE_CHANCE_CODEC.forGetter(RingTaterParticleSpawner::getBlockParticleChance)
         ).apply(instance, RingTaterParticleSpawner::new)
     );
 
@@ -19,8 +21,8 @@ public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
     private static final double BLOCK_PARTICLE_RADIUS = 0.8;
     private static final double PLAYER_PARTICLE_RADIUS = 0.5;
 
-    public RingTaterParticleSpawner(ParticleEffect particleEffect) {
-        super(particleEffect);
+    public RingTaterParticleSpawner(ParticleEffect particleEffect, int playerParticleRate, int blockParticleChance) {
+        super(particleEffect, playerParticleRate, blockParticleChance);
     }
 
     @Override
@@ -55,6 +57,6 @@ public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
     }
 
     public static TaterParticleSpawner ofDust(int color) {
-        return new RingTaterParticleSpawner(new DustParticleEffect(color, 1));
+        return new RingTaterParticleSpawner(new DustParticleEffect(color, 1), SimpleTaterParticleSpawner.DEFAULT_PLAYER_PARTICLE_RATE, SimpleTaterParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE);
     }
 }

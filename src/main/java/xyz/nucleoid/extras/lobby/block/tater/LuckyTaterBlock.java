@@ -45,7 +45,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     private final String cooldownTexture;
 
     public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
-        super(settings, LuckyTaterParticleSpawner.INSTANCE, texture);
+        super(settings, LuckyTaterParticleSpawner.DEFAULT, texture);
         this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(PHASE, LuckyTaterPhase.READY));

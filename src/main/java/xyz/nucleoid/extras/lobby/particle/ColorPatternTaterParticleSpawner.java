@@ -15,20 +15,24 @@ public class ColorPatternTaterParticleSpawner extends DynamicTaterParticleSpawne
 
     public static final MapCodec<ColorPatternTaterParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-                PARTICLES_CODEC.fieldOf("particles").forGetter(spawner -> spawner.particleEffects)
+                PARTICLES_CODEC.fieldOf("particles").forGetter(spawner -> spawner.particleEffects),
+                PLAYER_PARTICLE_RATE_CODEC.forGetter(ColorPatternTaterParticleSpawner::getPlayerParticleRate),
+                BLOCK_PARTICLE_CHANCE_CODEC.forGetter(ColorPatternTaterParticleSpawner::getBlockParticleChance)
         ).apply(instance, ColorPatternTaterParticleSpawner::new)
     );
 
     private final ParticleEffect[] particleEffects;
 
-    public ColorPatternTaterParticleSpawner(ParticleEffect[] particleEffects) {
+    public ColorPatternTaterParticleSpawner(ParticleEffect[] particleEffects, int playerParticleRate, int blockParticleChance) {
+        super(playerParticleRate, blockParticleChance);
+
         this.particleEffects = particleEffects;
     }
 
     public ColorPatternTaterParticleSpawner(int[] pattern) {
         this(IntStream.of(pattern).mapToObj(color ->
             new DustParticleEffect(color, 1)
-        ).toArray(ParticleEffect[]::new));
+        ).toArray(ParticleEffect[]::new), DEFAULT_PLAYER_PARTICLE_RATE, DEFAULT_BLOCK_PARTICLE_CHANCE);
     }
 
     @Override

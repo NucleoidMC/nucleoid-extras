@@ -478,7 +478,7 @@ public class NEBlocks {
     }
 
     private static Block registerEntityEffectTaterBlock(String id, String texture) {
-        return registerTaterBlock(id, EntityEffectTaterParticleSpawner.INSTANCE, texture);
+        return registerTaterBlock(id, EntityEffectTaterParticleSpawner.DEFAULT, texture);
     }
 
     private static Block registerLuckyTaterBlock(String id, String texture, String cooldownTexture) {
@@ -530,11 +530,11 @@ public class NEBlocks {
     }
 
     private static Block registerMarkerTaterBlock(String id, Block particleBlock, String texture) {
-        return registerTaterBlock(id, new SimpleMarkerTaterParticleSpawner(particleBlock), texture);
+        return registerTaterBlock(id, new SimpleMarkerTaterParticleSpawner(particleBlock, MarkerTaterParticleSpawner.MARKER_PLAYER_PARTICLE_RATE, SimpleMarkerTaterParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE), texture);
     }
 
     private static Block registerLightTaterBlock(String id, String texture) {
-        return registerTaterBlock(id, LightTaterParticleSpawner.INSTANCE, texture);
+        return registerTaterBlock(id, LightTaterParticleSpawner.DEFAULT, texture);
     }
 
     public static void register() {

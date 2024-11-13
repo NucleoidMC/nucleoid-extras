@@ -13,14 +13,16 @@ public class TateroidParticleSpawner extends SimpleTaterParticleSpawner {
     public static final MapCodec<TateroidParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
                 PARTICLE_CODEC.forGetter(TateroidParticleSpawner::getParticleEffect),
+                PLAYER_PARTICLE_RATE_CODEC.forGetter(TateroidParticleSpawner::getPlayerParticleRate),
+                BLOCK_PARTICLE_CHANCE_CODEC.forGetter(TateroidParticleSpawner::getBlockParticleChance),
                 DEFAULT_PARTICLE_COLOR_CODEC.forGetter(spawner -> spawner.defaultParticleColor)
         ).apply(instance, TateroidParticleSpawner::new)
     );
 
     private final double defaultParticleColor;
 
-    public TateroidParticleSpawner(ParticleEffect particleEffect, double defaultParticleColor) {
-        super(particleEffect);
+    public TateroidParticleSpawner(ParticleEffect particleEffect, int playerParticleRate, int blockParticleChance, double defaultParticleColor) {
+        super(particleEffect, playerParticleRate, blockParticleChance);
 
         this.defaultParticleColor = defaultParticleColor;
     }

@@ -3,10 +3,10 @@ package xyz.nucleoid.extras.lobby.particle;
 import com.mojang.serialization.MapCodec;
 
 public abstract class MarkerTaterParticleSpawner extends DynamicTaterParticleSpawner {
-    private static final int PLAYER_PARTICLE_RATE = 12;
+    public static final int MARKER_PLAYER_PARTICLE_RATE = 12;
 
-    public MarkerTaterParticleSpawner() {
-        super(PLAYER_PARTICLE_RATE);
+    public MarkerTaterParticleSpawner(int playerParticleRate, int blockParticleChance) {
+        super(playerParticleRate, blockParticleChance);
     }
 
     protected double getPlayerParticleOffsetY() {

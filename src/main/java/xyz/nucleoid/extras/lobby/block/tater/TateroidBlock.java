@@ -44,7 +44,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     private final double defaultParticleColor;
 
     public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
-        super(settings, new TateroidParticleSpawner(ParticleTypes.NOTE, defaultParticleColor), texture);
+        super(settings, new TateroidParticleSpawner(ParticleTypes.NOTE, TateroidParticleSpawner.DEFAULT_PLAYER_PARTICLE_RATE, TateroidParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE, defaultParticleColor), texture);
 
         this.defaultSound = defaultSound;
         this.defaultParticleColor = defaultParticleColor;

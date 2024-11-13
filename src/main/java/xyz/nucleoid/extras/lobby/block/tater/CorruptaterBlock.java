@@ -14,7 +14,7 @@ public final class CorruptaterBlock extends CubicPotatoBlock {
 
     private final Random random = Random.createLocal();
     public CorruptaterBlock(AbstractBlock.Settings settings) {
-        super(settings, new RandomTaterParticleSpawner(CorruptaterBlock::getTater), PolymerUtils.NO_TEXTURE_HEAD_VALUE);
+        super(settings, new RandomTaterParticleSpawner(CorruptaterBlock::getTater, RandomTaterParticleSpawner.DEFAULT_PLAYER_PARTICLE_RATE, RandomTaterParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE), PolymerUtils.NO_TEXTURE_HEAD_VALUE);
     }
 
     @Override
