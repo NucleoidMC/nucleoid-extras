@@ -1,10 +1,22 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class TateroidParticleSpawner extends SimpleTaterParticleSpawner {
+    public static final MapCodec<Double> DEFAULT_PARTICLE_COLOR_CODEC = Codec.DOUBLE.fieldOf("default_particle_color");
+
+    public static final MapCodec<TateroidParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                PARTICLE_CODEC.forGetter(TateroidParticleSpawner::getParticleEffect),
+                DEFAULT_PARTICLE_COLOR_CODEC.forGetter(spawner -> spawner.defaultParticleColor)
+        ).apply(instance, TateroidParticleSpawner::new)
+    );
+
     private final double defaultParticleColor;
 
     public TateroidParticleSpawner(ParticleEffect particleEffect, double defaultParticleColor) {
@@ -52,5 +64,10 @@ public class TateroidParticleSpawner extends SimpleTaterParticleSpawner {
         if (particleEffect != null) {
             context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 0, 1, 0, 0, particleSpeed);
         }
+    }
+
+    @Override
+    public MapCodec<? extends TateroidParticleSpawner> getCodec() {
+        return CODEC;
     }
 }

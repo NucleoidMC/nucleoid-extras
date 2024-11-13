@@ -34,7 +34,7 @@ public final class CorruptaterBlock extends CubicPotatoBlock {
         return CODEC;
     }
 
-    private static CubicPotatoBlock getTater(Random random) {
+    public static CubicPotatoBlock getTater(Random random) {
         return CubicPotatoBlock.CUBIC_TATERS.get(random.nextInt(CubicPotatoBlock.CUBIC_TATERS.size()));
     }
 }

@@ -29,6 +29,7 @@ import net.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
@@ -36,7 +37,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
     public static final MapCodec<BotanicalPotatoBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
                 createSettingsCodec(),
-                TaterParticleSpawner.CODEC.fieldOf("particle_spawner").forGetter(BotanicalPotatoBlock::getParticleSpawner),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(BotanicalPotatoBlock::getParticleSpawner),
                 Codec.STRING.fieldOf("upper_texture").forGetter(BotanicalPotatoBlock::getItemTexture),
                 Codec.STRING.fieldOf("lower_texture").forGetter(b -> b.lowerTexture)
         ).apply(instance, BotanicalPotatoBlock::new)

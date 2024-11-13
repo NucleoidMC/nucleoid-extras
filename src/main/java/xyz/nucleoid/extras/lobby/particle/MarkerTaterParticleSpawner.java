@@ -1,5 +1,7 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.MapCodec;
+
 public abstract class MarkerTaterParticleSpawner extends DynamicTaterParticleSpawner {
     private static final int PLAYER_PARTICLE_RATE = 12;
 
@@ -26,4 +28,7 @@ public abstract class MarkerTaterParticleSpawner extends DynamicTaterParticleSpa
             context.world().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
         }
     }
+
+    @Override
+    public abstract MapCodec<? extends MarkerTaterParticleSpawner> getCodec();
 }

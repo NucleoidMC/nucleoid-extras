@@ -1,14 +1,11 @@
 package xyz.nucleoid.extras.lobby.particle;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class TaterParticleSpawner {
-    public static final Codec<TaterParticleSpawner> CODEC = Codec.unit(new SimpleTaterParticleSpawner(ParticleTypes.NOTE));
-
     protected boolean shouldSpawn(TaterParticleContext context) {
         return true;
     }
@@ -44,4 +41,6 @@ public abstract class TaterParticleSpawner {
             context.world().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, particleSpeed);
         }
     }
+
+    public abstract MapCodec<? extends TaterParticleSpawner> getCodec();
 }

@@ -538,6 +538,8 @@ public class NEBlocks {
     }
 
     public static void register() {
+        TaterParticleSpawnerTypes.register();
+
         registerBlockType("bell_tater", BellTaterBlock.CODEC);
         registerBlockType("botantical_tater", BotanicalPotatoBlock.CODEC);
         registerBlockType("capsule_tater", CapsuleTaterBlock.CODEC);

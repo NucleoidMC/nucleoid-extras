@@ -8,12 +8,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 
 public class RedstoneTaterBlock extends CubicPotatoBlock {
 	public static final MapCodec<RedstoneTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
 		instance.group(
 				createSettingsCodec(),
-				TaterParticleSpawner.CODEC.fieldOf("particle_spawner").forGetter(RedstoneTaterBlock::getParticleSpawner),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(RedstoneTaterBlock::getParticleSpawner),
 				Codec.STRING.fieldOf("texture").forGetter(RedstoneTaterBlock::getItemTexture)
 		).apply(instance, RedstoneTaterBlock::new)
 	);

@@ -1,11 +1,19 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 
 public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
+    public static final MapCodec<RingTaterParticleSpawner> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                PARTICLE_CODEC.forGetter(RingTaterParticleSpawner::getParticleEffect)
+        ).apply(instance, RingTaterParticleSpawner::new)
+    );
+
     private static final int PARTICLE_COUNT = 8;
 
     private static final double BLOCK_PARTICLE_RADIUS = 0.8;
@@ -28,6 +36,11 @@ public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
         if (particleEffect != null) {
             this.spawnParticlesAround(context.world(), particleEffect, pos.getX(), radius, y, pos.getZ(), radius, centerAngle);
         }
+    }
+
+    @Override
+    public MapCodec<? extends RingTaterParticleSpawner> getCodec() {
+        return CODEC;
     }
 
     private void spawnParticlesAround(ServerWorld world, ParticleEffect particleEffect, double centerX, double radiusX, double y, double centerZ, double radiusZ, double centerAngle) {

@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LightBlock;
@@ -9,7 +10,9 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 
 public class LightTaterParticleSpawner extends MarkerTaterParticleSpawner {
-    public static final TaterParticleSpawner INSTANCE = new LightTaterParticleSpawner();
+    public static final LightTaterParticleSpawner INSTANCE = new LightTaterParticleSpawner();
+
+    public static final MapCodec<LightTaterParticleSpawner> CODEC = MapCodec.unit(INSTANCE);
 
     private LightTaterParticleSpawner() {
         super();
@@ -33,6 +36,11 @@ public class LightTaterParticleSpawner extends MarkerTaterParticleSpawner {
         int level = context.world().getLightLevel(pos);
 
         return getLightParticle(level);
+    }
+
+    @Override
+    public MapCodec<? extends LightTaterParticleSpawner> getCodec() {
+        return CODEC;
     }
 
     private static BlockState getLightState(int level) {

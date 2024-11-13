@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationPropertyHelper;
 import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class CubicPotatoBlock extends TinyPotatoBlock implements PolymerHeadBloc
     public static final MapCodec<CubicPotatoBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
                 createSettingsCodec(),
-                TaterParticleSpawner.CODEC.fieldOf("particle_spawner").forGetter(CubicPotatoBlock::getParticleSpawner),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(CubicPotatoBlock::getParticleSpawner),
                 Codec.STRING.fieldOf("texture").forGetter(CubicPotatoBlock::getItemTexture)
         ).apply(instance, CubicPotatoBlock::new)
     );

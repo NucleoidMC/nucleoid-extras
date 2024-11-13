@@ -32,7 +32,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
         instance.group(
                 createSettingsCodec(),
                 SoundEvent.ENTRY_CODEC.fieldOf("default_sound").forGetter(TateroidBlock::getDefaultSound),
-                Codec.DOUBLE.fieldOf("default_particle_color").forGetter(tater -> tater.defaultParticleColor),
+                TateroidParticleSpawner.DEFAULT_PARTICLE_COLOR_CODEC.forGetter(tater -> tater.defaultParticleColor),
                 Codec.STRING.fieldOf("texture").forGetter(TateroidBlock::getItemTexture)
         ).apply(instance, TateroidBlock::new)
     );

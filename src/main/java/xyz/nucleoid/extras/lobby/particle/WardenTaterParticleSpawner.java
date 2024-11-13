@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.SharedConstants;
@@ -13,6 +14,8 @@ import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class WardenTaterParticleSpawner extends DynamicTaterParticleSpawner {
+    public static final MapCodec<WardenTaterParticleSpawner> CODEC = MapCodec.unit(WardenTaterParticleSpawner::new);
+
     private static final int BOX_SIZE = 16;
     private static final int ARRIVAL_TICKS = SharedConstants.TICKS_PER_SECOND;
 
@@ -40,6 +43,11 @@ public class WardenTaterParticleSpawner extends DynamicTaterParticleSpawner {
         if (particleEffect != null) {
             context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, particleSpeed);
         }
+    }
+
+    @Override
+    public MapCodec<? extends WardenTaterParticleSpawner> getCodec() {
+        return CODEC;
     }
 
     @Nullable
