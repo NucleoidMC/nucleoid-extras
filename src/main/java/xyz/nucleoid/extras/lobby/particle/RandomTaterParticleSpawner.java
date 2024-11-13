@@ -6,10 +6,10 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.random.Random;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 
-public class RandomParticleSpawner extends TaterParticleSpawner {
+public class RandomTaterParticleSpawner extends DynamicTaterParticleSpawner {
     private final Function<Random, CubicPotatoBlock> taterSupplier;
 
-    public RandomParticleSpawner(Function<Random, CubicPotatoBlock> taterSupplier) {
+    public RandomTaterParticleSpawner(Function<Random, CubicPotatoBlock> taterSupplier) {
         this.taterSupplier = taterSupplier;
     }
 

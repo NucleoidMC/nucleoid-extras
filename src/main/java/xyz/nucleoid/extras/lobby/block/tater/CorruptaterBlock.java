@@ -5,13 +5,13 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import xyz.nucleoid.extras.lobby.particle.RandomParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.RandomTaterParticleSpawner;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public final class CorruptaterBlock extends CubicPotatoBlock {
     private final Random random = Random.createLocal();
     public CorruptaterBlock(AbstractBlock.Settings settings, int particleRate) {
-        super(settings, new RandomParticleSpawner(CorruptaterBlock::getTater), PolymerUtils.NO_TEXTURE_HEAD_VALUE);
+        super(settings, new RandomTaterParticleSpawner(CorruptaterBlock::getTater), PolymerUtils.NO_TEXTURE_HEAD_VALUE);
     }
 
     @Override
