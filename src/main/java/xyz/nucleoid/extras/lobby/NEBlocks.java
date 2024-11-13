@@ -32,6 +32,7 @@ import xyz.nucleoid.extras.lobby.block.tater.*;
 import xyz.nucleoid.extras.lobby.particle.*;
 
 import java.util.function.Function;
+import com.mojang.serialization.MapCodec;
 
 public class NEBlocks {
     public static final Block NUCLEOID_LOGO = registerTaterBlock("nucleoid_logo", ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
@@ -430,7 +431,7 @@ public class NEBlocks {
     public static final Block SILVER_CAPSULE_TATER = registerCapsuleTaterBlock("silver_capsule_tater", 0xBFBFBF, 9, "afdce3ea1399dd0b738faaecf89cc5bdcf179b8dc4f3d7964c8cd45c89257fd1");
     public static final Block GOLD_CAPSULE_TATER = registerCapsuleTaterBlock("gold_capsule_tater", 0xF1A00E, 1, "db5388834578ccb906e97d3e54aeb33edcc12d821f081b7eb04830cbd260ad81");
 
-    public static final Block CORRUPTATER = register("corruptater", createTaterBlockSettings(), settings -> new CorruptaterBlock(settings, 2));
+    public static final Block CORRUPTATER = register("corruptater", createTaterBlockSettings(), settings -> new CorruptaterBlock(settings));
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
     public static final BlockEntityType<ContributorStatueBlockEntity> CONTRIBUTOR_STATUE_ENTITY = FabricBlockEntityTypeBuilder.create(ContributorStatueBlockEntity::new, CONTRIBUTOR_STATUE).build();
@@ -537,6 +538,18 @@ public class NEBlocks {
     }
 
     public static void register() {
+        registerBlockType("bell_tater", BellTaterBlock.CODEC);
+        registerBlockType("botantical_tater", BotanicalPotatoBlock.CODEC);
+        registerBlockType("capsule_tater", CapsuleTaterBlock.CODEC);
+        registerBlockType("corruptater", CorruptaterBlock.CODEC);
+        registerBlockType("cubic_tater", CubicPotatoBlock.CODEC);
+        registerBlockType("daylight_detector_tater", DaylightDetectorTaterBlock.CODEC);
+        registerBlockType("dice_tater", DiceTaterBlock.CODEC);
+        registerBlockType("lucky_tater", LuckyTaterBlock.CODEC);
+        registerBlockType("redstone_tater", RedstoneTaterBlock.CODEC);
+        registerBlockType("target_tater", TargetTaterBlock.CODEC);
+        registerBlockType("tateroid", TateroidBlock.CODEC);
+
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);
@@ -549,6 +562,10 @@ public class NEBlocks {
         T block = factory.apply(settings.registryKey(key));
 
         return Registry.register(Registries.BLOCK, key, block);
+    }
+
+    private static <T extends Block> MapCodec<T> registerBlockType(String id, MapCodec<T> codec) {
+        return Registry.register(Registries.BLOCK_TYPE, NucleoidExtras.identifier(id), codec);
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {

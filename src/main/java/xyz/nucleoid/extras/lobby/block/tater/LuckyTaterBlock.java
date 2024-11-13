@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,6 +29,14 @@ import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LuckyTaterBlock extends CubicPotatoBlock {
+    public static final MapCodec<LuckyTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                Codec.STRING.fieldOf("texture").forGetter(LuckyTaterBlock::getItemTexture),
+                Codec.STRING.fieldOf("cooldown_texture").forGetter(tater -> tater.cooldownTexture)
+        ).apply(instance, LuckyTaterBlock::new)
+    );
+
     private static final EnumProperty<LuckyTaterPhase> PHASE = EnumProperty.of("phase", LuckyTaterPhase.class);
 
     private static final int COURAGE_TICKS = 5;
@@ -163,5 +174,10 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     @Override
     public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
         return state.get(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, context);
+    }
+
+    @Override
+    public MapCodec<? extends LuckyTaterBlock> getCodec() {
+        return CODEC;
     }
 }

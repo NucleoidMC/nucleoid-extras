@@ -2,6 +2,7 @@ package xyz.nucleoid.extras.lobby.block.tater;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -65,4 +66,6 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
 
         return ActionResult.SUCCESS_SERVER;
     }
+
+    public abstract MapCodec<? extends TinyPotatoBlock> getCodec();
 }

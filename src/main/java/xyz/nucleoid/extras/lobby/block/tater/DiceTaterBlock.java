@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,8 @@ import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class DiceTaterBlock extends CubicPotatoBlock {
+    public static final MapCodec<DiceTaterBlock> CODEC = createCodec(DiceTaterBlock::new);
+
     private static final int ROLLING_FACE = 0;
     private static final int MAX_FACE = 6;
     private static final int ROLLING_TICKS = 8;
@@ -90,5 +93,10 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
         int face = state.get(FACE);
         return TEXTURES[face];
+    }
+
+    @Override
+    public MapCodec<? extends DiceTaterBlock> getCodec() {
+        return CODEC;
     }
 }

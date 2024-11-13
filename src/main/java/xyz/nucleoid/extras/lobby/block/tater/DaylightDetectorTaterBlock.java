@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
@@ -25,6 +28,14 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 
 public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
+	public static final MapCodec<DaylightDetectorTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+		instance.group(
+				createSettingsCodec(),
+				Codec.STRING.fieldOf("texture").forGetter(DaylightDetectorTaterBlock::getItemTexture),
+				Codec.BOOL.fieldOf("inverted").forGetter(tater -> tater.inverted)
+		).apply(instance, DaylightDetectorTaterBlock::new)
+	);
+
 	public static final IntProperty POWER = Properties.POWER;
 
 	public final boolean inverted;
@@ -87,4 +98,9 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 		super.appendProperties(builder);
 		builder.add(POWER);
 	}
+
+    @Override
+    public MapCodec<? extends DaylightDetectorTaterBlock> getCodec() {
+        return CODEC;
+    }
 }

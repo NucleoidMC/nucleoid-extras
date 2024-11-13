@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -9,8 +10,10 @@ import xyz.nucleoid.extras.lobby.particle.RandomTaterParticleSpawner;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public final class CorruptaterBlock extends CubicPotatoBlock {
+    public static final MapCodec<CorruptaterBlock> CODEC = createCodec(CorruptaterBlock::new);
+
     private final Random random = Random.createLocal();
-    public CorruptaterBlock(AbstractBlock.Settings settings, int particleRate) {
+    public CorruptaterBlock(AbstractBlock.Settings settings) {
         super(settings, new RandomTaterParticleSpawner(CorruptaterBlock::getTater), PolymerUtils.NO_TEXTURE_HEAD_VALUE);
     }
 
@@ -24,6 +27,11 @@ public final class CorruptaterBlock extends CubicPotatoBlock {
     @Override
     public String getTranslationKey() {
         return super.getTranslationKey() + "." + random.nextInt(7);
+    }
+
+    @Override
+    public MapCodec<? extends CorruptaterBlock> getCodec() {
+        return CODEC;
     }
 
     private static CubicPotatoBlock getTater(Random random) {

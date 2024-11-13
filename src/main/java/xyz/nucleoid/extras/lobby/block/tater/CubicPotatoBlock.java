@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,6 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CubicPotatoBlock extends TinyPotatoBlock implements PolymerHeadBlock {
+    public static final MapCodec<CubicPotatoBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                TaterParticleSpawner.CODEC.fieldOf("particle_spawner").forGetter(CubicPotatoBlock::getParticleSpawner),
+                Codec.STRING.fieldOf("texture").forGetter(CubicPotatoBlock::getItemTexture)
+        ).apply(instance, CubicPotatoBlock::new)
+    );
+
     protected static final List<CubicPotatoBlock> CUBIC_TATERS = new ArrayList<>();
 
     public CubicPotatoBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
@@ -42,5 +53,10 @@ public class CubicPotatoBlock extends TinyPotatoBlock implements PolymerHeadBloc
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
         return Blocks.PLAYER_HEAD.getDefaultState().with(Properties.ROTATION, state.get(Properties.ROTATION));
+    }
+
+    @Override
+    public MapCodec<? extends CubicPotatoBlock> getCodec() {
+        return CODEC;
     }
 }

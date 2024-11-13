@@ -1,10 +1,14 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class TaterParticleSpawner {
+    public static final Codec<TaterParticleSpawner> CODEC = Codec.unit(new SimpleTaterParticleSpawner(ParticleTypes.NOTE));
+
     protected boolean shouldSpawn(TaterParticleContext context) {
         return true;
     }

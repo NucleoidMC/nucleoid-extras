@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -25,15 +28,26 @@ import xyz.nucleoid.extras.lobby.particle.TateroidParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvider {
+    public static final MapCodec<TateroidBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                SoundEvent.ENTRY_CODEC.fieldOf("default_sound").forGetter(TateroidBlock::getDefaultSound),
+                Codec.DOUBLE.fieldOf("default_particle_color").forGetter(tater -> tater.defaultParticleColor),
+                Codec.STRING.fieldOf("texture").forGetter(TateroidBlock::getItemTexture)
+        ).apply(instance, TateroidBlock::new)
+    );
+
     private static final BooleanProperty POWERED = Properties.POWERED;
     private static final int FULL_DURATION = 15 * SharedConstants.TICKS_PER_SECOND;
 
     private final RegistryEntry<SoundEvent> defaultSound;
+    private final double defaultParticleColor;
 
     public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
         super(settings, new TateroidParticleSpawner(ParticleTypes.NOTE, defaultParticleColor), texture);
 
         this.defaultSound = defaultSound;
+        this.defaultParticleColor = defaultParticleColor;
 
         this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
     }
@@ -111,6 +125,11 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new TateroidBlockEntity(pos, state);
+    }
+
+    @Override
+    public MapCodec<? extends TateroidBlock> getCodec() {
+        return CODEC;
     }
 
     @Override

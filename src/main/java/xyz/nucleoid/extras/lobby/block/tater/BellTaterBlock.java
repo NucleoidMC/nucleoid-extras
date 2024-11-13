@@ -5,6 +5,9 @@ import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -31,6 +34,13 @@ import net.minecraft.world.event.GameEvent;
 
 public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
 	public static final BooleanProperty POWERED = Properties.POWERED;
+
+	public static final MapCodec<BellTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+		instance.group(
+				createSettingsCodec(),
+				Codec.STRING.fieldOf("texture").forGetter(BellTaterBlock::getItemTexture)
+		).apply(instance, BellTaterBlock::new)
+	);
 
 	public BellTaterBlock(Settings settings, String texture) {
 		super(settings, new SimpleTaterParticleSpawner(ParticleTypes.NOTE), texture);
@@ -100,6 +110,11 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	@Nullable
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return new BellTaterBlockEntity(pos, state);
+	}
+
+	@Override
+	public MapCodec<? extends BellTaterBlock> getCodec() {
+		return CODEC;
 	}
 
 	@Override

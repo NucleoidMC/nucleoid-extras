@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,6 +30,13 @@ import net.minecraft.world.WorldAccess;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
 
 public class TargetTaterBlock extends CubicPotatoBlock {
+	public static final MapCodec<TargetTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+		instance.group(
+				createSettingsCodec(),
+				Codec.STRING.fieldOf("texture").forGetter(TargetTaterBlock::getItemTexture)
+		).apply(instance, TargetTaterBlock::new)
+	);
+
 	private static final IntProperty POWER = Properties.POWER;
 	private static final int RECOVERABLE_POWER_DELAY = 20;
 	private static final int REGULAR_POWER_DELAY = 8;
@@ -102,4 +112,9 @@ public class TargetTaterBlock extends CubicPotatoBlock {
 			world.setBlockState(pos, state.with(POWER, 0), Block.NOTIFY_LISTENERS | Block.FORCE_STATE);
 		}
 	}
+
+    @Override
+    public MapCodec<? extends TargetTaterBlock> getCodec() {
+        return CODEC;
+    }
 }
