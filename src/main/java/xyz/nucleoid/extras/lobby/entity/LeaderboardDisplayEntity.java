@@ -9,13 +9,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
     private static final int REGULAR_UPDATE_WAIT_TIME = 20 * 60;
     private static final int FORCED_UPDATE_WAIT_TIME = 20 * 10;
     private static final int CHANGE_DISPLAYED_TIME_TIME = 20 * 10;
-    private List<Identifier> leaderboardIds = List.of(new Identifier("nucleoid:games_played"));
+    private List<Identifier> leaderboardIds = List.of(Identifier.of("nucleoid", "games_played"));
     private final List<Text> leaderboards = new ArrayList<>();
     private int updateTimer = -1;
     private int displayTimer = CHANGE_DISPLAYED_TIME_TIME;
@@ -120,7 +120,7 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayerEntity player) {
+    public EntityType<?> getPolymerEntityType(PacketContext context) {
         return EntityType.TEXT_DISPLAY;
     }
 }

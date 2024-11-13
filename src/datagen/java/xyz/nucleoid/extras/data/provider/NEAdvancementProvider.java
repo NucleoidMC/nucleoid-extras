@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.data.provider;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -12,6 +13,7 @@ import net.minecraft.advancement.AdvancementRequirements.CriterionMerger;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -25,18 +27,18 @@ import xyz.nucleoid.extras.lobby.criterion.TaterCount;
 import xyz.nucleoid.extras.lobby.criterion.WearTaterCriterion;
 
 public class NEAdvancementProvider extends FabricAdvancementProvider {
-    public NEAdvancementProvider(FabricDataOutput output) {
-        super(output);
+    public NEAdvancementProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generateAdvancement(Consumer<AdvancementEntry> consumer) {
+    public void generateAdvancement(RegistryWrapper.WrapperLookup registries, Consumer<AdvancementEntry> consumer) {
         var root = accept(consumer, "root", null, Advancement.Builder.createUntelemetered()
                 .display(
                         NEItems.NUCLEOID_LOGO,
                         Text.translatable("advancements.nucleoid_extras.root.title"),
                         Text.translatable("advancements.nucleoid_extras.root.description"),
-                        new Identifier("textures/block/lime_concrete.png"),
+                        Identifier.ofVanilla("textures/block/lime_concrete.png"),
                         AdvancementFrame.TASK,
                         false,
                         false,

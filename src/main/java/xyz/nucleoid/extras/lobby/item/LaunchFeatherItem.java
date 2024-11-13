@@ -6,14 +6,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import xyz.nucleoid.extras.component.LauncherComponent;
+import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.lobby.block.LaunchPadBlock;
-import xyz.nucleoid.extras.lobby.block.LaunchPadBlockEntity;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LaunchFeatherItem extends Item implements PolymerItem {
     public LaunchFeatherItem(Settings settings) {
@@ -22,30 +23,22 @@ public class LaunchFeatherItem extends Item implements PolymerItem {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        float pitch = LaunchPadBlockEntity.DEFAULT_PITCH;
-        float power = LaunchPadBlockEntity.DEFAULT_POWER;
+        LauncherComponent launcher = stack.get(NEDataComponentTypes.LAUNCHER);
 
-        NbtCompound nbt = stack.getNbt();
-
-        if (nbt != null) {
-            pitch = nbt.getFloat(LaunchPadBlockEntity.PITCH_KEY);
-            power = nbt.getFloat(LaunchPadBlockEntity.POWER_KEY);
-        }
-
-        if (!user.getWorld().isClient() && LaunchPadBlock.tryLaunch(entity, user, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, pitch, power)) {
-            return ActionResult.SUCCESS;
+        if (!user.getWorld().isClient() && LaunchPadBlock.tryLaunch(entity, user, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, launcher)) {
+            return ActionResult.SUCCESS_SERVER;
         }
 
         return ActionResult.PASS;
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
-        return true;
+    public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
+        return Items.FEATHER;
     }
 
     @Override
-    public Item getPolymerItem(ItemStack stack, ServerPlayerEntity player) {
-        return Items.FEATHER;
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        return null;
     }
 }

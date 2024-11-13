@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.game_portal;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -9,10 +10,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.codecs.MoreCodecs;
-import xyz.nucleoid.plasmid.game.config.CustomValuesConfig;
-import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.GamePortalConfig;
-import xyz.nucleoid.plasmid.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ public record ServerChangePortalConfig(
         CustomValuesConfig custom
 ) implements GamePortalConfig {
 
-    public static final Codec<ServerChangePortalConfig> CODEC = RecordCodecBuilder.create(instance -> {
+    public static final MapCodec<ServerChangePortalConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(ServerChangePortalConfig::name),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(ServerChangePortalConfig::description),
@@ -48,7 +49,7 @@ public record ServerChangePortalConfig(
     }
 
     @Override
-    public Codec<? extends GamePortalConfig> codec() {
+    public MapCodec<? extends GamePortalConfig> codec() {
         return CODEC;
     }
 }

@@ -1,21 +1,16 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BellBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 import java.util.List;
@@ -43,7 +38,7 @@ public class BellTaterBlockEntity extends BlockEntity {
 		return super.onSyncedBlockEvent(type, data);
 	}
 
-	private static void tick(World world, BlockPos pos, BlockState state, BellTaterBlockEntity blockEntity, BellTaterBlockEntity.Effect bellEffect) {
+	private static void tick(World world, BlockPos pos, BlockState state, BellTaterBlockEntity blockEntity, BellBlockEntity.Effect bellEffect) {
 		if (blockEntity.ringing) {
 			++blockEntity.ringTicks;
 		}
@@ -51,7 +46,7 @@ public class BellTaterBlockEntity extends BlockEntity {
 			blockEntity.ringing = false;
 			blockEntity.ringTicks = 0;
 		}
-		if (blockEntity.ringTicks >= 5 && blockEntity.resonateTime == 0 && BellTaterBlockEntity.raidersHearBell(pos, blockEntity.hearingEntities)) {
+		if (blockEntity.ringTicks >= 5 && blockEntity.resonateTime == 0 && BellBlockEntity.raidersHearBell(pos, blockEntity.hearingEntities)) {
 			blockEntity.resonating = true;
 			world.playSound(null, pos, SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.BLOCKS, 1.0f, 1.0f);
 		}
@@ -66,11 +61,11 @@ public class BellTaterBlockEntity extends BlockEntity {
 	}
 
 	public static void clientTick(World world, BlockPos pos, BlockState state, BellTaterBlockEntity blockEntity) {
-		BellTaterBlockEntity.tick(world, pos, state, blockEntity, BellTaterBlockEntity::applyParticlesToRaiders);
+		BellTaterBlockEntity.tick(world, pos, state, blockEntity, BellBlockEntity::applyParticlesToRaiders);
 	}
 
 	public static void serverTick(World world, BlockPos pos, BlockState state, BellTaterBlockEntity blockEntity) {
-		BellTaterBlockEntity.tick(world, pos, state, blockEntity, BellTaterBlockEntity::applyGlowToRaiders);
+		BellTaterBlockEntity.tick(world, pos, state, blockEntity, BellBlockEntity::applyGlowToRaiders);
 	}
 
 	/**
@@ -102,58 +97,5 @@ public class BellTaterBlockEntity extends BlockEntity {
 				livingEntity.getBrain().remember(MemoryModuleType.HEARD_BELL_TIME, this.world.getTime());
 			}
 		}
-	}
-
-	private static boolean raidersHearBell(BlockPos pos, List<LivingEntity> hearingEntities) {
-		for (LivingEntity livingEntity : hearingEntities) {
-			if (!livingEntity.isAlive() || livingEntity.isRemoved() || !pos.isWithinDistance(livingEntity.getPos(), 32.0) || !livingEntity.getType().isIn(EntityTypeTags.RAIDERS)) continue;
-			return true;
-		}
-		return false;
-	}
-
-	private static void applyGlowToRaiders(World world, BlockPos pos, List<LivingEntity> hearingEntities) {
-		hearingEntities.stream().filter(entity -> BellTaterBlockEntity.isRaiderEntity(pos, entity)).forEach(BellTaterBlockEntity::applyGlowToEntity);
-	}
-
-	/**
-	 * Spawns {@link net.minecraft.particle.ParticleTypes#ENTITY_EFFECT} particles around raiders within 48 blocks.
-	 */
-	private static void applyParticlesToRaiders(World world, BlockPos pos, List<LivingEntity> hearingEntities) {
-		MutableInt mutableInt = new MutableInt(16700985);
-		int i = (int)hearingEntities.stream().filter(entity -> pos.isWithinDistance(entity.getPos(), 48.0)).count();
-		hearingEntities.stream().filter(entity -> BellTaterBlockEntity.isRaiderEntity(pos, entity)).forEach(entity -> {
-			float f = 1.0f;
-			double d = Math.sqrt((entity.getX() - (double)pos.getX()) * (entity.getX() - (double)pos.getX()) + (entity.getZ() - (double)pos.getZ()) * (entity.getZ() - (double)pos.getZ()));
-			double e = (double)((float)pos.getX() + 0.5f) + 1.0 / d * (entity.getX() - (double)pos.getX());
-			double g = (double)((float)pos.getZ() + 0.5f) + 1.0 / d * (entity.getZ() - (double)pos.getZ());
-			int j = MathHelper.clamp((i - 21) / -2, 3, 15);
-			for (int k = 0; k < j; ++k) {
-				int l = mutableInt.addAndGet(5);
-				double h = (double)(l >> 16 & 0xFF) / 255.0;
-				double m = (double)(l >> 8 & 0xFF) / 255.0;
-				double n = (double)(l & 0xFF) / 255.0;
-				world.addParticle(ParticleTypes.ENTITY_EFFECT, e, (float)pos.getY() + 0.5f, g, h, m, n);
-			}
-		});
-	}
-
-	/**
-	 * Determines whether the given entity is in the {@link EntityTypeTags#RAIDERS} entity type tag and within 48 blocks of the given position.
-	 */
-	private static boolean isRaiderEntity(BlockPos pos, LivingEntity entity) {
-		return entity.isAlive() && !entity.isRemoved() && pos.isWithinDistance(entity.getPos(), 48.0) && entity.getType().isIn(EntityTypeTags.RAIDERS);
-	}
-
-	/**
-	 * Gives the {@link net.minecraft.entity.effect.StatusEffects#GLOWING} status effect to the given entity for 3 seconds (60 ticks).
-	 */
-	private static void applyGlowToEntity(LivingEntity entity) {
-		entity.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 60));
-	}
-
-	@FunctionalInterface
-	interface Effect {
-		void run(World world, BlockPos pos, List<LivingEntity> hearingEntities);
 	}
 }

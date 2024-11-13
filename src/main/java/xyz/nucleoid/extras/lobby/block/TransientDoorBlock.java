@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSetType;
 import net.minecraft.block.BlockState;
@@ -14,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
     private static final int CLOSE_DELAY = SharedConstants.TICKS_PER_SECOND * 10;
@@ -23,8 +23,8 @@ public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
 
     private final Block polymerBlock;
 
-    public TransientDoorBlock(Block block) {
-        super(block instanceof DoorBlock door ? door.getBlockSetType() : BlockSetType.OAK, AbstractBlock.Settings.copy(block));
+    public TransientDoorBlock(Block block, Block.Settings settings) {
+        super(block instanceof DoorBlock door ? door.getBlockSetType() : BlockSetType.OAK, settings);
         this.polymerBlock = block;
     }
 
@@ -52,12 +52,7 @@ public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return this.polymerBlock;
-    }
-
-    @Override
-    public BlockState getPolymerBlockState(BlockState state) {
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
         return this.polymerBlock.getStateWithProperties(state);
     }
 }

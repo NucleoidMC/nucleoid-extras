@@ -9,7 +9,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Nullables;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;
+import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -37,6 +37,7 @@ public class PlayerListHelper {
             player.networkHandler.getLatency(),
             getGameMode(player, gray),
             getDisplayName(player, gray),
+            player.getPlayerListOrder(),
             getSession(player)
         );
     }

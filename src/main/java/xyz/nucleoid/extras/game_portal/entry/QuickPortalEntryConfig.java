@@ -1,14 +1,14 @@
 package xyz.nucleoid.extras.game_portal.entry;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.codecs.MoreCodecs;
-import xyz.nucleoid.plasmid.game.portal.GamePortalManager;
-import xyz.nucleoid.plasmid.game.portal.menu.*;
-import xyz.nucleoid.plasmid.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalManager;
+import xyz.nucleoid.plasmid.impl.portal.menu.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ public record QuickPortalEntryConfig(
         Optional<List<Text>> description,
         Optional<ItemStack> icon
 ) implements MenuEntryConfig {
-    public static final Codec<QuickPortalEntryConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<QuickPortalEntryConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Identifier.CODEC.fieldOf("portal").forGetter(QuickPortalEntryConfig::portal),
             Identifier.CODEC.fieldOf("quick_portal").forGetter(QuickPortalEntryConfig::quickPortal),
             PlasmidCodecs.TEXT.fieldOf("message").orElse(Text.translatable("text.nucleoid_extras.ui.action.more")).forGetter(QuickPortalEntryConfig::message),
@@ -50,7 +50,7 @@ public record QuickPortalEntryConfig(
     }
 
     @Override
-    public Codec<? extends MenuEntryConfig> codec() {
+    public MapCodec<? extends MenuEntryConfig> codec() {
         return CODEC;
     }
 }

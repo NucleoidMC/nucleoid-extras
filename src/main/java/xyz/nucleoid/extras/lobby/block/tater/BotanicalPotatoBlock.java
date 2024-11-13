@@ -9,15 +9,14 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -28,6 +27,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
 import xyz.nucleoid.extras.util.SkinEncoder;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithElementHolder {
     private final ItemStack upStack;
@@ -50,8 +50,8 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return Blocks.BARRIER;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.BARRIER.getDefaultState();
     }
 
     @Override
@@ -65,16 +65,14 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand == Hand.MAIN_HAND) {
-            var model = (Model) BlockBoundAttachment.get(world, pos).holder();
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        var model = (Model) BlockBoundAttachment.get(world, pos).holder();
 
-            if (model.jumpTime < 0) {
-                model.jumpTime = 20;
-            }
+        if (model.jumpTime < 0) {
+            model.jumpTime = 20;
         }
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 
     private class Model extends ElementHolder {

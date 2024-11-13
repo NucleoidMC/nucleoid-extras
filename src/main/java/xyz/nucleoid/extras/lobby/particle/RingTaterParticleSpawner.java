@@ -1,7 +1,5 @@
 package xyz.nucleoid.extras.lobby.particle;
 
-import org.joml.Vector3f;
-
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
@@ -40,7 +38,7 @@ public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
         }
     }
 
-    public static TaterParticleSpawner ofDust(Vector3f color) {
+    public static TaterParticleSpawner ofDust(int color) {
         return new RingTaterParticleSpawner(new DustParticleEffect(color, 1));
     }
 }

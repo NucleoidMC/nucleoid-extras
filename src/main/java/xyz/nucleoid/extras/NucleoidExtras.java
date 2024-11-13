@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.command.ExtraCommands;
+import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
@@ -24,6 +25,7 @@ import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.extras.lobby.*;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
+import xyz.nucleoid.extras.network.NucleoidExtrasNetworking;
 import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
@@ -37,6 +39,7 @@ public final class NucleoidExtras implements ModInitializer {
     @Override
     public void onInitialize() {
         NEBlocks.register();
+        NEDataComponentTypes.register();
         NEItems.register();
         NEEntities.register();
         NECriteria.register();
@@ -59,7 +62,7 @@ public final class NucleoidExtras implements ModInitializer {
 
         ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
-        ServerChangePortalBackend.register();
+        NucleoidExtrasNetworking.register();
     }
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
@@ -92,6 +95,6 @@ public final class NucleoidExtras implements ModInitializer {
     }
 
     public static Identifier identifier(String path) {
-        return new Identifier(ID, path);
+        return Identifier.of(ID, path);
     }
 }

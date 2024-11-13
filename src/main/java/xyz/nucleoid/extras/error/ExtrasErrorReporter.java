@@ -1,14 +1,17 @@
 package xyz.nucleoid.extras.error;
 
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.ReportType;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.plasmid.event.GameEvents;
-import xyz.nucleoid.plasmid.game.GameCloseReason;
-import xyz.nucleoid.plasmid.game.GameLifecycle;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.config.GameConfig;
+import xyz.nucleoid.plasmid.api.event.GameEvents;
+import xyz.nucleoid.plasmid.api.game.GameCloseReason;
+import xyz.nucleoid.plasmid.api.game.GameLifecycle;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.config.GameConfig;
+import xyz.nucleoid.plasmid.api.game.config.GameConfigs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,16 +52,16 @@ public final class ExtrasErrorReporter {
         });
     }
 
-    private static String sourceName(GameConfig<?> game) {
-        var name = game.name().getString();
-        return name + " (" + game.source() + ")";
+    private static String sourceName(RegistryEntry<GameConfig<?>> game) {
+        var name = GameConfig.name(game).getString();
+        return name + " (" + GameConfig.sourceName(game) + ")";
     }
 
     public static void onServerCrash(CrashReport report) {
         var webhook = openWebhook();
         if (webhook != null) {
             var message = new DiscordWebhook.Message("The server has crashed!");
-            message.addFile("report.txt", report.asString());
+            message.addFile("report.txt", report.asString(ReportType.MINECRAFT_CRASH_REPORT));
             webhook.post(message);
         }
     }

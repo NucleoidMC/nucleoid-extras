@@ -22,11 +22,11 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.block.WireOrientation;
 import net.minecraft.world.event.GameEvent;
 
 public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
@@ -38,7 +38,7 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
 		boolean bl = world.isReceivingRedstonePower(pos);
 		if (bl != state.get(POWERED)) {
 			if (bl) {
@@ -56,9 +56,9 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		super.onUse(state, world, pos, player, hand, hit);
-		return this.ring(world, hit, player) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+		super.onUse(state, world, pos, player, hit);
+		return this.ring(world, hit, player) ? ActionResult.SUCCESS_SERVER : ActionResult.PASS;
 	}
 
 	public boolean ring(World world, BlockHitResult hitResult, @Nullable PlayerEntity player) {

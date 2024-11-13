@@ -13,11 +13,10 @@ import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
-import xyz.nucleoid.plasmid.event.GameEvents;
-import xyz.nucleoid.plasmid.game.GameCloseReason;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.stats.GameStatisticBundle;
-import xyz.nucleoid.plasmid.game.stats.StatisticKey;
+import xyz.nucleoid.plasmid.api.event.GameEvents;
+import xyz.nucleoid.plasmid.api.game.GameCloseReason;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.stats.GameStatisticBundle;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -60,7 +59,7 @@ public class StatisticsIntegration {
         }
 
         // Do not send statistics for anonymous games to the backend
-        if (space.getMetadata().sourceConfig().source() == null) return;
+        if (!space.getMetadata().sourceConfig().getKey().isPresent()) return;
 
         UUID gameId = space.getMetadata().id();
 

@@ -2,7 +2,6 @@ package xyz.nucleoid.extras.lobby.particle;
 
 import net.minecraft.particle.DustColorTransitionParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
 public class LuckyTaterParticleSpawner extends DynamicTaterParticleSpawner {
@@ -20,7 +19,7 @@ public class LuckyTaterParticleSpawner extends DynamicTaterParticleSpawner {
         int toColor = getRandomColor(random);
 
         int scale = random.nextInt(3);
-        return new DustColorTransitionParticleEffect(Vec3d.unpackRgb(fromColor).toVector3f(), Vec3d.unpackRgb(toColor).toVector3f(), scale);
+        return new DustColorTransitionParticleEffect(fromColor, toColor, scale);
     }
 
     private static int getRandomColor(Random random) {

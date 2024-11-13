@@ -3,10 +3,10 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import xyz.nucleoid.extras.lobby.particle.RandomParticleSpawner;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public final class CorruptaterBlock extends CubicPotatoBlock {
     private final Random random = Random.createLocal();
@@ -15,9 +15,10 @@ public final class CorruptaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity player) {
-        var tater = getTater(player.getRandom());
-        return tater.getPolymerSkinValue(tater.getDefaultState(), pos, player);
+    public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
+        var player = context.getPlayer();
+        var tater = getTater(player == null ? random : player.getRandom());
+        return tater.getPolymerSkinValue(tater.getDefaultState(), pos, context);
     }
 
     @Override

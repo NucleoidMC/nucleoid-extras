@@ -27,7 +27,7 @@ public record LobbySpawnConfig(
     );
 
     public void teleport(ServerPlayerEntity player, ServerWorld world) {
-        player.teleport(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), Collections.emptySet(), this.yaw, this.pitch);
+        player.teleport(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), Collections.emptySet(), this.yaw, this.pitch, true);
     }
 
     public void changeGameMode(ServerPlayerEntity player, GameMode fallback) {

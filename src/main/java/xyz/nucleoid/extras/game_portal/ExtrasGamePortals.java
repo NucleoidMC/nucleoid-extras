@@ -2,7 +2,7 @@ package xyz.nucleoid.extras.game_portal;
 
 import net.fabricmc.loader.api.FabricLoader;
 import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.plasmid.game.portal.GamePortalConfig;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalConfig;
 
 public class ExtrasGamePortals {
     public static final boolean SHOW_INVALID = false && FabricLoader.getInstance().isDevelopmentEnvironment();

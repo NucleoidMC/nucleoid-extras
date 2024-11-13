@@ -1,8 +1,6 @@
 package xyz.nucleoid.extras.lobby.particle;
 
-import java.util.stream.Stream;
-
-import org.joml.Vector3f;
+import java.util.stream.IntStream;
 
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -10,8 +8,8 @@ import net.minecraft.particle.ParticleEffect;
 public class ColorPatternTaterParticleSpawner extends DynamicTaterParticleSpawner {
     private final ParticleEffect[] particleEffects;
 
-    public ColorPatternTaterParticleSpawner(Vector3f[] pattern) {
-        this.particleEffects = Stream.of(pattern).map(color ->
+    public ColorPatternTaterParticleSpawner(int[] pattern) {
+        this.particleEffects = IntStream.of(pattern).mapToObj(color ->
             new DustParticleEffect(color, 1)
         ).toArray(ParticleEffect[]::new);
     }

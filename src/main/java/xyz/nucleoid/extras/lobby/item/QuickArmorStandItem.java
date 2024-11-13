@@ -1,14 +1,13 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.item.*;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -16,13 +15,14 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
             Box box = NEEntities.QUICK_ARMOR_STAND.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
             if (world.isSpaceEmpty(box) && world.getOtherEntities(null, box).isEmpty()) {
                 if (world instanceof ServerWorld serverWorld) {
-                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND.spawnFromItemStack(serverWorld, itemStack, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
+                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND.spawnFromItemStack(serverWorld, itemStack, context.getPlayer(), blockPos, SpawnReason.SPAWN_ITEM_USE, true, true);
                     if (armorStandEntity == null) {
                         return ActionResult.FAIL;
                     }
@@ -70,7 +70,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
                 }
 
                 itemStack.decrement(1);
-                return ActionResult.success(world.isClient);
+                return ActionResult.SUCCESS_SERVER;
             } else {
                 return ActionResult.FAIL;
             }
@@ -90,13 +90,18 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     }
 
     @Override
-    public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
+    public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
         return Items.ARMOR_STAND;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        return null;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        super.appendTooltip(stack, context, tooltip, type);
         tooltip.add(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }

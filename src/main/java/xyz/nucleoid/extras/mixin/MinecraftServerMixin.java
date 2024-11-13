@@ -3,8 +3,10 @@ package xyz.nucleoid.extras.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.profiler.PerformanceLog;
+import net.minecraft.util.profiler.MultiValueDebugSampleLogImpl;
+import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +20,7 @@ import xyz.nucleoid.extras.integrations.status.ServerLifecycleIntegration;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements HasTickPerformanceLog {
     @Unique
-    private final PerformanceLog extras$tickPerformanceLog = new PerformanceLog();
+    private final MultiValueDebugSampleLogImpl extras$tickPerformanceLog = new MultiValueDebugSampleLogImpl(1);
 
     @ModifyArg(
             method = "runServer",
@@ -33,15 +35,15 @@ public class MinecraftServerMixin implements HasTickPerformanceLog {
     }
 
     @Inject(
-            method = "tickTickLog",
+            method = "pushTickLog",
             at = @At(value = "HEAD")
     )
-    public void pushTickPerformanceLog(long nanos, CallbackInfo ci) {
-        this.extras$tickPerformanceLog.push(nanos);
+    public void pushTickPerformanceLog(long tickStartTime, CallbackInfo ci) {
+        this.extras$tickPerformanceLog.push(Util.getMeasuringTimeNano() - tickStartTime);
     }
 
     @Override
-    public PerformanceLog getTickPerformanceLog() {
+    public MultiValueDebugSampleLog getTickPerformanceLog() {
         return this.extras$tickPerformanceLog;
     }
 }

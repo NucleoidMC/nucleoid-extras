@@ -18,14 +18,14 @@ import xyz.nucleoid.extras.util.PagedGui;
 import java.util.List;
 
 public class TaterBoxGui extends PagedGui.FromList {
-	protected static final Text SHOW_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.show_unfound").formatted(Formatting.WHITE);
-	protected static final Text HIDE_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.hide_unfound").formatted(Formatting.WHITE);
+	protected static final Text SHOW_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.show_unfound");
+	protected static final Text HIDE_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.hide_unfound");
 	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
-	protected static final Text COLLECT_ALL_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.collect_all").formatted(Formatting.WHITE);
+	protected static final Text COLLECT_ALL_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.collect_all");
     protected static final Item COLLECT_ALL_ICON = Items.EMERALD;
 
-	protected static final Text RESET_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.reset").formatted(Formatting.WHITE);
+	protected static final Text RESET_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.reset");
     protected static final Item RESET_ICON = Items.CAMPFIRE;
 
 	private final boolean creative;
@@ -86,8 +86,8 @@ public class TaterBoxGui extends PagedGui.FromList {
 		boolean hideUnfound = gui.shouldHideUnfound();
 
 		GuiElementBuilder builder = new GuiElementBuilder(UNFOUND_BUTTON_ICON)
-				.setName(hideUnfound ? SHOW_UNFOUND_TEXT : HIDE_UNFOUND_TEXT)
-				.hideFlags()
+				.setItemName(hideUnfound ? SHOW_UNFOUND_TEXT : HIDE_UNFOUND_TEXT)
+				.hideDefaultTooltip()
 				.setCallback((x, y, z) -> {
 					playClickSound(gui.player);
 					gui.toggleHideUnfound();
@@ -99,8 +99,8 @@ public class TaterBoxGui extends PagedGui.FromList {
 
 	public static DisplayElement collectAllButton(TaterBoxGui gui) {
         GuiElementBuilder builder = new GuiElementBuilder(COLLECT_ALL_ICON)
-            .setName(COLLECT_ALL_TEXT)
-            .hideFlags()
+            .setItemName(COLLECT_ALL_TEXT)
+            .hideDefaultTooltip()
             .setCallback(() -> {
                 var state = PlayerLobbyState.get(gui.getPlayer());
                 state.collectedTaters.addAll(TinyPotatoBlock.TATERS);
@@ -114,8 +114,8 @@ public class TaterBoxGui extends PagedGui.FromList {
 
 	public static DisplayElement resetButton(TaterBoxGui gui) {
         GuiElementBuilder builder = new GuiElementBuilder(RESET_ICON)
-            .setName(RESET_TEXT)
-            .hideFlags()
+            .setItemName(RESET_TEXT)
+            .hideDefaultTooltip()
             .setCallback(() -> {
                 var state = PlayerLobbyState.get(gui.getPlayer());
                 state.collectedTaters.clear();
@@ -153,7 +153,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 		public TaterGuiElementBuilder setFound(boolean found) {
 			this.found = found;
 			if(!found) {
-				setName(NOT_FOUND_TEXT);
+				setItemName(NOT_FOUND_TEXT);
 				setItem(UNFOUND_ICON);
 			}
 			return this;

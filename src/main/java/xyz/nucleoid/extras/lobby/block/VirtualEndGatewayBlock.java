@@ -7,8 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
     public VirtualEndGatewayBlock(Settings settings) {
@@ -16,12 +16,12 @@ public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return Blocks.END_GATEWAY;
+    public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
+        return Blocks.END_GATEWAY.getDefaultState();
     }
 
     @Override
-    public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, ServerPlayerEntity player) {
+    public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, PacketContext.NotNullWithPlayer contexts) {
         var main = new NbtCompound();
         main.putString("id", "minecraft:end_gateway");
         main.putInt("x", pos.getX());
@@ -29,6 +29,6 @@ public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
         main.putInt("z", pos.getZ());
         main.putLong("Age", Long.MIN_VALUE);
 
-        player.networkHandler.sendPacket(PolymerBlockUtils.createBlockEntityPacket(pos, BlockEntityType.END_GATEWAY, main));
+        contexts.getPlayer().networkHandler.sendPacket(PolymerBlockUtils.createBlockEntityPacket(pos, BlockEntityType.END_GATEWAY, main));
     }
 }

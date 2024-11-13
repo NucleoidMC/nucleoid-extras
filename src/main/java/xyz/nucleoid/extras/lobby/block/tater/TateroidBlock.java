@@ -15,11 +15,11 @@ import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.block.WireOrientation;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.particle.TateroidParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
@@ -59,8 +59,8 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ActionResult result = super.onUse(state, world, pos, player, hand, hit);
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        ActionResult result = super.onUse(state, world, pos, player, hit);
         if (result.isAccepted() && !world.isClient()) {
             this.activate(world, pos, FULL_DURATION);
         }
@@ -69,7 +69,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
         if (!world.isClient()) {
             int power = world.getReceivedRedstonePower(pos);
             boolean powered = power > 0;

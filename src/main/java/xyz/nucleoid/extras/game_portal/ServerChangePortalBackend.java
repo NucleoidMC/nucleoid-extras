@@ -1,24 +1,21 @@
 package xyz.nucleoid.extras.game_portal;
 
 import com.google.common.io.ByteStreams;
+import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.portal.GamePortalBackend;
-import xyz.nucleoid.plasmid.game.portal.GamePortalDisplay;
+import xyz.nucleoid.extras.network.BungeeCordPayload;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
+import xyz.nucleoid.plasmid.impl.portal.GamePortalDisplay;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +26,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public final class ServerChangePortalBackend implements GamePortalBackend {
-    private static final Identifier PACKET_ID = new Identifier("bungeecord", "main");
-
     public static final Map<String, List<ServerChangePortalBackend>> ID_TO_PORTAL = new HashMap<>();
 
     private final ItemStack icon;
@@ -58,6 +53,10 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     public static void tick(MinecraftServer server) {
+        if (true) {
+            return;
+        }
+
         var players = server.getPlayerManager().getPlayerList();
 
         if (players.isEmpty() || server.getTicks() % 100 != 0) {
@@ -73,15 +72,13 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
 
             var out = PacketByteBufs.create();
             out.writeBytes(buf.toByteArray());
-            random.networkHandler.sendPacket(ServerPlayNetworking.createS2CPacket(PACKET_ID, out));
+            ServerPlayNetworking.send(random, new BungeeCordPayload(out));
         }
     }
 
-    public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(PACKET_ID, ServerChangePortalBackend::handlePacket);
-    }
+    public static void handlePacket(BungeeCordPayload payload, ServerPlayNetworking.Context context) {
+        ByteBuf buf = payload.data();
 
-    private static void handlePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender packetSender) {
         try {
             var out = new DataInputStream(new InputStream() {
                 @Override
@@ -96,7 +93,7 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
                 var serverId = out.readUTF();
                 var count = out.readInt();
 
-                server.execute(() -> {
+                context.server().execute(() -> {
                     var x = ID_TO_PORTAL.get(serverId);
 
                     if (x != null) {
@@ -159,7 +156,7 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public void applyTo(ServerPlayerEntity player) {
+    public void applyTo(ServerPlayerEntity player, boolean alt) {
         var buf = ByteStreams.newDataOutput();
         buf.writeUTF("Connect");
         buf.writeUTF(this.serverId);
@@ -167,6 +164,6 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
 
         var out = PacketByteBufs.create();
         out.writeBytes(buf.toByteArray());
-        player.networkHandler.sendPacket(ServerPlayNetworking.createS2CPacket(PACKET_ID, out));
+        ServerPlayNetworking.send(player, new BungeeCordPayload(out));
     }
 }

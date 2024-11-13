@@ -10,8 +10,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
-    public static final Codec<RegistryEntry<Block>> ENTRY_CODEC = Codecs.validate(Registries.BLOCK.createEntryCodec(), block -> {
+    public static final Codec<RegistryEntry<Block>> ENTRY_CODEC = Registries.BLOCK.getEntryCodec().validate(block -> {
         if (block.value() instanceof TinyPotatoBlock) {
             return DataResult.success(block);
         }
@@ -60,15 +58,11 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (hand == Hand.OFF_HAND) {
-            return ActionResult.FAIL;
-        }
-
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world instanceof ServerWorld serverWorld) {
             this.particleSpawner.trySpawn(new TaterParticleContext.Block(pos, serverWorld));
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResult.SUCCESS_SERVER;
     }
 }

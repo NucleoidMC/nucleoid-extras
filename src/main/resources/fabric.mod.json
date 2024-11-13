@@ -12,11 +12,12 @@
     "fabric-datagen": ["xyz.nucleoid.extras.data.NEDatagen"]
   },
   "mixins": ["extras.mixins.json"],
+  "accessWidener": "extras.accesswidener",
   "depends": {
     "fabricloader": ">=0.9.1",
     "fabric": "*",
-    "minecraft": ">=1.20",
-    "plasmid": "0.5.x",
+    "minecraft": ">=1.21.2-",
+    "plasmid": "0.6.x",
     "java": ">=17"
   }
 }
