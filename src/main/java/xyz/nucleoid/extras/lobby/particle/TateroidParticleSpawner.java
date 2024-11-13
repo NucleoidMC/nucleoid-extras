@@ -49,6 +49,8 @@ public class TateroidParticleSpawner extends SimpleTaterParticleSpawner {
         var pos = this.getPos(context);
         var particleEffect = this.getParticleEffect(context);
 
-        context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 0, 1, 0, 0, particleSpeed);
+        if (particleEffect != null) {
+            context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 0, 1, 0, 0, particleSpeed);
+        }
     }
 }

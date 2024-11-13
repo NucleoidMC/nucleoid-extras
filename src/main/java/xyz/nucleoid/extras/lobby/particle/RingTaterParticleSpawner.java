@@ -24,7 +24,10 @@ public class RingTaterParticleSpawner extends SimpleTaterParticleSpawner {
         double centerAngle = context instanceof TaterParticleContext.Player playerContext ? (playerContext.player().getYaw() * MathHelper.RADIANS_PER_DEGREE) : 0;
 
         var particleEffect = this.getParticleEffect(context);
-        this.spawnParticlesAround(context.world(), particleEffect, pos.getX(), radius, y, pos.getZ(), radius, centerAngle);
+
+        if (particleEffect != null) {
+            this.spawnParticlesAround(context.world(), particleEffect, pos.getX(), radius, y, pos.getZ(), radius, centerAngle);
+        }
     }
 
     private void spawnParticlesAround(ServerWorld world, ParticleEffect particleEffect, double centerX, double radiusX, double y, double centerZ, double radiusZ, double centerAngle) {

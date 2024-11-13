@@ -21,6 +21,9 @@ public abstract class MarkerTaterParticleSpawner extends DynamicTaterParticleSpa
         double z = pos.getZ();
 
         var particleEffect = this.getParticleEffect(context);
-        context.world().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
+
+        if (particleEffect != null) {
+            context.world().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
+        }
     }
 }

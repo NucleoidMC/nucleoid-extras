@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.util.math.MathHelper;
 
@@ -8,6 +9,7 @@ public abstract class TaterParticleSpawner {
         return true;
     }
 
+    @Nullable
     protected abstract ParticleEffect getParticleEffect(TaterParticleContext context);
 
     protected double getParticleSpeed(TaterParticleContext context) {
@@ -34,6 +36,8 @@ public abstract class TaterParticleSpawner {
         var particleEffect = this.getParticleEffect(context);
         double particleSpeed = this.getParticleSpeed(context);
 
-        context.world().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, particleSpeed);
+        if (particleEffect != null) {
+            context.world().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, particleSpeed);
+        }
     }
 }

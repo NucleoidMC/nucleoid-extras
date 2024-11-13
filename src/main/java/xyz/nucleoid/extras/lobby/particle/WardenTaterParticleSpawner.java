@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.particle;
 
+import org.jetbrains.annotations.Nullable;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.BlockState;
@@ -36,9 +37,12 @@ public class WardenTaterParticleSpawner extends DynamicTaterParticleSpawner {
         var particleEffect = this.getParticleEffect(context);
         double particleSpeed = this.getParticleSpeed(context);
 
-        context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, particleSpeed);
+        if (particleEffect != null) {
+            context.world().spawnParticles(particleEffect, pos.getX(), pos.getY(), pos.getZ(), 1, 0, 0, 0, particleSpeed);
+        }
     }
 
+    @Nullable
     private static ParticleEffect getTaterVibrationParticleEffect(BlockPos pos, ServerWorld world) {
         var taters = new LongArrayList();
 
