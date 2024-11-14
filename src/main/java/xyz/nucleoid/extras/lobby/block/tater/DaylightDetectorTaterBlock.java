@@ -6,6 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 import net.minecraft.block.Block;
@@ -31,6 +33,7 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 	public static final MapCodec<DaylightDetectorTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
 		instance.group(
 				createSettingsCodec(),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(DaylightDetectorTaterBlock::getParticleSpawner),
 				Codec.STRING.fieldOf("texture").forGetter(DaylightDetectorTaterBlock::getItemTexture),
 				Codec.BOOL.fieldOf("inverted").forGetter(tater -> tater.inverted)
 		).apply(instance, DaylightDetectorTaterBlock::new)
@@ -40,10 +43,14 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 
 	public final boolean inverted;
 
-	public DaylightDetectorTaterBlock(Settings settings, String texture, boolean inverted) {
-		super(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DAYLIGHT_DETECTOR.getDefaultState().with(Properties.INVERTED, inverted))), texture);
+	public DaylightDetectorTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture, boolean inverted) {
+		super(settings, particleSpawner, texture);
 		this.inverted = inverted;
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
+	}
+
+	public DaylightDetectorTaterBlock(Settings settings, String texture, boolean inverted) {
+		this(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DAYLIGHT_DETECTOR.getDefaultState().with(Properties.INVERTED, inverted))), texture, inverted);
 	}
 
 	@Override
@@ -99,8 +106,8 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 		builder.add(POWER);
 	}
 
-    @Override
-    public MapCodec<? extends DaylightDetectorTaterBlock> getCodec() {
-        return CODEC;
-    }
+	@Override
+	public MapCodec<? extends DaylightDetectorTaterBlock> getCodec() {
+		return CODEC;
+	}
 }

@@ -24,6 +24,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.block.WireOrientation;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.lobby.particle.TateroidParticleSpawner;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
@@ -32,7 +34,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
         instance.group(
                 createSettingsCodec(),
                 SoundEvent.ENTRY_CODEC.fieldOf("default_sound").forGetter(TateroidBlock::getDefaultSound),
-                TateroidParticleSpawner.DEFAULT_PARTICLE_COLOR_CODEC.forGetter(tater -> tater.defaultParticleColor),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(TateroidBlock::getParticleSpawner),
                 Codec.STRING.fieldOf("texture").forGetter(TateroidBlock::getItemTexture)
         ).apply(instance, TateroidBlock::new)
     );
@@ -41,15 +43,17 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     private static final int FULL_DURATION = 15 * SharedConstants.TICKS_PER_SECOND;
 
     private final RegistryEntry<SoundEvent> defaultSound;
-    private final double defaultParticleColor;
 
-    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
-        super(settings, new TateroidParticleSpawner(ParticleTypes.NOTE, TateroidParticleSpawner.DEFAULT_PLAYER_PARTICLE_RATE, TateroidParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE, defaultParticleColor), texture);
+    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, TaterParticleSpawner particleSpawner, String texture) {
+        super(settings, particleSpawner, texture);
 
         this.defaultSound = defaultSound;
-        this.defaultParticleColor = defaultParticleColor;
 
         this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
+    }
+
+    public TateroidBlock(Settings settings, RegistryEntry<SoundEvent> defaultSound, double defaultParticleColor, String texture) {
+        this(settings, defaultSound, new TateroidParticleSpawner(ParticleTypes.NOTE, TateroidParticleSpawner.DEFAULT_PLAYER_PARTICLE_RATE, TateroidParticleSpawner.DEFAULT_BLOCK_PARTICLE_CHANCE, defaultParticleColor), texture);
     }
 
     private void activate(World world, BlockPos pos, int duration) {

@@ -3,6 +3,8 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 import com.mojang.serialization.Codec;
@@ -38,13 +40,18 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	public static final MapCodec<BellTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
 		instance.group(
 				createSettingsCodec(),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(BellTaterBlock::getParticleSpawner),
 				Codec.STRING.fieldOf("texture").forGetter(BellTaterBlock::getItemTexture)
 		).apply(instance, BellTaterBlock::new)
 	);
 
-	public BellTaterBlock(Settings settings, String texture) {
-		super(settings, new SimpleTaterParticleSpawner(ParticleTypes.NOTE), texture);
+	public BellTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
+		super(settings, particleSpawner, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
+	}
+
+	public BellTaterBlock(Settings settings, String texture) {
+		this(settings, new SimpleTaterParticleSpawner(ParticleTypes.NOTE), texture);
 	}
 
 	@Override

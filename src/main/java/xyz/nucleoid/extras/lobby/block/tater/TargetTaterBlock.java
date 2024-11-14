@@ -28,11 +28,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 
 public class TargetTaterBlock extends CubicPotatoBlock {
 	public static final MapCodec<TargetTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
 		instance.group(
 				createSettingsCodec(),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(TargetTaterBlock::getParticleSpawner),
 				Codec.STRING.fieldOf("texture").forGetter(TargetTaterBlock::getItemTexture)
 		).apply(instance, TargetTaterBlock::new)
 	);
@@ -41,9 +44,13 @@ public class TargetTaterBlock extends CubicPotatoBlock {
 	private static final int RECOVERABLE_POWER_DELAY = 20;
 	private static final int REGULAR_POWER_DELAY = 8;
 
-	public TargetTaterBlock(Settings settings, String texture) {
-		super(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.TARGET.getDefaultState())), texture);
+	public TargetTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
+		super(settings, particleSpawner, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
+	}
+
+	public TargetTaterBlock(Settings settings, String texture) {
+		this(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.TARGET.getDefaultState())), texture);
 	}
 
 	@Override
@@ -113,8 +120,8 @@ public class TargetTaterBlock extends CubicPotatoBlock {
 		}
 	}
 
-    @Override
-    public MapCodec<? extends TargetTaterBlock> getCodec() {
-        return CODEC;
-    }
+	@Override
+	public MapCodec<? extends TargetTaterBlock> getCodec() {
+		return CODEC;
+	}
 }

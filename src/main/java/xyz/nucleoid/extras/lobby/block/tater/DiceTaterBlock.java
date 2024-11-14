@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,11 +18,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class DiceTaterBlock extends CubicPotatoBlock {
-    public static final MapCodec<DiceTaterBlock> CODEC = createCodec(DiceTaterBlock::new);
+    public static final MapCodec<DiceTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(DiceTaterBlock::getParticleSpawner)
+        ).apply(instance, DiceTaterBlock::new)
+    );
 
     private static final int ROLLING_FACE = 0;
     private static final int MAX_FACE = 6;
@@ -37,10 +45,14 @@ public class DiceTaterBlock extends CubicPotatoBlock {
         SkinEncoder.encode("9c40bf70f1648b7ee438a6a22904228ab5fbbd4926af30ae8ade4df01b8d7413"),
     };
 
-    public DiceTaterBlock(Settings settings) {
-        super(settings, new SimpleTaterParticleSpawner(ParticleTypes.POOF), TEXTURES[6]);
+    public DiceTaterBlock(Settings settings, TaterParticleSpawner particleSpawner) {
+        super(settings, particleSpawner, TEXTURES[6]);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(FACE, 1));
+    }
+
+    public DiceTaterBlock(Settings settings) {
+        this(settings, new SimpleTaterParticleSpawner(ParticleTypes.POOF));
     }
 
     private boolean isRolling(BlockState state) {

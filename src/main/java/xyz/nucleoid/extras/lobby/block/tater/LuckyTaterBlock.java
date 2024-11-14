@@ -24,6 +24,8 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.particle.LuckyTaterParticleSpawner;
 import xyz.nucleoid.extras.lobby.particle.TaterParticleContext;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -32,6 +34,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     public static final MapCodec<LuckyTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
                 createSettingsCodec(),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(LuckyTaterBlock::getParticleSpawner),
                 Codec.STRING.fieldOf("texture").forGetter(LuckyTaterBlock::getItemTexture),
                 Codec.STRING.fieldOf("cooldown_texture").forGetter(tater -> tater.cooldownTexture)
         ).apply(instance, LuckyTaterBlock::new)
@@ -43,6 +46,13 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
 
     private final String cooldownTexture;
+
+    public LuckyTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture, String cooldownTexture) {
+        super(settings, particleSpawner, texture);
+        this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
+
+        this.setDefaultState(this.stateManager.getDefaultState().with(PHASE, LuckyTaterPhase.READY));
+    }
 
     public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
         super(settings, LuckyTaterParticleSpawner.DEFAULT, texture);
