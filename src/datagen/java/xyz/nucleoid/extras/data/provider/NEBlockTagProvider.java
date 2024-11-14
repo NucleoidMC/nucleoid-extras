@@ -38,6 +38,7 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(NEBlocks.TRANSIENT_CHERRY_DOOR)
                 .add(NEBlocks.TRANSIENT_DARK_OAK_DOOR)
                 .add(NEBlocks.TRANSIENT_MANGROVE_DOOR)
+                .add(NEBlocks.TRANSIENT_PALE_OAK_DOOR)
                 .add(NEBlocks.TRANSIENT_BAMBOO_DOOR)
                 .add(NEBlocks.TRANSIENT_CRIMSON_DOOR)
                 .add(NEBlocks.TRANSIENT_WARPED_DOOR);
