@@ -440,6 +440,8 @@ public class NEBlocks {
 
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD_ENTITY = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GOLD_LAUNCH_PAD, IRON_LAUNCH_PAD).build();
     public static final BlockEntityType<ContributorStatueBlockEntity> CONTRIBUTOR_STATUE_ENTITY = FabricBlockEntityTypeBuilder.create(ContributorStatueBlockEntity::new, CONTRIBUTOR_STATUE).build();
+    public static final BlockEntityType<InfiniteDispenserBlockEntity> INFINITE_DISPENSER_ENTITY = FabricBlockEntityTypeBuilder.create(InfiniteDispenserBlockEntity::new, INFINITE_DISPENSER).build();
+    public static final BlockEntityType<InfiniteDropperBlockEntity> INFINITE_DROPPER_ENTITY = FabricBlockEntityTypeBuilder.create(InfiniteDropperBlockEntity::new, INFINITE_DROPPER).build();
     public static final BlockEntityType<TateroidBlockEntity> TATEROID_ENTITY = FabricBlockEntityTypeBuilder.create(TateroidBlockEntity::new, TATEROID, RED_TATEROID, ORANGE_TATEROID, YELLOW_TATEROID, GREEN_TATEROID, BLUE_TATEROID, PURPLE_TATEROID).build();
     public static final BlockEntityType<DaylightDetectorTaterBlockEntity> DAYLIGHT_DETECTOR_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(DaylightDetectorTaterBlockEntity::new, DAYLIGHT_DETECTOR_TATER, INVERTED_DAYLIGHT_DETECTOR_TATER).build();
     public static final BlockEntityType<BellTaterBlockEntity> BELL_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(BellTaterBlockEntity::new, BELL_TATER).build();
@@ -544,6 +546,8 @@ public class NEBlocks {
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
+        registerBlockEntity("infinite_dispenser", INFINITE_DISPENSER_ENTITY);
+        registerBlockEntity("infinite_dropper", INFINITE_DROPPER_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);
         registerBlockEntity("daylight_detector_tater", DAYLIGHT_DETECTOR_TATER_ENTITY);
         registerBlockEntity("bell_tater", BELL_TATER_ENTITY);
