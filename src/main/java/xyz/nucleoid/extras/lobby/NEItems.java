@@ -91,6 +91,14 @@ public class NEItems {
             entries.add(NEItems.TRANSIENT_BAMBOO_DOOR);
             entries.add(NEItems.TRANSIENT_CRIMSON_DOOR);
             entries.add(NEItems.TRANSIENT_WARPED_DOOR);
+            entries.add(NEItems.TRANSIENT_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_EXPOSED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_WEATHERED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_OXIDIZED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_WAXED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
+            entries.add(NEItems.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
             entries.add(NEItems.BLACK_CONCRETE_POWDER);
             entries.add(NEItems.BLUE_CONCRETE_POWDER);
             entries.add(NEItems.BROWN_CONCRETE_POWDER);
@@ -145,6 +153,14 @@ public class NEItems {
     public static final Item TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, settings, Items.BAMBOO_DOOR));
     public static final Item TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, settings, Items.CRIMSON_DOOR));
     public static final Item TRANSIENT_WARPED_DOOR = register("transient_warped_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, settings, Items.WARPED_DOOR));
+    public static final Item TRANSIENT_COPPER_DOOR = register("transient_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_COPPER_DOOR, settings, Items.COPPER_DOOR));
+    public static final Item TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, settings, Items.EXPOSED_COPPER_DOOR));
+    public static final Item TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, settings, Items.WEATHERED_COPPER_DOOR));
+    public static final Item TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, settings, Items.OXIDIZED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_COPPER_DOOR, settings, Items.WAXED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR, settings, Items.WAXED_EXPOSED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR, settings, Items.WAXED_WEATHERED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR, settings, Items.WAXED_OXIDIZED_COPPER_DOOR));
 
     public static final Item BLACK_CONCRETE_POWDER = registerSimple("black_concrete_powder", NEBlocks.BLACK_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER);
     public static final Item BLUE_CONCRETE_POWDER = registerSimple("blue_concrete_powder", NEBlocks.BLUE_CONCRETE_POWDER, Items.BLUE_CONCRETE_POWDER);
