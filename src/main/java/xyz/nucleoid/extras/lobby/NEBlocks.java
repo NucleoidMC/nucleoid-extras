@@ -3,8 +3,10 @@ package xyz.nucleoid.extras.lobby;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.block.SimplePolymerBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntity;
@@ -78,7 +80,14 @@ public class NEBlocks {
     public static final Block TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", AbstractBlock.Settings.copy(Blocks.BAMBOO_DOOR), settings -> new TransientDoorBlock(Blocks.BAMBOO_DOOR, settings));
     public static final Block TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", AbstractBlock.Settings.copy(Blocks.CRIMSON_DOOR), settings -> new TransientDoorBlock(Blocks.CRIMSON_DOOR, settings));
     public static final Block TRANSIENT_WARPED_DOOR = register("transient_warped_door", AbstractBlock.Settings.copy(Blocks.WARPED_DOOR), settings -> new TransientDoorBlock(Blocks.WARPED_DOOR, settings));
-    // pale oak
+    public static final Block TRANSIENT_COPPER_DOOR = register("transient_copper_door", AbstractBlock.Settings.copy(Blocks.COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.COPPER_DOOR, settings));
+    public static final Block TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.EXPOSED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.WEATHERED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.OXIDIZED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_EXPOSED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_WEATHERED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_OXIDIZED_COPPER_DOOR, settings));
 
     public static final Block NUCLE_PAST_LOGO = registerTaterBlock("nucle_past_logo", new DustParticleEffect(0x52C471, 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
 
@@ -524,6 +533,15 @@ public class NEBlocks {
     }
 
     public static void register() {
+        registerOxidizableBlockPair(NEBlocks.TRANSIENT_COPPER_DOOR, NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR);
+        registerOxidizableBlockPair(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR);
+        registerOxidizableBlockPair(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR);
+
+        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
+
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
         registerBlockEntity("tateroid", TATEROID_ENTITY);
@@ -536,6 +554,16 @@ public class NEBlocks {
         T block = factory.apply(settings.registryKey(key));
 
         return Registry.register(Registries.BLOCK, key, block);
+    }
+
+    private static void registerOxidizableBlockPair(Block less, Block more) {
+        OxidizableBlocksRegistry.registerOxidizableBlockPair(less, more);
+
+        // TransientOxidizableDoorBlock#hasRandomTicks is dependent on the above registration,
+        // so the cached BlockState#ticksRandomly field must be recomputed with the new result
+        for (BlockState state : less.getStateManager().getStates()) {
+            state.initShapeCache();
+        }
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {
