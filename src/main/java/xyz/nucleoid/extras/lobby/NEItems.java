@@ -9,7 +9,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.Block;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -497,13 +499,17 @@ public class NEItems {
             .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true), settings -> new RuleBookItem(settings));
 
     private static Item registerHead(String id, Block head) {
+        Item.Settings baseSettings = new Item.Settings()
+                .useBlockPrefixedTranslationKey()
+                .equippableUnswappable(EquipmentSlot.HEAD);
+
         if (head instanceof TinyPotatoBlock tinyPotatoBlock) {
-            return register(id, new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyHeadItem(head, settings, tinyPotatoBlock.getItemTexture()));
+            return register(id, baseSettings, settings -> new LobbyHeadItem(head, settings, tinyPotatoBlock.getItemTexture()));
         } else if (head instanceof PolymerHeadBlock headBlock) {
-            return register(id, new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyHeadItem(head, settings, headBlock.getPolymerSkinValue(head.getDefaultState(), BlockPos.ORIGIN, null)));
+            return register(id, baseSettings, settings -> new LobbyHeadItem(head, settings, headBlock.getPolymerSkinValue(head.getDefaultState(), BlockPos.ORIGIN, null)));
         }
 
-        return registerSimple(id, head, Items.STONE);
+        throw new IllegalArgumentException("Cannot register " + id + " as a head item because " + head + " is not a head");
     }
 
     private static Item registerSimple(String id, Block block, Item virtual) {
