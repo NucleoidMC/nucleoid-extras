@@ -67,7 +67,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
         ItemStack stack = user.getStackInHand(hand);
 
         if (!user.getWorld().isClient()) {
-            this.openTaterBox(world, (ServerPlayerEntity) user, stack, hand);
+            this.openTaterBox((ServerPlayerEntity) user, stack, hand);
         }
 
         return ActionResult.SUCCESS_SERVER;
@@ -76,15 +76,22 @@ public class TaterBoxItem extends Item implements PolymerItem {
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT && !player.getWorld().isClient()) {
-            this.openTaterBox(player.getWorld(), (ServerPlayerEntity) player, stack, null);
+            this.openTaterBox((ServerPlayerEntity) player, stack, null);
             return true;
         }
 
         return false;
     }
 
-    private void openTaterBox(World world, ServerPlayerEntity user, ItemStack stack, Hand hand) {
-        if (NEItems.canUseTaters(user) && stack.contains(NEDataComponentTypes.TATER_SELECTION)) {
+    private void openTaterBox(ServerPlayerEntity user, ItemStack stack, Hand hand) {
+        if (NEItems.canUseTaters(user)) {
+            this.migrateCollectedTaters(user, stack);
+            this.openTaterBoxUi(user, stack, hand);
+        }
+    }
+
+    private void migrateCollectedTaters(ServerPlayerEntity user, ItemStack stack) {
+        if (stack.contains(DataComponentTypes.CUSTOM_DATA)) {
             stack.apply(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT, customData -> {
                 if (!customData.contains(LEGACY_TATERS_KEY)) {
                     return customData;
@@ -105,7 +112,11 @@ public class TaterBoxItem extends Item implements PolymerItem {
                     user.sendMessage(Text.translatable("text.nucleoid_extras.tater_box.updated"));
                 });
             });
+        }
+    }
 
+    private void openTaterBoxUi(ServerPlayerEntity user, ItemStack stack, Hand hand) {
+        if (stack.contains(NEDataComponentTypes.TATER_SELECTION)) {
             var state = PlayerLobbyState.get(user);
             List<GuiElementInterface> taters = new ArrayList<>();
 
