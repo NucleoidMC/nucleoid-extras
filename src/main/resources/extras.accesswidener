@@ -6,3 +6,5 @@ accessible  method  net/minecraft/block/entity/BellBlockEntity  applyGlowToRaide
 accessible  method  net/minecraft/block/entity/BellBlockEntity  applyParticlesToRaiders (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Ljava/util/List;)V
 
 extendable  method  net/minecraft/block/AbstractBlock getTranslationKey ()Ljava/lang/String;
+
+accessible  class net/minecraft/datafixer/fix/ItemStackComponentizationFix$StackData
