@@ -11,6 +11,7 @@
     "TextCodecMixin",
     "debug.EntityMixin",
     "lobby.ArmorStandEntityAccessor",
+    "lobby.ItemStackComponentizationFixMixin",
     "lobby.LivingEntityAccessor",
     "lobby.ServerChunkLoadingManagerAccessor",
     "lobby.ServerPlayerEntityMixin",
