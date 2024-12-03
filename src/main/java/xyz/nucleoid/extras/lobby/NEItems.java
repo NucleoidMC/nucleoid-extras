@@ -22,7 +22,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -151,7 +150,7 @@ public class NEItems {
     public static final Item TRANSIENT_CHERRY_DOOR = register("transient_cherry_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CHERRY_DOOR, settings, Items.CHERRY_DOOR));
     public static final Item TRANSIENT_DARK_OAK_DOOR = register("transient_dark_oak_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_DARK_OAK_DOOR, settings, Items.DARK_OAK_DOOR));
     public static final Item TRANSIENT_MANGROVE_DOOR = register("transient_mangrove_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_MANGROVE_DOOR, settings, Items.MANGROVE_DOOR));
-    public static final Item TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", new Item.Settings().useBlockPrefixedTranslationKey().requires(FeatureFlags.WINTER_DROP), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_PALE_OAK_DOOR, settings, Items.PALE_OAK_DOOR));
+    public static final Item TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_PALE_OAK_DOOR, settings, Items.PALE_OAK_DOOR));
     public static final Item TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, settings, Items.BAMBOO_DOOR));
     public static final Item TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, settings, Items.CRIMSON_DOOR));
     public static final Item TRANSIENT_WARPED_DOOR = register("transient_warped_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, settings, Items.WARPED_DOOR));
