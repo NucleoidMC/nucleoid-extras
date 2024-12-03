@@ -28,13 +28,21 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         ItemStack helmet = this.getEquippedStack(EquipmentSlot.HEAD);
         TaterSelectionComponent taterSelection = helmet.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT);
 
-        if (taterSelection.tater().isPresent() && taterSelection.tater().get().value() instanceof CubicPotatoBlock tinyPotatoBlock) {
-            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            NECriteria.WEAR_TATER.trigger(player, tinyPotatoBlock);
-            NECriteria.TATER_COLLECTED.trigger(player, tinyPotatoBlock, PlayerLobbyState.get(this).collectedTaters.size());
-            if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
-                tinyPotatoBlock.spawnPlayerParticles(player);
+        taterSelection.tater().ifPresent(tater -> {
+            if (tater.value() instanceof CubicPotatoBlock tinyPotatoBlock) {
+                ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+                PlayerLobbyState state = PlayerLobbyState.get(player);
+
+                if (state.collectedTaters.contains(tinyPotatoBlock)) {
+                    NECriteria.WEAR_TATER.trigger(player, tinyPotatoBlock);
+                    NECriteria.TATER_COLLECTED.trigger(player, tinyPotatoBlock, state.collectedTaters.size());
+                    if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
+                        tinyPotatoBlock.spawnPlayerParticles(player);
+                    }
+                } else {
+                    helmet.set(NEDataComponentTypes.TATER_SELECTION, taterSelection.selected(null));
+                }
             }
-        }
+        });
     }
 }
