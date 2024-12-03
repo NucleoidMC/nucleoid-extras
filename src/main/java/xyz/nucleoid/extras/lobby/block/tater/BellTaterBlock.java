@@ -79,7 +79,7 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 		if (!world.isClient && blockEntity instanceof BellTaterBlockEntity bellTaterBlockEntity) {
 			if (direction == null) {
 				int rotation = world.getBlockState(pos).get(Properties.ROTATION);
-				direction = Direction.fromRotation(rotation * 22.5);
+				direction = Direction.fromHorizontalDegrees(rotation * 22.5);
 			}
 			bellTaterBlockEntity.activate(direction);
 			world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0f, 1.0f);

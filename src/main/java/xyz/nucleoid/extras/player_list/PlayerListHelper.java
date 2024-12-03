@@ -25,20 +25,23 @@ public class PlayerListHelper {
         return Nullables.map(player.getSession(), PublicPlayerSession::toSerialized);
     }
 
-    public static GameMode getGameMode(ServerPlayerEntity player, boolean gray) {
-        return gray ? GameMode.SPECTATOR : player.interactionManager.getGameMode();
+    public static GameMode getGameMode(PlayerListS2CPacket.Entry examplar, boolean gray) {
+        return gray ? GameMode.SPECTATOR : examplar.gameMode();
     }
 
     public static PlayerListS2CPacket.Entry createEntry(ServerPlayerEntity player,  boolean gray) {
+        var examplar = new PlayerListS2CPacket.Entry(player);
+
         return new PlayerListS2CPacket.Entry(
-            player.getUuid(),
-            player.getGameProfile(),
-            true,
-            player.networkHandler.getLatency(),
-            getGameMode(player, gray),
+            examplar.profileId(),
+            examplar.profile(),
+            examplar.listed(),
+            examplar.latency(),
+            getGameMode(examplar, gray),
             getDisplayName(player, gray),
-            player.getPlayerListOrder(),
-            getSession(player)
+            examplar.showHat(),
+            examplar.listOrder(),
+            examplar.chatSession()
         );
     }
 
