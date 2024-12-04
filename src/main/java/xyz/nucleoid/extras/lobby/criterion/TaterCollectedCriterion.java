@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCriterion.Conditions> {
 	public void trigger(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {
-		this.trigger(player, conditions -> conditions.matches(tater, count));
+		this.trigger(player, conditions -> conditions.matches(player, tater, count));
 	}
 
     @Override
@@ -36,9 +36,9 @@ public class TaterCollectedCriterion extends AbstractCriterion<TaterCollectedCri
             this.count = count;
         }
 
-        public boolean matches(TinyPotatoBlock tater, int count) {
+        public boolean matches(ServerPlayerEntity player, TinyPotatoBlock tater, int count) {
             boolean taterMatches = this.tater.isEmpty() || this.tater.get().value() == tater;
-            boolean countMatches = this.count.isEmpty() || this.count.get().matches(count);
+            boolean countMatches = this.count.isEmpty() || this.count.get().matches(player.getRegistryManager(), count);
             return taterMatches && countMatches;
         }
 

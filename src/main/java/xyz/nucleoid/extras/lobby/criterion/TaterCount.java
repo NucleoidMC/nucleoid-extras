@@ -3,8 +3,11 @@ package xyz.nucleoid.extras.lobby.criterion;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.dynamic.Codecs;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
+import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 
 import java.util.function.Function;
 
@@ -15,10 +18,10 @@ public sealed interface TaterCount {
         return count instanceof Value ? Either.left((Value) count) : Either.right((All) count);
     });
 
-    int count();
+    int count(@Nullable RegistryWrapper.WrapperLookup registries);
 
-    default boolean matches(int count) {
-        return this.count() <= count;
+    default boolean matches(RegistryWrapper.WrapperLookup registries, int count) {
+        return this.count(registries) <= count;
     }
 
     record Value(int count) implements TaterCount {
@@ -28,6 +31,11 @@ public sealed interface TaterCount {
             if (count < 0) {
                 throw new IllegalArgumentException("Count must be non-negative: " + count);
             }
+        }
+
+        @Override
+        public int count(@Nullable RegistryWrapper.WrapperLookup registries) {
+            return this.count;
         }
     }
 
@@ -44,8 +52,13 @@ public sealed interface TaterCount {
         }, string -> STRING);
 
         @Override
-        public int count() {
-            return TinyPotatoBlock.TATERS.size();
+        public int count(@Nullable RegistryWrapper.WrapperLookup registries) {
+            if (registries == null) {
+                return TinyPotatoBlock.TATERS.size();
+            }
+
+            long count = TaterBoxItem.getCollectableTaterCount(registries);
+            return count > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) count;
         }
     }
 }
