@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras.mixin.lobby;
+package xyz.nucleoid.extras.mixin.datafixer;
 
 import com.mojang.serialization.Dynamic;
 import net.minecraft.datafixer.fix.ItemStackComponentizationFix;
