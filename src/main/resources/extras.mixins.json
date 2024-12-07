@@ -9,6 +9,7 @@
     "ServerEntityManagerAccessor",
     "ServerWorldAccessor",
     "TextCodecMixin",
+    "compat.ServerWorldMixin",
     "datafixer.ItemStackComponentizationFixMixin",
     "datafixer.Schema1460Mixin",
     "debug.EntityMixin",
