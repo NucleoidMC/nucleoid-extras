@@ -47,6 +47,7 @@ import xyz.nucleoid.extras.lobby.item.LaunchFeatherItem;
 import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
 import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
 import xyz.nucleoid.extras.lobby.item.LobbyTallBlockItem;
+import xyz.nucleoid.extras.lobby.item.LockSetterItem;
 import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
 import xyz.nucleoid.extras.lobby.item.RuleBookItem;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
@@ -75,6 +76,7 @@ public class NEItems {
             entries.add(NEItems.GOLD_LAUNCH_PAD);
             entries.add(NEItems.IRON_LAUNCH_PAD);
             entries.add(NEItems.CONTRIBUTOR_STATUE);
+            entries.add(NEItems.LOCK_SETTER);
             entries.add(NEItems.INFINITE_DISPENSER);
             entries.add(NEItems.INFINITE_DROPPER);
             entries.add(NEItems.SNAKE_BLOCK);
@@ -492,6 +494,11 @@ public class NEItems {
     public static final Item LAUNCH_FEATHER = register("launch_feather", new Item.Settings()
             .component(NEDataComponentTypes.LAUNCHER, LauncherComponent.DEFAULT)
             .maxCount(1), settings -> new LaunchFeatherItem(settings));
+
+    public static final Item LOCK_SETTER = register("lock_setter", new Item.Settings()
+            .component(DataComponentTypes.LOCK, LockSetterItem.createUnlockableLock())
+            .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
+            .maxCount(1), LockSetterItem::new);
 
     public static final Item RULE_BOOK = register("rule_book", new Item.Settings()
             .rarity(Rarity.EPIC)
