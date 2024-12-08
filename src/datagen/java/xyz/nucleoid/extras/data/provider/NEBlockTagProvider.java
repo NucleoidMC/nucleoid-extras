@@ -8,6 +8,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.registry.tag.BlockTags;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -17,6 +18,10 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(WrapperLookup lookup) {
+        for (var block : TinyPotatoBlock.TATERS) {
+            this.getOrCreateTagBuilder(NEBlockTags.COLLECTABLE_TATERS).add(block);
+        }
+
         this.getOrCreateTagBuilder(BlockTags.DOORS)
                 .add(NEBlocks.TRANSIENT_IRON_DOOR)
                 .add(NEBlocks.TRANSIENT_COPPER_DOOR)

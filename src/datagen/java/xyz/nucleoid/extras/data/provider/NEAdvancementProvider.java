@@ -147,7 +147,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
     private static Advancement.Builder requiringTatersCollected(TaterCount count) {
         var builder = Advancement.Builder.createUntelemetered();
 
-        var name = "get_" + count.count() + "_tater" + (count.count() == 1 ? "" : "s");
+        var name = "get_" + count.count(null) + "_tater" + (count.count(null) == 1 ? "" : "s");
         var conditions = new TaterCollectedCriterion.Conditions(Optional.empty(), Optional.of(count));
 
         builder.criterion(name, NECriteria.TATER_COLLECTED.create(conditions));
