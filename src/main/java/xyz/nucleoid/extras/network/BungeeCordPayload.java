@@ -7,6 +7,8 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
+import java.nio.charset.StandardCharsets;
+
 public record BungeeCordPayload(byte[] data) implements CustomPayload {
     public static final CustomPayload.Id<BungeeCordPayload> ID = new CustomPayload.Id<>(Identifier.of("bungeecord", "main"));
 
@@ -22,6 +24,9 @@ public record BungeeCordPayload(byte[] data) implements CustomPayload {
     }
 
     private static BungeeCordPayload read(ByteBuf buf) {
-        return new BungeeCordPayload(PacketByteBuf.readByteArray(buf));
+        var data = PacketByteBuf.readByteArray(buf);
+        // debug
+        System.out.println(new String(data, StandardCharsets.UTF_8));
+        return new BungeeCordPayload(data);
     }
 }
