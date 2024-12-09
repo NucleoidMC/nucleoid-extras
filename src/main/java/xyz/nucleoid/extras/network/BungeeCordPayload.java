@@ -24,9 +24,8 @@ public record BungeeCordPayload(byte[] data) implements CustomPayload {
     }
 
     private static BungeeCordPayload read(ByteBuf buf) {
-        var data = PacketByteBuf.readByteArray(buf);
-        // debug
-        System.out.println(new String(data, StandardCharsets.UTF_8));
+        var data = new byte[buf.readableBytes()];
+        buf.readBytes(data);
         return new BungeeCordPayload(data);
     }
 }
