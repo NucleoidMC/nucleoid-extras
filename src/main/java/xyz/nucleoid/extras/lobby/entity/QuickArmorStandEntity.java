@@ -4,11 +4,13 @@ import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEEntities;
+import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEntity {
@@ -32,6 +34,11 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEn
             return true;
         }
         return super.isInvulnerableTo(world, damageSource);
+    }
+
+    @Override
+    public ItemStack getPickBlockStack() {
+        return NEItems.QUICK_ARMOR_STAND.getDefaultStack();
     }
 
     @Override
