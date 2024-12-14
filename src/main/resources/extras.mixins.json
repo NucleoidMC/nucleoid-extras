@@ -12,6 +12,7 @@
     "compat.ServerWorldMixin",
     "datafixer.ItemStackComponentizationFixMixin",
     "datafixer.Schema1460Mixin",
+    "debug.ClientConnectionMixin",
     "debug.EntityMixin",
     "lobby.ArmorStandEntityAccessor",
     "lobby.BeaconBlockEntityMixin",
