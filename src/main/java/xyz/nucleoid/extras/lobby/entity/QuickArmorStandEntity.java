@@ -6,6 +6,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -42,4 +43,7 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEn
     public void tickMovement() {
 
     }
+
+    @Override
+    public void setVelocity(Vec3d velocity) {}
 }
