@@ -82,7 +82,7 @@ public class PlayerLobbyState {
     }
 
     private ActionResult collectTater(Block block, ItemStack stack, ServerPlayerEntity player) {
-        if (!NEItems.canUseTaters(player) || !(block instanceof TinyPotatoBlock tater)) return ActionResult.PASS;
+        if (!NEItems.canUseTaters(player) || !(block instanceof TinyPotatoBlock tater) || !tater.isCollectable()) return ActionResult.PASS;
 
         boolean alreadyAdded = this.collectedTaters.contains(tater);
 
