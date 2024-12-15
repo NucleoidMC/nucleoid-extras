@@ -182,6 +182,7 @@ public class NEBlocks {
     }, "32b7cd2c5d70cab476ce951e2c520c9b3579250ad900164d6c2321c7f43d6dc7");
 
     public static final Block WARDEN_TATER = registerWardenTaterBlock("warden_tater", "52e411aa1501c72d99d738cb38e250a395c6604b8bccc9f29d7f26e9cacd8d6f");
+    public static final Block CREAKING_TATER = registerGlowingLayerTaterBlock("creaking_tater", new BlockStateParticleEffect(ParticleTypes.BLOCK_CRUMBLE, Blocks.PALE_OAK_WOOD.getDefaultState()), "ba2adfd9b68769ba7ecd4b35d904c7756d1e232e7f2b9cbcbdf49f6a34162e54", GlowingLayerTaterBlock.Pixel.CREAKING);
     public static final Block VIRAL_TATER = registerTaterBlock("viral_tater", ParticleTypes.SCRAPE, "b12f770c4542c9f26ba03aaee686e0946698d394a8e745d3eac6013383dcff29");
     public static final Block DICE_TATER = registerDiceTaterBlock("dice_tater");
     public static final Block TATEROID = registerTateroidBlock("tateroid", SoundEvents.BLOCK_NOTE_BLOCK_BELL, -1, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
@@ -488,6 +489,10 @@ public class NEBlocks {
 
     private static Block registerWardenTaterBlock(String id, String texture) {
         return register(id, createTaterBlockSettings(), settings -> new WardenTaterBlock(settings, texture));
+    }
+
+    private static Block registerGlowingLayerTaterBlock(String id, ParticleEffect effect, String texture, GlowingLayerTaterBlock.Pixel[] glowingPixels) {
+        return register(id, createTaterBlockSettings(), settings -> new GlowingLayerTaterBlock(settings, effect, texture, glowingPixels));
     }
 
     private static Block registerDiceTaterBlock(String id) {

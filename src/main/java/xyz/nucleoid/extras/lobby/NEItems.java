@@ -210,6 +210,7 @@ public class NEItems {
     public static final Item NONBINARY_TATER = registerHead("nonbinary_tater", NEBlocks.NONBINARY_TATER);
     public static final Item PAN_TATER = registerHead("pan_tater", NEBlocks.PAN_TATER);
     public static final Item WARDEN_TATER = registerHead("warden_tater", NEBlocks.WARDEN_TATER);
+    public static final Item CREAKING_TATER = registerHead("creaking_tater", NEBlocks.CREAKING_TATER);
     public static final Item VIRAL_TATER = registerHead("viral_tater", NEBlocks.VIRAL_TATER);
     public static final Item TATEROID = registerHead("tateroid", NEBlocks.TATEROID);
     public static final Item RED_TATEROID = registerHead("red_tateroid", NEBlocks.RED_TATEROID);
