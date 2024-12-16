@@ -40,6 +40,8 @@ dependencies {
 
 	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
 	modCompileOnly "dev.gegy:player-roles-api:1.6.13"
+
+  modImplementation "eu.pb4:polymer-autohost:${project.autohost_version}"
 }
 
 test {
