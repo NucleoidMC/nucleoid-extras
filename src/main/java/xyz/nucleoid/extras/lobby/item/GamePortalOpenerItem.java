@@ -1,6 +1,5 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import com.mojang.authlib.GameProfile;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,9 +12,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.component.GamePortalComponent;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
+import xyz.nucleoid.extras.model.NEModels;
 import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 
@@ -48,8 +47,8 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
 
     @Override
     public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
-        if(PolymerResourcePackUtils.hasMainPack(context)) {
-            return NucleoidExtras.identifier("controller");
+        if (PolymerResourcePackUtils.hasMainPack(context)) {
+            return NEModels.CONTROLLER;
         }
         return null;
     }
