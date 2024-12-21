@@ -414,7 +414,7 @@
 
   "text.nucleoid_extras.ui.action.more": "Right-click for more...",
 
-  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
+  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped %s is here! Click here to open our website and see yours!",
 
   "text.nucleoid_extras.rules.continued_title": "%s (cont.)",
   "text.nucleoid_extras.rules.welcome": "Welcome to %s!\n\nWe're building open-source minigames.",

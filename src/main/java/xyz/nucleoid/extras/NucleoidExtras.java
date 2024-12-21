@@ -102,15 +102,17 @@ public final class NucleoidExtras implements ModInitializer {
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.YEAR) == 2023 && calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
-            handler.getPlayer().sendMessage(
-                Text.translatable("text.nucleoid_extras.wrapped.join", handler.getPlayer().getUuidAsString())
-                    .formatted(Formatting.GREEN)
-                    .styled(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.OPEN_URL,
-                        "https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped"
-                    )))
-            );
+        for (WrappedEvent event : NucleoidExtrasConfig.get().wrappedEvents()) {
+            if (event.isDuring(calendar)) {
+                handler.getPlayer().sendMessage(
+                    Text.translatable("text.nucleoid_extras.wrapped.join", event.year())
+                        .formatted(Formatting.GREEN)
+                        .styled(style -> style.withClickEvent(new ClickEvent(
+                            ClickEvent.Action.OPEN_URL,
+                            "https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped?year=" + event.year()
+                        )))
+                );
+            }
         }
     }
 
