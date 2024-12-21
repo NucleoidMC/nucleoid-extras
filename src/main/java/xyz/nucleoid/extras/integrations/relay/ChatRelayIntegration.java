@@ -78,9 +78,7 @@ public final class ChatRelayIntegration {
     }
 
     private static String parseUserId(JsonObject user) {
-        var name = user.get("name").getAsString();
-        int discriminator = user.get("discriminator").getAsInt();
-        return name + "#" + String.format("%04d", discriminator);
+        return user.get("name").getAsString();
     }
 
     @NotNull
