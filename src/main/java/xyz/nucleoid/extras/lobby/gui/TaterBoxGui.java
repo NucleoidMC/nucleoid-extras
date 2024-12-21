@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
+import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.util.PagedGui;
 
 import java.util.List;
@@ -74,12 +75,13 @@ public class TaterBoxGui extends PagedGui.FromList {
 	public List<GuiElementInterface> getList() {
 		List<GuiElementInterface> all = super.getList();
 
-		if(this.shouldHideUnfound()) {
-			return all.stream().filter(element -> {
-				if(element instanceof TaterGuiElement taterGuiElement) return taterGuiElement.isFound();
-				else return true;
-			}).toList();
-		} else return all;
+		return all.stream().filter(element -> {
+			if (element instanceof TaterGuiElement taterGuiElement) {
+				return taterGuiElement.shouldShow(this.shouldHideUnfound());
+			}
+
+			return true;
+		}).toList();
 	}
 
 	public static DisplayElement hideUnfoundButton(TaterBoxGui gui) {
@@ -101,9 +103,15 @@ public class TaterBoxGui extends PagedGui.FromList {
         GuiElementBuilder builder = new GuiElementBuilder(COLLECT_ALL_ICON)
             .setItemName(COLLECT_ALL_TEXT)
             .hideDefaultTooltip()
-            .setCallback(() -> {
+            .setCallback(clickType -> {
+                var player = gui.getPlayer();
                 var state = PlayerLobbyState.get(gui.getPlayer());
-                state.collectedTaters.addAll(TinyPotatoBlock.TATERS);
+
+                if (clickType.shift) {
+                    state.collectedTaters.addAll(TinyPotatoBlock.TATERS);
+                } else {
+                    TaterBoxItem.getCollectableTaters(player.getRegistryManager()).forEach(state.collectedTaters::add);
+                }
 
                 playSound(gui.player, SoundEvents.ENTITY_PLAYER_LEVELUP);
                 gui.close();
@@ -129,14 +137,20 @@ public class TaterBoxGui extends PagedGui.FromList {
 
 	public static class TaterGuiElement extends GuiElement {
 		protected final boolean found;
+		protected final boolean collectable;
 
-		public TaterGuiElement(ItemStack item, ClickCallback callback, boolean found) {
+		public TaterGuiElement(ItemStack item, ClickCallback callback, boolean found, boolean collectable) {
 			super(item, callback);
 			this.found = found;
+			this.collectable = collectable;
 		}
 
-		public boolean isFound() {
-			return found;
+		public boolean shouldShow(boolean hideUnfound) {
+			if (this.found) {
+				return true;
+			}
+
+			return !hideUnfound && this.collectable;
 		}
 	}
 
@@ -145,6 +159,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 		protected static final Item UNFOUND_ICON = Items.POTATO;
 
 		protected boolean found;
+		protected boolean collectable;
 
 		public TaterGuiElementBuilder(Item item) {
 			super(item);
@@ -159,9 +174,14 @@ public class TaterBoxGui extends PagedGui.FromList {
 			return this;
 		}
 
+		public TaterGuiElementBuilder setCollectable(boolean collectable) {
+			this.collectable = collectable;
+			return this;
+		}
+
 		@Override
 		public TaterGuiElement build() {
-			return new TaterGuiElement(asStack(), callback, found);
+			return new TaterGuiElement(asStack(), callback, found, collectable);
 		}
 	}
 }
