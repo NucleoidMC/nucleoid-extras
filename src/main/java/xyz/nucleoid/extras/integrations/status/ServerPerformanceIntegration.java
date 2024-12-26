@@ -1,9 +1,9 @@
 package xyz.nucleoid.extras.integrations.status;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -28,7 +28,7 @@ public final class ServerPerformanceIntegration {
         var performanceSender = integrations.openSender("performance");
 
         var integration = new ServerPerformanceIntegration(performanceSender);
-        ServerTickEvents.END_SERVER_TICK.register(integration::tick);
+        NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
     }
 
     private void tick(MinecraftServer server) {

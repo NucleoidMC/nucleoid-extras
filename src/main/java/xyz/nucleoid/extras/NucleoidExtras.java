@@ -3,7 +3,6 @@ package xyz.nucleoid.extras;
 import eu.pb4.playerdata.api.PlayerDataApi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +18,7 @@ import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.command.ExtraCommands;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
 import xyz.nucleoid.extras.game_portal.entry.ExtraMenuEntries;
@@ -61,7 +61,7 @@ public final class NucleoidExtras implements ModInitializer {
 
         PlayerDataApi.register(PlayerLobbyState.STORAGE);
 
-        ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
+        NucleoidExtrasEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
         ServerLifecycleEvents.SERVER_STOPPED.register(NucleoidExtras::onServerStopped);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
         NucleoidExtrasNetworking.register();
