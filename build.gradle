@@ -32,13 +32,18 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation 'xyz.nucleoid:plasmid:0.6.0-SNAPSHOT+1.21.3'
+	modImplementation 'xyz.nucleoid:plasmid:0.6.2+1.21.4'
 
 	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
 	modCompileOnly "dev.gegy:player-roles-api:1.6.13"
+}
+
+test {
+	useJUnitPlatform()
 }
 
 processResources {

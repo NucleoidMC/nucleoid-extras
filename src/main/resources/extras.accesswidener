@@ -1,8 +1,12 @@
 accessWidener v2  named
 
+accessible  method  net/minecraft/network/packet/s2c/play/PlayerListS2CPacket$Entry  <init> (Lnet/minecraft/server/network/ServerPlayerEntity;)V
+
 accessible  class net/minecraft/block/entity/BellBlockEntity$Effect
 accessible  method  net/minecraft/block/entity/BellBlockEntity  raidersHearBell (Lnet/minecraft/util/math/BlockPos;Ljava/util/List;)Z
 accessible  method  net/minecraft/block/entity/BellBlockEntity  applyGlowToRaiders  (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Ljava/util/List;)V
 accessible  method  net/minecraft/block/entity/BellBlockEntity  applyParticlesToRaiders (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Ljava/util/List;)V
 
 extendable  method  net/minecraft/block/AbstractBlock getTranslationKey ()Ljava/lang/String;
+
+accessible  class net/minecraft/datafixer/fix/ItemStackComponentizationFix$StackData

@@ -132,7 +132,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
         dropPos.move(Direction.DOWN);
 
         int rotation = state.get(Properties.ROTATION);
-        dropPos.move(Direction.fromRotation(rotation * 22.5).getOpposite());
+        dropPos.move(Direction.fromHorizontalDegrees(rotation * 22.5).getOpposite());
 
         for (int i = 0; i < 3; i++) {
             BlockState dropState = world.getBlockState(dropPos);

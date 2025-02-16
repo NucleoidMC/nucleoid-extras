@@ -53,7 +53,7 @@ public class ContributorStatueModel extends ElementHolder {
         var entity = this.entityElement.entity();
         contributor.fillEntity(world.getServer(), entity);
 
-        entity.setYaw(entity.getYaw() + state.get(ContributorStatueBlock.FACING).asRotation());
+        entity.setYaw(entity.getYaw() + state.get(ContributorStatueBlock.FACING).getPositiveHorizontalDegrees());
         entity.setHeadYaw(entity.getYaw());
         entity.setBodyYaw(entity.getYaw());
 

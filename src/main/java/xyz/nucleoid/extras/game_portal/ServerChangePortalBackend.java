@@ -11,11 +11,13 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.random.Random;
+import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.network.BungeeCordPayload;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalDisplay;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ import java.util.function.Consumer;
 
 public final class ServerChangePortalBackend implements GamePortalBackend {
     public static final Map<String, List<ServerChangePortalBackend>> ID_TO_PORTAL = new HashMap<>();
+    private static boolean lastFailed = false;
 
     private final ItemStack icon;
     private final Text name;
@@ -53,39 +56,34 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     public static void tick(MinecraftServer server) {
-        if (true) {
-            return;
-        }
+        try {
+            var players = server.getPlayerManager().getPlayerList();
 
-        var players = server.getPlayerManager().getPlayerList();
+            if (players.isEmpty() || server.getTicks() % 200 != 0) {
+                return;
+            }
 
-        if (players.isEmpty() || server.getTicks() % 100 != 0) {
-            return;
-        }
+            var random = players.get(Random.create().nextInt(players.size()));
 
-        var random = players.get(Random.create().nextInt(players.size()));
+            for (var key : ID_TO_PORTAL.keySet()) {
+                var buf = ByteStreams.newDataOutput();
+                buf.writeUTF("PlayerCount");
+                buf.writeUTF(key);
 
-        for (var key : ID_TO_PORTAL.keySet()) {
-            var buf = ByteStreams.newDataOutput();
-            buf.writeUTF("PlayerCount");
-            buf.writeUTF(key);
-
-            var out = PacketByteBufs.create();
-            out.writeBytes(buf.toByteArray());
-            ServerPlayNetworking.send(random, new BungeeCordPayload(out));
+                ServerPlayNetworking.send(random, new BungeeCordPayload(buf.toByteArray()));
+            }
+            lastFailed = false;
+        } catch (Throwable e) {
+            if (!lastFailed) {
+                NucleoidExtras.LOGGER.warn("Failed to sent bungee packet!", e);
+            }
+            lastFailed = true;
         }
     }
 
     public static void handlePacket(BungeeCordPayload payload, ServerPlayNetworking.Context context) {
-        ByteBuf buf = payload.data();
-
         try {
-            var out = new DataInputStream(new InputStream() {
-                @Override
-                public int read() throws IOException {
-                    return buf.readByte();
-                }
-            });
+            var out = new DataInputStream(new ByteArrayInputStream(payload.data()));
 
             var type = out.readUTF();
 
@@ -105,7 +103,7 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
                 });
             }
         } catch (Throwable e) {
-            e.printStackTrace();
+            NucleoidExtras.LOGGER.warn("Failed to receive bungee packet!", e);
         }
     }
 
@@ -160,10 +158,6 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
         var buf = ByteStreams.newDataOutput();
         buf.writeUTF("Connect");
         buf.writeUTF(this.serverId);
-
-
-        var out = PacketByteBufs.create();
-        out.writeBytes(buf.toByteArray());
-        ServerPlayNetworking.send(player, new BungeeCordPayload(out));
+        ServerPlayNetworking.send(player, new BungeeCordPayload(buf.toByteArray()));
     }
 }

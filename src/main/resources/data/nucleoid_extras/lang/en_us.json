@@ -48,6 +48,14 @@
   "block.nucleoid_extras.transient_bamboo_door": "Transient Bamboo Door (Lobby only!)",
   "block.nucleoid_extras.transient_crimson_door": "Transient Crimson Door (Lobby only!)",
   "block.nucleoid_extras.transient_warped_door": "Transient Warped Door (Lobby only!)",
+  "block.nucleoid_extras.transient_copper_door": "Transient Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_exposed_copper_door": "Transient Exposed Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_weathered_copper_door": "Transient Weathered Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_oxidized_copper_door": "Transient Oxidized Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_waxed_copper_door": "Transient Waxed Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_waxed_exposed_copper_door": "Transient Waxed Exposed Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_waxed_weathered_copper_door": "Transient Waxed Weathered Copper Door (Lobby only!)",
+  "block.nucleoid_extras.transient_waxed_oxidized_copper_door": "Transient Waxed Oxidized Copper Door (Lobby only!)",
 
   "block.nucleoid_extras.black_concrete_powder": "Floating Black Concrete Powder (Lobby only!)",
   "block.nucleoid_extras.blue_concrete_powder": "Floating Blue Concrete Powder (Lobby only!)",
@@ -95,6 +103,7 @@
   "block.nucleoid_extras.genderfluid_tater": "Genderfluid Pride Tater",
   "block.nucleoid_extras.demisexual_tater": "Demisexual Pride Tater",
   "block.nucleoid_extras.warden_tater": "Warden Tater",
+  "block.nucleoid_extras.creaking_tater": "Creaking Tater",
   "block.nucleoid_extras.viral_tater": "Viral Tater",
   "block.nucleoid_extras.tateroid": "Tateroid",
   "block.nucleoid_extras.red_tateroid": "Red Tateroid",
@@ -359,6 +368,7 @@
 
   "item.nucleoid_extras.game_portal_opener": "Game Portal Opener",
   "item.nucleoid_extras.launch_feather": "Launch Feather",
+  "item.nucleoid_extras.lock_setter": "Lock Setter",
   "item.nucleoid_extras.tater_box": "Tater Box",
   "item.nucleoid_extras.creative_tater_box": "Creative Tater Box",
   "item.nucleoid_extras.tater_guidebook": "Tater Guidebook",
@@ -391,6 +401,10 @@
   "text.nucleoid_extras.lobby_items": "Do not use this block outside of lobby!",
   "text.nucleoid_extras.lobby_only": "(Lobby Only!)",
 
+  "text.nucleoid_extras.lock_setter.already_locked": "%s has already has a different lock!",
+  "text.nucleoid_extras.lock_setter.locked": "%s is now locked!",
+  "text.nucleoid_extras.lock_setter.unlocked": "%s has been unlocked!",
+
   "text.nucleoid_extras.statistics.web_url": "Click here to check out all the stats for this game!",
   "text.nucleoid_extras.statistics.bundle_header": "Statistics for %s",
   "text.nucleoid_extras.statistics.stat": "%s: %s",
@@ -400,7 +414,7 @@
 
   "text.nucleoid_extras.ui.action.more": "Right-click for more...",
 
-  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
+  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped %s is here! Click here to open our website and see yours!",
 
   "text.nucleoid_extras.rules.continued_title": "%s (cont.)",
   "text.nucleoid_extras.rules.welcome": "Welcome to %s!\n\nWe're building open-source minigames.",
