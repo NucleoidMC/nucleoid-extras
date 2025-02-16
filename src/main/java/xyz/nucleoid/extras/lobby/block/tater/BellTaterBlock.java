@@ -2,8 +2,14 @@ package xyz.nucleoid.extras.lobby.block.tater;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -31,9 +37,21 @@ import net.minecraft.world.event.GameEvent;
 public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
 	public static final BooleanProperty POWERED = Properties.POWERED;
 
-	public BellTaterBlock(Settings settings, String texture) {
-		super(settings, ParticleTypes.NOTE, texture);
+	public static final MapCodec<BellTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+		instance.group(
+				createSettingsCodec(),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(BellTaterBlock::getParticleSpawner),
+				Codec.STRING.fieldOf("texture").forGetter(BellTaterBlock::getItemTexture)
+		).apply(instance, BellTaterBlock::new)
+	);
+
+	public BellTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
+		super(settings, particleSpawner, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
+	}
+
+	public BellTaterBlock(Settings settings, String texture) {
+		this(settings, new SimpleTaterParticleSpawner(ParticleTypes.NOTE), texture);
 	}
 
 	@Override
@@ -99,6 +117,11 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	@Nullable
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return new BellTaterBlockEntity(pos, state);
+	}
+
+	@Override
+	public MapCodec<? extends BellTaterBlock> getCodec() {
+		return CODEC;
 	}
 
 	@Override

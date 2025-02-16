@@ -1,14 +1,14 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -22,11 +22,24 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.lobby.particle.LuckyTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleContext;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LuckyTaterBlock extends CubicPotatoBlock {
+    public static final MapCodec<LuckyTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(LuckyTaterBlock::getParticleSpawner),
+                Codec.STRING.fieldOf("texture").forGetter(LuckyTaterBlock::getItemTexture),
+                Codec.STRING.fieldOf("cooldown_texture").forGetter(tater -> tater.cooldownTexture)
+        ).apply(instance, LuckyTaterBlock::new)
+    );
+
     private static final EnumProperty<LuckyTaterPhase> PHASE = EnumProperty.of("phase", LuckyTaterPhase.class);
 
     private static final int COURAGE_TICKS = 5;
@@ -34,20 +47,18 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
 
     private final String cooldownTexture;
 
-    public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
-        super(settings, (ParticleEffect) null, texture);
+    public LuckyTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture, String cooldownTexture) {
+        super(settings, particleSpawner, texture);
         this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
 
         this.setDefaultState(this.stateManager.getDefaultState().with(PHASE, LuckyTaterPhase.READY));
     }
 
-    @Override
-    public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
-        int fromColor = LuckyTaterBlock.getRandomColor(player.getRandom());
-        int toColor = LuckyTaterBlock.getRandomColor(player.getRandom());
+    public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
+        super(settings, LuckyTaterParticleSpawner.DEFAULT, texture);
+        this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
 
-        int scale = player.getRandom().nextInt(3);
-        return new DustColorTransitionParticleEffect(fromColor, toColor, scale);
+        this.setDefaultState(this.stateManager.getDefaultState().with(PHASE, LuckyTaterPhase.READY));
     }
 
     @Override
@@ -76,8 +87,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
                     world.setBlockState(allowed.pos(), dropState);
 
                     // Spawn particles
-                    ParticleEffect particleEffect = taterDrop.getBlockParticleEffect(taterDrop.getDefaultState(), serverWorld, pos, player, hit);
-                    this.spawnBlockParticles(serverWorld, pos, particleEffect);
+                    taterDrop.getParticleSpawner().trySpawn(new TaterParticleContext.Block(pos, serverWorld));
 
                     // Play sound
                     float pitch = 0.5f + world.getRandom().nextFloat() * 0.4f;
@@ -176,7 +186,8 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
         return state.get(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, context);
     }
 
-    private static int getRandomColor(Random random) {
-        return random.nextInt() * 0xFFFFFF;
+    @Override
+    public MapCodec<? extends LuckyTaterBlock> getCodec() {
+        return CODEC;
     }
 }

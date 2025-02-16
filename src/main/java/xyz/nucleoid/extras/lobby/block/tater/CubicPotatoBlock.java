@@ -1,53 +1,39 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationPropertyHelper;
-import xyz.nucleoid.extras.util.SkinEncoder;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CubicPotatoBlock extends TinyPotatoBlock implements PolymerHeadBlock {
+    public static final MapCodec<CubicPotatoBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(CubicPotatoBlock::getParticleSpawner),
+                Codec.STRING.fieldOf("texture").forGetter(CubicPotatoBlock::getItemTexture)
+        ).apply(instance, CubicPotatoBlock::new)
+    );
+
     protected static final List<CubicPotatoBlock> CUBIC_TATERS = new ArrayList<>();
 
-    public CubicPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture, int particleRate) {
-        super(settings, texture, particleEffect, particleRate);
+    public CubicPotatoBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
+        super(settings, particleSpawner, texture);
         CUBIC_TATERS.add(this);
-    }
-
-    public CubicPotatoBlock(Settings settings, ParticleEffect particleEffect, String texture) {
-        this(settings, particleEffect, texture, 2);
-    }
-
-    public CubicPotatoBlock(Settings settings, BlockState particleState, String texture) {
-        this(settings, new BlockStateParticleEffect(ParticleTypes.BLOCK, particleState), texture);
-    }
-
-    public CubicPotatoBlock(Settings settings, Block particleBlock, String texture) {
-        this(settings, particleBlock.getDefaultState(), texture);
-    }
-
-    public CubicPotatoBlock(Settings settings, ItemStack particleStack, String texture) {
-        this(settings, new ItemStackParticleEffect(ParticleTypes.ITEM, particleStack), texture);
-    }
-
-    public CubicPotatoBlock(Settings settings, Item particleItem, String texture) {
-        this(settings, new ItemStack(particleItem), texture);
     }
 
     @Override
@@ -68,5 +54,10 @@ public class CubicPotatoBlock extends TinyPotatoBlock implements PolymerHeadBloc
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
         return Blocks.PLAYER_HEAD.getDefaultState().with(Properties.ROTATION, state.get(Properties.ROTATION));
+    }
+
+    @Override
+    public MapCodec<? extends CubicPotatoBlock> getCodec() {
+        return CODEC;
     }
 }

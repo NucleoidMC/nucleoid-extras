@@ -16,6 +16,7 @@ import xyz.nucleoid.extras.component.TaterSelectionComponent;
 import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleContext;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
@@ -36,9 +37,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
                 if (state.collectedTaters.contains(tinyPotatoBlock)) {
                     NECriteria.WEAR_TATER.trigger(player, tinyPotatoBlock);
                     NECriteria.TATER_COLLECTED.trigger(player, tinyPotatoBlock, state.collectedTaters.size());
-                    if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
-                        tinyPotatoBlock.spawnPlayerParticles(player);
-                    }
+                    tinyPotatoBlock.getParticleSpawner().trySpawn(new TaterParticleContext.Player(player));
                 } else {
                     helmet.set(NEDataComponentTypes.TATER_SELECTION, taterSelection.selected(null));
                 }

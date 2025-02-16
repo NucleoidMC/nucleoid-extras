@@ -1,5 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -7,6 +10,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
@@ -22,15 +27,30 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import xyz.nucleoid.extras.lobby.particle.SimpleTaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 
 public class TargetTaterBlock extends CubicPotatoBlock {
+	public static final MapCodec<TargetTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+		instance.group(
+				createSettingsCodec(),
+				TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(TargetTaterBlock::getParticleSpawner),
+				Codec.STRING.fieldOf("texture").forGetter(TargetTaterBlock::getItemTexture)
+		).apply(instance, TargetTaterBlock::new)
+	);
+
 	private static final IntProperty POWER = Properties.POWER;
 	private static final int RECOVERABLE_POWER_DELAY = 20;
 	private static final int REGULAR_POWER_DELAY = 8;
 
-	public TargetTaterBlock(Settings settings, String texture) {
-		super(settings, Blocks.TARGET, texture);
+	public TargetTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture) {
+		super(settings, particleSpawner, texture);
 		this.setDefaultState(this.stateManager.getDefaultState().with(POWER, 0));
+	}
+
+	public TargetTaterBlock(Settings settings, String texture) {
+		this(settings, new SimpleTaterParticleSpawner(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.TARGET.getDefaultState())), texture);
 	}
 
 	@Override
@@ -98,5 +118,10 @@ public class TargetTaterBlock extends CubicPotatoBlock {
 		if (state.get(POWER) > 0 && !world.getBlockTickScheduler().isQueued(pos, this)) {
 			world.setBlockState(pos, state.with(POWER, 0), Block.NOTIFY_LISTENERS | Block.FORCE_STATE);
 		}
+	}
+
+	@Override
+	public MapCodec<? extends TargetTaterBlock> getCodec() {
+		return CODEC;
 	}
 }
