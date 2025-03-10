@@ -1,24 +1,39 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.TextDisplayElement;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.decoration.Brightness;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import xyz.nucleoid.codecs.MoreCodecs;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawner;
+import xyz.nucleoid.extras.lobby.particle.TaterParticleSpawnerTypes;
 import org.joml.Matrix4f;
 
 public class GlowingLayerTaterBlock extends CubicPotatoBlock implements BlockWithElementHolder {
+    public static final MapCodec<GlowingLayerTaterBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+                createSettingsCodec(),
+                TaterParticleSpawnerTypes.CODEC.fieldOf("particle_spawner").forGetter(GlowingLayerTaterBlock::getParticleSpawner),
+                Codec.STRING.fieldOf("texture").forGetter(GlowingLayerTaterBlock::getItemTexture),
+                MoreCodecs.listToArray(Pixel.CODEC.listOf(), Pixel[]::new).fieldOf("glowing_pixels").forGetter(tater -> tater.glowingPixels)
+        ).apply(instance, GlowingLayerTaterBlock::new)
+    );
+
     private final Pixel[] glowingPixels;
 
-    public GlowingLayerTaterBlock(Settings settings, ParticleEffect particleEffect, String texture, Pixel[] glowingPixels) {
-        super(settings, particleEffect, texture, 1);
+    public GlowingLayerTaterBlock(Settings settings, TaterParticleSpawner particleSpawner, String texture, Pixel[] glowingPixels) {
+        super(settings, particleSpawner, texture);
         this.glowingPixels = glowingPixels;
     }
 
@@ -35,7 +50,20 @@ public class GlowingLayerTaterBlock extends CubicPotatoBlock implements BlockWit
         return holder;
     }
 
+    @Override
+    public MapCodec<? extends GlowingLayerTaterBlock> getCodec() {
+        return CODEC;
+    }
+
     public record Pixel(int x, int y, int color) {
+        public static final Codec<Pixel> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.INT.fieldOf("x").forGetter(Pixel::x),
+                    Codec.INT.fieldOf("y").forGetter(Pixel::y),
+                    Codecs.ARGB.fieldOf("color").forGetter(Pixel::color)
+            ).apply(instance, Pixel::new)
+        );
+
         private static final int CREAKING_ORANGE = 0xFFEC7214;
         private static final int CREAKING_YELLOW = 0xFFEFA337;
 
