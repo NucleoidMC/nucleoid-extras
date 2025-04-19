@@ -286,7 +286,7 @@ public class DataFixTests {
 
     private static NbtCompound parseNbtString(String name, String string) {
         try {
-            return StringNbtReader.parse(string);
+            return StringNbtReader.readCompound(string);
         } catch (CommandSyntaxException e) {
             throw new RuntimeException("Failed to parse " + name, e);
         }
