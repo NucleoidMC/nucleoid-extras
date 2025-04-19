@@ -32,7 +32,7 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
                 Style.EMPTY
                     .withColor(
                         TextColor.fromRgb(gameSpace == null ? 0x800080 : (int) (gameSpace.getMetadata().id().getLeastSignificantBits() & 0xFFFFFF)))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    .withHoverEvent(new HoverEvent.ShowText(
                         gameSpace == null ? Text.literal("Lobby") :  GameConfig.name(gameSpace.getMetadata().sourceConfig()))))
         ).append(ScreenTexts.SPACE);
 

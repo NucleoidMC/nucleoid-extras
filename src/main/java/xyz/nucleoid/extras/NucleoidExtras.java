@@ -31,6 +31,7 @@ import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
+import java.net.URI;
 import java.util.Calendar;
 
 public final class NucleoidExtras implements ModInitializer {
@@ -65,6 +66,8 @@ public final class NucleoidExtras implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(NucleoidExtras::onServerStopped);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
         NucleoidExtrasNetworking.register();
+
+        //new DuckFixerUpper().onInitialize();
     }
 
     private static void onServerStopped(MinecraftServer server) {
@@ -107,9 +110,8 @@ public final class NucleoidExtras implements ModInitializer {
                 handler.getPlayer().sendMessage(
                     Text.translatable("text.nucleoid_extras.wrapped.join", event.year())
                         .formatted(Formatting.GREEN)
-                        .styled(style -> style.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.OPEN_URL,
-                            "https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped?year=" + event.year()
+                        .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+                             URI.create("https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped?year=" + event.year())
                         )))
                 );
             }

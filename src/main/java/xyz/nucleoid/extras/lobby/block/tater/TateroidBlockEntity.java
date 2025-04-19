@@ -110,9 +110,9 @@ public class TateroidBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
 
-        this.duration = nbt.getInt(DURATION_KEY);
-        this.tempo = nbt.getInt(TEMPO_KEY);
-        this.pitch = nbt.getInt(PITCH_KEY);
+        this.duration = nbt.getInt(DURATION_KEY, 0);
+        this.tempo = nbt.getInt(TEMPO_KEY, 0);
+        this.pitch = nbt.getInt(PITCH_KEY, 0);
 
         Registries.SOUND_EVENT.getEntryCodec().parse(NbtOps.INSTANCE, nbt.get(SOUND_KEY)).result()
             .ifPresent(entry -> this.sound = entry);

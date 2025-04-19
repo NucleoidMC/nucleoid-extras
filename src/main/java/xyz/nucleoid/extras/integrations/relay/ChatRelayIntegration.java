@@ -14,6 +14,7 @@ import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
+import java.net.URI;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class ChatRelayIntegration {
@@ -137,8 +138,8 @@ public final class ChatRelayIntegration {
             for (var attachment : message.attachments) {
                 result.append(Text.literal("[Attachment: " + attachment.name + "]").styled(style ->
                     style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open attachment")))
+                            .withClickEvent(new ClickEvent.OpenUrl(URI.create(attachment.url)))
+                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open attachment")))
                 ));
             }
         }
@@ -175,7 +176,7 @@ public final class ChatRelayIntegration {
             if (this.nameColor != null) {
                 var style = sender.getStyle()
                         .withColor(this.nameColor)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(this.senderUserId)));
+                        .withHoverEvent(new HoverEvent.ShowText(Text.literal(this.senderUserId)));
                 sender = sender.setStyle(style);
             }
             return sender;

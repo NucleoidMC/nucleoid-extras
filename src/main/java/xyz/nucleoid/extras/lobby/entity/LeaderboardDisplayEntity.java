@@ -19,6 +19,8 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity implements PolymerEntity {
@@ -44,7 +46,8 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
 
-        var ids = nbt.getList("leaderboards", NbtElement.STRING_TYPE).stream().map(x -> Identifier.tryParse(x.asString())).filter(x -> x != null).toList();
+        var ids = nbt.getList("leaderboards").stream().map(NbtElement::asString)
+            .filter(Optional::isPresent).map(Optional::get).map(Identifier::tryParse).filter(Objects::nonNull).toList();
         this.leaderboardIds = ids;
         this.updateTimer = FORCED_UPDATE_WAIT_TIME;
         this.leaderboards.clear();

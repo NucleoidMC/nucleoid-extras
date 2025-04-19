@@ -6,6 +6,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -34,14 +35,14 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         var blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
             tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower(), launchPad.getSound()));
         }
 
-        super.onEntityCollision(state, world, pos, entity);
+        super.onEntityCollision(state, world, pos, entity, handler);
     }
 
     public static boolean tryLaunch(Entity entity, Entity source, SoundEvent defaultSound, SoundCategory category, LauncherComponent launcher) {

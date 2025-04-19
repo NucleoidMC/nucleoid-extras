@@ -112,7 +112,7 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
-        this.contributorId = nbt.getString(CONTRIBUTOR_ID_KEY);
+        this.contributorId = nbt.getString(CONTRIBUTOR_ID_KEY, "");
     }
 
     @Override

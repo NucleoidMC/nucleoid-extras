@@ -58,15 +58,11 @@ public class LaunchPadBlockEntity extends BlockEntity {
     @Override
     public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
         super.readNbt(nbt, registries);
-
-        this.pitch = nbt.getFloat(PITCH_KEY);
-        this.power = nbt.getFloat(POWER_KEY);
+        this.pitch = nbt.getFloat(PITCH_KEY, 0);
+        this.power = nbt.getFloat(POWER_KEY, 0);
 
         if (nbt.contains(SOUND_KEY)) {
-            Codecs.optional(SoundEvent.ENTRY_CODEC)
-                    .parse(registries.getOps(NbtOps.INSTANCE), nbt.get(SOUND_KEY))
-                    .result()
-                    .ifPresent(sound -> this.sound = sound);
+            this.sound = nbt.get(SOUND_KEY, SoundEvent.ENTRY_CODEC, registries.getOps(NbtOps.INSTANCE));
         } else {
             this.sound = Optional.empty();
         }

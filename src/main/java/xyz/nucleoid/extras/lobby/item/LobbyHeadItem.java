@@ -6,6 +6,7 @@ import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import net.minecraft.block.Block;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraft.util.Identifier;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class LobbyHeadItem extends BlockItem implements PolymerItem {
     private final String texture;
@@ -54,8 +56,8 @@ public class LobbyHeadItem extends BlockItem implements PolymerItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        super.appendTooltip(stack, context, tooltip, type);
-        tooltip.add(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+        textConsumer.accept(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }

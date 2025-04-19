@@ -18,6 +18,7 @@ import xyz.nucleoid.plasmid.api.game.GameCloseReason;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.stats.GameStatisticBundle;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -74,8 +75,8 @@ public class StatisticsIntegration {
         this.sendBundle(body);
         space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url")
                 .formatted(Formatting.GRAY, Formatting.ITALIC)
-                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-                        "https://stats.nucleoid.xyz/games/" + gameId))));
+                .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+                        URI.create("https://stats.nucleoid.xyz/games/" + gameId)))));
     }
 
     private void sendBundle(JsonObject bundle) {
