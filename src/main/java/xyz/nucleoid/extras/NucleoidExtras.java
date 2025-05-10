@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras;
 
 import eu.pb4.playerdata.api.PlayerDataApi;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -65,6 +66,12 @@ public final class NucleoidExtras implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(NucleoidExtras::onServerStopped);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
         NucleoidExtrasNetworking.register();
+
+        if (PolymerResourcePackUtils.addModAssets(ID)) {
+            LOGGER.info("Successfully added mod assets for " + ID);
+        } else {
+            LOGGER.error("Failed to add mod assets for " + ID);
+        }
     }
 
     private static void onServerStopped(MinecraftServer server) {
