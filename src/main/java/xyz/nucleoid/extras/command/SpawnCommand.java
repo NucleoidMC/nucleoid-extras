@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.command.ServerCommandSource;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.NEItems;
+import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -28,6 +29,8 @@ public class SpawnCommand {
 
         var player = source.getPlayerOrThrow();
         var server = source.getServer();
+
+        GameSpaceManager.get().byPlayer(player).getPlayers().kick(player);
 
         var config = NucleoidExtrasConfig.get().lobbySpawn();
 
