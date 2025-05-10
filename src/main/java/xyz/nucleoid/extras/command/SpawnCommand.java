@@ -30,7 +30,11 @@ public class SpawnCommand {
         var player = source.getPlayerOrThrow();
         var server = source.getServer();
 
-        GameSpaceManager.get().byPlayer(player).getPlayers().kick(player);
+        var gameSpace = GameSpaceManager.get().byPlayer(player);
+
+        if (gameSpace != null) {
+            gameSpace.getPlayers().kick(player);
+        }
 
         var config = NucleoidExtrasConfig.get().lobbySpawn();
 
