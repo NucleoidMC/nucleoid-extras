@@ -9,6 +9,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -43,11 +45,10 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readCustomData(ReadView nbt) {
+        super.readCustomData(nbt);
 
-        var ids = nbt.getList("leaderboards").stream().map(NbtElement::asString)
-            .filter(Optional::isPresent).map(Optional::get).map(Identifier::tryParse).filter(Objects::nonNull).toList();
+        var ids = nbt.getTypedListView("leaderboards", Identifier.CODEC).stream().toList();
         this.leaderboardIds = ids;
         this.updateTimer = FORCED_UPDATE_WAIT_TIME;
         this.leaderboards.clear();
@@ -112,13 +113,11 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
 
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void writeCustomData(WriteView nbt) {
+        super.writeCustomData(nbt);
         if (this.leaderboardIds != null) {
-            var list = new NbtList();
-            this.leaderboardIds.stream().map(x -> NbtString.of(x.toString())).forEach(list::add);
-
-            nbt.put("leaderboards", list);
+            var list = nbt.getListAppender("leaderboards", Identifier.CODEC);
+            this.leaderboardIds.forEach(list::add);
         }
     }
 

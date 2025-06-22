@@ -194,7 +194,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     private static void tryJoinGame(ServerPlayerEntity player, GameSpace gameSpace, JoinIntent intent) {
-        player.server.submit(() -> {
+        player.getServer().submit(() -> {
             var result = GamePlayerJoiner.tryJoin(player, gameSpace, intent);
             if (result.isError()) {
                 player.sendMessage(result.errorCopy().formatted(Formatting.RED));

@@ -17,7 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.storage.NbtReadView;
 import net.minecraft.text.Text;
+import net.minecraft.util.ErrorReporter;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
 public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) implements Comparable<Contributor> {
@@ -42,7 +44,7 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
 
     public void fillEntity(MinecraftServer server, Entity entity) {
         if (this.statueNbt.isPresent()) {
-            entity.readNbt(this.statueNbt.get());
+            entity.readData(NbtReadView.create(ErrorReporter.EMPTY, server.getRegistryManager(), this.statueNbt.get()));
         }
 
         // Name

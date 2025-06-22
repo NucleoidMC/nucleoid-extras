@@ -7,6 +7,8 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.extras.component.LauncherComponent;
@@ -41,30 +43,23 @@ public class LaunchPadBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.writeNbt(nbt, registries);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
 
-        nbt.putFloat(PITCH_KEY, this.pitch);
-        nbt.putFloat(POWER_KEY, this.power);
+        view.putFloat(PITCH_KEY, this.pitch);
+        view.putFloat(POWER_KEY, this.power);
 
         if (this.sound.isPresent()) {
-            Codecs.optional(SoundEvent.ENTRY_CODEC)
-                    .encodeStart(registries.getOps(NbtOps.INSTANCE), this.sound)
-                    .result()
-                    .ifPresent(sound -> nbt.put(SOUND_KEY, sound));
+            view.put(SOUND_KEY, SoundEvent.ENTRY_CODEC, this.sound.get());
         }
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.readNbt(nbt, registries);
-        this.pitch = nbt.getFloat(PITCH_KEY, 0);
-        this.power = nbt.getFloat(POWER_KEY, 0);
+    public void readData(ReadView view) {
+        super.readData(view);
+        this.pitch = view.getFloat(PITCH_KEY, 0);
+        this.power = view.getFloat(POWER_KEY, 0);
 
-        if (nbt.contains(SOUND_KEY)) {
-            this.sound = nbt.get(SOUND_KEY, SoundEvent.ENTRY_CODEC, registries.getOps(NbtOps.INSTANCE));
-        } else {
-            this.sound = Optional.empty();
-        }
+        this.sound = view.read(SOUND_KEY, SoundEvent.ENTRY_CODEC);
     }
 }

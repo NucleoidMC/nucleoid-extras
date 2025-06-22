@@ -80,7 +80,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     private static void recordToGuidebook(ServerPlayerEntity player, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositions, ItemStack stack) {
         int initialCount = taterPositions.size();
 
-        var chunkManager = player.getServerWorld().getChunkManager();
+        var chunkManager = player.getWorld().getChunkManager();
 
         var chunkStorage = chunkManager.chunkLoadingManager;
         var accessor = (ServerChunkLoadingManagerAccessor) (Object) chunkStorage;

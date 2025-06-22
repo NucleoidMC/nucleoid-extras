@@ -12,9 +12,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.NbtWriteView;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -37,7 +40,9 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target instanceof ArmorStandEntity armorStandEntity) {
             var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
-            quickArmorStand.readNbt(armorStandEntity.writeNbt(new NbtCompound()));
+            var view = NbtWriteView.create(ErrorReporter.EMPTY, target.getRegistryManager());
+            armorStandEntity.writeData(view);
+            quickArmorStand.readData(NbtReadView.create(ErrorReporter.EMPTY, target.getRegistryManager(), view.getNbt()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
             quickArmorStand.getWorld().spawnEntity(quickArmorStand);
         }

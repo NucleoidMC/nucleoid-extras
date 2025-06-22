@@ -15,6 +15,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -110,14 +112,14 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.readNbt(nbt, registries);
-        this.contributorId = nbt.getString(CONTRIBUTOR_ID_KEY, "");
+    public void readData(ReadView view) {
+        super.readData(view);
+        this.contributorId = view.getString(CONTRIBUTOR_ID_KEY, "");
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.writeNbt(nbt, registries);
-        nbt.putString(CONTRIBUTOR_ID_KEY, this.contributorId);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putString(CONTRIBUTOR_ID_KEY, this.contributorId);
     }
 }
