@@ -38,7 +38,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
                         NEItems.NUCLEOID_LOGO,
                         Text.translatable("advancements.nucleoid_extras.root.title"),
                         Text.translatable("advancements.nucleoid_extras.root.description"),
-                        Identifier.ofVanilla("textures/block/lime_concrete.png"),
+                        Identifier.ofVanilla("block/lime_concrete"),
                         AdvancementFrame.TASK,
                         false,
                         false,
