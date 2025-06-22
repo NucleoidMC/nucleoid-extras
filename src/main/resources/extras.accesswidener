@@ -10,3 +10,4 @@ accessible  method  net/minecraft/block/entity/BellBlockEntity  applyParticlesTo
 extendable  method  net/minecraft/block/AbstractBlock getTranslationKey ()Ljava/lang/String;
 
 accessible  class net/minecraft/datafixer/fix/ItemStackComponentizationFix$StackData
+accessible field net/minecraft/server/network/ServerPlayerEntity server Lnet/minecraft/server/MinecraftServer;
