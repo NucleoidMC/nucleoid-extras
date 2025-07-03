@@ -368,6 +368,7 @@ public class NEItems {
     public static final Item EYE_OF_ENDER_TATER = registerHead("eye_of_ender_tater", NEBlocks.EYE_OF_ENDER_TATER);
     public static final Item FOX_TATER = registerHead("fox_tater", NEBlocks.FOX_TATER);
     public static final Item GHAST_TATER = registerHead("ghast_tater", NEBlocks.GHAST_TATER);
+    public static final Item HAPPY_GHAST_TATER = registerHead("happy_ghast_tater", NEBlocks.HAPPY_GHAST_TATER);
     public static final Item GILDED_BLACKSTONE_TATER = registerHead("gilded_blackstone_tater", NEBlocks.GILDED_BLACKSTONE_TATER);
     public static final Item GLOW_SQUID_TATER = registerHead("glow_squid_tater", NEBlocks.GLOW_SQUID_TATER);
     public static final Item GLOWSTONE_TATER = registerHead("glowstone_tater", NEBlocks.GLOWSTONE_TATER);
