@@ -23,6 +23,7 @@ public class GuiTextures {
 
     public static void register() {
         ResourcePackExtras.forDefault().addBridgedModelsFolder(identifier("sgui"));
+        UiResourceCreator.setup();
     }
 
 }

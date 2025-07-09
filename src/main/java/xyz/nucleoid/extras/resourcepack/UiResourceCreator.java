@@ -212,7 +212,7 @@ public class UiResourceCreator {
         SPACES.put(CHEST_SPACE1, -168);
         SPACES.put(ANVIL_SPACE0, -60);
         SPACES.put(ANVIL_SPACE1, -119);
-        if (true) {
+        if (false) {
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register((b) -> UiResourceCreator.generateAssets(b::addData));
         }
     }
