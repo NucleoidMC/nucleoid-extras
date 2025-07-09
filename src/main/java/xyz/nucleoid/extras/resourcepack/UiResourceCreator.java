@@ -302,7 +302,7 @@ public class UiResourceCreator {
 
         fontBase.add("providers", providers);
 
-        assetWriter.accept("assets/farmers-delight-patch/font/gui.json", fontBase.toString().getBytes(StandardCharsets.UTF_8));
+        assetWriter.accept("assets/nucleoid_extras/font/gui.json", fontBase.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     private record TextBuilders(Text base) implements Function<Text, Text> {
