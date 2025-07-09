@@ -137,12 +137,14 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             PagedGui.playClickSound(player);
         });
 
+        var hasPack = PolymerResourcePackUtils.hasMainPack(player);
         if (viewOpen) {
             filter.glow();
-            gui.setTitle(this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only")));
+            var title = this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only"));
+            gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(title) : title);
             this.fillOpen(player, gui, page);
         } else {
-            gui.setTitle(this.uiTitle);
+            gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(this.uiTitle) : this.uiTitle);
             this.fillInterface(player, gui, page);
         }
         gui.setSlot(5 * 9 + 4, filter.setItemName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")).hideDefaultTooltip());
