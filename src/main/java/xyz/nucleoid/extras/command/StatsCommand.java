@@ -28,7 +28,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 
 public class StatsCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("stats").executes(StatsCommand::openScreen));
+        //dispatcher.register(literal("stats").executes(StatsCommand::openScreen));
     }
 
     private static int openScreen(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -87,7 +87,7 @@ public class StatsCommand {
             list.add(builder.build());
         }
         list.sort(Comparator.comparing(x -> x.getItemStack().getName().getString()));
-        var g = PagedGui.of(player, list, (id) -> id == 8 ? CommonGuiElements.back(cGui::open).build() : null);
+        var g = PagedGui.of(player, list, (id) -> id == 8 ? CommonGuiElements.back(player, cGui::open).build() : null);
         g.setTitle(Text.translatable(GameStatisticBundle.getTranslationKey(key)));
         g.open();
     }

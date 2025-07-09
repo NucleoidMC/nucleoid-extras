@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras;
 
 import eu.pb4.playerdata.api.PlayerDataApi;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -28,6 +29,7 @@ import xyz.nucleoid.extras.lobby.*;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.extras.network.NucleoidExtrasNetworking;
 import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
@@ -66,6 +68,9 @@ public final class NucleoidExtras implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPED.register(NucleoidExtras::onServerStopped);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
         NucleoidExtrasNetworking.register();
+
+        GuiTextures.register();
+        PolymerResourcePackUtils.addModAssets(ID);
 
         //new DuckFixerUpper().onInitialize();
     }
