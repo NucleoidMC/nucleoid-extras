@@ -5,12 +5,15 @@ import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.BasicItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
+import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelTransformation;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.DataOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.model.NEModels;
 
@@ -44,7 +47,15 @@ public class NEModelProvider implements DataProvider {
 
     private void spriteItem(Identifier id) {
         this.assetMap.put(id, new ItemAsset(new BasicItemModel(id.withPrefixedPath("item/")), ItemAsset.Properties.DEFAULT));
-        this.modelMap.put(id, ModelAsset.builder().parent(Identifier.of("item/generated")).texture("layer0", id.withPrefixedPath("item/").toString()).build());
+        this.modelMap.put(id, ModelAsset.builder()
+                .parent(Identifier.of("item/generated"))
+                .texture("layer0", id.withPrefixedPath("item/").toString())
+                        .transformation(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, new ModelTransformation(
+                                new Vec3d(-15, 0, 0),
+                                new Vec3d(-9, 3.2, 1.13),
+                                new Vec3d(0.68, 0.68, 0.68)
+                        ))
+                .build());
     }
 
     @Override
