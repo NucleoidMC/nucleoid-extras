@@ -14,8 +14,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.status.HasTickPerformanceLog;
 import xyz.nucleoid.extras.integrations.status.ServerLifecycleIntegration;
+
+import java.util.function.BooleanSupplier;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements HasTickPerformanceLog {
@@ -32,6 +35,14 @@ public class MinecraftServerMixin implements HasTickPerformanceLog {
             ServerLifecycleIntegration.setCrashed();
         }
         return report;
+    }
+
+    @Inject(
+            method = "tick",
+            at = @At("RETURN")
+    )
+    private void onEndTickIncludingPaused(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+        NucleoidExtrasEvents.END_SERVER_TICK.invoker().onEndTick((MinecraftServer) (Object) this);
     }
 
     @Inject(

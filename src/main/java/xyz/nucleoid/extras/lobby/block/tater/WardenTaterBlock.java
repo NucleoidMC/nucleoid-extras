@@ -36,7 +36,7 @@ public class WardenTaterBlock extends CubicPotatoBlock {
     @Override
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
         BlockPos pos = BlockPos.ofFloored(player.getX(), player.getEyeY() - 0.2, player.getZ());
-        return getTaterVibrationParticleEffect(pos, player.getServerWorld());
+        return getTaterVibrationParticleEffect(pos, player.getWorld());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class WardenTaterBlock extends CubicPotatoBlock {
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getServerWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
+            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
         }
     }
 

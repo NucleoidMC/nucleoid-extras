@@ -78,7 +78,7 @@ public class BellTaterBlockEntity extends BlockEntity {
 		} else {
 			this.ringing = true;
 		}
-		this.world.addSyncedBlockEvent(blockPos, this.getCachedState().getBlock(), 1, direction.getId());
+		this.world.addSyncedBlockEvent(blockPos, this.getCachedState().getBlock(), 1, direction.getIndex());
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.server.MinecraftServer;
@@ -10,10 +9,12 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
 
+import java.net.URI;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class ChatRelayIntegration {
@@ -36,7 +37,7 @@ public final class ChatRelayIntegration {
                 integration.messageQueue.add(message);
             });
 
-            ServerTickEvents.END_SERVER_TICK.register(integration::tick);
+            NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
 
             ServerMessageEvents.CHAT_MESSAGE.register((message, sender, parameters) -> {
                 integration.onSendChatMessage(sender, message.getContent().getString());
@@ -78,9 +79,7 @@ public final class ChatRelayIntegration {
     }
 
     private static String parseUserId(JsonObject user) {
-        var name = user.get("name").getAsString();
-        int discriminator = user.get("discriminator").getAsInt();
-        return name + "#" + String.format("%04d", discriminator);
+        return user.get("name").getAsString();
     }
 
     @NotNull
@@ -139,8 +138,8 @@ public final class ChatRelayIntegration {
             for (var attachment : message.attachments) {
                 result.append(Text.literal("[Attachment: " + attachment.name + "]").styled(style ->
                     style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, attachment.url))
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("Open attachment")))
+                            .withClickEvent(new ClickEvent.OpenUrl(URI.create(attachment.url)))
+                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open attachment")))
                 ));
             }
         }
@@ -177,7 +176,7 @@ public final class ChatRelayIntegration {
             if (this.nameColor != null) {
                 var style = sender.getStyle()
                         .withColor(this.nameColor)
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(this.senderUserId)));
+                        .withHoverEvent(new HoverEvent.ShowText(Text.literal(this.senderUserId)));
                 sender = sender.setStyle(style);
             }
             return sender;

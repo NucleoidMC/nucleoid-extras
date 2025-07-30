@@ -131,7 +131,7 @@ public abstract class PagedGui extends SimpleGui {
         public static DisplayElement nextPage(PagedGui gui) {
             if (gui.canNextPage()) {
                 return DisplayElement.of(
-                    CommonGuiElements.nextPage().setCallback((x, y, z) -> {
+                    CommonGuiElements.nextPage(gui.player).setCallback((x, y, z) -> {
                         playClickSound(gui.player);
                         gui.nextPage();
                     })
@@ -149,7 +149,7 @@ public abstract class PagedGui extends SimpleGui {
         public static DisplayElement previousPage(PagedGui gui) {
             if (gui.canPreviousPage()) {
                 return DisplayElement.of(
-                    CommonGuiElements.previousPage()
+                    CommonGuiElements.previousPage(gui.player)
                         .setCallback((x, y, z) -> {
                             playClickSound(gui.player);
                             gui.previousPage();

@@ -4,7 +4,6 @@ import eu.pb4.playerdata.api.PlayerDataApi;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
@@ -20,6 +19,7 @@ import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.command.ExtraCommands;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.error.ExtrasErrorReporter;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.game_portal.ExtrasGamePortals;
 import xyz.nucleoid.extras.game_portal.ServerChangePortalBackend;
 import xyz.nucleoid.extras.game_portal.entry.ExtraMenuEntries;
@@ -29,9 +29,11 @@ import xyz.nucleoid.extras.lobby.*;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.extras.network.NucleoidExtrasNetworking;
 import xyz.nucleoid.extras.placeholder.ExtraPlaceholders;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.scheduled_stop.ScheduledStop;
 import xyz.nucleoid.extras.sidebar.NucleoidSidebar;
 
+import java.net.URI;
 import java.util.Calendar;
 
 public final class NucleoidExtras implements ModInitializer {
@@ -62,16 +64,19 @@ public final class NucleoidExtras implements ModInitializer {
 
         PlayerDataApi.register(PlayerLobbyState.STORAGE);
 
-        ServerTickEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
+        NucleoidExtrasEvents.END_SERVER_TICK.register(NucleoidExtras::onServerTick);
         ServerLifecycleEvents.SERVER_STOPPED.register(NucleoidExtras::onServerStopped);
         ServerPlayConnectionEvents.JOIN.register(NucleoidExtras::onPlayerJoin);
         NucleoidExtrasNetworking.register();
 
+        GuiTextures.register();
         if (PolymerResourcePackUtils.addModAssets(ID)) {
             LOGGER.info("Successfully added mod assets for " + ID);
         } else {
             LOGGER.error("Failed to add mod assets for " + ID);
         }
+
+        //new DuckFixerUpper().onInitialize();
     }
 
     private static void onServerStopped(MinecraftServer server) {
@@ -109,15 +114,16 @@ public final class NucleoidExtras implements ModInitializer {
 
     private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(Calendar.YEAR) == 2023 && calendar.get(Calendar.MONTH) == Calendar.DECEMBER) {
-            handler.getPlayer().sendMessage(
-                Text.translatable("text.nucleoid_extras.wrapped.join", handler.getPlayer().getUuidAsString())
-                    .formatted(Formatting.GREEN)
-                    .styled(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.OPEN_URL,
-                        "https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped"
-                    )))
-            );
+        for (WrappedEvent event : NucleoidExtrasConfig.get().wrappedEvents()) {
+            if (event.isDuring(calendar)) {
+                handler.getPlayer().sendMessage(
+                    Text.translatable("text.nucleoid_extras.wrapped.join", event.year())
+                        .formatted(Formatting.GREEN)
+                        .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+                             URI.create("https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped?year=" + event.year())
+                        )))
+                );
+            }
         }
     }
 

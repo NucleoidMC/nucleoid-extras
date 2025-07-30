@@ -2,11 +2,11 @@ package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -35,7 +35,7 @@ public final class GameStatusIntegration {
             var statusSender = integrations.openSender("status");
 
             var integration = new GameStatusIntegration(statusSender);
-            ServerTickEvents.END_SERVER_TICK.register(integration::tick);
+            NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
         }
     }
 

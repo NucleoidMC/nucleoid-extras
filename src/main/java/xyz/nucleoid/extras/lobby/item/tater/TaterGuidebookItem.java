@@ -80,7 +80,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     private static void recordToGuidebook(ServerPlayerEntity player, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositions, ItemStack stack) {
         int initialCount = taterPositions.size();
 
-        var chunkManager = player.getServerWorld().getChunkManager();
+        var chunkManager = player.getWorld().getChunkManager();
 
         var chunkStorage = chunkManager.chunkLoadingManager;
         var accessor = (ServerChunkLoadingManagerAccessor) (Object) chunkStorage;
@@ -174,7 +174,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
             hoverText.append(Texts.bracketed(coordinates).formatted(Formatting.GREEN));
         }
 
-        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverText);
+        return new HoverEvent.ShowText(hoverText);
     }
 
     private static ClickEvent getClickEvent(RegistryEntry<Item> tater, Set<BlockPos> positions) {
@@ -182,6 +182,6 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
 
         var pos = positions.iterator().next();
         var command = "/tp @s " + pos.getX() + " " + pos.getY() + " " + pos.getZ();
-        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
+        return new ClickEvent.RunCommand(command);
     }
 }

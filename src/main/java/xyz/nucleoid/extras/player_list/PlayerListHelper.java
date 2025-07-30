@@ -70,7 +70,7 @@ public class PlayerListHelper {
     }
 
     private static void updatePlayer(ServerPlayerEntity updatedPlayer, EnumSet<PlayerListS2CPacket.Action> actions) {
-        var server = updatedPlayer.server;
+        var server = updatedPlayer.getServer();
 
         var normalPacket = PlayerListHelper.createPacket(updatedPlayer, actions, false);
         var grayPacket = PlayerListHelper.createPacket(updatedPlayer, actions, true);

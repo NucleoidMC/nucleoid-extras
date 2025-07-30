@@ -1,11 +1,11 @@
 package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -56,7 +56,7 @@ public final class RemoteCommandIntegration {
                 integration.commandQueue.add(new RemoteCommand(command, sender, silent, permissionLevel, roles));
             });
 
-            ServerTickEvents.END_SERVER_TICK.register(integration::tick);
+            NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
         }
     }
 

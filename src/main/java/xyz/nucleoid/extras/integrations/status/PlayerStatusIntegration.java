@@ -3,9 +3,9 @@ package xyz.nucleoid.extras.integrations.status;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.integrations.NucleoidIntegrations;
@@ -32,7 +32,7 @@ public final class PlayerStatusIntegration {
             var statusSender = integrations.openSender("status");
 
             var integration = new PlayerStatusIntegration(statusSender);
-            ServerTickEvents.END_SERVER_TICK.register(integration::tick);
+            NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
         }
     }
 

@@ -19,8 +19,8 @@ import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity {
-    public ServerPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
+        super(world,  gameProfile);
     }
 
     @Inject(method = "playerTick", at = @At("TAIL"))

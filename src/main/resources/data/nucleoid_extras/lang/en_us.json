@@ -252,6 +252,7 @@
   "block.nucleoid_extras.eye_of_ender_tater": "Eye of Ender Tater",
   "block.nucleoid_extras.fox_tater": "Fox Tater",
   "block.nucleoid_extras.ghast_tater": "Ghast Tater",
+  "block.nucleoid_extras.happy_ghast_tater": "Happy Ghast Tater",
   "block.nucleoid_extras.gilded_blackstone_tater": "Gilded Blackstone Tater",
   "block.nucleoid_extras.glow_squid_tater": "Glow Squid Tater",
   "block.nucleoid_extras.glowstone_tater": "Glowstone Tater",
@@ -414,7 +415,7 @@
 
   "text.nucleoid_extras.ui.action.more": "Right-click for more...",
 
-  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped 2023 is here! Check out yours at https://stats.nucleoid.xyz/players/%s/wrapped",
+  "text.nucleoid_extras.wrapped.join": "Nucleoid Wrapped %s is here! Click here to open our website and see yours!",
 
   "text.nucleoid_extras.rules.continued_title": "%s (cont.)",
   "text.nucleoid_extras.rules.welcome": "Welcome to %s!\n\nWe're building open-source minigames.",

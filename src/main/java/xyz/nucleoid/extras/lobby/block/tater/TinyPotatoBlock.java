@@ -16,6 +16,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getServerWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
         }
     }
 
@@ -95,6 +96,9 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
         return false;
     }
 
+    public boolean isCollectable() {
+        return this.getDefaultState().isIn(NEBlockTags.COLLECTABLE_TATERS);
+    }
 
     public final String getItemTexture() {
         return this.texture;

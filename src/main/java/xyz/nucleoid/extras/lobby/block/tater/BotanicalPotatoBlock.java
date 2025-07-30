@@ -10,9 +10,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -87,8 +87,8 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
             this.upPart = new ItemDisplayElement(BotanicalPotatoBlock.this.upStack);
             this.downPart = new ItemDisplayElement(BotanicalPotatoBlock.this.downStack);
 
-            this.upPart.setModelTransformation(ModelTransformationMode.FIXED);
-            this.downPart.setModelTransformation(ModelTransformationMode.FIXED);
+            this.upPart.setItemDisplayContext(ItemDisplayContext.FIXED);
+            this.downPart.setItemDisplayContext(ItemDisplayContext.FIXED);
 
             this.upPart.setInterpolationDuration(1);
             this.downPart.setInterpolationDuration(1);

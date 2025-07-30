@@ -327,7 +327,8 @@ public class NEBlocks {
     public static final Block DROWNED_TATER = registerTaterBlock("drowned_tater", ParticleTypes.NAUTILUS, "5ea6f03c0cab4a968976ad95beaba4c60ab46755aa7ff8400b2d87383df6b885");
     public static final Block EYE_OF_ENDER_TATER = registerTaterBlock("eye_of_ender_tater", ParticleTypes.REVERSE_PORTAL, "36fc9fc2b0ab94a11303e3efb8b2534662e5d11ac8a9b9310b588a512eaab55e");
     public static final Block FOX_TATER = registerTaterBlock("fox_tater", ParticleTypes.HEART, "d0d40bc2aa788d6f9d0e3fcde50714f3f47d5db64f3d6a11b2c3fad2b65ba1ea");
-    public static final Block GHAST_TATER = registerTaterBlock("ghast_tater", ParticleTypes.DRIPPING_OBSIDIAN_TEAR, "66585c4fc057e15bfc28db7ae8ac778016504f31d5422dfda2345967ba53c44f");
+    public static final Block GHAST_TATER = registerTaterBlock("ghast_tater", ParticleTypes.DRIPPING_OBSIDIAN_TEAR, "69d87b3fa40d9d12af95e18e411f7263471a480052a069545a7ef336e8666d48");
+    public static final Block HAPPY_GHAST_TATER = registerTaterBlock("happy_ghast_tater", Items.SNOWBALL, "66585c4fc057e15bfc28db7ae8ac778016504f31d5422dfda2345967ba53c44f");
     public static final Block GILDED_BLACKSTONE_TATER = registerTaterBlock("gilded_blackstone_tater", Blocks.GILDED_BLACKSTONE, "987e60212d2d60123e26d1be977de784aa1afc781522645c9a74e492f2295e67");
     public static final Block GLOW_SQUID_TATER = registerTaterBlock("glow_squid_tater", ParticleTypes.GLOW_SQUID_INK, "edd69cada8e6095770ffcfc91fd6df851630efd3bad08dfce78bcb30a5702909");
     public static final Block GLOWSTONE_TATER = registerTaterBlock("glowstone_tater", ParticleTypes.GLOW, "58283dd855f99826c8e938d0f162f111b067bad26685e606b35c847946e4f38f");

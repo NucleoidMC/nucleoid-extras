@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
@@ -11,12 +12,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.TooltipContext;
+import net.minecraft.item.tooltip.TooltipAppender;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,7 +37,7 @@ import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.packettweaker.PacketContext;
 
-public class ContributorStatueBlock extends BlockWithEntity implements PolymerBlock, BlockWithElementHolder {
+public class ContributorStatueBlock extends BlockWithEntity implements PolymerBlock, BlockWithElementHolder, TooltipAppender {
     protected static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
     public ContributorStatueBlock(Settings settings) {
@@ -85,21 +88,20 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
 
     @SuppressWarnings("deprecation")
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        super.appendTooltip(stack, context, tooltip, type);
+    public void appendTooltip(TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
 
-        var nbt = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
+        var nbt = components.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
 
         if (nbt != null) {
-            var contributorId = nbt.getString(ContributorStatueBlockEntity.CONTRIBUTOR_ID_KEY);
+            var contributorId = nbt.getString(ContributorStatueBlockEntity.CONTRIBUTOR_ID_KEY, "");
             var contributor = ContributorData.getContributor(contributorId);
 
             if (contributor != null) {
-                tooltip.add(Text.translatable("block.nucleoid_extras.contributor_statue.contributor", contributor.getName()).formatted(Formatting.GRAY));
+                textConsumer.accept(Text.translatable("block.nucleoid_extras.contributor_statue.contributor", contributor.getName()).formatted(Formatting.GRAY));
             }
 
             if (type.isAdvanced()) {
-                tooltip.add(Text.translatable("block.nucleoid_extras.contributor_statue.contributor_id", contributorId).formatted(Formatting.GRAY));
+                textConsumer.accept(Text.translatable("block.nucleoid_extras.contributor_statue.contributor_id", contributorId).formatted(Formatting.GRAY));
             }
         }
     }

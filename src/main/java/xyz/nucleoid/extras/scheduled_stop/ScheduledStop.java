@@ -4,12 +4,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.plasmid.api.event.GameEvents;
 import xyz.nucleoid.plasmid.api.game.GameCloseReason;
 import xyz.nucleoid.plasmid.api.game.GameOpenException;
@@ -36,7 +36,7 @@ public final class ScheduledStop {
             registerCommands(dispatcher)
         );
 
-        ServerTickEvents.END_SERVER_TICK.register(ScheduledStop::tick);
+        NucleoidExtrasEvents.END_SERVER_TICK.register(ScheduledStop::tick);
 
         GameEvents.OPENED.register(ScheduledStop::openGame);
     }

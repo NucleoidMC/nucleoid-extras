@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -11,9 +12,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.NbtWriteView;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -25,6 +29,7 @@ import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class QuickArmorStandItem extends Item implements PolymerItem {
     public QuickArmorStandItem(Settings settings) {
@@ -32,15 +37,15 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     }
 
     @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target instanceof ArmorStandEntity armorStandEntity) {
             var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
-            quickArmorStand.readNbt(armorStandEntity.writeNbt(new NbtCompound()));
+            var view = NbtWriteView.create(ErrorReporter.EMPTY, target.getRegistryManager());
+            armorStandEntity.writeData(view);
+            quickArmorStand.readData(NbtReadView.create(ErrorReporter.EMPTY, target.getRegistryManager(), view.getNbt()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
             quickArmorStand.getWorld().spawnEntity(quickArmorStand);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -81,11 +86,11 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
         EulerAngle eulerAngle = stand.getHeadRotation();
         float f = random.nextFloat() * 5.0F;
         float g = random.nextFloat() * 20.0F - 10.0F;
-        EulerAngle eulerAngle2 = new EulerAngle(eulerAngle.getPitch() + f, eulerAngle.getYaw() + g, eulerAngle.getRoll());
+        EulerAngle eulerAngle2 = new EulerAngle(eulerAngle.pitch() + f, eulerAngle.yaw() + g, eulerAngle.roll());
         stand.setHeadRotation(eulerAngle2);
         eulerAngle = stand.getBodyRotation();
         f = random.nextFloat() * 10.0F - 5.0F;
-        eulerAngle2 = new EulerAngle(eulerAngle.getPitch(), eulerAngle.getYaw() + f, eulerAngle.getRoll());
+        eulerAngle2 = new EulerAngle(eulerAngle.pitch(), eulerAngle.yaw() + f, eulerAngle.roll());
         stand.setBodyRotation(eulerAngle2);
     }
 
@@ -100,8 +105,8 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        super.appendTooltip(stack, context, tooltip, type);
-        tooltip.add(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+        textConsumer.accept(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
     }
 }

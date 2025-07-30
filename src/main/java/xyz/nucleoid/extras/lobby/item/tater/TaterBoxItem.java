@@ -5,20 +5,20 @@ import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
 import net.minecraft.block.Block;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.DyedColorComponent;
-import net.minecraft.component.type.EquippableComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.component.type.UnbreakableComponent;
+import net.minecraft.component.type.*;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -32,13 +32,14 @@ import xyz.nucleoid.extras.component.TaterSelectionComponent;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
-import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
+import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.server.translations.api.Localization;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class TaterBoxItem extends Item implements PolymerItem {
@@ -57,7 +58,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     private MutableText getTitle(ServerPlayerEntity player) {
         Text name = this.getName();
         int count = PlayerLobbyState.get(player).collectedTaters.size();
-        int max = TinyPotatoBlock.TATERS.size();
+        long max = getCollectableTaterCount(player.getRegistryManager());
 
         return Text.translatable("text.nucleoid_extras.tater_box.title", name, count, max);
     }
@@ -100,11 +101,13 @@ public class TaterBoxItem extends Item implements PolymerItem {
                 return customData.apply(nbt -> {
                     var data = PlayerLobbyState.get(user);
 
-                    for (var entry : nbt.getList(LEGACY_TATERS_KEY, NbtElement.STRING_TYPE)) {
-                        var block = Registries.BLOCK.get(Identifier.tryParse(entry.asString()));
+                    for (var e : nbt.getListOrEmpty(LEGACY_TATERS_KEY)) {
+                        if (e instanceof NbtString entry) {
+                            var block = Registries.BLOCK.get(Identifier.tryParse(entry.value()));
 
-                        if (block instanceof TinyPotatoBlock tinyPotatoBlock) {
-                            data.collectedTaters.add(tinyPotatoBlock);
+                            if (block instanceof TinyPotatoBlock tinyPotatoBlock) {
+                                data.collectedTaters.add(tinyPotatoBlock);
+                            }
                         }
                     }
 
@@ -120,13 +123,13 @@ public class TaterBoxItem extends Item implements PolymerItem {
             var state = PlayerLobbyState.get(user);
             List<GuiElementInterface> taters = new ArrayList<>();
 
-            taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true));
+            taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true, true));
 
             getSortedTaterStream(user)
                 .map(tater -> {
                     boolean found = state.collectedTaters.contains(tater);
 
-                    return createGuiElement(stack, user, hand, tater, tater.getName(), tater.getRegistryEntry(), found);
+                    return createGuiElement(stack, user, hand, tater, tater.getName(), tater.getRegistryEntry(), found, tater.isCollectable());
                 })
                 .forEachOrdered(taters::add);
 
@@ -143,11 +146,12 @@ public class TaterBoxItem extends Item implements PolymerItem {
         }
     }
 
-    private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text text, RegistryEntry<Block> tater, boolean found) {
+    private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text text, RegistryEntry<Block> tater, boolean found, boolean collectable) {
         var guiElementBuilder = new TaterBoxGui.TaterGuiElementBuilder(icon.asItem());
         guiElementBuilder.setName(text);
         guiElementBuilder.setRarity(Rarity.COMMON);
         guiElementBuilder.setFound(found);
+        guiElementBuilder.setCollectable(collectable);
         guiElementBuilder.hideDefaultTooltip();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
             ItemStack newStack = hand == null ? stack : user.getStackInHand(hand);
@@ -187,20 +191,17 @@ public class TaterBoxItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipType tooltipType, PacketContext context) {
-        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context);
-
+    public void modifyBasePolymerItemStack(ItemStack out, ItemStack itemStack, PacketContext context) {
+        PolymerItem.super.modifyBasePolymerItemStack(out, itemStack, context);
         Optional<RegistryEntry<Block>> selectedTater = itemStack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
         if (selectedTater.isPresent() && selectedTater.get().value() instanceof TinyPotatoBlock potatoBlock) {
             ProfileComponent profile = PolymerUtils.createProfileComponent(potatoBlock.getItemTexture());
             out.set(DataComponentTypes.PROFILE, profile);
         } else {
-            out.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(this.getEmptyColor(), false));
-            out.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(false));
+            out.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(this.getEmptyColor()));
+            out.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
             out.set(DataComponentTypes.EQUIPPABLE, Items.LEATHER_HELMET.getComponents().get(DataComponentTypes.EQUIPPABLE));
         }
-
-        return out;
     }
 
     @Override
@@ -209,8 +210,8 @@ public class TaterBoxItem extends Item implements PolymerItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        super.appendTooltip(stack, context, tooltip, type);
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
 
         var owner = PacketContext.get();
 
@@ -223,13 +224,28 @@ public class TaterBoxItem extends Item implements PolymerItem {
             selectedName = NONE_TEXT;
         }
 
-        tooltip.add(Text.translatable("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
+        textConsumer.accept(Text.translatable("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
 
         int count = owner != null && owner.getPlayer() != null ? PlayerLobbyState.get(owner.getPlayer()).collectedTaters.size() : 0;
-        int max = CubicPotatoBlock.TATERS.size();
-        String percent = String.format("%.2f", count / (double) max * 100);
+        long max = getCollectableTaterCount(context.getRegistryLookup());
+        String percent = String.format("%.2f", max == 0 ? 0 : count / (double) max * 100);
 
-        tooltip.add(Text.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
+        textConsumer.accept(Text.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
+    }
+
+    public static Stream<TinyPotatoBlock> getCollectableTaters(RegistryWrapper.WrapperLookup registries) {
+        return registries
+            .getOrThrow(RegistryKeys.BLOCK)
+            .getOptional(NEBlockTags.COLLECTABLE_TATERS)
+            .map(RegistryEntryList::stream)
+            .orElseGet(Stream::empty)
+            .map(RegistryEntry::value)
+            .filter(block -> block instanceof TinyPotatoBlock)
+            .map(block -> (TinyPotatoBlock) block);
+    }
+
+    public static long getCollectableTaterCount(RegistryWrapper.WrapperLookup registries) {
+        return getCollectableTaters(registries).count();
     }
 
     public static Stream<TinyPotatoBlock> getSortedTaterStream(ServerPlayerEntity player) {

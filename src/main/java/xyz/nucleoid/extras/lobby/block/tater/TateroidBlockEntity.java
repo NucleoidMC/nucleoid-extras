@@ -13,6 +13,8 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -93,29 +95,27 @@ public class TateroidBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.writeNbt(nbt, registries);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
 
-        nbt.putInt(DURATION_KEY, this.duration);
-        nbt.putInt(TEMPO_KEY, this.tempo);
-        nbt.putInt(PITCH_KEY, this.pitch);
+        view.putInt(DURATION_KEY, this.duration);
+        view.putInt(TEMPO_KEY, this.tempo);
+        view.putInt(PITCH_KEY, this.pitch);
 
         if (sound != null) {
-            Registries.SOUND_EVENT.getEntryCodec().encodeStart(NbtOps.INSTANCE, sound).result()
-                    .ifPresent(sound -> nbt.put(SOUND_KEY, sound));
+            view.put(SOUND_KEY, SoundEvent.ENTRY_CODEC, sound);
         }
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-        super.readNbt(nbt, registries);
+    public void readData(ReadView view) {
+        super.readData(view);
 
-        this.duration = nbt.getInt(DURATION_KEY);
-        this.tempo = nbt.getInt(TEMPO_KEY);
-        this.pitch = nbt.getInt(PITCH_KEY);
+        this.duration = view.getInt(DURATION_KEY, 0);
+        this.tempo = view.getInt(TEMPO_KEY, 0);
+        this.pitch = view.getInt(PITCH_KEY, 0);
 
-        Registries.SOUND_EVENT.getEntryCodec().parse(NbtOps.INSTANCE, nbt.get(SOUND_KEY)).result()
-            .ifPresent(entry -> this.sound = entry);
+        this.sound = view.read(SOUND_KEY, SoundEvent.ENTRY_CODEC).orElse(null);
     }
 
     protected static void serverTick(World world, BlockPos pos, BlockState state, TateroidBlockEntity blockEntity) {

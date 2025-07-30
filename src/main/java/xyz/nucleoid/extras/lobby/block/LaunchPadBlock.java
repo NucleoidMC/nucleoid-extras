@@ -6,8 +6,10 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -33,19 +35,21 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         var blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
-            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower()));
+            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower(), launchPad.getSound()));
         }
 
-        super.onEntityCollision(state, world, pos, entity);
+        super.onEntityCollision(state, world, pos, entity, handler);
     }
 
-    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent sound, SoundCategory category, LauncherComponent launcher) {
+    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent defaultSound, SoundCategory category, LauncherComponent launcher) {
         if (launcher != null && entity.isOnGround() && !(entity instanceof ArmorStandEntity)) {
             entity.setVelocity(getVector(launcher.pitch(), source.getYaw(0)).multiply(launcher.power()));
+            SoundEvent sound = launcher.sound().map(RegistryEntry::value).orElse(defaultSound);
+
             if (entity instanceof ServerPlayerEntity player) {
                 player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
                 playLaunchSound(player, sound, category);

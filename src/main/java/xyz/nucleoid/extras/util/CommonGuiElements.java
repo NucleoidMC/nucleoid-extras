@@ -1,31 +1,50 @@
 package xyz.nucleoid.extras.util;
 
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 
 public class CommonGuiElements {
     private static final GuiElement PURPLE_PLATE = new GuiElementBuilder(Items.PURPLE_STAINED_GLASS_PANE).hideTooltip().build();
     private static final GuiElement WHITE_PLATE = new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE).hideTooltip().build();
-    public static GuiElementBuilder nextPage() {
+    public static GuiElementBuilder nextPage(ServerPlayerEntity player) {
+        if (PolymerResourcePackUtils.hasMainPack(player)) {
+            return GuiTextures.NEXT_BUTTON.get().setName(Text.translatable("spectatorMenu.next_page"));
+        }
+
         return new GuiElementBuilder(Items.PLAYER_HEAD)
-            .setItemName(Text.translatable("spectatorMenu.next_page"))
+            .setName(Text.translatable("spectatorMenu.next_page"))
             .hideDefaultTooltip()
             .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg2MTg1YjFkNTE5YWRlNTg1ZjE4NGMzNGYzZjNlMjBiYjY0MWRlYjg3OWU4MTM3OGU0ZWFmMjA5Mjg3In19fQ");
     }
 
-    public static GuiElementBuilder previousPage() {
+    public static GuiElementBuilder previousPage(ServerPlayerEntity player) {
+        if (PolymerResourcePackUtils.hasMainPack(player)) {
+            return GuiTextures.PREVIOUS_BUTTON.get().setName(Text.translatable("spectatorMenu.next_page"));
+        }
+
         return new GuiElementBuilder(Items.PLAYER_HEAD)
-            .setItemName(Text.translatable("spectatorMenu.previous_page"))
+            .setName(Text.translatable("spectatorMenu.previous_page"))
             .hideDefaultTooltip()
             .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzEwODI5OGZmMmIyNjk1MWQ2ODNlNWFkZTQ2YTQyZTkwYzJmN2M3ZGQ0MWJhYTkwOGJjNTg1MmY4YzMyZTU4MyJ9fX0");
     }
 
-    public static GuiElementBuilder back(Runnable runnable) {
+    public static GuiElementBuilder back(ServerPlayerEntity player, Runnable runnable) {
+        if (PolymerResourcePackUtils.hasMainPack(player)) {
+            return GuiTextures.BACK_BUTTON.get().setName(ScreenTexts.BACK)
+                .setCallback((a, b, c, gui) -> {
+                    PagedGui.playClickSound(gui.getPlayer());
+                    runnable.run();
+                });
+        }
+
         return new GuiElementBuilder(Items.STRUCTURE_VOID)
-            .setItemName(ScreenTexts.BACK)
+            .setName(ScreenTexts.BACK)
             .hideDefaultTooltip()
             .setCallback((a, b, c, gui) -> {
                 PagedGui.playClickSound(gui.getPlayer());

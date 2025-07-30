@@ -16,7 +16,7 @@ import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.collection.DataPool;
+import net.minecraft.util.collection.Pool;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -102,7 +102,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
             return null;
         }
 
-        var builder = DataPool.<Block>builder();
+        var builder = Pool.<Block>builder();
 
         for (RegistryEntry<Block> entry : drops.get()) {
             Block block = entry.value();
@@ -113,7 +113,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
 
         return builder
             .build()
-            .getDataOrEmpty(world.getRandom())
+            .getOrEmpty(world.getRandom())
             .orElse(null);
     }
 

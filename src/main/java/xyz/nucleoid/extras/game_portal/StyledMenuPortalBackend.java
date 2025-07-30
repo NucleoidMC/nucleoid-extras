@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.game_portal;
 
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.sgui.api.GuiHelpers;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
@@ -15,6 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.mutable.MutableInt;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.util.CommonGuiElements;
 import xyz.nucleoid.extras.util.PagedGui;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
@@ -105,17 +107,22 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     @Override
     public void applyTo(ServerPlayerEntity player, boolean alt) {
         var oldGui = GuiHelpers.getCurrentGui(player);
-
+        var hasPack = PolymerResourcePackUtils.hasMainPack(player);
         var gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, player, false);
-        gui.setTitle(this.uiTitle);
-        var filler = CommonGuiElements.purple();
+        if (hasPack) {
+            gui.setTitle(GuiTextures.GAME_PORTAL_9X6.apply(this.uiTitle));
+        } else {
+            gui.setTitle(this.uiTitle);
 
-        for (int i = 0; i < 9; i++) {
-            gui.setSlot(5 * 9 + i, filler);
+            var filler = CommonGuiElements.purple();
+
+            for (int i = 0; i < 9; i++) {
+                gui.setSlot(5 * 9 + i, filler);
+            }
         }
 
         if (oldGui != null) {
-            gui.setSlot(5 * 9 + 8, CommonGuiElements.back(oldGui::open));
+            gui.setSlot(5 * 9 + 8, CommonGuiElements.back(player, oldGui::open));
         }
         this.fill(player, gui, false);
 
@@ -130,12 +137,14 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             PagedGui.playClickSound(player);
         });
 
+        var hasPack = PolymerResourcePackUtils.hasMainPack(player);
         if (viewOpen) {
             filter.glow();
-            gui.setTitle(this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only")));
+            var title = this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only"));
+            gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(title) : title);
             this.fillOpen(player, gui, page);
         } else {
-            gui.setTitle(this.uiTitle);
+            gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(this.uiTitle) : this.uiTitle);
             this.fillInterface(player, gui, page);
         }
         gui.setSlot(5 * 9 + 4, filter.setItemName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")).hideDefaultTooltip());
@@ -153,7 +162,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             if (page.getValue() == 0) {
                 gui.setSlot(9 * 2, GuiElement.EMPTY);
             } else {
-                gui.setSlot(9 * 2, CommonGuiElements.previousPage().setCallback(() -> {
+                gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
                     PagedGui.playClickSound(player);
                     this.fillOpen(player, gui, page);
@@ -163,7 +172,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             if (page.getValue() == pages - 1) {
                 gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
             } else {
-                gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage().setCallback(() -> {
+                gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
                     PagedGui.playClickSound(player);
                     this.fillOpen(player, gui, page);
@@ -194,7 +203,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     private static void tryJoinGame(ServerPlayerEntity player, GameSpace gameSpace, JoinIntent intent) {
-        player.server.submit(() -> {
+        player.getServer().submit(() -> {
             var result = GamePlayerJoiner.tryJoin(player, gameSpace, intent);
             if (result.isError()) {
                 player.sendMessage(result.errorCopy().formatted(Formatting.RED));
@@ -210,7 +219,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             if (page.getValue() == 0) {
                 gui.setSlot(9 * 2, GuiElement.EMPTY);
             } else {
-                gui.setSlot(9 * 2, CommonGuiElements.previousPage().setCallback(() -> {
+                gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
                     PagedGui.playClickSound(player);
                     this.fillInterface(player, gui, page);
@@ -220,7 +229,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             if (page.getValue() == pages - 1) {
                 gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
             } else {
-                gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage().setCallback(() -> {
+                gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
                     PagedGui.playClickSound(player);
                     this.fillInterface(player, gui, page);

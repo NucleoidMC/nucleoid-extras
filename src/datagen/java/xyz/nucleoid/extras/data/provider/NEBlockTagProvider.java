@@ -8,6 +8,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.registry.tag.BlockTags;
 import xyz.nucleoid.extras.lobby.NEBlocks;
+import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -17,7 +18,11 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(WrapperLookup lookup) {
-        this.getOrCreateTagBuilder(BlockTags.DOORS)
+        for (var block : TinyPotatoBlock.TATERS) {
+            this.valueLookupBuilder(NEBlockTags.COLLECTABLE_TATERS).add(block);
+        }
+
+        this.valueLookupBuilder(BlockTags.DOORS)
                 .add(NEBlocks.TRANSIENT_IRON_DOOR)
                 .add(NEBlocks.TRANSIENT_COPPER_DOOR)
                 .add(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR)
@@ -28,12 +33,12 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR)
                 .add(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
 
-        this.getOrCreateTagBuilder(NEBlockTags.LUCKY_TATER_DROPS)
+        this.valueLookupBuilder(NEBlockTags.LUCKY_TATER_DROPS)
                 .add(NEBlocks.BRONZE_CAPSULE_TATER)
                 .add(NEBlocks.SILVER_CAPSULE_TATER)
                 .add(NEBlocks.GOLD_CAPSULE_TATER);
 
-        this.getOrCreateTagBuilder(BlockTags.MOB_INTERACTABLE_DOORS)
+        this.valueLookupBuilder(BlockTags.MOB_INTERACTABLE_DOORS)
                 .add(NEBlocks.TRANSIENT_COPPER_DOOR)
                 .add(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR)
                 .add(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR)
@@ -43,11 +48,11 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR)
                 .add(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
 
-        this.getOrCreateTagBuilder(NEBlockTags.NON_VIBRATING_TATERS)
+        this.valueLookupBuilder(NEBlockTags.NON_VIBRATING_TATERS)
                 .addOptionalTag(BlockTags.DAMPENS_VIBRATIONS)
                 .add(NEBlocks.WARDEN_TATER);
 
-        this.getOrCreateTagBuilder(BlockTags.WOODEN_DOORS)
+        this.valueLookupBuilder(BlockTags.WOODEN_DOORS)
                 .add(NEBlocks.TRANSIENT_OAK_DOOR)
                 .add(NEBlocks.TRANSIENT_SPRUCE_DOOR)
                 .add(NEBlocks.TRANSIENT_BIRCH_DOOR)
@@ -61,7 +66,7 @@ public class NEBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(NEBlocks.TRANSIENT_CRIMSON_DOOR)
                 .add(NEBlocks.TRANSIENT_WARPED_DOOR);
 
-        this.getOrCreateTagBuilder(NEBlockTags.VIRAL_TATERS)
+        this.valueLookupBuilder(NEBlockTags.VIRAL_TATERS)
                 .add(NEBlocks.VIRAL_TATER);
     }
 }
