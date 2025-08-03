@@ -1,4 +1,4 @@
-package xyz.nucleoid.extras;
+package xyz.nucleoid.extras.dialog;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,8 +11,6 @@ import net.minecraft.dialog.type.NoticeDialog;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
-import net.minecraft.util.CachedMapper;
-import net.minecraft.util.Util;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
 
@@ -28,12 +26,12 @@ public record RulesConfig(
         PAGE_CODEC.listOf().fieldOf("pages").forGetter(RulesConfig::pages)
     ).apply(i, RulesConfig::new));
 
-    private static final Text DIALOG_TITLE = Text.translatable("text.nucleoid_extras.rules");
+    private static final Text DIALOG_TITLE = Text.translatable("text.nucleoid_extras.rules.title");
+    private static final Text DIALOG_EXTERNAL_TITLE = Text.translatable("text.nucleoid_extras.rules.external_title");
+
     private static final int DIALOG_BODY_WIDTH = 300;
 
-    public static final CachedMapper<RulesConfig, Dialog> DIALOG_MAPPER = Util.cachedMapper(RulesConfig::createDialog);
-
-    private Dialog createDialog() {
+    public Dialog createDialog() {
         var body = new ArrayList<DialogBody>();
 
         for (List<Text> page : this.pages()) {
@@ -41,7 +39,7 @@ public record RulesConfig(
             body.add(new PlainMessageDialogBody(combinedPage, DIALOG_BODY_WIDTH));
         }
 
-        var data = new DialogCommonData(DIALOG_TITLE, Optional.empty(), true, false, AfterAction.CLOSE, body, List.of());
+        var data = new DialogCommonData(DIALOG_TITLE, Optional.of(DIALOG_EXTERNAL_TITLE), true, false, AfterAction.CLOSE, body, List.of());
 
         return new NoticeDialog(data, NoticeDialog.OK_BUTTON);
     }
