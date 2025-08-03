@@ -11,6 +11,7 @@ public class NEDatagen implements DataGeneratorEntrypoint {
 
         pack.addProvider(NEAdvancementProvider::new);
         pack.addProvider(NEAssetProvider::new);
+        pack.addProvider(NEDialogTagProvider::new);
 
         var blockTags = pack.addProvider(NEBlockTagProvider::new);
         pack.addProvider((dataOutput, registries) -> new NEItemTagProvider(dataOutput, registries, blockTags));
