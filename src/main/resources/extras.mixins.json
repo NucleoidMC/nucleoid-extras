@@ -15,6 +15,7 @@
     "datafixer.Schema1460Mixin",
     "debug.ClientConnectionMixin",
     "debug.EntityMixin",
+    "dialog.RegistryLoaderMixin",
     "lobby.ArmorStandEntityAccessor",
     "lobby.BeaconBlockEntityMixin",
     "lobby.LivingEntityAccessor",

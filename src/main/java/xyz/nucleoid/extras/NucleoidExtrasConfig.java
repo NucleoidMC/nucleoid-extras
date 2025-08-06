@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.extras.chat_filter.ChatFilterConfig;
 import xyz.nucleoid.extras.command.CommandAliasConfig;
+import xyz.nucleoid.extras.dialog.RulesConfig;
 import xyz.nucleoid.extras.error.ErrorReportingConfig;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
 import xyz.nucleoid.extras.lobby.LobbySpawnConfig;

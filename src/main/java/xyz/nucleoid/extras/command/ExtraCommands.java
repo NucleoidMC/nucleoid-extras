@@ -13,6 +13,7 @@ public class ExtraCommands {
     }
 
     private static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
+        RulesCommand.register(dispatcher);
         SpawnCommand.register(dispatcher);
         StatsCommand.register(dispatcher);
     }
