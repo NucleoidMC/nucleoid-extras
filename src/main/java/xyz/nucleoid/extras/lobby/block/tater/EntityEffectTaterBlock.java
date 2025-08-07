@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.util.math.random.Random;
 
 public class EntityEffectTaterBlock extends CubicPotatoBlock {
@@ -18,6 +18,6 @@ public class EntityEffectTaterBlock extends CubicPotatoBlock {
         float g = (float) (this.random.nextGaussian() * 0.2);
         float b = (float) (this.random.nextGaussian() * 0.2);
 
-        return EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, r, g, b);
+        return TintedParticleEffect.create(ParticleTypes.ENTITY_EFFECT, r, g, b);
     }
 }
