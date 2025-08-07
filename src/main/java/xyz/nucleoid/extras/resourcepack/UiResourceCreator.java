@@ -157,12 +157,15 @@ public class UiResourceCreator {
     }
 
     public static Function<Text, Text> background(String path) {
+        return background(path, 0);
+    }
+    public static Function<Text, Text> background(String path, int verticalOffset) {
         var builder = new StringBuilder().append(CHEST_SPACE0);
         var c = (character++);
         builder.append(c);
         builder.append(CHEST_SPACE1);
 
-        var texture = new FontTexture(identifier("sgui/" + path), 13, 256, new char[][] { new char[] {c} });
+        var texture = new FontTexture(identifier("sgui/" + path), 13 + verticalOffset, 256, new char[][] { new char[] {c} });
 
         FONT_TEXTURES.add(texture);
         return new TextBuilders(Text.literal(builder.toString()).setStyle(STYLE));

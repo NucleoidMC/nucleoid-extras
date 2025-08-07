@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.gui;
 
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
@@ -14,6 +15,7 @@ import net.minecraft.util.Formatting;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.util.PagedGui;
 
 import java.util.List;
@@ -135,7 +137,20 @@ public class TaterBoxGui extends PagedGui.FromList {
         return DisplayElement.of(builder);
     }
 
-	public static class TaterGuiElement extends GuiElement {
+    @Override
+    public void setTitle(Text title) {
+        super.setTitle(PolymerResourcePackUtils.hasMainPack(this.player) ? GuiTextures.TATERBOX.apply(title) : title);
+    }
+
+    @Override
+    protected DisplayElement filler() {
+        if (PolymerResourcePackUtils.hasMainPack(this.player)) {
+            return DisplayElement.empty();
+        }
+        return super.filler();
+    }
+
+    public static class TaterGuiElement extends GuiElement {
 		protected final boolean found;
 		protected final boolean collectable;
 

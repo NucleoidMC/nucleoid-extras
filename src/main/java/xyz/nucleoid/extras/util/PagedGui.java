@@ -108,8 +108,12 @@ public abstract class PagedGui extends SimpleGui {
         return switch (id) {
             case 2 -> DisplayElement.previousPage(this);
             case 6 -> DisplayElement.nextPage(this);
-            default -> DisplayElement.filler();
+            default -> filler();
         };
+    }
+
+    protected DisplayElement filler() {
+        return DisplayElement.filler();
     }
 
     public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
@@ -137,12 +141,13 @@ public abstract class PagedGui extends SimpleGui {
                     })
                 );
             } else {
-                return DisplayElement.of(
+                /*return DisplayElement.of(
                     new GuiElementBuilder(Items.PLAYER_HEAD)
                         .setItemName(Text.translatable("spectatorMenu.next_page").formatted(Formatting.DARK_GRAY))
                         .hideDefaultTooltip()
                         .setSkullOwner(SkinEncoder.encode("7e57720a4878c8bcab0e9c9c47d9e55128ccd77ba3445a54a91e3e1e1a27356e"))
-                );
+                );*/
+                return DisplayElement.empty();
             }
         }
 
@@ -156,12 +161,13 @@ public abstract class PagedGui extends SimpleGui {
                         })
                 );
             } else {
-                return DisplayElement.of(
+                /*return DisplayElement.of(
                     new GuiElementBuilder(Items.PLAYER_HEAD)
                         .setItemName(Text.translatable("spectatorMenu.previous_page").formatted(Formatting.DARK_GRAY))
                         .hideDefaultTooltip()
                         .setSkullOwner(SkinEncoder.encode("50820f76e3e041c75f76d0f301232bdf48321b534fe6a859ccb873d2981a9623"))
-                );
+                );*/
+                return DisplayElement.empty();
             }
         }
 

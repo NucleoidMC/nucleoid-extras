@@ -35,9 +35,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class StyledMenuPortalBackend implements GamePortalBackend {
-    public static final int GAMES_WIDTH = 7;
+    public static final int GAMES_WIDTH = 9;
     public static final int GAMES_HEIGHT = 5;
-    public static final int GAMES_X = 1;
+    public static final int GAMES_X = 0;
     public static final int GAMES_Y = 0;
     public static final int GAMES_PER_PAGE = GAMES_HEIGHT * GAMES_WIDTH;
 

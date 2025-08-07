@@ -38,6 +38,7 @@ dependencies {
 
 	modImplementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
 	modImplementation "eu.pb4:factorytools:${project.factorytools_version}"
+  modRuntimeOnly "eu.pb4:polymer-autohost:${project.polymer_version}"
 
 
 	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
