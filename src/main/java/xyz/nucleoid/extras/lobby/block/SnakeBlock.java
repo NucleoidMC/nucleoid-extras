@@ -53,7 +53,7 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
         return this.isActive(state) ? 15 : 0;
     }
     

@@ -25,7 +25,7 @@ public class LaunchFeatherItem extends Item implements PolymerItem {
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         LauncherComponent launcher = stack.get(NEDataComponentTypes.LAUNCHER);
 
-        if (!user.getWorld().isClient() && LaunchPadBlock.tryLaunch(entity, user, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, launcher)) {
+        if (!user.getEntityWorld().isClient() && LaunchPadBlock.tryLaunch(entity, user, SoundEvents.ENTITY_ENDER_DRAGON_FLAP, SoundCategory.PLAYERS, launcher)) {
             return ActionResult.SUCCESS_SERVER;
         }
 

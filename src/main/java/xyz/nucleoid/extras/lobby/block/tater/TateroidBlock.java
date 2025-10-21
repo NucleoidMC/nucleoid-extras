@@ -21,6 +21,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.block.WireOrientation;
@@ -91,7 +92,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 0, 1, 0, 0, this.particleColor);
+            player.getEntityWorld().spawnParticles(particleEffect, x, y, z, 0, 1, 0, 0, this.particleColor);
         }
     }
 
@@ -127,7 +128,7 @@ public class TateroidBlock extends CubicPotatoBlock implements BlockEntityProvid
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
         var optional = world.getBlockEntity(pos, NEBlocks.TATEROID_ENTITY);
         if (optional.isPresent()) {
             int duration = optional.get().getDuration();

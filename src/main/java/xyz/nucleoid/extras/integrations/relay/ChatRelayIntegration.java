@@ -110,7 +110,7 @@ public final class ChatRelayIntegration {
 
         var senderRoot = new JsonObject();
         senderRoot.addProperty("id", player.getUuidAsString());
-        senderRoot.addProperty("name", player.getGameProfile().getName());
+        senderRoot.addProperty("name", player.getGameProfile().name());
 
         body.add("sender", senderRoot);
         body.addProperty("content", content);

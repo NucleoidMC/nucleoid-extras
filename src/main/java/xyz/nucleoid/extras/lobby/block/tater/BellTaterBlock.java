@@ -76,7 +76,7 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 
 	public boolean ring(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!world.isClient && blockEntity instanceof BellTaterBlockEntity bellTaterBlockEntity) {
+		if (!world.isClient() && blockEntity instanceof BellTaterBlockEntity bellTaterBlockEntity) {
 			if (direction == null) {
 				int rotation = world.getBlockState(pos).get(Properties.ROTATION);
 				direction = Direction.fromHorizontalDegrees(rotation * 22.5);
@@ -104,6 +104,6 @@ public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvi
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return BlockWithEntityAccessor.validateTicker(type, NEBlocks.BELL_TATER_ENTITY, world.isClient ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
+		return BlockWithEntityAccessor.validateTicker(type, NEBlocks.BELL_TATER_ENTITY, world.isClient() ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
 	}
 }

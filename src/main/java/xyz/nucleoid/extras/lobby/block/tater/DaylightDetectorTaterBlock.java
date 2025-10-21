@@ -67,7 +67,7 @@ public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements Bloc
 	@Override
 	@Nullable
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		if (!world.isClient && world.getDimension().hasSkyLight()) {
+		if (!world.isClient() && world.getDimension().hasSkyLight()) {
 			return BlockWithEntityAccessor.validateTicker(type, NEBlocks.DAYLIGHT_DETECTOR_TATER_ENTITY, DaylightDetectorTaterBlock::tick);
 		}
 		return null;

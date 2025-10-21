@@ -19,7 +19,7 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
             return out;
         }
 
-        var playerSpace = GameSpaceManager.get().byWorld(player.getWorld());
+        var playerSpace = GameSpaceManager.get().byWorld(player.getEntityWorld());
 
         if (playerSpace == gameSpace) {
             var out = Text.empty();
@@ -42,7 +42,7 @@ public record GameTextContent(GameSpace gameSpace) implements TextContent {
     }
 
     @Override
-    public Type<?> getType() {
+    public MapCodec<? extends TextContent> getCodec() {
         return null;
     }
 }

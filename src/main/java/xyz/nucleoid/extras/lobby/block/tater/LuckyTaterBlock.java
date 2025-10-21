@@ -161,7 +161,7 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
         return state.get(PHASE).getComparatorOutput();
     }
 

@@ -89,8 +89,8 @@ public final class PlayerStatusIntegration {
             var playerArray = new JsonArray();
             for (var player : this.players) {
                 var playerRoot = new JsonObject();
-                playerRoot.addProperty("id", player.getId().toString());
-                playerRoot.addProperty("name", player.getName());
+                playerRoot.addProperty("id", player.id().toString());
+                playerRoot.addProperty("name", player.name());
                 playerArray.add(playerRoot);
             }
 

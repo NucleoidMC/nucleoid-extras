@@ -62,7 +62,7 @@ public class PlayerListHelper {
 
     public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
         var manager = GameSpaceManager.get();
-        return manager.byWorld(left.getWorld()) != manager.byWorld(right.getWorld());
+        return manager.byWorld(left.getEntityWorld()) != manager.byWorld(right.getEntityWorld());
     }
 
     public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
@@ -70,7 +70,7 @@ public class PlayerListHelper {
     }
 
     private static void updatePlayer(ServerPlayerEntity updatedPlayer, EnumSet<PlayerListS2CPacket.Action> actions) {
-        var server = updatedPlayer.getServer();
+        var server = updatedPlayer.getEntityWorld().getServer();
 
         var normalPacket = PlayerListHelper.createPacket(updatedPlayer, actions, false);
         var grayPacket = PlayerListHelper.createPacket(updatedPlayer, actions, true);

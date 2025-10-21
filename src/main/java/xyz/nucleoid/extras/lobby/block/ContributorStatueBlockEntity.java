@@ -67,7 +67,7 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     }
 
     protected void openEditScreen(ServerPlayerEntity player) {
-        var server = player.getServer();
+        var server = player.getEntityWorld().getServer();
 
         List<GuiElementInterface> elements = ContributorData.getContributors()
                 .stream()

@@ -77,9 +77,9 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
                         text.append(Text.literal(entry.ranking() + ". ").setStyle(PLACE_NUMBER));
                         String name;
 
-                        var profile = this.getServer().getUserCache().getByUuid(entry.playerUuid());
+                        var profile = this.getEntityWorld().getServer().getApiServices().nameToIdCache().getByUuid(entry.playerUuid());
                         if (profile.isPresent()) {
-                            name = profile.get().getName();
+                            name = profile.get().name();
                         } else {
                             name = "[Unknown player]";
                         }
@@ -90,13 +90,13 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
                     }
 
                     return text;
-                }).thenAcceptAsync(text -> this.leaderboards.set(ia, text), this.getServer()));
+                }).thenAcceptAsync(text -> this.leaderboards.set(ia, text), this.getEntityWorld().getServer()));
             }
 
             CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).handleAsync((a, b) -> {
                 this.updateTimer = REGULAR_UPDATE_WAIT_TIME;
                 return null;
-            }, this.getServer());
+            }, this.getEntityWorld().getServer());
         }
 
         if (this.displayTimer-- == 0) {

@@ -39,12 +39,12 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     @Override
     public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target instanceof ArmorStandEntity armorStandEntity) {
-            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
+            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getEntityWorld());
             var view = NbtWriteView.create(ErrorReporter.EMPTY, target.getRegistryManager());
             armorStandEntity.writeData(view);
             quickArmorStand.readData(NbtReadView.create(ErrorReporter.EMPTY, target.getRegistryManager(), view.getNbt()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
-            quickArmorStand.getWorld().spawnEntity(quickArmorStand);
+            quickArmorStand.getEntityWorld().spawnEntity(quickArmorStand);
         }
     }
 
@@ -71,7 +71,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
                     armorStandEntity.refreshPositionAndAngles(armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), f, 0.0F);
                     this.setRotations(armorStandEntity, world.random);
                     world.playSound(null, armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
-                    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.getPos());
+                    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.getEntityPos());
                 }
 
                 itemStack.decrement(1);

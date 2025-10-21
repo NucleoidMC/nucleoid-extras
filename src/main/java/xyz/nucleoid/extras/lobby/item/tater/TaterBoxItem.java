@@ -67,7 +67,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (!user.getWorld().isClient()) {
+        if (!user.getEntityWorld().isClient()) {
             this.openTaterBox((ServerPlayerEntity) user, stack, hand);
         }
 
@@ -76,7 +76,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
 
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType == ClickType.RIGHT && !player.getWorld().isClient()) {
+        if (clickType == ClickType.RIGHT && !player.getEntityWorld().isClient()) {
             this.openTaterBox((ServerPlayerEntity) player, stack, null);
             return true;
         }
@@ -94,7 +94,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     private void migrateCollectedTaters(ServerPlayerEntity user, ItemStack stack) {
         if (stack.contains(DataComponentTypes.CUSTOM_DATA)) {
             stack.apply(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT, customData -> {
-                if (!customData.contains(LEGACY_TATERS_KEY)) {
+                if (!customData.copyNbt().contains(LEGACY_TATERS_KEY)) {
                     return customData;
                 }
 

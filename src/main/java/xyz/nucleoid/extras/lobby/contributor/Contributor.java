@@ -74,10 +74,8 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
 
     public GameProfile createGameProfile(MinecraftServer server) {
         var uuid = this.socials.minecraft();
-
-        return server.getUserCache().getByUuid(uuid).orElseGet(() -> {
-            return new GameProfile(uuid, null);
-        });
+        // Todo
+        return new GameProfile(uuid, "");
     }
 
     public void loadGameProfileProperties(MinecraftServer server, GameProfile profile, Consumer<GameProfile> callback) {
@@ -95,6 +93,6 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
     }
 
     public static void writeSkullOwner(ItemStack stack, GameProfile profile) {
-        stack.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
+        stack.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
     }
 }

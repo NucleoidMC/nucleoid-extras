@@ -91,9 +91,9 @@ public class BellTaterBlockEntity extends BlockEntity {
 			Box box = new Box(blockPos).expand(48.0);
 			this.hearingEntities = this.world.getNonSpectatingEntities(LivingEntity.class, box);
 		}
-		if (!this.world.isClient) {
+		if (!this.world.isClient()) {
 			for (LivingEntity livingEntity : this.hearingEntities) {
-				if (!livingEntity.isAlive() || livingEntity.isRemoved() || !blockPos.isWithinDistance(livingEntity.getPos(), 32.0)) continue;
+				if (!livingEntity.isAlive() || livingEntity.isRemoved() || !blockPos.isWithinDistance(livingEntity.getEntityPos(), 32.0)) continue;
 				livingEntity.getBrain().remember(MemoryModuleType.HEARD_BELL_TIME, this.world.getTime());
 			}
 		}

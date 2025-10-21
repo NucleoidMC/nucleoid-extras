@@ -61,7 +61,7 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
     }
 
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
-        return this.getParticleEffect(player.getServer().getTicks());
+        return this.getParticleEffect(player.getEntityWorld().getServer().getTicks());
     }
 
     public int getBlockParticleChance() {
@@ -85,7 +85,7 @@ public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
 
         ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
+            player.getEntityWorld().spawnParticles(particleEffect, x, y, z, 1, deltaX, deltaY, deltaZ, 0.2);
         }
     }
 

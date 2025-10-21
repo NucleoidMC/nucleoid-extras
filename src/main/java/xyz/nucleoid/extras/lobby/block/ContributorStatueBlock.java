@@ -15,6 +15,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.ComponentsAccess;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.entity.TypedEntityData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -89,8 +90,8 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
     @SuppressWarnings("deprecation")
     @Override
     public void appendTooltip(TooltipContext context, Consumer<Text> textConsumer, TooltipType type, ComponentsAccess components) {
-
-        var nbt = components.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
+        // Todo
+        /*var nbt = components.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, null).copyNbtWithoutId().getNbt();
 
         if (nbt != null) {
             var contributorId = nbt.getString(ContributorStatueBlockEntity.CONTRIBUTOR_ID_KEY, "");
@@ -103,7 +104,7 @@ public class ContributorStatueBlock extends BlockWithEntity implements PolymerBl
             if (type.isAdvanced()) {
                 textConsumer.accept(Text.translatable("block.nucleoid_extras.contributor_statue.contributor_id", contributorId).formatted(Formatting.GRAY));
             }
-        }
+        }*/
     }
 
     @Override

@@ -31,7 +31,6 @@ import net.minecraft.world.chunk.Chunk;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.component.TaterPositionsComponent;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.extras.mixin.lobby.ServerChunkLoadingManagerAccessor;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class TaterGuidebookItem extends Item implements PolymerItem {
@@ -80,18 +79,10 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     private static void recordToGuidebook(ServerPlayerEntity player, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositions, ItemStack stack) {
         int initialCount = taterPositions.size();
 
-        var chunkManager = player.getWorld().getChunkManager();
+        var chunkManager = player.getEntityWorld().getChunkManager();
 
-        var chunkStorage = chunkManager.chunkLoadingManager;
-        var accessor = (ServerChunkLoadingManagerAccessor) (Object) chunkStorage;
 
-        for (var holder : accessor.callEntryIterator()) {
-            var chunk = holder.getWorldChunk();
-
-            if (chunk != null) {
-                recordChunk(chunk, taterPositions);
-            }
-        }
+        chunkManager.chunkLoadingManager.forEachChunk(chunk -> recordChunk(chunk, taterPositions));
 
         stack.set(NEDataComponentTypes.TATER_POSITIONS, new TaterPositionsComponent(taterPositions));
 

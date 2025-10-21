@@ -576,7 +576,7 @@ public class NEItems {
     }
 
     private static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        if (!player.getWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
+        if (!player.getEntityWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
             ItemStack stack = player.getStackInHand(hand);
             BlockPos pos = hitResult.getBlockPos();
 
@@ -588,9 +588,9 @@ public class NEItems {
     }
 
     private static ActionResult onUseEntity(PlayerEntity player, World world, Hand hand, Entity entity, EntityHitResult hitResult) {
-        if (!player.getWorld().isClient() && hitResult != null) {
+        if (!player.getEntityWorld().isClient() && hitResult != null) {
             ItemStack stack = player.getStackInHand(hand);
-            Vec3d hitPos = hitResult.getPos().subtract(entity.getPos());
+            Vec3d hitPos = hitResult.getPos().subtract(entity.getEntityPos());
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
             state.collectTaterFromEntity(entity, hitPos, stack, (ServerPlayerEntity) player);

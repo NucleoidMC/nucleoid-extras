@@ -31,7 +31,7 @@ public class MarkerTaterBlock extends CubicPotatoBlock {
             double y = player.getY() + this.getPlayerParticleYOffset();
             double z = player.getZ();
 
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
+            player.getEntityWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
         }
     }
 

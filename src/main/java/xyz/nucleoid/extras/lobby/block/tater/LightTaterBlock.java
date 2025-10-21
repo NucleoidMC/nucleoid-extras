@@ -31,7 +31,7 @@ public class LightTaterBlock extends MarkerTaterBlock {
     public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
         BlockPos pos = BlockPos.ofFloored(player.getX(), player.getY() + this.getPlayerParticleYOffset(), player.getZ());
 
-        return getLightParticle(player.getWorld().getLightLevel(pos));
+        return getLightParticle(player.getEntityWorld().getLightLevel(pos));
     }
 
     private static BlockState getLightState(int level) {
