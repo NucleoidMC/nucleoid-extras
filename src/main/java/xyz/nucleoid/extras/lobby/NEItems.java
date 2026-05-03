@@ -7,33 +7,32 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.block.Block;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.EquippableComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Rarity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.component.GamePortalComponent;
@@ -64,65 +63,65 @@ import java.util.function.Function;
 public class NEItems {
     private static final List<Item> TATERS = new ArrayList<>();
 
-    public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
-        .displayName(Text.translatable("text.nucleoid_extras.name"))
+    public static final CreativeModeTab ITEM_GROUP = FabricItemGroup.builder()
+        .title(Component.translatable("text.nucleoid_extras.name"))
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
-        .entries((context, entries) -> {
-            entries.add(NEItems.QUICK_ARMOR_STAND);
-            entries.add(NEItems.END_PORTAL);
-            entries.add(NEItems.END_GATEWAY);
-            entries.add(NEItems.SAFE_TNT);
-            entries.add(NEItems.LAUNCH_FEATHER);
-            entries.add(NEItems.GOLD_LAUNCH_PAD);
-            entries.add(NEItems.IRON_LAUNCH_PAD);
-            entries.add(NEItems.CONTRIBUTOR_STATUE);
-            entries.add(NEItems.LOCK_SETTER);
-            entries.add(NEItems.INFINITE_DISPENSER);
-            entries.add(NEItems.INFINITE_DROPPER);
-            entries.add(NEItems.SNAKE_BLOCK);
-            entries.add(NEItems.FAST_SNAKE_BLOCK);
-            entries.add(NEItems.TRANSIENT_IRON_DOOR);
-            entries.add(NEItems.TRANSIENT_OAK_DOOR);
-            entries.add(NEItems.TRANSIENT_SPRUCE_DOOR);
-            entries.add(NEItems.TRANSIENT_BIRCH_DOOR);
-            entries.add(NEItems.TRANSIENT_JUNGLE_DOOR);
-            entries.add(NEItems.TRANSIENT_ACACIA_DOOR);
-            entries.add(NEItems.TRANSIENT_CHERRY_DOOR);
-            entries.add(NEItems.TRANSIENT_DARK_OAK_DOOR);
-            entries.add(NEItems.TRANSIENT_MANGROVE_DOOR);
-            entries.add(NEItems.TRANSIENT_PALE_OAK_DOOR);
-            entries.add(NEItems.TRANSIENT_BAMBOO_DOOR);
-            entries.add(NEItems.TRANSIENT_CRIMSON_DOOR);
-            entries.add(NEItems.TRANSIENT_WARPED_DOOR);
-            entries.add(NEItems.TRANSIENT_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_EXPOSED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_WEATHERED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_OXIDIZED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_WAXED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
-            entries.add(NEItems.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
-            entries.add(NEItems.BLACK_CONCRETE_POWDER);
-            entries.add(NEItems.BLUE_CONCRETE_POWDER);
-            entries.add(NEItems.BROWN_CONCRETE_POWDER);
-            entries.add(NEItems.CYAN_CONCRETE_POWDER);
-            entries.add(NEItems.GREEN_CONCRETE_POWDER);
-            entries.add(NEItems.GRAY_CONCRETE_POWDER);
-            entries.add(NEItems.LIGHT_BLUE_CONCRETE_POWDER);
-            entries.add(NEItems.LIGHT_GRAY_CONCRETE_POWDER);
-            entries.add(NEItems.LIME_CONCRETE_POWDER);
-            entries.add(NEItems.MAGENTA_CONCRETE_POWDER);
-            entries.add(NEItems.ORANGE_CONCRETE_POWDER);
-            entries.add(NEItems.PINK_CONCRETE_POWDER);
-            entries.add(NEItems.PURPLE_CONCRETE_POWDER);
-            entries.add(NEItems.RED_CONCRETE_POWDER);
-            entries.add(NEItems.WHITE_CONCRETE_POWDER);
-            entries.add(NEItems.YELLOW_CONCRETE_POWDER);
-            entries.add(NEItems.GAME_PORTAL_OPENER);
-            entries.add(NEItems.TATER_BOX);
-            entries.add(NEItems.CREATIVE_TATER_BOX);
-            entries.add(NEItems.TATER_GUIDEBOOK);
-            TATERS.forEach(entries::add);
+        .displayItems((context, entries) -> {
+            entries.accept(NEItems.QUICK_ARMOR_STAND);
+            entries.accept(NEItems.END_PORTAL);
+            entries.accept(NEItems.END_GATEWAY);
+            entries.accept(NEItems.SAFE_TNT);
+            entries.accept(NEItems.LAUNCH_FEATHER);
+            entries.accept(NEItems.GOLD_LAUNCH_PAD);
+            entries.accept(NEItems.IRON_LAUNCH_PAD);
+            entries.accept(NEItems.CONTRIBUTOR_STATUE);
+            entries.accept(NEItems.LOCK_SETTER);
+            entries.accept(NEItems.INFINITE_DISPENSER);
+            entries.accept(NEItems.INFINITE_DROPPER);
+            entries.accept(NEItems.SNAKE_BLOCK);
+            entries.accept(NEItems.FAST_SNAKE_BLOCK);
+            entries.accept(NEItems.TRANSIENT_IRON_DOOR);
+            entries.accept(NEItems.TRANSIENT_OAK_DOOR);
+            entries.accept(NEItems.TRANSIENT_SPRUCE_DOOR);
+            entries.accept(NEItems.TRANSIENT_BIRCH_DOOR);
+            entries.accept(NEItems.TRANSIENT_JUNGLE_DOOR);
+            entries.accept(NEItems.TRANSIENT_ACACIA_DOOR);
+            entries.accept(NEItems.TRANSIENT_CHERRY_DOOR);
+            entries.accept(NEItems.TRANSIENT_DARK_OAK_DOOR);
+            entries.accept(NEItems.TRANSIENT_MANGROVE_DOOR);
+            entries.accept(NEItems.TRANSIENT_PALE_OAK_DOOR);
+            entries.accept(NEItems.TRANSIENT_BAMBOO_DOOR);
+            entries.accept(NEItems.TRANSIENT_CRIMSON_DOOR);
+            entries.accept(NEItems.TRANSIENT_WARPED_DOOR);
+            entries.accept(NEItems.TRANSIENT_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_EXPOSED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_WEATHERED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_OXIDIZED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_WAXED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
+            entries.accept(NEItems.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
+            entries.accept(NEItems.BLACK_CONCRETE_POWDER);
+            entries.accept(NEItems.BLUE_CONCRETE_POWDER);
+            entries.accept(NEItems.BROWN_CONCRETE_POWDER);
+            entries.accept(NEItems.CYAN_CONCRETE_POWDER);
+            entries.accept(NEItems.GREEN_CONCRETE_POWDER);
+            entries.accept(NEItems.GRAY_CONCRETE_POWDER);
+            entries.accept(NEItems.LIGHT_BLUE_CONCRETE_POWDER);
+            entries.accept(NEItems.LIGHT_GRAY_CONCRETE_POWDER);
+            entries.accept(NEItems.LIME_CONCRETE_POWDER);
+            entries.accept(NEItems.MAGENTA_CONCRETE_POWDER);
+            entries.accept(NEItems.ORANGE_CONCRETE_POWDER);
+            entries.accept(NEItems.PINK_CONCRETE_POWDER);
+            entries.accept(NEItems.PURPLE_CONCRETE_POWDER);
+            entries.accept(NEItems.RED_CONCRETE_POWDER);
+            entries.accept(NEItems.WHITE_CONCRETE_POWDER);
+            entries.accept(NEItems.YELLOW_CONCRETE_POWDER);
+            entries.accept(NEItems.GAME_PORTAL_OPENER);
+            entries.accept(NEItems.TATER_BOX);
+            entries.accept(NEItems.CREATIVE_TATER_BOX);
+            entries.accept(NEItems.TATER_GUIDEBOOK);
+            TATERS.forEach(entries::accept);
         })
         .build();
 
@@ -143,27 +142,27 @@ public class NEItems {
     public static final Item SNAKE_BLOCK = registerSimple("snake_block", NEBlocks.SNAKE_BLOCK, Items.LIME_CONCRETE);
     public static final Item FAST_SNAKE_BLOCK = registerSimple("fast_snake_block", NEBlocks.FAST_SNAKE_BLOCK, Items.LIGHT_BLUE_CONCRETE);
 
-    public static final Item TRANSIENT_IRON_DOOR = register("transient_iron_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_IRON_DOOR, settings, Items.IRON_DOOR));
-    public static final Item TRANSIENT_OAK_DOOR = register("transient_oak_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OAK_DOOR, settings, Items.OAK_DOOR));
-    public static final Item TRANSIENT_SPRUCE_DOOR = register("transient_spruce_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_SPRUCE_DOOR, settings, Items.SPRUCE_DOOR));
-    public static final Item TRANSIENT_BIRCH_DOOR = register("transient_birch_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BIRCH_DOOR, settings, Items.BIRCH_DOOR));
-    public static final Item TRANSIENT_JUNGLE_DOOR = register("transient_jungle_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_JUNGLE_DOOR, settings, Items.JUNGLE_DOOR));
-    public static final Item TRANSIENT_ACACIA_DOOR = register("transient_acacia_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_ACACIA_DOOR, settings, Items.ACACIA_DOOR));
-    public static final Item TRANSIENT_CHERRY_DOOR = register("transient_cherry_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CHERRY_DOOR, settings, Items.CHERRY_DOOR));
-    public static final Item TRANSIENT_DARK_OAK_DOOR = register("transient_dark_oak_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_DARK_OAK_DOOR, settings, Items.DARK_OAK_DOOR));
-    public static final Item TRANSIENT_MANGROVE_DOOR = register("transient_mangrove_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_MANGROVE_DOOR, settings, Items.MANGROVE_DOOR));
-    public static final Item TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_PALE_OAK_DOOR, settings, Items.PALE_OAK_DOOR));
-    public static final Item TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, settings, Items.BAMBOO_DOOR));
-    public static final Item TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, settings, Items.CRIMSON_DOOR));
-    public static final Item TRANSIENT_WARPED_DOOR = register("transient_warped_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, settings, Items.WARPED_DOOR));
-    public static final Item TRANSIENT_COPPER_DOOR = register("transient_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_COPPER_DOOR, settings, Items.COPPER_DOOR));
-    public static final Item TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, settings, Items.EXPOSED_COPPER_DOOR));
-    public static final Item TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, settings, Items.WEATHERED_COPPER_DOOR));
-    public static final Item TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, settings, Items.OXIDIZED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_COPPER_DOOR, settings, Items.WAXED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR, settings, Items.WAXED_EXPOSED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR, settings, Items.WAXED_WEATHERED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", new Item.Settings().useBlockPrefixedTranslationKey(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR, settings, Items.WAXED_OXIDIZED_COPPER_DOOR));
+    public static final Item TRANSIENT_IRON_DOOR = register("transient_iron_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_IRON_DOOR, settings, Items.IRON_DOOR));
+    public static final Item TRANSIENT_OAK_DOOR = register("transient_oak_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OAK_DOOR, settings, Items.OAK_DOOR));
+    public static final Item TRANSIENT_SPRUCE_DOOR = register("transient_spruce_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_SPRUCE_DOOR, settings, Items.SPRUCE_DOOR));
+    public static final Item TRANSIENT_BIRCH_DOOR = register("transient_birch_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BIRCH_DOOR, settings, Items.BIRCH_DOOR));
+    public static final Item TRANSIENT_JUNGLE_DOOR = register("transient_jungle_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_JUNGLE_DOOR, settings, Items.JUNGLE_DOOR));
+    public static final Item TRANSIENT_ACACIA_DOOR = register("transient_acacia_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_ACACIA_DOOR, settings, Items.ACACIA_DOOR));
+    public static final Item TRANSIENT_CHERRY_DOOR = register("transient_cherry_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CHERRY_DOOR, settings, Items.CHERRY_DOOR));
+    public static final Item TRANSIENT_DARK_OAK_DOOR = register("transient_dark_oak_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_DARK_OAK_DOOR, settings, Items.DARK_OAK_DOOR));
+    public static final Item TRANSIENT_MANGROVE_DOOR = register("transient_mangrove_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_MANGROVE_DOOR, settings, Items.MANGROVE_DOOR));
+    public static final Item TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_PALE_OAK_DOOR, settings, Items.PALE_OAK_DOOR));
+    public static final Item TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, settings, Items.BAMBOO_DOOR));
+    public static final Item TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, settings, Items.CRIMSON_DOOR));
+    public static final Item TRANSIENT_WARPED_DOOR = register("transient_warped_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, settings, Items.WARPED_DOOR));
+    public static final Item TRANSIENT_COPPER_DOOR = register("transient_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_COPPER_DOOR, settings, Items.COPPER_DOOR));
+    public static final Item TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, settings, Items.EXPOSED_COPPER_DOOR));
+    public static final Item TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, settings, Items.WEATHERED_COPPER_DOOR));
+    public static final Item TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, settings, Items.OXIDIZED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_COPPER_DOOR, settings, Items.WAXED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR, settings, Items.WAXED_EXPOSED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR, settings, Items.WAXED_WEATHERED_COPPER_DOOR));
+    public static final Item TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR, settings, Items.WAXED_OXIDIZED_COPPER_DOOR));
 
     public static final Item BLACK_CONCRETE_POWDER = registerSimple("black_concrete_powder", NEBlocks.BLACK_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER);
     public static final Item BLUE_CONCRETE_POWDER = registerSimple("blue_concrete_powder", NEBlocks.BLUE_CONCRETE_POWDER, Items.BLUE_CONCRETE_POWDER);
@@ -480,48 +479,48 @@ public class NEItems {
 
     public static final Item CORRUPTATER = registerHead("corruptater", NEBlocks.CORRUPTATER);
 
-    public static final Item TATER_BOX = register("tater_box", new Item.Settings()
+    public static final Item TATER_BOX = register("tater_box", new Item.Properties()
             .component(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT)
-            .maxCount(1), settings -> new TaterBoxItem(settings));
-    public static final Item CREATIVE_TATER_BOX = register("creative_tater_box", new Item.Settings()
+            .stacksTo(1), settings -> new TaterBoxItem(settings));
+    public static final Item CREATIVE_TATER_BOX = register("creative_tater_box", new Item.Properties()
             .component(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT)
-            .maxCount(1), settings -> new CreativeTaterBoxItem(settings));
+            .stacksTo(1), settings -> new CreativeTaterBoxItem(settings));
 
-    public static final Item TATER_GUIDEBOOK = register("tater_guidebook", new Item.Settings()
+    public static final Item TATER_GUIDEBOOK = register("tater_guidebook", new Item.Properties()
             .component(NEDataComponentTypes.TATER_POSITIONS, TaterPositionsComponent.DEFAULT)
-            .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
-            .maxCount(1), settings -> new TaterGuidebookItem(settings));
-    public static final Item QUICK_ARMOR_STAND = register("quick_armor_stand", new Item.Settings(), settings -> new QuickArmorStandItem(settings));
-    public static final Item GAME_PORTAL_OPENER = register("game_portal_opener", new Item.Settings().maxCount(1), settings -> new GamePortalOpenerItem(settings));
-    public static final Item LAUNCH_FEATHER = register("launch_feather", new Item.Settings()
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+            .stacksTo(1), settings -> new TaterGuidebookItem(settings));
+    public static final Item QUICK_ARMOR_STAND = register("quick_armor_stand", new Item.Properties(), settings -> new QuickArmorStandItem(settings));
+    public static final Item GAME_PORTAL_OPENER = register("game_portal_opener", new Item.Properties().stacksTo(1), settings -> new GamePortalOpenerItem(settings));
+    public static final Item LAUNCH_FEATHER = register("launch_feather", new Item.Properties()
             .component(NEDataComponentTypes.LAUNCHER, LauncherComponent.DEFAULT)
-            .maxCount(1), settings -> new LaunchFeatherItem(settings));
+            .stacksTo(1), settings -> new LaunchFeatherItem(settings));
 
-    public static final Item LOCK_SETTER = register("lock_setter", new Item.Settings()
-            .component(DataComponentTypes.LOCK, LockSetterItem.createUnlockableLock())
-            .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true)
-            .maxCount(1), LockSetterItem::new);
+    public static final Item LOCK_SETTER = register("lock_setter", new Item.Properties()
+            .component(DataComponents.LOCK, LockSetterItem.createUnlockableLock())
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+            .stacksTo(1), LockSetterItem::new);
 
-    public static final Item RULE_BOOK = register("rule_book", new Item.Settings()
+    public static final Item RULE_BOOK = register("rule_book", new Item.Properties()
             .rarity(Rarity.EPIC)
-            .component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true), settings -> new RuleBookItem(settings));
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true), settings -> new RuleBookItem(settings));
 
     private static Item registerHead(String id, Block head) {
-        Item.Settings baseSettings = new Item.Settings()
-                .useBlockPrefixedTranslationKey()
+        Item.Properties baseSettings = new Item.Properties()
+                .useBlockDescriptionPrefix()
                 .equippableUnswappable(EquipmentSlot.HEAD);
 
         if (head instanceof TinyPotatoBlock tinyPotatoBlock) {
             return register(id, baseSettings, settings -> new LobbyHeadItem(head, settings, tinyPotatoBlock.getItemTexture()));
         } else if (head instanceof PolymerHeadBlock headBlock) {
-            return register(id, baseSettings, settings -> new LobbyHeadItem(head, settings, headBlock.getPolymerSkinValue(head.getDefaultState(), BlockPos.ORIGIN, null)));
+            return register(id, baseSettings, settings -> new LobbyHeadItem(head, settings, headBlock.getPolymerSkinValue(head.defaultBlockState(), BlockPos.ZERO, null)));
         }
 
         throw new IllegalArgumentException("Cannot register " + id + " as a head item because " + head + " is not a head");
     }
 
     private static Item registerSimple(String id, Block block, Item virtual) {
-        return register(id, new Item.Settings().component(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true).useBlockPrefixedTranslationKey(), settings -> new LobbyBlockItem(block, settings, virtual));
+        return register(id, new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true).useBlockDescriptionPrefix(), settings -> new LobbyBlockItem(block, settings, virtual));
     }
 
     public static void register() {
@@ -533,29 +532,29 @@ public class NEItems {
         UseEntityCallback.EVENT.register(NEItems::onUseEntity);
     }
 
-    private static boolean tryOfferStack(ServerPlayerEntity player, Item item, Consumer<ItemStack> consumer) {
+    private static boolean tryOfferStack(ServerPlayer player, Item item, Consumer<ItemStack> consumer) {
         var inventory = player.getInventory();
 
-        if (inventory.containsAny(Collections.singleton(item))) {
+        if (inventory.hasAnyOf(Collections.singleton(item))) {
             return false;
         }
 
         var stack = new ItemStack(item);
         consumer.accept(stack);
 
-        player.getInventory().offer(stack, true);
+        player.getInventory().placeItemBackInInventory(stack, true);
         return true;
     }
 
-    private static boolean tryOfferStack(ServerPlayerEntity player, Item item) {
+    private static boolean tryOfferStack(ServerPlayer player, Item item) {
         return tryOfferStack(player, item, stack -> {});
     }
 
-    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+    private static void onPlayerJoin(ServerGamePacketListenerImpl handler, PacketSender packetSender, MinecraftServer server) {
         giveLobbyItems(handler.getPlayer());
     }
 
-    public static void giveLobbyItems(ServerPlayerEntity player) {
+    public static void giveLobbyItems(ServerPlayer player) {
         var config = NucleoidExtrasConfig.get();
 
         tryOfferStack(player, TATER_BOX);
@@ -571,42 +570,42 @@ public class NEItems {
         });
     }
 
-    public static boolean canUseTaters(ServerPlayerEntity player) {
+    public static boolean canUseTaters(ServerPlayer player) {
         return !GameSpaceManager.get().inGame(player);
     }
 
-    private static ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        if (!player.getEntityWorld().isClient() && hitResult != null && hand == Hand.MAIN_HAND) {
-            ItemStack stack = player.getStackInHand(hand);
+    private static InteractionResult onUseBlock(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+        if (!player.level().isClientSide() && hitResult != null && hand == InteractionHand.MAIN_HAND) {
+            ItemStack stack = player.getItemInHand(hand);
             BlockPos pos = hitResult.getBlockPos();
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            state.collectTaterFromBlock(world, pos, stack, (ServerPlayerEntity) player);
+            state.collectTaterFromBlock(world, pos, stack, (ServerPlayer) player);
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    private static ActionResult onUseEntity(PlayerEntity player, World world, Hand hand, Entity entity, EntityHitResult hitResult) {
-        if (!player.getEntityWorld().isClient() && hitResult != null) {
-            ItemStack stack = player.getStackInHand(hand);
-            Vec3d hitPos = hitResult.getPos().subtract(entity.getEntityPos());
+    private static InteractionResult onUseEntity(Player player, Level world, InteractionHand hand, Entity entity, EntityHitResult hitResult) {
+        if (!player.level().isClientSide() && hitResult != null) {
+            ItemStack stack = player.getItemInHand(hand);
+            Vec3 hitPos = hitResult.getLocation().subtract(entity.position());
 
             PlayerLobbyState state = PlayerLobbyState.get(player);
-            state.collectTaterFromEntity(entity, hitPos, stack, (ServerPlayerEntity) player);
+            state.collectTaterFromEntity(entity, hitPos, stack, (ServerPlayer) player);
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    private static <T extends Item> T register(String id, Item.Settings settings, Function<Item.Settings, T> factory) {
-        RegistryKey<Item> key = RegistryKey.of(RegistryKeys.ITEM, NucleoidExtras.identifier(id));
-        T item = factory.apply(settings.registryKey(key));
+    private static <T extends Item> T register(String id, Item.Properties settings, Function<Item.Properties, T> factory) {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, NucleoidExtras.identifier(id));
+        T item = factory.apply(settings.setId(key));
 
         if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof TinyPotatoBlock) {
             TATERS.add(item);
         }
 
-        return Registry.register(Registries.ITEM, key, item);
+        return Registry.register(BuiltInRegistries.ITEM, key, item);
     }
 }

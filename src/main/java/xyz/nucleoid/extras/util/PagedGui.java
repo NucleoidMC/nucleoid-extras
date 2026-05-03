@@ -7,34 +7,31 @@ import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.IntFunction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class PagedGui extends SimpleGui {
-    private static final Object2IntMap<ScreenHandlerType<?>> TYPE_TO_SIZE = new Object2IntOpenHashMap<>();
+    private static final Object2IntMap<MenuType<?>> TYPE_TO_SIZE = new Object2IntOpenHashMap<>();
 
     protected int page = 0;
 
-    public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements) {
+    public static SimpleGui of(ServerPlayer player, List<GuiElementInterface> elements) {
         return of(player, elements, null);
     }
-    public static SimpleGui of(ServerPlayerEntity player, List<GuiElementInterface> elements, @Nullable IntFunction<GuiElementInterface> navbar) {
-        return new FromList(ScreenHandlerType.GENERIC_9X6, player, false, elements, navbar);
+    public static SimpleGui of(ServerPlayer player, List<GuiElementInterface> elements, @Nullable IntFunction<GuiElementInterface> navbar) {
+        return new FromList(MenuType.GENERIC_9x6, player, false, elements, navbar);
     }
 
-    public PagedGui(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots) {
+    public PagedGui(MenuType<?> type, ServerPlayer player, boolean includePlayerInventorySlots) {
         super(type, player, includePlayerInventorySlots);
     }
 
@@ -180,11 +177,11 @@ public abstract class PagedGui extends SimpleGui {
         }
     }
 
-    public static void playSound(ServerPlayerEntity player, SoundEvent sound) {
-        player.playSoundToPlayer(sound, SoundCategory.MASTER, 1, 1);
+    public static void playSound(ServerPlayer player, SoundEvent sound) {
+        player.playNotifySound(sound, SoundSource.MASTER, 1, 1);
     }
 
-    public static void playClickSound(ServerPlayerEntity player) {
+    public static void playClickSound(ServerPlayer player) {
         playSound(player, SoundEvents.UI_BUTTON_CLICK.value());
     }
 
@@ -194,7 +191,7 @@ public abstract class PagedGui extends SimpleGui {
         @Nullable
         private final IntFunction<GuiElementInterface> navbar;
 
-        public FromList(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, IntFunction<GuiElementInterface> navbar) {
+        public FromList(MenuType<?> type, ServerPlayer player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, IntFunction<GuiElementInterface> navbar) {
             super(type, player, includePlayerInventorySlots);
             this.list = guiElementInterfaces;
             this.navbar = navbar;
@@ -224,10 +221,10 @@ public abstract class PagedGui extends SimpleGui {
 
     static {
         TYPE_TO_SIZE.defaultReturnValue(0);
-        TYPE_TO_SIZE.put(ScreenHandlerType.GENERIC_9X2, 1);
-        TYPE_TO_SIZE.put(ScreenHandlerType.GENERIC_9X3, 2);
-        TYPE_TO_SIZE.put(ScreenHandlerType.GENERIC_9X4, 3);
-        TYPE_TO_SIZE.put(ScreenHandlerType.GENERIC_9X5, 4);
-        TYPE_TO_SIZE.put(ScreenHandlerType.GENERIC_9X6, 5);
+        TYPE_TO_SIZE.put(MenuType.GENERIC_9x2, 1);
+        TYPE_TO_SIZE.put(MenuType.GENERIC_9x3, 2);
+        TYPE_TO_SIZE.put(MenuType.GENERIC_9x4, 3);
+        TYPE_TO_SIZE.put(MenuType.GENERIC_9x5, 4);
+        TYPE_TO_SIZE.put(MenuType.GENERIC_9x6, 5);
     }
 }

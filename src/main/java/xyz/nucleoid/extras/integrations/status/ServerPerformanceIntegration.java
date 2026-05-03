@@ -2,7 +2,7 @@ package xyz.nucleoid.extras.integrations.status;
 
 import com.google.gson.JsonObject;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
+import net.minecraft.util.debugchart.SampleStorage;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
@@ -43,13 +43,13 @@ public final class ServerPerformanceIntegration {
             int entities = 0;
             int chunks = 0;
 
-            for (var world : server.getWorlds()) {
+            for (var world : server.getAllLevels()) {
                 var entityManager = ((ServerWorldAccessor) world).nucleoid$getEntityManager();
                 var entityIds = ((ServerEntityManagerAccessor) entityManager).nucleoid$getEntityUuids();
 
                 dimensions += 1;
                 entities += entityIds.size();
-                chunks += world.getChunkManager().getLoadedChunkCount();
+                chunks += world.getChunkSource().getLoadedChunksCount();
             }
 
             var runtime = Runtime.getRuntime();
@@ -69,13 +69,13 @@ public final class ServerPerformanceIntegration {
         }
     }
 
-    private static float getAverageTickMs(MultiValueDebugSampleLog log) {
+    private static float getAverageTickMs(SampleStorage log) {
         try {
             long total = 0;
-            for (int index = 0; index < log.getLength(); index++) {
+            for (int index = 0; index < log.size(); index++) {
                 total += log.get(index);
             }
-            double averageTickNs = (double) total / log.getLength();
+            double averageTickNs = (double) total / log.size();
             return (float) (averageTickNs / 1000000.0);
         } catch (Throwable e) {
             return 0;

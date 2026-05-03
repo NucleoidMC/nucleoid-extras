@@ -1,109 +1,108 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.block.WireOrientation;
-import net.minecraft.world.event.GameEvent;
+public class BellTaterBlock extends CubicPotatoBlock implements EntityBlock {
+	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-public class BellTaterBlock extends CubicPotatoBlock implements BlockEntityProvider {
-	public static final BooleanProperty POWERED = Properties.POWERED;
-
-	public BellTaterBlock(Settings settings, String texture) {
+	public BellTaterBlock(Properties settings, String texture) {
 		super(settings, ParticleTypes.NOTE, texture);
-		this.setDefaultState(this.stateManager.getDefaultState().with(POWERED, false));
+		this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
-		boolean bl = world.isReceivingRedstonePower(pos);
-		if (bl != state.get(POWERED)) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, Orientation wireOrientation, boolean notify) {
+		boolean bl = world.hasNeighborSignal(pos);
+		if (bl != state.getValue(POWERED)) {
 			if (bl) {
 				this.ring(world, pos, null);
 			}
-			world.setBlockState(pos, state.with(POWERED, bl), Block.NOTIFY_ALL);
+			world.setBlock(pos, state.setValue(POWERED, bl), Block.UPDATE_ALL);
 		}
 	}
 
 	@Override
-	public void onProjectileHit(World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
+	public void onProjectileHit(Level world, BlockState state, BlockHitResult hit, Projectile projectile) {
 		Entity entity = projectile.getOwner();
-		PlayerEntity playerEntity = entity instanceof PlayerEntity ? (PlayerEntity)entity : null;
+		Player playerEntity = entity instanceof Player ? (Player)entity : null;
 		this.ring(world, hit, playerEntity);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-		super.onUse(state, world, pos, player, hit);
-		return this.ring(world, hit, player) ? ActionResult.SUCCESS_SERVER : ActionResult.PASS;
+	public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+		super.useWithoutItem(state, world, pos, player, hit);
+		return this.ring(world, hit, player) ? InteractionResult.SUCCESS_SERVER : InteractionResult.PASS;
 	}
 
-	public boolean ring(World world, BlockHitResult hitResult, @Nullable PlayerEntity player) {
-		Direction direction = hitResult.getSide();
+	public boolean ring(Level world, BlockHitResult hitResult, @Nullable Player player) {
+		Direction direction = hitResult.getDirection();
 		BlockPos blockPos = hitResult.getBlockPos();
 		boolean bl32 = this.ring(player, world, blockPos, direction);
 		if (bl32 && player != null) {
-			player.incrementStat(Stats.BELL_RING);
+			player.awardStat(Stats.BELL_RING);
 		}
 		return true;
 	}
 
-	public boolean ring(World world, BlockPos pos, @Nullable Direction direction) {
+	public boolean ring(Level world, BlockPos pos, @Nullable Direction direction) {
 		return this.ring(null, world, pos, direction);
 	}
 
-	public boolean ring(@Nullable Entity entity, World world, BlockPos pos, @Nullable Direction direction) {
+	public boolean ring(@Nullable Entity entity, Level world, BlockPos pos, @Nullable Direction direction) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
-		if (!world.isClient() && blockEntity instanceof BellTaterBlockEntity bellTaterBlockEntity) {
+		if (!world.isClientSide() && blockEntity instanceof BellTaterBlockEntity bellTaterBlockEntity) {
 			if (direction == null) {
-				int rotation = world.getBlockState(pos).get(Properties.ROTATION);
-				direction = Direction.fromHorizontalDegrees(rotation * 22.5);
+				int rotation = world.getBlockState(pos).getValue(BlockStateProperties.ROTATION_16);
+				direction = Direction.fromYRot(rotation * 22.5);
 			}
 			bellTaterBlockEntity.activate(direction);
-			world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0f, 1.0f);
-			world.emitGameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
+			world.playSound(null, pos, SoundEvents.BELL_BLOCK, SoundSource.BLOCKS, 2.0f, 1.0f);
+			world.gameEvent(entity, GameEvent.BLOCK_CHANGE, pos);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		super.appendProperties(builder);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(POWERED);
 	}
 
 	@Override
 	@Nullable
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new BellTaterBlockEntity(pos, state);
 	}
 
 	@Override
 	@Nullable
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-		return BlockWithEntityAccessor.validateTicker(type, NEBlocks.BELL_TATER_ENTITY, world.isClient() ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+		return BlockWithEntityAccessor.validateTicker(type, NEBlocks.BELL_TATER_ENTITY, world.isClientSide() ? BellTaterBlockEntity::clientTick : BellTaterBlockEntity::serverTick);
 	}
 }

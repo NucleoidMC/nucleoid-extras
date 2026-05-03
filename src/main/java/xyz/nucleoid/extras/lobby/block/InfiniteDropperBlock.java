@@ -1,22 +1,22 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.DispenserBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class InfiniteDropperBlock extends InfiniteDispenserBlock {
-    private static final DispenserBehavior BEHAVIOR = new ItemDispenserBehavior();
+    private static final DispenseItemBehavior BEHAVIOR = new DefaultDispenseItemBehavior();
 
-    public InfiniteDropperBlock(Settings settings) {
+    public InfiniteDropperBlock(Properties settings) {
         super(settings);
     }
     
@@ -30,12 +30,12 @@ public class InfiniteDropperBlock extends InfiniteDispenserBlock {
     }
 
     @Override
-    protected DispenserBehavior getBehaviorForItem(World world, ItemStack stack) {
+    protected DispenseItemBehavior getDispenseMethod(Level world, ItemStack stack) {
         return BEHAVIOR;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new InfiniteDropperBlockEntity(pos, state);
     }
 }

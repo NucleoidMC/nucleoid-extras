@@ -3,8 +3,8 @@ package xyz.nucleoid.extras.placeholder;
 import eu.pb4.placeholders.api.PlaceholderContext;
 import eu.pb4.placeholders.api.PlaceholderResult;
 import eu.pb4.placeholders.api.Placeholders;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
@@ -16,9 +16,9 @@ public class ExtraPlaceholders {
 
     private static PlaceholderResult locationDifference(PlaceholderContext context, @Nullable String s) {
         if (context.hasWorld()) {
-            return PlaceholderResult.value(MutableText.of(new GameTextContent(GameSpaceManager.get().byWorld(context.world()))));
+            return PlaceholderResult.value(MutableComponent.create(new GameTextContent(GameSpaceManager.get().byWorld(context.world()))));
         }
 
-        return PlaceholderResult.value(Text.empty());
+        return PlaceholderResult.value(Component.empty());
     }
 }

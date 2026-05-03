@@ -1,40 +1,40 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import xyz.nucleoid.extras.component.GamePortalComponent;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 
 public class GamePortalOpenerItem extends Item implements PolymerItem {
-    public GamePortalOpenerItem(Settings settings) {
+    public GamePortalOpenerItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        ItemStack stack = user.getItemInHand(hand);
 
-        if (!world.isClient()) {
+        if (!world.isClientSide()) {
             GamePortal portal = getGamePortal(stack);
             if (portal == null) {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
 
-            portal.requestJoin((ServerPlayerEntity) user, false);
+            portal.requestJoin((ServerPlayer) user, false);
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
@@ -44,12 +44,12 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
     }
 
     @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
         return null;
     }
 
     @Override
-    public Text getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         GamePortal portal = getGamePortal(stack);
         return portal == null ? super.getName(stack) : portal.getName();
     }

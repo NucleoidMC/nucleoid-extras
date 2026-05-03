@@ -3,40 +3,40 @@ package xyz.nucleoid.extras.util;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Items;
 import xyz.nucleoid.extras.resourcepack.GuiTextures;
 
 public class CommonGuiElements {
     private static final GuiElement PURPLE_PLATE = new GuiElementBuilder(Items.PURPLE_STAINED_GLASS_PANE).hideTooltip().build();
     private static final GuiElement WHITE_PLATE = new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE).hideTooltip().build();
-    public static GuiElementBuilder nextPage(ServerPlayerEntity player) {
+    public static GuiElementBuilder nextPage(ServerPlayer player) {
         if (PolymerResourcePackUtils.hasMainPack(player)) {
-            return GuiTextures.NEXT_BUTTON.get().setName(Text.translatable("spectatorMenu.next_page"));
+            return GuiTextures.NEXT_BUTTON.get().setName(Component.translatable("spectatorMenu.next_page"));
         }
 
         return new GuiElementBuilder(Items.PLAYER_HEAD)
-            .setName(Text.translatable("spectatorMenu.next_page"))
+            .setName(Component.translatable("spectatorMenu.next_page"))
             .hideDefaultTooltip()
             .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzg2MTg1YjFkNTE5YWRlNTg1ZjE4NGMzNGYzZjNlMjBiYjY0MWRlYjg3OWU4MTM3OGU0ZWFmMjA5Mjg3In19fQ");
     }
 
-    public static GuiElementBuilder previousPage(ServerPlayerEntity player) {
+    public static GuiElementBuilder previousPage(ServerPlayer player) {
         if (PolymerResourcePackUtils.hasMainPack(player)) {
-            return GuiTextures.PREVIOUS_BUTTON.get().setName(Text.translatable("spectatorMenu.next_page"));
+            return GuiTextures.PREVIOUS_BUTTON.get().setName(Component.translatable("spectatorMenu.next_page"));
         }
 
         return new GuiElementBuilder(Items.PLAYER_HEAD)
-            .setName(Text.translatable("spectatorMenu.previous_page"))
+            .setName(Component.translatable("spectatorMenu.previous_page"))
             .hideDefaultTooltip()
             .setSkullOwner("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzEwODI5OGZmMmIyNjk1MWQ2ODNlNWFkZTQ2YTQyZTkwYzJmN2M3ZGQ0MWJhYTkwOGJjNTg1MmY4YzMyZTU4MyJ9fX0");
     }
 
-    public static GuiElementBuilder back(ServerPlayerEntity player, Runnable runnable) {
+    public static GuiElementBuilder back(ServerPlayer player, Runnable runnable) {
         if (PolymerResourcePackUtils.hasMainPack(player)) {
-            return GuiTextures.BACK_BUTTON.get().setName(ScreenTexts.BACK)
+            return GuiTextures.BACK_BUTTON.get().setName(CommonComponents.GUI_BACK)
                 .setCallback((a, b, c, gui) -> {
                     PagedGui.playClickSound(gui.getPlayer());
                     runnable.run();
@@ -44,7 +44,7 @@ public class CommonGuiElements {
         }
 
         return new GuiElementBuilder(Items.STRUCTURE_VOID)
-            .setName(ScreenTexts.BACK)
+            .setName(CommonComponents.GUI_BACK)
             .hideDefaultTooltip()
             .setCallback((a, b, c, gui) -> {
                 PagedGui.playClickSound(gui.getPlayer());

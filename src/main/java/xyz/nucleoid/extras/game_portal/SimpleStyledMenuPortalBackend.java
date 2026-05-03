@@ -1,19 +1,19 @@
 package xyz.nucleoid.extras.game_portal;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 import xyz.nucleoid.plasmid.impl.portal.game.ConcurrentGamePortalBackend;
 import xyz.nucleoid.plasmid.impl.portal.menu.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend {
     private final List<MenuPortalConfig.Entry> configEntries;
     private List<MenuEntry> entries;
 
-    public SimpleStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
+    public SimpleStyledMenuPortalBackend(Component name, Component uiTitle, List<Component> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
         super(name, uiTitle, description, icon);
         this.configEntries = config;
     }

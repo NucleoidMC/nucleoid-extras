@@ -8,62 +8,62 @@ import com.google.common.collect.SetMultimap;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.BookElementBuilder;
 import eu.pb4.sgui.api.gui.BookGui;
+import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.component.TaterPositionsComponent;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 public class TaterGuidebookItem extends Item implements PolymerItem {
-    private static final Text MISSING_SYMBOL = Text.literal("❌").formatted(Formatting.RED);
-    private static final Text FOUND_SYMBOL = Text.literal("✔").formatted(Formatting.GREEN);
-    private static final Text TOO_MANY_SYMBOL = Text.literal("✔").setStyle(Style.EMPTY.withColor(0x055005));
+    private static final Component MISSING_SYMBOL = Component.literal("❌").withStyle(ChatFormatting.RED);
+    private static final Component FOUND_SYMBOL = Component.literal("✔").withStyle(ChatFormatting.GREEN);
+    private static final Component TOO_MANY_SYMBOL = Component.literal("✔").setStyle(Style.EMPTY.withColor(0x055005));
 
     private static final int RECORD_COOLDOWN = 2 * SharedConstants.TICKS_PER_SECOND;
 
-    public TaterGuidebookItem(Settings settings) {
+    public TaterGuidebookItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        var stack = user.getStackInHand(hand);
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        var stack = user.getItemInHand(hand);
 
-        if (!world.isClient() && user.isCreativeLevelTwoOp()) {
-            var player = (ServerPlayerEntity) user;
+        if (!world.isClientSide() && user.canUseGameMasterBlocks()) {
+            var player = (ServerPlayer) user;
             var taterPositionMap = stack.get(NEDataComponentTypes.TATER_POSITIONS);
 
             if (taterPositionMap != null) {
-                if (user.isSneaking()) {
+                if (user.isShiftKeyDown()) {
                     recordToGuidebook(player, HashMultimap.create(taterPositionMap.positions()), stack);
                 } else {
                     showGuidebook(player, taterPositionMap.positions(), stack);
                 }
 
-                return ActionResult.SUCCESS_SERVER;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -72,50 +72,50 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     }
 
     @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
         return null;
     }
 
-    private static void recordToGuidebook(ServerPlayerEntity player, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositions, ItemStack stack) {
+    private static void recordToGuidebook(ServerPlayer player, SetMultimap<Holder<Item>, BlockPos> taterPositions, ItemStack stack) {
         int initialCount = taterPositions.size();
 
-        var chunkManager = player.getEntityWorld().getChunkManager();
+        var chunkManager = player.level().getChunkSource();
 
 
-        chunkManager.chunkLoadingManager.forEachChunk(chunk -> recordChunk(chunk, taterPositions));
+        chunkManager.chunkMap.forEachReadyToSendChunk(chunk -> recordChunk(chunk, taterPositions));
 
         stack.set(NEDataComponentTypes.TATER_POSITIONS, new TaterPositionsComponent(taterPositions));
 
-        player.getItemCooldownManager().set(stack, RECORD_COOLDOWN);
+        player.getCooldowns().addCooldown(stack, RECORD_COOLDOWN);
 
         int difference = taterPositions.size() - initialCount;
-        player.sendMessage(Text.translatable("text.nucleoid_extras.tater_guidebook.recorded", difference), true);
+        player.displayClientMessage(Component.translatable("text.nucleoid_extras.tater_guidebook.recorded", difference), true);
     }
 
-    private static void recordChunk(Chunk chunk, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositions) {
-        chunk.forEachBlockMatchingPredicate(state -> {
+    private static void recordChunk(ChunkAccess chunk, SetMultimap<Holder<Item>, BlockPos> taterPositions) {
+        chunk.findBlocks(state -> {
             return state.getBlock() instanceof TinyPotatoBlock;
         }, (pos, state) -> {
-            taterPositions.put(state.getBlock().asItem().getRegistryEntry(), pos.toImmutable());
+            taterPositions.put(state.getBlock().asItem().builtInRegistryHolder(), pos.immutable());
         });
     }
 
-    private static void showGuidebook(ServerPlayerEntity player, SetMultimap<RegistryEntry<Item>, BlockPos> taterPositionMap, ItemStack stack) {
+    private static void showGuidebook(ServerPlayer player, SetMultimap<Holder<Item>, BlockPos> taterPositionMap, ItemStack stack) {
         var builder = new BookElementBuilder();
         var taters = TaterBoxItem.getSortedTaterStream(player).iterator();
 
         boolean firstPage = true;
 
         while (taters.hasNext()) {
-            var page = Text.empty();
+            var page = Component.empty();
 
             if (firstPage) {
-                page.append(stack.getName().copy().formatted(Formatting.BOLD));
-                page.append(ScreenTexts.LINE_BREAK);
+                page.append(stack.getHoverName().copy().withStyle(ChatFormatting.BOLD));
+                page.append(CommonComponents.NEW_LINE);
 
-                page.append(Text.translatable("text.nucleoid_extras.tater_guidebook.header", taterPositionMap.size()));
-                page.append(ScreenTexts.LINE_BREAK);
-                page.append(ScreenTexts.LINE_BREAK);
+                page.append(Component.translatable("text.nucleoid_extras.tater_guidebook.header", taterPositionMap.size()));
+                page.append(CommonComponents.NEW_LINE);
+                page.append(CommonComponents.NEW_LINE);
 
                 firstPage = false;
             }
@@ -123,7 +123,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
             for (int index = 0; index < (16 * 4); index++) {
                 if (!taters.hasNext()) break;
 
-                var tater = taters.next().asItem().getRegistryEntry();
+                var tater = taters.next().asItem().builtInRegistryHolder();
                 var positions = taterPositionMap.get(tater);
 
                 var symbol = getSymbol(positions);
@@ -131,7 +131,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
                 var hoverEvent = getHoverEvent(tater, positions);
                 var clickEvent = getClickEvent(tater, positions);
 
-                var text = symbol.copy().styled(style -> {
+                var text = symbol.copy().withStyle(style -> {
                     return style
                         .withHoverEvent(hoverEvent)
                         .withClickEvent(clickEvent);
@@ -147,7 +147,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
         ui.open();
     }
 
-    private static Text getSymbol(Set<BlockPos> positions) {
+    private static Component getSymbol(Set<BlockPos> positions) {
         return switch (positions.size()) {
             case 0 -> MISSING_SYMBOL;
             case 1 -> FOUND_SYMBOL;
@@ -155,20 +155,20 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
         };
     }
 
-    private static HoverEvent getHoverEvent(RegistryEntry<Item> tater, Set<BlockPos> positions) {
+    private static HoverEvent getHoverEvent(Holder<Item> tater, Set<BlockPos> positions) {
         var hoverText = tater.value().getName().copy();
 
         for (var pos : positions) {
-            hoverText.append(ScreenTexts.LINE_BREAK);
+            hoverText.append(CommonComponents.NEW_LINE);
 
-            Text coordinates = Text.translatable("chat.coordinates", pos.getX(), pos.getY(), pos.getZ());
-            hoverText.append(Texts.bracketed(coordinates).formatted(Formatting.GREEN));
+            Component coordinates = Component.translatable("chat.coordinates", pos.getX(), pos.getY(), pos.getZ());
+            hoverText.append(ComponentUtils.wrapInSquareBrackets(coordinates).withStyle(ChatFormatting.GREEN));
         }
 
         return new HoverEvent.ShowText(hoverText);
     }
 
-    private static ClickEvent getClickEvent(RegistryEntry<Item> tater, Set<BlockPos> positions) {
+    private static ClickEvent getClickEvent(Holder<Item> tater, Set<BlockPos> positions) {
         if (positions.isEmpty()) return null;
 
         var pos = positions.iterator().next();

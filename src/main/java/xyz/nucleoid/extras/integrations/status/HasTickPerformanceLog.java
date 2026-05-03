@@ -1,7 +1,7 @@
 package xyz.nucleoid.extras.integrations.status;
 
-import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
+import net.minecraft.util.debugchart.SampleStorage;
 
 public interface HasTickPerformanceLog {
-    public MultiValueDebugSampleLog getTickPerformanceLog();
+    public SampleStorage getTickPerformanceLog();
 }

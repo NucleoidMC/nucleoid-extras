@@ -5,25 +5,24 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.dialog.type.Dialog;
-import net.minecraft.registry.MutableRegistry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryLoader;
-import net.minecraft.registry.RegistryOps;
-import net.minecraft.resource.ResourceManager;
 import xyz.nucleoid.extras.dialog.NEDialogs;
 
 import java.util.Map;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.dialog.Dialog;
+import net.minecraft.server.packs.resources.ResourceManager;
 
-@Mixin(RegistryLoader.class)
+@Mixin(RegistryDataLoader.class)
 public class RegistryLoaderMixin {
     @SuppressWarnings("unchecked")
-    @Inject(method = "loadFromResource(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/registry/RegistryOps$RegistryInfoGetter;Lnet/minecraft/registry/MutableRegistry;Lcom/mojang/serialization/Decoder;Ljava/util/Map;)V", at = @At("HEAD"))
-    private static void registerNucleoidExtrasDialogs(ResourceManager resourceManager, RegistryOps.RegistryInfoGetter infoGetter, MutableRegistry<?> registry, Decoder<?> elementDecoder, Map<RegistryKey<?>, Exception> errors, CallbackInfo ci) {
-        if (registry.getKey() == RegistryKeys.DIALOG) {
-            NEDialogs.register((MutableRegistry<Dialog>) registry);
+    @Inject(method = "loadContentsFromManager(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;Lnet/minecraft/core/WritableRegistry;Lcom/mojang/serialization/Decoder;Ljava/util/Map;)V", at = @At("HEAD"))
+    private static void registerNucleoidExtrasDialogs(ResourceManager resourceManager, RegistryOps.RegistryInfoLookup infoGetter, WritableRegistry<?> registry, Decoder<?> elementDecoder, Map<ResourceKey<?>, Exception> errors, CallbackInfo ci) {
+        if (registry.key() == Registries.DIALOG) {
+            NEDialogs.register((WritableRegistry<Dialog>) registry);
         }
     }
 }

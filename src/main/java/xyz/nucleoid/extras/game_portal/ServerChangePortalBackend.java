@@ -4,13 +4,13 @@ import com.google.common.io.ByteStreams;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.ItemStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.network.BungeeCordPayload;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
@@ -32,20 +32,20 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     private static boolean lastFailed = false;
 
     private final ItemStack icon;
-    private final Text name;
-    private final MutableText hologramName;
-    private final List<Text> description;
+    private final Component name;
+    private final MutableComponent hologramName;
+    private final List<Component> description;
     private final String serverId;
     private int cachedPlayerCount = 0;
     private int lastUpdate = 0;
     private boolean waitingForUpdate;
 
-    public ServerChangePortalBackend(Text name, List<Text> description, ItemStack icon, String serverId) {
+    public ServerChangePortalBackend(Component name, List<Component> description, ItemStack icon, String serverId) {
         this.name = name;
         var hologramName = name.copy();
 
         if (hologramName.getStyle().getColor() == null) {
-            hologramName.setStyle(hologramName.getStyle().withColor(Formatting.AQUA));
+            hologramName.setStyle(hologramName.getStyle().withColor(ChatFormatting.AQUA));
         }
 
         this.hologramName = hologramName;
@@ -57,13 +57,13 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
 
     public static void tick(MinecraftServer server) {
         try {
-            var players = server.getPlayerManager().getPlayerList();
+            var players = server.getPlayerList().getPlayers();
 
-            if (players.isEmpty() || server.getTicks() % 200 != 0) {
+            if (players.isEmpty() || server.getTickCount() % 200 != 0) {
                 return;
             }
 
-            var random = players.get(Random.create().nextInt(players.size()));
+            var random = players.get(RandomSource.create().nextInt(players.size()));
 
             for (var key : ID_TO_PORTAL.keySet()) {
                 var buf = ByteStreams.newDataOutput();
@@ -108,12 +108,12 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public Text getName() {
+    public Component getName() {
         return this.name;
     }
 
     @Override
-    public List<Text> getDescription() {
+    public List<Component> getDescription() {
         return this.description;
     }
 
@@ -154,7 +154,7 @@ public final class ServerChangePortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public void applyTo(ServerPlayerEntity player, boolean alt) {
+    public void applyTo(ServerPlayer player, boolean alt) {
         var buf = ByteStreams.newDataOutput();
         buf.writeUTF("Connect");
         buf.writeUTF(this.serverId);

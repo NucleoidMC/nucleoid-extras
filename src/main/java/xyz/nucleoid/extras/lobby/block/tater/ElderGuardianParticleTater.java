@@ -1,9 +1,9 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.core.particles.ParticleTypes;
 
 public class ElderGuardianParticleTater extends CubicPotatoBlock {
-	public ElderGuardianParticleTater(Settings settings, String texture) {
+	public ElderGuardianParticleTater(Properties settings, String texture) {
 		super(settings, ParticleTypes.ELDER_GUARDIAN, texture, 10000);
 	}
 

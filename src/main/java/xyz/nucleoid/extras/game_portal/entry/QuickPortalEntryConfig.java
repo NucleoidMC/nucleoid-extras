@@ -2,9 +2,6 @@ package xyz.nucleoid.extras.game_portal.entry;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalManager;
@@ -12,19 +9,22 @@ import xyz.nucleoid.plasmid.impl.portal.menu.*;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public record QuickPortalEntryConfig(
-        Identifier portal,
-        Identifier quickPortal,
-        Text message,
-        Optional<Text> name,
-        Optional<List<Text>> description,
+        ResourceLocation portal,
+        ResourceLocation quickPortal,
+        Component message,
+        Optional<Component> name,
+        Optional<List<Component>> description,
         Optional<ItemStack> icon
 ) implements MenuEntryConfig {
     public static final MapCodec<QuickPortalEntryConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Identifier.CODEC.fieldOf("portal").forGetter(QuickPortalEntryConfig::portal),
-            Identifier.CODEC.fieldOf("quick_portal").forGetter(QuickPortalEntryConfig::quickPortal),
-            PlasmidCodecs.TEXT.fieldOf("message").orElse(Text.translatable("text.nucleoid_extras.ui.action.more")).forGetter(QuickPortalEntryConfig::message),
+            ResourceLocation.CODEC.fieldOf("portal").forGetter(QuickPortalEntryConfig::portal),
+            ResourceLocation.CODEC.fieldOf("quick_portal").forGetter(QuickPortalEntryConfig::quickPortal),
+            PlasmidCodecs.TEXT.fieldOf("message").orElse(Component.translatable("text.nucleoid_extras.ui.action.more")).forGetter(QuickPortalEntryConfig::message),
             PlasmidCodecs.TEXT.optionalFieldOf("name").forGetter(QuickPortalEntryConfig::name),
             MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description").forGetter(QuickPortalEntryConfig::description),
             MoreCodecs.ITEM_STACK.optionalFieldOf("icon").forGetter(QuickPortalEntryConfig::icon)

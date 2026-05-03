@@ -8,12 +8,12 @@ import dev.gegy.roles.api.override.RoleOverrideReader;
 import dev.gegy.roles.api.override.RoleOverrideType;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,15 +22,15 @@ import java.util.*;
 public interface CommandSourceBuilder {
     CommandSourceBuilder INSTANCE = FabricLoader.getInstance().isModLoaded("player_roles") ? new PlayerRoles() : new Vanilla();
 
-    ServerCommandSource buildCommandSource(CommandOutput output, MinecraftServer server, String name, int permissionLevel, List<String> roles);
+    CommandSourceStack buildCommandSource(CommandSource output, MinecraftServer server, String name, int permissionLevel, List<String> roles);
 
     final class Vanilla implements CommandSourceBuilder {
         Vanilla() {
         }
 
         @Override
-        public ServerCommandSource buildCommandSource(CommandOutput output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
-            return new ServerCommandSource(output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, Text.literal(name), server, null);
+        public CommandSourceStack buildCommandSource(CommandSource output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
+            return new CommandSourceStack(output, Vec3.ZERO, Vec2.ZERO, server.overworld(), permissionLevel, name, Component.literal(name), server, null);
         }
     }
 
@@ -39,7 +39,7 @@ public interface CommandSourceBuilder {
         }
 
         @Override
-        public ServerCommandSource buildCommandSource(CommandOutput output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
+        public CommandSourceStack buildCommandSource(CommandSource output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
             var resolvedRoles = new ArrayList<Role>();
             for (var roleId : roles) {
                 var role = PlayerRolesApi.provider().get(roleId);
@@ -87,7 +87,7 @@ public interface CommandSourceBuilder {
                     return overrideReader;
                 }
             };
-            return new VirtualServerCommandSource(roleReader, output, Vec3d.ZERO, Vec2f.ZERO, server.getOverworld(), permissionLevel, name, Text.literal(name), server, null);
+            return new VirtualServerCommandSource(roleReader, output, Vec3.ZERO, Vec2.ZERO, server.overworld(), permissionLevel, name, Component.literal(name), server, null);
         }
     }
 }

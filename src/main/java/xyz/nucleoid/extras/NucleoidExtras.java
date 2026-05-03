@@ -6,12 +6,12 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
@@ -76,7 +76,7 @@ public final class NucleoidExtras implements ModInitializer {
     }
 
     private static void onServerStopped(MinecraftServer server) {
-        if (!server.isDedicated()) {
+        if (!server.isDedicatedServer()) {
             return;
         }
 
@@ -108,15 +108,15 @@ public final class NucleoidExtras implements ModInitializer {
         thread.start();
     }
 
-    private static void onPlayerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+    private static void onPlayerJoin(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
         Calendar calendar = Calendar.getInstance();
         for (WrappedEvent event : NucleoidExtrasConfig.get().wrappedEvents()) {
             if (event.isDuring(calendar)) {
-                handler.getPlayer().sendMessage(
-                    Text.translatable("text.nucleoid_extras.wrapped.join", event.year())
-                        .formatted(Formatting.GREEN)
-                        .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
-                             URI.create("https://stats.nucleoid.xyz/players/" + handler.getPlayer().getUuidAsString() + "/wrapped?year=" + event.year())
+                handler.getPlayer().sendSystemMessage(
+                    Component.translatable("text.nucleoid_extras.wrapped.join", event.year())
+                        .withStyle(ChatFormatting.GREEN)
+                        .withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+                             URI.create("https://stats.nucleoid.xyz/players/" + handler.getPlayer().getStringUUID() + "/wrapped?year=" + event.year())
                         )))
                 );
             }
@@ -124,7 +124,7 @@ public final class NucleoidExtras implements ModInitializer {
     }
 
     private static void onServerTick(MinecraftServer server) {
-        int ticks = server.getTicks();
+        int ticks = server.getTickCount();
         var config = NucleoidExtrasConfig.get();
         if (config.sidebar()) {
             NucleoidSidebar.get().update(ticks, server, config);
@@ -138,7 +138,7 @@ public final class NucleoidExtras implements ModInitializer {
         ServerChangePortalBackend.tick(server);
     }
 
-    public static Identifier identifier(String path) {
-        return Identifier.of(ID, path);
+    public static ResourceLocation identifier(String path) {
+        return ResourceLocation.fromNamespaceAndPath(ID, path);
     }
 }

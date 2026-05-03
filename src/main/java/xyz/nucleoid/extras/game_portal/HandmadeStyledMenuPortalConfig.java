@@ -3,12 +3,12 @@ package xyz.nucleoid.extras.game_portal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenTexts;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
 import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public record HandmadeStyledMenuPortalConfig(
-        Text name,
-        Optional<Text> uiTitle,
-        List<Text> description,
+        Component name,
+        Optional<Component> uiTitle,
+        List<Component> description,
         ItemStack icon,
         Map<Point, MenuEntryConfig> entries,
         CustomValuesConfig custom
@@ -32,7 +32,7 @@ public record HandmadeStyledMenuPortalConfig(
 
     public static final MapCodec<HandmadeStyledMenuPortalConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
-                PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(HandmadeStyledMenuPortalConfig::name),
+                PlasmidCodecs.TEXT.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(HandmadeStyledMenuPortalConfig::name),
                 PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(HandmadeStyledMenuPortalConfig::uiTitle),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(HandmadeStyledMenuPortalConfig::description),
                 MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(HandmadeStyledMenuPortalConfig::icon),
@@ -42,12 +42,12 @@ public record HandmadeStyledMenuPortalConfig(
     });
 
     @Override
-    public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
-        Text name;
-        if (this.name != null && this.name != ScreenTexts.EMPTY) {
+    public GamePortalBackend createBackend(MinecraftServer server, ResourceLocation id) {
+        Component name;
+        if (this.name != null && this.name != CommonComponents.EMPTY) {
             name = this.name;
         } else {
-            name = Text.literal(id.toString());
+            name = Component.literal(id.toString());
         }
 
         return new HandmadeStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon, this.entries);

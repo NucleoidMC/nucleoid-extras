@@ -1,12 +1,12 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.inventory.ContainerLock;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.LockCode;
 
 public interface ContainerLockAccess {
-    ContainerLock getContainerLock();
+    LockCode getContainerLock();
 
-    void setContainerLock(ContainerLock lock);
+    void setContainerLock(LockCode lock);
 
-    Text getContainerLockName();
+    Component getContainerLockName();
 }

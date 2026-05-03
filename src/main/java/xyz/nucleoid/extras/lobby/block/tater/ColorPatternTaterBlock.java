@@ -1,23 +1,22 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-
 import java.util.Arrays;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 
 public class ColorPatternTaterBlock extends CubicPotatoBlock {
-    private final ParticleEffect[] particleEffects;
+    private final ParticleOptions[] particleEffects;
 
-    public ColorPatternTaterBlock(Settings settings, int[] pattern, String texture) {
-        super(settings, (ParticleEffect) null, texture);
+    public ColorPatternTaterBlock(Properties settings, int[] pattern, String texture) {
+        super(settings, (ParticleOptions) null, texture);
 
         this.particleEffects = Arrays.stream(pattern).mapToObj(color ->
-            new DustParticleEffect(color, 1)
-        ).toArray(ParticleEffect[]::new);
+            new DustParticleOptions(color, 1)
+        ).toArray(ParticleOptions[]::new);
     }
 
     @Override
-    public ParticleEffect getParticleEffect(int time) {
+    public ParticleOptions getParticleEffect(int time) {
         return this.particleEffects[(time / 10) % this.particleEffects.length];
     }
 }

@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.mixin.player_list;
 
-import net.minecraft.scoreboard.ServerScoreboard;
-import net.minecraft.scoreboard.Team;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerScoreboard;
+import net.minecraft.world.scores.PlayerTeam;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,26 +18,26 @@ public class ServerScoreboardMixin {
     @Final
     private MinecraftServer server;
 
-    @Inject(method = "addScoreHolderToTeam", at = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/ServerScoreboard;runUpdateListeners()V", shift = At.Shift.AFTER))
-    private void extras$updatePlayerAfterJoining(String playerName, Team team, CallbackInfoReturnable<Boolean> cir) {
-        var player = this.server.getPlayerManager().getPlayer(playerName);
+    @Inject(method = "addPlayerToTeam", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/ServerScoreboard;setDirty()V", shift = At.Shift.AFTER))
+    private void extras$updatePlayerAfterJoining(String playerName, PlayerTeam team, CallbackInfoReturnable<Boolean> cir) {
+        var player = this.server.getPlayerList().getPlayerByName(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
         }
     }
 
-    @Inject(method = "removeScoreHolderFromTeam", at = @At("TAIL"))
-    private void extras$updatePlayerAfterLeaving(String playerName, Team team, CallbackInfo ci) {
-        var player = this.server.getPlayerManager().getPlayer(playerName);
+    @Inject(method = "removePlayerFromTeam(Ljava/lang/String;Lnet/minecraft/world/scores/PlayerTeam;)V", at = @At("TAIL"))
+    private void extras$updatePlayerAfterLeaving(String playerName, PlayerTeam team, CallbackInfo ci) {
+        var player = this.server.getPlayerList().getPlayerByName(playerName);
         if (player != null) {
             PlayerListHelper.updatePlayer(player);
         }
     }
 
-    @Inject(method = "updateRemovedTeam", at = @At("TAIL"))
-    private void extras$updatePlayerAfterRemovingTeam(Team team, CallbackInfo ci) {
-        for (var playerName : team.getPlayerList()) {
-            var player = this.server.getPlayerManager().getPlayer(playerName);
+    @Inject(method = "onTeamRemoved", at = @At("TAIL"))
+    private void extras$updatePlayerAfterRemovingTeam(PlayerTeam team, CallbackInfo ci) {
+        for (var playerName : team.getPlayers()) {
+            var player = this.server.getPlayerList().getPlayerByName(playerName);
             if (player != null) {
                 PlayerListHelper.updatePlayer(player);
             }

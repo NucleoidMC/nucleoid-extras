@@ -1,29 +1,29 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import com.mojang.math.Axis;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.RotationPropertyHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.RotationSegment;
+import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.util.SkinEncoder;
@@ -33,46 +33,46 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
     private final ItemStack upStack;
     private final ItemStack downStack;
 
-    public BotanicalPotatoBlock(Settings settings, String upperTexture, String lowerTexture, ParticleEffect particleEffect, int particleRate) {
-        super(settings.nonOpaque(), upperTexture, particleEffect, particleRate);
+    public BotanicalPotatoBlock(Properties settings, String upperTexture, String lowerTexture, ParticleOptions particleEffect, int particleRate) {
+        super(settings.noOcclusion(), upperTexture, particleEffect, particleRate);
         this.upStack = PolymerUtils.createPlayerHead(this.getItemTexture());
         this.downStack = PolymerUtils.createPlayerHead(SkinEncoder.encode(lowerTexture));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Properties.ROTATION);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(BlockStateProperties.ROTATION_16);
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.ROTATION, MathHelper.floor(RotationPropertyHelper.fromYaw(ctx.getPlayerYaw())));
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(BlockStateProperties.ROTATION_16, Mth.floor(RotationSegment.convertToSegment(ctx.getRotation())));
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
-        return Blocks.BARRIER.getDefaultState();
+        return Blocks.BARRIER.defaultBlockState();
     }
 
     @Override
-    public ElementHolder createElementHolder(ServerWorld world, BlockPos pos, BlockState initialBlockState) {
+    public ElementHolder createElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
         return new Model(initialBlockState);
     }
 
     @Override
-    public boolean tickElementHolder(ServerWorld world, BlockPos pos, BlockState initialBlockState) {
+    public boolean tickElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
         return true;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
         var model = (Model) BlockBoundAttachment.get(world, pos).holder();
 
         if (model.jumpTime < 0) {
             model.jumpTime = 20;
         }
 
-        return super.onUse(state, world, pos, player, hit);
+        return super.useWithoutItem(state, world, pos, player, hit);
     }
 
     private class Model extends ElementHolder {
@@ -114,7 +114,7 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
 
         private void updateAnimation() {
             mat.identity();
-            mat.rotateY(-RotationPropertyHelper.toDegrees(state.get(Properties.ROTATION)) * MathHelper.RADIANS_PER_DEGREE);
+            mat.rotateY(-RotationSegment.convertToDegrees(state.getValue(BlockStateProperties.ROTATION_16)) * Mth.DEG_TO_RAD);
 
             if (this.jumpTime > 0) {
                 // Math stolen from botania™
@@ -124,9 +124,9 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
                 float wiggle = (float) Math.sin(this.jumpTime / 10f * Math.PI) * 0.05F;
 
                 mat.translate(wiggle, up, 0F);
-                mat.rotate(RotationAxis.POSITIVE_Z.rotationDegrees(rotZ));
+                mat.rotate(Axis.ZP.rotationDegrees(rotZ));
             }
-            mat.rotateY(MathHelper.PI);
+            mat.rotateY(Mth.PI);
 
             this.upPart.setTransformation(mat);
             mat.translate(new Vector3f(0, -0.25f, 0));

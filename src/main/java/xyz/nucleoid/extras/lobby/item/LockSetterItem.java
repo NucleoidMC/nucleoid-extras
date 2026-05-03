@@ -1,71 +1,71 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ContainerLock;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
-import net.minecraft.predicate.NumberRange.IntRange;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds.Ints;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.LockCode;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
 import xyz.nucleoid.extras.lobby.block.ContainerLockAccess;
 
 public class LockSetterItem extends SimplePolymerItem {
-    public LockSetterItem(Settings settings) {
+    public LockSetterItem(Properties settings) {
         super(settings, Items.TRIAL_KEY, false);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        var world = context.getWorld();
+    public InteractionResult useOn(UseOnContext context) {
+        var world = context.getLevel();
         var user = context.getPlayer();
 
-        if (!world.isClient() && user.isCreativeLevelTwoOp()) {
-            var stack = context.getStack();
-            var newLock = stack.get(DataComponentTypes.LOCK);
+        if (!world.isClientSide() && user.canUseGameMasterBlocks()) {
+            var stack = context.getItemInHand();
+            var newLock = stack.get(DataComponents.LOCK);
 
             if (newLock != null) {
-                var pos = context.getBlockPos();
+                var pos = context.getClickedPos();
                 var blockEntity = world.getBlockEntity(pos);
 
                 if (blockEntity instanceof ContainerLockAccess access) {
                     var currentLock = access.getContainerLock();
 
-                    if (currentLock == ContainerLock.EMPTY) {
+                    if (currentLock == LockCode.NO_LOCK) {
                         access.setContainerLock(newLock);
                         sendFeedback(user, access, "locked");
                     } else if (!newLock.equals(currentLock)) {
                         sendFeedback(user, access, "already_locked");
-                        return ActionResult.FAIL;
+                        return InteractionResult.FAIL;
                     } else {
-                        access.setContainerLock(ContainerLock.EMPTY);
+                        access.setContainerLock(LockCode.NO_LOCK);
                         sendFeedback(user, access, "unlocked");
                     }
 
-                    return ActionResult.SUCCESS_SERVER;
+                    return InteractionResult.SUCCESS_SERVER;
                 }
             }
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    private static void sendFeedback(PlayerEntity player, ContainerLockAccess access, String suffix) {
-        var text = Text.translatable("text.nucleoid_extras.lock_setter." + suffix, access.getContainerLockName());
-        player.sendMessage(text, true);
+    private static void sendFeedback(Player player, ContainerLockAccess access, String suffix) {
+        var text = Component.translatable("text.nucleoid_extras.lock_setter." + suffix, access.getContainerLockName());
+        player.displayClientMessage(text, true);
 
-        player.playSoundToPlayer(SoundEvents.BLOCK_CHEST_LOCKED, SoundCategory.BLOCKS, 1, 1);
+        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1, 1);
     }
 
-    public static ContainerLock createUnlockableLock() {
-        var predicate = ItemPredicate.Builder.create()
-                .count(IntRange.exactly(-1))
+    public static LockCode createUnlockableLock() {
+        var predicate = ItemPredicate.Builder.item()
+                .withCount(Ints.exactly(-1))
                 .build();
 
-        return new ContainerLock(predicate);
+        return new LockCode(predicate);
     }
 }

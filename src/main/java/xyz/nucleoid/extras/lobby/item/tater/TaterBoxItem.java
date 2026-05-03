@@ -3,30 +3,44 @@ package xyz.nucleoid.extras.lobby.item.tater;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
-import net.minecraft.block.Block;
-import net.minecraft.component.DataComponentTypes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.component.type.*;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.equipment.Equippable;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.component.TaterSelectionComponent;
 import xyz.nucleoid.extras.lobby.NEItems;
@@ -43,67 +57,67 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class TaterBoxItem extends Item implements PolymerItem {
-    private static final Text NOT_OWNER_MESSAGE = Text.translatable("text.nucleoid_extras.tater_box.not_owner").formatted(Formatting.RED);
-    public static final Text NONE_TEXT = Text.translatable("text.nucleoid_extras.tater_box.none");
+    private static final Component NOT_OWNER_MESSAGE = Component.translatable("text.nucleoid_extras.tater_box.not_owner").withStyle(ChatFormatting.RED);
+    public static final Component NONE_TEXT = Component.translatable("text.nucleoid_extras.tater_box.none");
 
     private static final String LEGACY_TATERS_KEY = "Taters";
     private static final int COLOR = 0xCEADAA;
 
-    public TaterBoxItem(Settings settings) {
-        super(settings.component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.HEAD)
-                .equipSound(SoundEvents.ITEM_ARMOR_EQUIP_LEATHER)
+    public TaterBoxItem(Properties settings) {
+        super(settings.component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.HEAD)
+                .setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER)
                 .build()));
     }
 
-    private MutableText getTitle(ServerPlayerEntity player) {
-        Text name = this.getName();
+    private MutableComponent getTitle(ServerPlayer player) {
+        Component name = this.getName();
         int count = PlayerLobbyState.get(player).collectedTaters.size();
-        long max = getCollectableTaterCount(player.getRegistryManager());
+        long max = getCollectableTaterCount(player.registryAccess());
 
-        return Text.translatable("text.nucleoid_extras.tater_box.title", name, count, max);
+        return Component.translatable("text.nucleoid_extras.tater_box.title", name, count, max);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        ItemStack stack = user.getItemInHand(hand);
 
-        if (!user.getEntityWorld().isClient()) {
-            this.openTaterBox((ServerPlayerEntity) user, stack, hand);
+        if (!user.level().isClientSide()) {
+            this.openTaterBox((ServerPlayer) user, stack, hand);
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
-    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType == ClickType.RIGHT && !player.getEntityWorld().isClient()) {
-            this.openTaterBox((ServerPlayerEntity) player, stack, null);
+    public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack otherStack, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference) {
+        if (clickType == ClickAction.SECONDARY && !player.level().isClientSide()) {
+            this.openTaterBox((ServerPlayer) player, stack, null);
             return true;
         }
 
         return false;
     }
 
-    private void openTaterBox(ServerPlayerEntity user, ItemStack stack, Hand hand) {
+    private void openTaterBox(ServerPlayer user, ItemStack stack, InteractionHand hand) {
         if (NEItems.canUseTaters(user)) {
             this.migrateCollectedTaters(user, stack);
             this.openTaterBoxUi(user, stack, hand);
         }
     }
 
-    private void migrateCollectedTaters(ServerPlayerEntity user, ItemStack stack) {
-        if (stack.contains(DataComponentTypes.CUSTOM_DATA)) {
-            stack.apply(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT, customData -> {
-                if (!customData.copyNbt().contains(LEGACY_TATERS_KEY)) {
+    private void migrateCollectedTaters(ServerPlayer user, ItemStack stack) {
+        if (stack.has(DataComponents.CUSTOM_DATA)) {
+            stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, customData -> {
+                if (!customData.copyTag().contains(LEGACY_TATERS_KEY)) {
                     return customData;
                 }
 
-                return customData.apply(nbt -> {
+                return customData.update(nbt -> {
                     var data = PlayerLobbyState.get(user);
 
                     for (var e : nbt.getListOrEmpty(LEGACY_TATERS_KEY)) {
-                        if (e instanceof NbtString entry) {
-                            var block = Registries.BLOCK.get(Identifier.tryParse(entry.value()));
+                        if (e instanceof StringTag entry) {
+                            var block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(entry.value()));
 
                             if (block instanceof TinyPotatoBlock tinyPotatoBlock) {
                                 data.collectedTaters.add(tinyPotatoBlock);
@@ -112,14 +126,14 @@ public class TaterBoxItem extends Item implements PolymerItem {
                     }
 
                     nbt.remove(LEGACY_TATERS_KEY);
-                    user.sendMessage(Text.translatable("text.nucleoid_extras.tater_box.updated"));
+                    user.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.updated"));
                 });
             });
         }
     }
 
-    private void openTaterBoxUi(ServerPlayerEntity user, ItemStack stack, Hand hand) {
-        if (stack.contains(NEDataComponentTypes.TATER_SELECTION)) {
+    private void openTaterBoxUi(ServerPlayer user, ItemStack stack, InteractionHand hand) {
+        if (stack.has(NEDataComponentTypes.TATER_SELECTION)) {
             var state = PlayerLobbyState.get(user);
             List<GuiElementInterface> taters = new ArrayList<>();
 
@@ -129,7 +143,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
                 .map(tater -> {
                     boolean found = state.collectedTaters.contains(tater);
 
-                    return createGuiElement(stack, user, hand, tater, tater.getName(), tater.getRegistryEntry(), found, tater.isCollectable());
+                    return createGuiElement(stack, user, hand, tater, tater.getName(), tater.builtInRegistryHolder(), found, tater.isCollectable());
                 })
                 .forEachOrdered(taters::add);
 
@@ -138,15 +152,15 @@ public class TaterBoxItem extends Item implements PolymerItem {
             ui.setTitle(this.getTitle(user));
             ui.open();
 
-            EquippableComponent equippable = stack.get(DataComponentTypes.EQUIPPABLE);
+            Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
 
             if (equippable != null) {
-                user.networkHandler.sendPacket(new PlaySoundS2CPacket(equippable.equipSound(), SoundCategory.PLAYERS, user.getX(), user.getY(), user.getZ(), 0.8f, 1, user.getRandom().nextLong()));
+                user.connection.send(new ClientboundSoundPacket(equippable.equipSound(), SoundSource.PLAYERS, user.getX(), user.getY(), user.getZ(), 0.8f, 1, user.getRandom().nextLong()));
             }
         }
     }
 
-    private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, PlayerEntity user, Hand hand, ItemConvertible icon, Text text, RegistryEntry<Block> tater, boolean found, boolean collectable) {
+    private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, Player user, InteractionHand hand, ItemLike icon, Component text, Holder<Block> tater, boolean found, boolean collectable) {
         var guiElementBuilder = new TaterBoxGui.TaterGuiElementBuilder(icon.asItem());
         guiElementBuilder.setName(text);
         guiElementBuilder.setRarity(Rarity.COMMON);
@@ -154,9 +168,9 @@ public class TaterBoxItem extends Item implements PolymerItem {
         guiElementBuilder.setCollectable(collectable);
         guiElementBuilder.hideDefaultTooltip();
         guiElementBuilder.setCallback((index, type, action, gui) -> {
-            ItemStack newStack = hand == null ? stack : user.getStackInHand(hand);
+            ItemStack newStack = hand == null ? stack : user.getItemInHand(hand);
             if (found && this == newStack.getItem()) {
-                newStack.apply(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT, taterSelection -> taterSelection.selected(tater));
+                newStack.update(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT, taterSelection -> taterSelection.selected(tater));
                 gui.close();
             }
         });
@@ -193,30 +207,30 @@ public class TaterBoxItem extends Item implements PolymerItem {
     @Override
     public void modifyBasePolymerItemStack(ItemStack out, ItemStack itemStack, PacketContext context) {
         PolymerItem.super.modifyBasePolymerItemStack(out, itemStack, context);
-        Optional<RegistryEntry<Block>> selectedTater = itemStack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
+        Optional<Holder<Block>> selectedTater = itemStack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
         if (selectedTater.isPresent() && selectedTater.get().value() instanceof TinyPotatoBlock potatoBlock) {
-            ProfileComponent profile = PolymerUtils.createProfileComponent(potatoBlock.getItemTexture());
-            out.set(DataComponentTypes.PROFILE, profile);
+            ResolvableProfile profile = PolymerUtils.createProfileComponent(potatoBlock.getItemTexture());
+            out.set(DataComponents.PROFILE, profile);
         } else {
-            out.set(DataComponentTypes.DYED_COLOR, new DyedColorComponent(this.getEmptyColor()));
-            out.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
-            out.set(DataComponentTypes.EQUIPPABLE, Items.LEATHER_HELMET.getComponents().get(DataComponentTypes.EQUIPPABLE));
+            out.set(DataComponents.DYED_COLOR, new DyedItemColor(this.getEmptyColor()));
+            out.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+            out.set(DataComponents.EQUIPPABLE, Items.LEATHER_HELMET.components().get(DataComponents.EQUIPPABLE));
         }
     }
 
     @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
         return null;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
 
         var owner = PacketContext.get();
 
-        Optional<RegistryEntry<Block>> selectedBlock = stack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
-        Text selectedName;
+        Optional<Holder<Block>> selectedBlock = stack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
+        Component selectedName;
 
         if (selectedBlock.isPresent()) {
             selectedName = selectedBlock.get().value().getName();
@@ -224,31 +238,31 @@ public class TaterBoxItem extends Item implements PolymerItem {
             selectedName = NONE_TEXT;
         }
 
-        textConsumer.accept(Text.translatable("text.nucleoid_extras.tater_box.selected", selectedName).formatted(Formatting.GRAY));
+        textConsumer.accept(Component.translatable("text.nucleoid_extras.tater_box.selected", selectedName).withStyle(ChatFormatting.GRAY));
 
         int count = owner != null && owner.getPlayer() != null ? PlayerLobbyState.get(owner.getPlayer()).collectedTaters.size() : 0;
-        long max = getCollectableTaterCount(context.getRegistryLookup());
+        long max = getCollectableTaterCount(context.registries());
         String percent = String.format("%.2f", max == 0 ? 0 : count / (double) max * 100);
 
-        textConsumer.accept(Text.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).formatted(Formatting.GRAY));
+        textConsumer.accept(Component.translatable("text.nucleoid_extras.tater_box.completion", count, max, percent).withStyle(ChatFormatting.GRAY));
     }
 
-    public static Stream<TinyPotatoBlock> getCollectableTaters(RegistryWrapper.WrapperLookup registries) {
+    public static Stream<TinyPotatoBlock> getCollectableTaters(HolderLookup.Provider registries) {
         return registries
-            .getOrThrow(RegistryKeys.BLOCK)
-            .getOptional(NEBlockTags.COLLECTABLE_TATERS)
-            .map(RegistryEntryList::stream)
+            .lookupOrThrow(Registries.BLOCK)
+            .get(NEBlockTags.COLLECTABLE_TATERS)
+            .map(HolderSet::stream)
             .orElseGet(Stream::empty)
-            .map(RegistryEntry::value)
+            .map(Holder::value)
             .filter(block -> block instanceof TinyPotatoBlock)
             .map(block -> (TinyPotatoBlock) block);
     }
 
-    public static long getCollectableTaterCount(RegistryWrapper.WrapperLookup registries) {
+    public static long getCollectableTaterCount(HolderLookup.Provider registries) {
         return getCollectableTaters(registries).count();
     }
 
-    public static Stream<TinyPotatoBlock> getSortedTaterStream(ServerPlayerEntity player) {
+    public static Stream<TinyPotatoBlock> getSortedTaterStream(ServerPlayer player) {
         return TinyPotatoBlock.TATERS.stream()
             .sorted(Comparator.comparing(tater -> {
                 if (!(tater instanceof CorruptaterBlock)) {
@@ -259,7 +273,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
                     }
                 }
 
-                return Registries.BLOCK.getId(tater).getPath();
+                return BuiltInRegistries.BLOCK.getKey(tater).getPath();
             }, String.CASE_INSENSITIVE_ORDER));
     }
 }

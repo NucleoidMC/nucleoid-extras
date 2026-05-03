@@ -2,12 +2,6 @@ package xyz.nucleoid.extras.game_portal.entry;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
@@ -15,21 +9,27 @@ import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 public record QuickPortalEntry(
     GamePortal portal,
     GamePortal quickPortal,
-    Text message,
-    Text name,
-    List<Text> description,
+    Component message,
+    Component name,
+    List<Component> description,
     ItemStack icon
 ) implements MenuEntry {
     @Override
-    public void click(ServerPlayerEntity player, boolean alt) {
+    public void click(ServerPlayer player, boolean alt) {
         this.quickPortal.requestJoin(player, alt);
     }
 
-    public void secondaryClick(ServerPlayerEntity player) {
+    public void secondaryClick(ServerPlayer player) {
         this.portal.requestJoin(player, false);
     }
 
@@ -50,14 +50,14 @@ public record QuickPortalEntry(
 
     public GuiElement createGuiElement() {
         var element = GuiElementBuilder.from(this.icon().copy())
-            .setItemName(Text.empty().append(this.name()))
+            .setItemName(Component.empty().append(this.name()))
             .hideDefaultTooltip();
 
         for (var line : this.description()) {
             var text = line.copy();
 
             if (line.getStyle().getColor() == null) {
-                text.setStyle(line.getStyle().withFormatting(Formatting.GRAY));
+                text.setStyle(line.getStyle().applyFormat(ChatFormatting.GRAY));
             }
 
             element.addLoreLine(text);
@@ -69,39 +69,39 @@ public record QuickPortalEntry(
 
         if (playerCount > -1) {
             if (allowSpace) {
-                element.addLoreLine(ScreenTexts.EMPTY);
+                element.addLoreLine(CommonComponents.EMPTY);
                 allowSpace = false;
             }
-            element.addLoreLine(Text.empty()
-                .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
-                .append(Text.translatable("text.plasmid.ui.game_join.players",
-                    Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
+            element.addLoreLine(Component.empty()
+                .append(Component.literal("» ").withStyle(ChatFormatting.DARK_GRAY))
+                .append(Component.translatable("text.plasmid.ui.game_join.players",
+                    Component.literal(playerCount + "").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GOLD))
             );
         }
 
         if (spectatorCount > -1) {
             if (allowSpace) {
-                element.addLoreLine(ScreenTexts.EMPTY);
+                element.addLoreLine(CommonComponents.EMPTY);
                 allowSpace = false;
             }
 
-            element.addLoreLine(Text.empty()
-                .append(Text.literal("» ").formatted(Formatting.DARK_GRAY))
-                .append(Text.translatable("text.plasmid.ui.game_join.spectators",
-                    Text.literal(playerCount + "").formatted(Formatting.YELLOW)).formatted(Formatting.GOLD))
+            element.addLoreLine(Component.empty()
+                .append(Component.literal("» ").withStyle(ChatFormatting.DARK_GRAY))
+                .append(Component.translatable("text.plasmid.ui.game_join.spectators",
+                    Component.literal(playerCount + "").withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GOLD))
             );
         }
 
         var actionType = this.getActionType();
 
         if (actionType != GamePortalBackend.ActionType.NONE) {
-            element.addLoreLine(Text.empty().append(Text.literal(" [ ").formatted(Formatting.GRAY))
+            element.addLoreLine(Component.empty().append(Component.literal(" [ ").withStyle(ChatFormatting.GRAY))
                 .append(actionType.text())
-                .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x76ed6f)));
+                .append(Component.literal(" ]").withStyle(ChatFormatting.GRAY)).setStyle(Style.EMPTY.withColor(0x76ed6f)));
         }
-        element.addLoreLine(Text.empty().append(Text.literal(" [ ").formatted(Formatting.GRAY))
+        element.addLoreLine(Component.empty().append(Component.literal(" [ ").withStyle(ChatFormatting.GRAY))
             .append(this.message().copy())
-            .append(Text.literal(" ]").formatted(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(0x5e8ad6)));
+            .append(Component.literal(" ]").withStyle(ChatFormatting.GRAY)).setStyle(Style.EMPTY.withColor(0x5e8ad6)));
 
         element.setCallback((index, clickType, slotActionType, gui) -> {
             if (clickType.isRight) this.secondaryClick(gui.getPlayer());

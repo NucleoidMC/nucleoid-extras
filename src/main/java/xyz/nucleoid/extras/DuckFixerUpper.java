@@ -26,8 +26,8 @@ import com.mojang.serialization.JsonOps;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.datafixer.Schemas;
-import net.minecraft.datafixer.TypeReferences;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 
 public class DuckFixerUpper implements ModInitializer {
 	private static final int DATA_VERSION_1_20_4 = 3700;
@@ -136,7 +136,7 @@ public class DuckFixerUpper implements ModInitializer {
 			JsonObject output = input.deepCopy().getAsJsonObject();
 
 			if (output.has("id") && output.has("Count")) {
-				Dynamic<JsonElement> upgradedOutput = Schemas.getFixer().update(TypeReferences.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
+				Dynamic<JsonElement> upgradedOutput = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
 				return upgradedOutput.getValue();
 			} else {
 				for (String key : output.keySet()) {

@@ -66,8 +66,8 @@ public final class PlayerStatusIntegration {
     }
 
     private void buildStatus(MinecraftServer server, Status status) {
-        var playerManager = server.getPlayerManager();
-        for (var player : playerManager.getPlayerList()) {
+        var playerManager = server.getPlayerList();
+        for (var player : playerManager.getPlayers()) {
             status.addPlayer(player.getGameProfile());
         }
     }

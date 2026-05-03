@@ -1,25 +1,25 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LightBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LightBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class LightTaterBlock extends MarkerTaterBlock {
-    public LightTaterBlock(Settings settings, String texture) {
+    public LightTaterBlock(Properties settings, String texture) {
         super(settings, Blocks.LIGHT, texture);
     }
 
     @Override
-    public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        return getLightParticle(world.getLightLevel(pos));
+    public ParticleOptions getBlockParticleEffect(BlockState state, ServerLevel world, BlockPos pos, Player player, BlockHitResult hit) {
+        return getLightParticle(world.getMaxLocalRawBrightness(pos));
     }
 
     @Override
@@ -28,17 +28,17 @@ public class LightTaterBlock extends MarkerTaterBlock {
     }
 
     @Override
-    public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
-        BlockPos pos = BlockPos.ofFloored(player.getX(), player.getY() + this.getPlayerParticleYOffset(), player.getZ());
+    public ParticleOptions getPlayerParticleEffect(ServerPlayer player) {
+        BlockPos pos = BlockPos.containing(player.getX(), player.getY() + this.getPlayerParticleYOffset(), player.getZ());
 
-        return getLightParticle(player.getEntityWorld().getLightLevel(pos));
+        return getLightParticle(player.level().getMaxLocalRawBrightness(pos));
     }
 
     private static BlockState getLightState(int level) {
-        return Blocks.LIGHT.getDefaultState().with(LightBlock.LEVEL_15, level);
+        return Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, level);
     }
 
-    private static ParticleEffect getLightParticle(int level) {
-        return new BlockStateParticleEffect(ParticleTypes.BLOCK_MARKER, getLightState(level));
+    private static ParticleOptions getLightParticle(int level) {
+        return new BlockParticleOption(ParticleTypes.BLOCK_MARKER, getLightState(level));
     }
 }

@@ -2,12 +2,12 @@ package xyz.nucleoid.extras.game_portal;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenTexts;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
 import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 public record AdvancedStyledMenuPortalConfig(
-        Text name,
-        Optional<Text> uiTitle,
-        List<Text> description,
+        Component name,
+        Optional<Component> uiTitle,
+        List<Component> description,
         ItemStack icon,
         List<MenuEntryConfig> entries,
         CustomValuesConfig custom
@@ -30,7 +30,7 @@ public record AdvancedStyledMenuPortalConfig(
 
     public static final MapCodec<AdvancedStyledMenuPortalConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> {
         return instance.group(
-                PlasmidCodecs.TEXT.optionalFieldOf("name", ScreenTexts.EMPTY).forGetter(AdvancedStyledMenuPortalConfig::name),
+                PlasmidCodecs.TEXT.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(AdvancedStyledMenuPortalConfig::name),
                 PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(AdvancedStyledMenuPortalConfig::uiTitle),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(AdvancedStyledMenuPortalConfig::description),
                 MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(AdvancedStyledMenuPortalConfig::icon),
@@ -40,12 +40,12 @@ public record AdvancedStyledMenuPortalConfig(
     });
 
     @Override
-    public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
-        Text name;
-        if (this.name != null && this.name != ScreenTexts.EMPTY) {
+    public GamePortalBackend createBackend(MinecraftServer server, ResourceLocation id) {
+        Component name;
+        if (this.name != null && this.name != CommonComponents.EMPTY) {
             name = this.name;
         } else {
-            name = Text.literal(id.toString());
+            name = Component.literal(id.toString());
         }
 
         return new AdvancedStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon, this.entries);

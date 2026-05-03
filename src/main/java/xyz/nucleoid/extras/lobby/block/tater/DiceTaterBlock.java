@@ -1,21 +1,21 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import xyz.nucleoid.extras.util.SkinEncoder;
 import xyz.nucleoid.packettweaker.PacketContext;
 
@@ -23,7 +23,7 @@ public class DiceTaterBlock extends CubicPotatoBlock {
     private static final int ROLLING_FACE = 0;
     private static final int MAX_FACE = 6;
     private static final int ROLLING_TICKS = 8;
-    private static final IntProperty FACE = IntProperty.of("face", ROLLING_FACE, MAX_FACE);
+    private static final IntegerProperty FACE = IntegerProperty.create("face", ROLLING_FACE, MAX_FACE);
     private static final String[] TEXTURES = {
         SkinEncoder.encode("b4d4126574c3dcb9847547f29f04e5df6cf0fc6d862b4abe75926f359d5d6a91"),
         SkinEncoder.encode("59b568e3d4eb5309e3660f4acfc04ecaa84825d2fe4a1312591d128b26859eaf"),
@@ -34,61 +34,61 @@ public class DiceTaterBlock extends CubicPotatoBlock {
         SkinEncoder.encode("9c40bf70f1648b7ee438a6a22904228ab5fbbd4926af30ae8ade4df01b8d7413"),
     };
 
-    public DiceTaterBlock(Settings settings) {
+    public DiceTaterBlock(Properties settings) {
         super(settings, ParticleTypes.POOF, TEXTURES[6]);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(FACE, 1));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACE, 1));
     }
 
     private boolean isRolling(BlockState state) {
-        return state.get(FACE) == ROLLING_FACE;
+        return state.getValue(FACE) == ROLLING_FACE;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
         if (this.isRolling(state)) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
-        if (world instanceof ServerWorld) {
-            world.setBlockState(pos, state.with(FACE, ROLLING_FACE));
-            world.scheduleBlockTick(pos, this, ROLLING_TICKS);
+        if (world instanceof ServerLevel) {
+            world.setBlockAndUpdate(pos, state.setValue(FACE, ROLLING_FACE));
+            world.scheduleTick(pos, this, ROLLING_TICKS);
 
             float pitch = 1.6f + world.getRandom().nextFloat() * 0.4f;
-            world.playSound(null, pos, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundCategory.BLOCKS, 1, pitch);
+            world.playSound(null, pos, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, SoundSource.BLOCKS, 1, pitch);
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (this.isRolling(state)) {
             int face = world.getRandom().nextInt(MAX_FACE) + 1;
-            world.setBlockState(pos, state.with(FACE, face));
+            world.setBlockAndUpdate(pos, state.setValue(FACE, face));
         }
     }
 
     @Override
-    public boolean hasComparatorOutput(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
-        int face = state.get(FACE);
-        return MathHelper.floor(face / 6f * 15f);
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos, Direction direction) {
+        int face = state.getValue(FACE);
+        return Mth.floor(face / 6f * 15f);
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACE);
     }
 
     @Override
     public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
-        int face = state.get(FACE);
+        int face = state.getValue(FACE);
         return TEXTURES[face];
     }
 }

@@ -2,14 +2,14 @@ package xyz.nucleoid.extras.sidebar;
 
 import eu.pb4.sidebars.api.Sidebar;
 import eu.pb4.sidebars.api.lines.LineBuilder;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.scoreboard.number.BlankNumberFormat;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.numbers.BlankFormat;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
@@ -23,7 +23,7 @@ import java.util.List;
 public final class NucleoidSidebar {
     private static NucleoidSidebar instance;
 
-    public static final RegistryKey<World> DIMENSION = World.OVERWORLD;
+    public static final ResourceKey<Level> DIMENSION = Level.OVERWORLD;
 
     private static final Style MAIN_TITLE_STYLE = Style.EMPTY.withColor(0x800080).withBold(true);
     private static final Style FLASH_TITLE_STYLE = Style.EMPTY.withColor(0xffffff);
@@ -35,33 +35,33 @@ public final class NucleoidSidebar {
     private static final Style LINK_STYLE = Style.EMPTY.withColor(0x94eeff);
 
     private static final String NAME = "Nucleoid";
-    private static final Text DEV_TITLE = Text.literal(" (DEV)").setStyle(Style.EMPTY.withColor(0xbf0059));
+    private static final Component DEV_TITLE = Component.literal(" (DEV)").setStyle(Style.EMPTY.withColor(0xbf0059));
 
-    private static final Text NAME_APPEND = Text.literal(".xyz").setStyle(Style.EMPTY.withColor(Formatting.WHITE).withBold(false));
+    private static final Component NAME_APPEND = Component.literal(".xyz").setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withBold(false));
 
-    private static final Text TITLE_MAIN = Text.literal(NAME).setStyle(MAIN_TITLE_STYLE).append(NAME_APPEND);
-    private static final Text TITLE_ALT = Text.literal(NAME).setStyle(ALT_TITLE_STYLE).append(NAME_APPEND);
+    private static final Component TITLE_MAIN = Component.literal(NAME).setStyle(MAIN_TITLE_STYLE).append(NAME_APPEND);
+    private static final Component TITLE_ALT = Component.literal(NAME).setStyle(ALT_TITLE_STYLE).append(NAME_APPEND);
 
 
-    private static final Text[] TITLE_ANIMATION_1 = createAnimatedTitle(NAME, NAME_APPEND, MAIN_TITLE_STYLE, FLASH_TITLE_STYLE, ALT_TITLE_STYLE);
-    private static final Text[] TITLE_ANIMATION_2 = createAnimatedTitle(NAME, NAME_APPEND, ALT_TITLE_STYLE, FLASH_TITLE_STYLE, MAIN_TITLE_STYLE);
+    private static final Component[] TITLE_ANIMATION_1 = createAnimatedTitle(NAME, NAME_APPEND, MAIN_TITLE_STYLE, FLASH_TITLE_STYLE, ALT_TITLE_STYLE);
+    private static final Component[] TITLE_ANIMATION_2 = createAnimatedTitle(NAME, NAME_APPEND, ALT_TITLE_STYLE, FLASH_TITLE_STYLE, MAIN_TITLE_STYLE);
     private static final int TITLE_SIZE = NAME.length();
 
-    private static final Text SIZE_FORCING_TEXT = Text.literal(" ".repeat(34));
+    private static final Component SIZE_FORCING_TEXT = Component.literal(" ".repeat(34));
 
     private final boolean enabled = NucleoidExtrasConfig.get().sidebar();
 
-    private static Text[] createAnimatedTitle(String string, Text append, Style leftStyle, Style middleStyle, Style rightStyle) {
-        List<Text> texts = new ArrayList<>();
+    private static Component[] createAnimatedTitle(String string, Component append, Style leftStyle, Style middleStyle, Style rightStyle) {
+        List<Component> texts = new ArrayList<>();
 
         for (int x = 0; x < string.length(); x++) {
-            texts.add(Text.literal(x == 0 ? "" : string.substring(0, x)).setStyle(leftStyle).append(
-                    Text.literal(string.substring(x, x + 1)).setStyle(middleStyle))
-                    .append(Text.literal(string.substring(x + 1)).setStyle(rightStyle))
+            texts.add(Component.literal(x == 0 ? "" : string.substring(0, x)).setStyle(leftStyle).append(
+                    Component.literal(string.substring(x, x + 1)).setStyle(middleStyle))
+                    .append(Component.literal(string.substring(x + 1)).setStyle(rightStyle))
                     .append(append)
             );
         }
-        return texts.toArray(new Text[0]);
+        return texts.toArray(new Component[0]);
     }
 
     private final Sidebar widget;
@@ -69,7 +69,7 @@ public final class NucleoidSidebar {
 
     private NucleoidSidebar() {
         this.widget = new Sidebar(TITLE_MAIN, Sidebar.Priority.LOW);
-        this.widget.setDefaultNumberFormat(BlankNumberFormat.INSTANCE);
+        this.widget.setDefaultNumberFormat(BlankFormat.INSTANCE);
         this.widget.show();
     }
 
@@ -83,7 +83,7 @@ public final class NucleoidSidebar {
     public void update(long ticks, MinecraftServer server, NucleoidExtrasConfig config) {
         {
             int cycle = (int) ticks % 180 - 160;
-            Text title = null;
+            Component title = null;
             if (cycle == -160) {
                 title = alt ? TITLE_MAIN : TITLE_ALT;
                 alt = !alt;
@@ -104,47 +104,47 @@ public final class NucleoidSidebar {
             b.add(SIZE_FORCING_TEXT);
             b.add((p) -> {
                 if (p != null) {
-                    return Text.literal("» ").append(
-                            Text.translatable("nucleoid.sidebar.welcome",
-                                    Text.empty().formatted(Formatting.WHITE).append(p.getDisplayName())
+                    return Component.literal("» ").append(
+                            Component.translatable("nucleoid.sidebar.welcome",
+                                    Component.empty().withStyle(ChatFormatting.WHITE).append(p.getDisplayName())
                             ).setStyle(TOP_SIDEBAR_STYLE)
-                    ).formatted(Formatting.GRAY);
+                    ).withStyle(ChatFormatting.GRAY);
                 } else {
-                    return Text.empty();
+                    return Component.empty();
                 }
             });
 
-            int playerCount = server.getCurrentPlayerCount();
-            b.add(Text.literal("» ").append(
-                        Text.translatable("nucleoid.sidebar.player_in_game." + (playerCount < 2 ? "1" : "more"),
-                                Text.literal("" + playerCount).formatted(Formatting.WHITE)
+            int playerCount = server.getPlayerCount();
+            b.add(Component.literal("» ").append(
+                        Component.translatable("nucleoid.sidebar.player_in_game." + (playerCount < 2 ? "1" : "more"),
+                                Component.literal("" + playerCount).withStyle(ChatFormatting.WHITE)
                         ).setStyle(TOP_SIDEBAR_STYLE)
-            ).formatted(Formatting.GRAY));
+            ).withStyle(ChatFormatting.GRAY));
 
-            b.add(Text.empty());
+            b.add(Component.empty());
 
             var openGames = GameSpaceManager.get().getOpenGameSpaces();
             if (!openGames.isEmpty()) {
                 this.writeGamesToSidebar(b, openGames);
             } else {
-                b.add(Text.translatable("nucleoid.sidebar.game.title.no_games").setStyle(GAME_TITLE_STYLE));
+                b.add(Component.translatable("nucleoid.sidebar.game.title.no_games").setStyle(GAME_TITLE_STYLE));
             }
 
-            b.add(Text.empty());
+            b.add(Component.empty());
             if (altText) {
-                b.add(Text.translatable("nucleoid.sidebar.join.1", Text.literal("/game join").formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
+                b.add(Component.translatable("nucleoid.sidebar.join.1", Component.literal("/game join").withStyle(ChatFormatting.WHITE)).withStyle(ChatFormatting.GRAY));
             } else {
-                b.add(Text.translatable("nucleoid.sidebar.join.2").formatted(Formatting.GRAY));
+                b.add(Component.translatable("nucleoid.sidebar.join.2").withStyle(ChatFormatting.GRAY));
             }
 
-            b.add(Text.empty());
+            b.add(Component.empty());
 
-            b.add(Text.translatable("nucleoid.discord").setStyle(LINK_STYLE));
+            b.add(Component.translatable("nucleoid.discord").setStyle(LINK_STYLE));
         });
     }
 
     private void writeGamesToSidebar(LineBuilder builder, Collection<GameSpace> openGames) {
-        builder.add(Text.translatable("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
+        builder.add(Component.translatable("nucleoid.sidebar.game.title").setStyle(GAME_TITLE_STYLE));
 
         var games = openGames.stream()
                 .sorted(Comparator.comparingInt((GameSpace space) -> space.getPlayers().size()).reversed())
@@ -154,25 +154,25 @@ public final class NucleoidSidebar {
             var name = GameConfig.shortName(game.getMetadata().sourceConfig());
 
             int players = game.getPlayers().size();
-            var playersText = Text.translatable("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
+            var playersText = Component.translatable("nucleoid.sidebar.game.player." + (players < 2 ? "1" : "more"), players).setStyle(GAME_COUNT_STYLE);
 
-            builder.add(Text.literal(" • ")
-                    .formatted(Formatting.DARK_GRAY)
-                    .append(Text.translatable("nucleoid.sidebar.game.entry", name, playersText).formatted(Formatting.WHITE)));
+            builder.add(Component.literal(" • ")
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .append(Component.translatable("nucleoid.sidebar.game.entry", name, playersText).withStyle(ChatFormatting.WHITE)));
         });
 
         if (openGames.size() > 4) {
-            builder.add(Text.translatable("nucleoid.sidebar.game.more", openGames.size() - 4).setStyle(GAME_COUNT_STYLE));
+            builder.add(Component.translatable("nucleoid.sidebar.game.more", openGames.size() - 4).setStyle(GAME_COUNT_STYLE));
         }
     }
 
-    public void addPlayer(ServerPlayerEntity player) {
+    public void addPlayer(ServerPlayer player) {
         if (this.enabled) {
             this.widget.addPlayer(player);
         }
     }
 
-    public void removePlayer(ServerPlayerEntity player) {
+    public void removePlayer(ServerPlayer player) {
         if (this.enabled) {
             this.widget.removePlayer(player);
         }

@@ -1,11 +1,6 @@
 package xyz.nucleoid.extras.mixin.player_list;
 
 import eu.pb4.polymer.core.mixin.entity.PlayerListS2CPacketAccessor;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,32 +10,37 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import xyz.nucleoid.extras.player_list.PlayerListHelper;
 
 import java.util.*;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public abstract class PlayerManagerMixin {
-    @Shadow @Final private Map<UUID, ServerPlayerEntity> playerMap;
+    @Shadow @Final private Map<UUID, ServerPlayer> playersByUUID;
 
-    @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendToAll(Lnet/minecraft/network/packet/Packet;)V"))
-    private void extras$sendToOthersOnJoin(PlayerManager playerManager, Packet<?> whitePacket) {
-        var entry = ((PlayerListS2CPacket) whitePacket).getEntries().get(0);
+    @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastAll(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void extras$sendToOthersOnJoin(PlayerList playerManager, Packet<?> whitePacket) {
+        var entry = ((ClientboundPlayerInfoUpdatePacket) whitePacket).entries().get(0);
         var player = playerManager.getPlayer(entry.profileId());
 
         var grayPacket = PlayerListHelper.createAddPacket(player, true);
 
-        for (var target : this.playerMap.values()) {
+        for (var target : this.playersByUUID.values()) {
             if (PlayerListHelper.shouldGray(player, target)) {
-                target.networkHandler.sendPacket(grayPacket);
+                target.connection.send(grayPacket);
             } else {
-                target.networkHandler.sendPacket(whitePacket);
+                target.connection.send(whitePacket);
             }
         }
     }
 
-    @Redirect(method = "onPlayerConnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;entryFromPlayer(Ljava/util/Collection;)Lnet/minecraft/network/packet/s2c/play/PlayerListS2CPacket;", ordinal = 0))
-    private PlayerListS2CPacket extras$sendOthersToJoining(Collection<ServerPlayerEntity> players, ClientConnection connection, ServerPlayerEntity target) {
-        var packet = PlayerListS2CPacket.entryFromPlayer(List.of());
+    @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket;createPlayerInitializing(Ljava/util/Collection;)Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket;", ordinal = 0))
+    private ClientboundPlayerInfoUpdatePacket extras$sendOthersToJoining(Collection<ServerPlayer> players, Connection connection, ServerPlayer target) {
+        var packet = ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of());
 
-        var entries = new ArrayList<PlayerListS2CPacket.Entry>();
+        var entries = new ArrayList<ClientboundPlayerInfoUpdatePacket.Entry>();
 
         for (var player : players) {
             entries.add(PlayerListHelper.createEntry(player, PlayerListHelper.shouldGray(player, target)));

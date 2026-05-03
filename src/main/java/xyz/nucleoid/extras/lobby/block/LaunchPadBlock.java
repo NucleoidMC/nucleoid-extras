@@ -1,30 +1,30 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.component.LauncherComponent;
 import xyz.nucleoid.packettweaker.PacketContext;
 import org.jetbrains.annotations.Nullable;
 
-public class LaunchPadBlock extends Block implements BlockEntityProvider, PolymerBlock {
+public class LaunchPadBlock extends Block implements EntityBlock, PolymerBlock {
     private final BlockState virtualBlockState;
 
-    public LaunchPadBlock(Settings settings, BlockState virtualBlockState) {
+    public LaunchPadBlock(Properties settings, BlockState virtualBlockState) {
         super(settings);
         this.virtualBlockState = virtualBlockState;
     }
@@ -35,26 +35,26 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean b) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean b) {
         var blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof LaunchPadBlockEntity launchPad) {
-            tryLaunch(entity, entity, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower(), launchPad.getSound()));
+            tryLaunch(entity, entity, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, new LauncherComponent(launchPad.getPitch(), launchPad.getPower(), launchPad.getSound()));
         }
 
-        super.onEntityCollision(state, world, pos, entity, handler, b);
+        super.entityInside(state, world, pos, entity, handler, b);
     }
 
-    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent defaultSound, SoundCategory category, LauncherComponent launcher) {
-        if (launcher != null && entity.isOnGround() && !(entity instanceof ArmorStandEntity)) {
-            entity.setVelocity(getVector(launcher.pitch(), source.getYaw(0)).multiply(launcher.power()));
-            SoundEvent sound = launcher.sound().map(RegistryEntry::value).orElse(defaultSound);
+    public static boolean tryLaunch(Entity entity, Entity source, SoundEvent defaultSound, SoundSource category, LauncherComponent launcher) {
+        if (launcher != null && entity.onGround() && !(entity instanceof ArmorStand)) {
+            entity.setDeltaMovement(getVector(launcher.pitch(), source.getViewYRot(0)).scale(launcher.power()));
+            SoundEvent sound = launcher.sound().map(Holder::value).orElse(defaultSound);
 
-            if (entity instanceof ServerPlayerEntity player) {
-                player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+            if (entity instanceof ServerPlayer player) {
+                player.connection.send(new ClientboundSetEntityMotionPacket(entity));
                 playLaunchSound(player, sound, category);
             }
-            if (source != entity && source instanceof ServerPlayerEntity player) {
+            if (source != entity && source instanceof ServerPlayer player) {
                 playLaunchSound(player, sound, category);
             }
 
@@ -64,16 +64,16 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
         return false;
     }
 
-    public static void playLaunchSound(ServerPlayerEntity player, SoundEvent sound, SoundCategory category) {
-        player.playSoundToPlayer(sound, category, 0.5f, 1);
+    public static void playLaunchSound(ServerPlayer player, SoundEvent sound, SoundSource category) {
+        player.playNotifySound(sound, category, 0.5f, 1);
     }
 
-    private static Vec3d getVector(float pitch, float yaw) {
+    private static Vec3 getVector(float pitch, float yaw) {
         double pitchRad = Math.toRadians(pitch);
         double yawRad = Math.toRadians(yaw);
 
         double horizontal = -Math.cos(pitchRad);
-        return new Vec3d(
+        return new Vec3(
                 Math.sin(yawRad) * horizontal,
                 Math.sin(pitchRad),
                 -Math.cos(yawRad) * horizontal
@@ -82,7 +82,7 @@ public class LaunchPadBlock extends Block implements BlockEntityProvider, Polyme
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LaunchPadBlockEntity(pos, state);
     }
 }

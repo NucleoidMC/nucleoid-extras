@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.tag;
 
-import net.minecraft.block.Block;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import xyz.nucleoid.extras.NucleoidExtras;
 
 public final class NEBlockTags {
@@ -16,6 +16,6 @@ public final class NEBlockTags {
     }
 
     private static TagKey<Block> of(String path) {
-        return TagKey.of(RegistryKeys.BLOCK, NucleoidExtras.identifier(path));
+        return TagKey.create(Registries.BLOCK, NucleoidExtras.identifier(path));
     }
 }

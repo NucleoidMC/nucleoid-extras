@@ -6,33 +6,32 @@ import java.util.function.Consumer;
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.storage.NbtReadView;
-import net.minecraft.text.Text;
-import net.minecraft.util.ErrorReporter;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.level.storage.TagValueInput;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
 
-public record Contributor(String name, ContributorSocials socials, Optional<NbtCompound> statueNbt) implements Comparable<Contributor> {
+public record Contributor(String name, ContributorSocials socials, Optional<CompoundTag> statueNbt) implements Comparable<Contributor> {
     protected static final Codec<Contributor> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
                 Codec.STRING.fieldOf("name").forGetter(Contributor::name),
                 ContributorSocials.CODEC.fieldOf("socials").forGetter(Contributor::socials),
-                NbtCompound.CODEC.optionalFieldOf("statue_nbt").forGetter(Contributor::statueNbt)
+                CompoundTag.CODEC.optionalFieldOf("statue_nbt").forGetter(Contributor::statueNbt)
         ).apply(instance, Contributor::new)
     );
 
-    public Text getName() {
-        return Text.literal(this.name);
+    public Component getName() {
+        return Component.literal(this.name);
     }
 
     public ItemStack createPlayerHead(GameProfile profile) {
@@ -44,7 +43,7 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
 
     public void fillEntity(MinecraftServer server, Entity entity) {
         if (this.statueNbt.isPresent()) {
-            entity.readData(NbtReadView.create(ErrorReporter.EMPTY, server.getRegistryManager(), this.statueNbt.get()));
+            entity.load(TagValueInput.create(ProblemReporter.DISCARDING, server.registryAccess(), this.statueNbt.get()));
         }
 
         // Name
@@ -55,17 +54,17 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
         var profile = this.createGameProfile(server);
         var playerHead = this.createPlayerHead(profile);
 
-        if (entity instanceof MobEntity mob) {
-            mob.equipStack(EquipmentSlot.HEAD, playerHead);
-        } else if (entity instanceof ArmorStandEntity armorStand) {
-            armorStand.equipStack(EquipmentSlot.HEAD, playerHead);
+        if (entity instanceof Mob mob) {
+            mob.setItemSlot(EquipmentSlot.HEAD, playerHead);
+        } else if (entity instanceof ArmorStand armorStand) {
+            armorStand.setItemSlot(EquipmentSlot.HEAD, playerHead);
         }
 
         this.loadGameProfileProperties(server, profile, fullProfile -> {
             writeSkullOwner(playerHead, fullProfile);
         });
 
-        if (entity instanceof ArmorStandEntity) {
+        if (entity instanceof ArmorStand) {
             var accessor = (ArmorStandEntityAccessor) (Object) entity;
             accessor.callSetHideBasePlate(true);
             accessor.callSetShowArms(true);
@@ -93,6 +92,6 @@ public record Contributor(String name, ContributorSocials socials, Optional<NbtC
     }
 
     public static void writeSkullOwner(ItemStack stack, GameProfile profile) {
-        stack.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
+        stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
     }
 }

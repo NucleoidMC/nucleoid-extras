@@ -1,9 +1,6 @@
 package xyz.nucleoid.extras.game_portal;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
@@ -11,13 +8,16 @@ import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
     private final Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> configEntries;
     private List<MenuEntry> entries;
     private List<Entry> guiEntries;
 
-    public HandmadeStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> config) {
+    public HandmadeStyledMenuPortalBackend(Component name, Component uiTitle, List<Component> description, ItemStack icon, Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> config) {
         super(name, uiTitle, description, icon);
         this.configEntries = config;
     }
@@ -35,7 +35,7 @@ public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
     }
 
     @Override
-    protected void fillInterface(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
+    protected void fillInterface(ServerPlayer player, SimpleGui gui, MutableInt page) {
         for (var entry : this.getGuiEntries()) {
             gui.setSlot(entry.pos, entry.entry.createGuiElement());
         }

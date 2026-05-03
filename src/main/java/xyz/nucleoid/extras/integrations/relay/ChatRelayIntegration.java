@@ -2,11 +2,16 @@ package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.minecraft.screen.ScreenTexts;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
@@ -40,7 +45,7 @@ public final class ChatRelayIntegration {
             NucleoidExtrasEvents.END_SERVER_TICK.register(integration::tick);
 
             ServerMessageEvents.CHAT_MESSAGE.register((message, sender, parameters) -> {
-                integration.onSendChatMessage(sender, message.getContent().getString());
+                integration.onSendChatMessage(sender, message.decoratedContent().getString());
             });
         }
     }
@@ -105,11 +110,11 @@ public final class ChatRelayIntegration {
         }
     }
 
-    private void onSendChatMessage(ServerPlayerEntity player, String content) {
+    private void onSendChatMessage(ServerPlayer player, String content) {
         var body = new JsonObject();
 
         var senderRoot = new JsonObject();
-        senderRoot.addProperty("id", player.getUuidAsString());
+        senderRoot.addProperty("id", player.getStringUUID());
         senderRoot.addProperty("name", player.getGameProfile().name());
 
         body.add("sender", senderRoot);
@@ -120,10 +125,10 @@ public final class ChatRelayIntegration {
     }
 
     private void broadcastMessage(MinecraftServer server, ChatMessage message) {
-        var playerManager = server.getPlayerManager();
+        var playerManager = server.getPlayerList();
 
         var sender = message.getSenderName();
-        var prefix = Text.literal("<@").append(sender).append(">").formatted(Formatting.GRAY);
+        var prefix = Component.literal("<@").append(sender).append(">").withStyle(ChatFormatting.GRAY);
         var result = new MessageBuilder(prefix);
 
         if (message.replyingTo != null) {
@@ -131,35 +136,35 @@ public final class ChatRelayIntegration {
         }
 
         for (var line : message.lines) {
-            result.append(Text.literal(line));
+            result.append(Component.literal(line));
         }
 
         if (message.attachments != null) {
             for (var attachment : message.attachments) {
-                result.append(Text.literal("[Attachment: " + attachment.name + "]").styled(style ->
-                    style.withFormatting(Formatting.BLUE, Formatting.UNDERLINE)
+                result.append(Component.literal("[Attachment: " + attachment.name + "]").withStyle(style ->
+                    style.applyFormats(ChatFormatting.BLUE, ChatFormatting.UNDERLINE)
                             .withClickEvent(new ClickEvent.OpenUrl(URI.create(attachment.url)))
-                            .withHoverEvent(new HoverEvent.ShowText(Text.literal("Open attachment")))
+                            .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open attachment")))
                 ));
             }
         }
 
-        playerManager.broadcast(result.build(), false);
+        playerManager.broadcastSystemMessage(result.build(), false);
     }
 
-    private MutableText createReplyText(ChatMessage message) {
+    private MutableComponent createReplyText(ChatMessage message) {
         var summary = message.getSummary();
 
-        var replyText = Text.literal("(replying to @")
+        var replyText = Component.literal("(replying to @")
                 .append(message.getSenderName());
 
         if (summary != null) {
-            replyText = replyText.append(": ").append(Text.literal(summary).formatted(Formatting.ITALIC));
+            replyText = replyText.append(": ").append(Component.literal(summary).withStyle(ChatFormatting.ITALIC));
         }
 
         replyText = replyText.append(")");
 
-        return replyText.formatted(Formatting.GRAY);
+        return replyText.withStyle(ChatFormatting.GRAY);
     }
 
     record ChatMessage(
@@ -171,12 +176,12 @@ public final class ChatRelayIntegration {
     ) {
         private static final int SUMMARY_LENGTH = 40;
 
-        MutableText getSenderName() {
-            MutableText sender = Text.literal(this.sender);
+        MutableComponent getSenderName() {
+            MutableComponent sender = Component.literal(this.sender);
             if (this.nameColor != null) {
                 var style = sender.getStyle()
                         .withColor(this.nameColor)
-                        .withHoverEvent(new HoverEvent.ShowText(Text.literal(this.senderUserId)));
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal(this.senderUserId)));
                 sender = sender.setStyle(style);
             }
             return sender;
@@ -200,16 +205,16 @@ public final class ChatRelayIntegration {
     }
 
     static class MessageBuilder {
-        private static final MutableText NEW_LINE = Text.literal("\n | ").formatted(Formatting.GRAY);
+        private static final MutableComponent NEW_LINE = Component.literal("\n | ").withStyle(ChatFormatting.GRAY);
 
-        MutableText text;
+        MutableComponent text;
         boolean first = true;
 
-        MessageBuilder(Text prefix) {
-            this.text = Text.empty().append(prefix).append(ScreenTexts.SPACE);
+        MessageBuilder(Component prefix) {
+            this.text = Component.empty().append(prefix).append(CommonComponents.SPACE);
         }
 
-        void append(MutableText text) {
+        void append(MutableComponent text) {
             if (this.first) {
                 this.text = this.text.append(text);
                 this.first = false;
@@ -218,7 +223,7 @@ public final class ChatRelayIntegration {
             }
         }
 
-        MutableText build() {
+        MutableComponent build() {
             return this.text;
         }
     }

@@ -3,33 +3,33 @@ package xyz.nucleoid.extras.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 
 import java.util.Map;
 import java.util.UUID;
 
 public final class CommandAliases {
-    private static final CommandOutput NO_FEEDBACK_OUTPUT = new CommandOutput() {
+    private static final CommandSource NO_FEEDBACK_OUTPUT = new CommandSource() {
         @Override
-        public void sendMessage(Text message) {
+        public void sendSystemMessage(Component message) {
         }
 
         @Override
-        public boolean shouldReceiveFeedback() {
+        public boolean acceptsSuccess() {
             return false;
         }
 
         @Override
-        public boolean shouldTrackOutput() {
+        public boolean acceptsFailure() {
             return false;
         }
 
         @Override
-        public boolean shouldBroadcastConsoleToOps() {
+        public boolean shouldInformAdmins() {
             return false;
         }
     };
@@ -48,9 +48,9 @@ public final class CommandAliases {
                 var value = entry.getValue();
                 var commands = value.commands;
                 literals[literals.length - 1].executes(context -> {
-                    var source = context.getSource().withMaxLevel(4);
+                    var source = context.getSource().withMaximumPermission(4);
                     if (!value.feedback) {
-                        source = source.withOutput(NO_FEEDBACK_OUTPUT);
+                        source = source.withSource(NO_FEEDBACK_OUTPUT);
                     }
 
                     int result = Command.SINGLE_SUCCESS;
@@ -67,18 +67,18 @@ public final class CommandAliases {
     }
 
     @SuppressWarnings("unchecked")
-    private static LiteralArgumentBuilder<ServerCommandSource>[] buildLiterals(Map.Entry<String, CommandAliasConfig.Entry> entry) {
+    private static LiteralArgumentBuilder<CommandSourceStack>[] buildLiterals(Map.Entry<String, CommandAliasConfig.Entry> entry) {
         var names = entry.getKey().split(" ");
 
-        LiteralArgumentBuilder<ServerCommandSource>[] literals = new LiteralArgumentBuilder[names.length];
+        LiteralArgumentBuilder<CommandSourceStack>[] literals = new LiteralArgumentBuilder[names.length];
         for (int i = 0; i < names.length; i++) {
-            literals[i] = CommandManager.literal(names[i]);
+            literals[i] = Commands.literal(names[i]);
         }
 
         return literals;
     }
 
-    private static LiteralArgumentBuilder<ServerCommandSource> linkLiterals(LiteralArgumentBuilder<ServerCommandSource>[] literals) {
+    private static LiteralArgumentBuilder<CommandSourceStack> linkLiterals(LiteralArgumentBuilder<CommandSourceStack>[] literals) {
         var chain = literals[0];
         for (int i = 1; i < literals.length; i++) {
             var next = literals[i];

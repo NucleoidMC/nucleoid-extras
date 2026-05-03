@@ -1,10 +1,10 @@
 package xyz.nucleoid.extras.integrations.relay;
 
 import com.google.gson.JsonObject;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
 import xyz.nucleoid.extras.integrations.IntegrationsConfig;
@@ -63,20 +63,20 @@ public final class RemoteCommandIntegration {
     private void tick(MinecraftServer server) {
         RemoteCommand command;
         while ((command = this.commandQueue.poll()) != null) {
-            var results = new ArrayList<Text>();
+            var results = new ArrayList<Component>();
             var commandSource = command.createCommandSource(server, results::add);
-            server.getCommandManager().executeWithPrefix(commandSource, command.command);
+            server.getCommands().performPrefixedCommand(commandSource, command.command);
             sendCommandResults(results);
         }
     }
 
-    private void sendCommandResults(List<Text> results) {
+    private void sendCommandResults(List<Component> results) {
         if (results.isEmpty()) {
             return;
         }
         var content = results.stream()
             .limit(MAX_RESULT_LINES)
-            .map(Text::getString)
+            .map(Component::getString)
             .collect(Collectors.joining("\n"));
         if (results.size() > MAX_RESULT_LINES) {
             content += "\n...and " + (results.size() - MAX_RESULT_LINES) + " more lines";
@@ -87,25 +87,25 @@ public final class RemoteCommandIntegration {
     }
 
     record RemoteCommand(String command, String sender, boolean silent, int permissionLevel, List<String> roles) {
-        ServerCommandSource createCommandSource(MinecraftServer server, Consumer<Text> result) {
-            var output = new CommandOutput() {
+        CommandSourceStack createCommandSource(MinecraftServer server, Consumer<Component> result) {
+            var output = new CommandSource() {
                 @Override
-                public void sendMessage(Text message) {
+                public void sendSystemMessage(Component message) {
                     if (!silent) result.accept(message);
                 }
 
                 @Override
-                public boolean shouldReceiveFeedback() {
+                public boolean acceptsSuccess() {
                     return true;
                 }
 
                 @Override
-                public boolean shouldTrackOutput() {
+                public boolean acceptsFailure() {
                     return true;
                 }
 
                 @Override
-                public boolean shouldBroadcastConsoleToOps() {
+                public boolean shouldInformAdmins() {
                     return true;
                 }
             };

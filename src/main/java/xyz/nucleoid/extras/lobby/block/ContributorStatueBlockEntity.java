@@ -2,24 +2,21 @@ package xyz.nucleoid.extras.lobby.block;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.elements.GuiElementInterface;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.WorldChunk;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.Contributor;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
@@ -29,7 +26,7 @@ import xyz.nucleoid.extras.util.PagedGui;
 public class ContributorStatueBlockEntity extends BlockEntity {
     protected static final String CONTRIBUTOR_ID_KEY = "contributor_id";
 
-    private static final Text GUI_TITLE = Text.translatable("text.nucleoid_extras.contributor_statue.title");
+    private static final Component GUI_TITLE = Component.translatable("text.nucleoid_extras.contributor_statue.title");
 
     private String contributorId = "";
 
@@ -39,8 +36,8 @@ public class ContributorStatueBlockEntity extends BlockEntity {
         super(NEBlocks.CONTRIBUTOR_STATUE_ENTITY, pos, state);
     }
 
-    public void attachElementHolder(WorldChunk chunk) {
-        var attachment = BlockAwareAttachment.get(chunk, this.getPos());
+    public void attachElementHolder(LevelChunk chunk) {
+        var attachment = BlockAwareAttachment.get(chunk, this.getBlockPos());
 
         if (attachment != null && attachment.holder() instanceof ContributorStatueModel model) {
             this.model = model;
@@ -52,22 +49,22 @@ public class ContributorStatueBlockEntity extends BlockEntity {
 
     public void updateModel() {
         if (this.model != null) {
-            this.model.update(this.contributorId, (ServerWorld) this.world, this.getCachedState());
+            this.model.update(this.contributorId, (ServerLevel) this.level, this.getBlockState());
         }
     }
 
-    private void selectContributor(ServerPlayerEntity player, String id) {
+    private void selectContributor(ServerPlayer player, String id) {
         if (this.contributorId.equals(id)) return;
 
         this.contributorId = id;
-        player.playSoundToPlayer(SoundEvents.UI_BUTTON_CLICK.value(), SoundCategory.MASTER, 1, 1);
+        player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 1, 1);
 
         this.updateModel();
-        this.markDirty();
+        this.setChanged();
     }
 
-    protected void openEditScreen(ServerPlayerEntity player) {
-        var server = player.getEntityWorld().getServer();
+    protected void openEditScreen(ServerPlayer player) {
+        var server = player.level().getServer();
 
         List<GuiElementInterface> elements = ContributorData.getContributors()
                 .stream()
@@ -112,14 +109,14 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readData(ReadView view) {
-        super.readData(view);
-        this.contributorId = view.getString(CONTRIBUTOR_ID_KEY, "");
+    public void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.contributorId = view.getStringOr(CONTRIBUTOR_ID_KEY, "");
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         view.putString(CONTRIBUTOR_ID_KEY, this.contributorId);
     }
 }

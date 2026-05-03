@@ -2,13 +2,13 @@ package xyz.nucleoid.extras.test;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.Bootstrap;
 import net.minecraft.SharedConstants;
-import net.minecraft.datafixer.Schemas;
-import net.minecraft.datafixer.TypeReferences;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +21,8 @@ public class DataFixTests {
 
     @BeforeAll
     public static void beforeAll() {
-        SharedConstants.createGameVersion();
-        Bootstrap.initialize();
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
     }
 
     @Test
@@ -279,14 +279,14 @@ public class DataFixTests {
         var newNbt = parseNbtString("newNbt", newNbtString);
 
         var input = new Dynamic<>(NbtOps.INSTANCE, oldNbt);
-        var output = Schemas.getFixer().update(TypeReferences.ITEM_STACK, input, DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
+        var output = DataFixers.getDataFixer().update(References.ITEM_STACK, input, DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
 
         assertEquals(newNbt, output.getValue());
     }
 
-    private static NbtCompound parseNbtString(String name, String string) {
+    private static CompoundTag parseNbtString(String name, String string) {
         try {
-            return StringNbtReader.readCompound(string);
+            return TagParser.parseCompoundFully(string);
         } catch (CommandSyntaxException e) {
             throw new RuntimeException("Failed to parse " + name, e);
         }

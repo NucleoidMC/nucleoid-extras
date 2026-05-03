@@ -6,17 +6,17 @@ import java.util.function.Consumer;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.AdvancementRequirements.CriterionMerger;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementRequirements.Strategy;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.NECriteria;
@@ -27,19 +27,19 @@ import xyz.nucleoid.extras.lobby.criterion.TaterCount;
 import xyz.nucleoid.extras.lobby.criterion.WearTaterCriterion;
 
 public class NEAdvancementProvider extends FabricAdvancementProvider {
-    public NEAdvancementProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+    public NEAdvancementProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    public void generateAdvancement(RegistryWrapper.WrapperLookup registries, Consumer<AdvancementEntry> consumer) {
-        var root = accept(consumer, "root", null, Advancement.Builder.createUntelemetered()
+    public void generateAdvancement(HolderLookup.Provider registries, Consumer<AdvancementHolder> consumer) {
+        var root = accept(consumer, "root", null, Advancement.Builder.recipeAdvancement()
                 .display(
                         NEItems.NUCLEOID_LOGO,
-                        Text.translatable("advancements.nucleoid_extras.root.title"),
-                        Text.translatable("advancements.nucleoid_extras.root.description"),
-                        Identifier.ofVanilla("block/lime_concrete"),
-                        AdvancementFrame.TASK,
+                        Component.translatable("advancements.nucleoid_extras.root.title"),
+                        Component.translatable("advancements.nucleoid_extras.root.description"),
+                        ResourceLocation.withDefaultNamespace("block/lime_concrete"),
+                        AdvancementType.TASK,
                         false,
                         false,
                         false
@@ -51,19 +51,19 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
 
         // Based on number collected
         var firstTater = accept(consumer, "first_tater", NEBlocks.TINY_POTATO, requiringTatersCollected(1).parent(root));
-        var tenTaters = accept(consumer, "ten_taters", NEBlocks.IRON_TATER, AdvancementFrame.GOAL, requiringTatersCollected(10).parent(firstTater));
-        var twentyFiveTaters = accept(consumer, "twenty_five_taters", NEBlocks.GOLD_TATER, AdvancementFrame.GOAL, requiringTatersCollected(25).parent(tenTaters));
-        var fiftyTaters = accept(consumer, "fifty_taters", NEBlocks.DIAMOND_TATER, AdvancementFrame.GOAL, requiringTatersCollected(50).parent(twentyFiveTaters));
-        var oneHundredTaters = accept(consumer, "one_hundred_taters", NEBlocks.EMERALD_TATER, AdvancementFrame.GOAL, requiringTatersCollected(100).parent(fiftyTaters));
-        var twoHundredTaters = accept(consumer, "two_hundred_taters", NEBlocks.NETHERITE_TATER, AdvancementFrame.GOAL, requiringTatersCollected(200).parent(oneHundredTaters));
+        var tenTaters = accept(consumer, "ten_taters", NEBlocks.IRON_TATER, AdvancementType.GOAL, requiringTatersCollected(10).parent(firstTater));
+        var twentyFiveTaters = accept(consumer, "twenty_five_taters", NEBlocks.GOLD_TATER, AdvancementType.GOAL, requiringTatersCollected(25).parent(tenTaters));
+        var fiftyTaters = accept(consumer, "fifty_taters", NEBlocks.DIAMOND_TATER, AdvancementType.GOAL, requiringTatersCollected(50).parent(twentyFiveTaters));
+        var oneHundredTaters = accept(consumer, "one_hundred_taters", NEBlocks.EMERALD_TATER, AdvancementType.GOAL, requiringTatersCollected(100).parent(fiftyTaters));
+        var twoHundredTaters = accept(consumer, "two_hundred_taters", NEBlocks.NETHERITE_TATER, AdvancementType.GOAL, requiringTatersCollected(200).parent(oneHundredTaters));
 
         accept(consumer, "all_taters", null, requiringTatersCollected(new TaterCount.All())
                 .display(
                         NEBlocks.TATER_OF_UNDYING,
-                        Text.translatable("advancements.nucleoid_extras.all_taters.title"),
-                        Text.translatable("advancements.nucleoid_extras.all_taters.description"),
+                        Component.translatable("advancements.nucleoid_extras.all_taters.title"),
+                        Component.translatable("advancements.nucleoid_extras.all_taters.description"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        AdvancementType.CHALLENGE,
                         true,
                         true,
                         false
@@ -90,13 +90,13 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
         accept(consumer, "zombie_taters", NEBlocks.ZOMBIE_TATER, requiringTatersCollected(NEBlocks.BOULDERING_ZOMBIE_TATER, NEBlocks.DROWNED_TATER, NEBlocks.HUSK_TATER, NEBlocks.LOBBER_ZOMBIE_TATER, NEBlocks.ZOMBIE_TATER, NEBlocks.ZOMBIE_VILLAGER_TATER, NEBlocks.ZOMBIFIED_PIGLIN_TATER).parent(firstTater));
 
         // Special conditions
-        accept(consumer, "wednesday_my_dudes", null, Advancement.Builder.createUntelemetered()
+        accept(consumer, "wednesday_my_dudes", null, Advancement.Builder.recipeAdvancement()
                 .display(
                         NEBlocks.WARM_FROG_TATER,
-                        Text.translatable("advancements.nucleoid_extras.wednesday_my_dudes.title"),
-                        Text.translatable("advancements.nucleoid_extras.wednesday_my_dudes.description"),
+                        Component.translatable("advancements.nucleoid_extras.wednesday_my_dudes.title"),
+                        Component.translatable("advancements.nucleoid_extras.wednesday_my_dudes.description"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        AdvancementType.CHALLENGE,
                         true,
                         true,
                         true
@@ -110,7 +110,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
                 .criterion("wear_warm_frog_tater", NECriteria.WEAR_TATER.create(
                         new WearTaterCriterion.Conditions(getTaterEntry(NEBlocks.WARM_FROG_TATER), Optional.of(4))
                 ))
-                .criteriaMerger(CriterionMerger.OR)
+                .criteriaMerger(Strategy.OR)
                 .parent(frogTaters)
         );
 
@@ -145,41 +145,41 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
     }
 
     private static Advancement.Builder requiringTatersCollected(TaterCount count) {
-        var builder = Advancement.Builder.createUntelemetered();
+        var builder = Advancement.Builder.recipeAdvancement();
 
         var name = "get_" + count.count(null) + "_tater" + (count.count(null) == 1 ? "" : "s");
         var conditions = new TaterCollectedCriterion.Conditions(Optional.empty(), Optional.of(count));
 
-        builder.criterion(name, NECriteria.TATER_COLLECTED.create(conditions));
+        builder.addCriterion(name, NECriteria.TATER_COLLECTED.create(conditions));
 
         return builder;
     }
 
     private static Advancement.Builder requiringTatersCollected(Block... taters) {
-        var builder = Advancement.Builder.createUntelemetered();
+        var builder = Advancement.Builder.recipeAdvancement();
 
         for (Block tater : taters) {
-            var id = Registries.BLOCK.getId(tater);
+            var id = BuiltInRegistries.BLOCK.getKey(tater);
             var name = "get_" + id.getPath();
 
             var conditions = new TaterCollectedCriterion.Conditions(getTaterEntry(tater), Optional.empty());
 
-            builder.criterion(name, NECriteria.TATER_COLLECTED.create(conditions));
+            builder.addCriterion(name, NECriteria.TATER_COLLECTED.create(conditions));
         }
 
         return builder;
     }
 
-    private static AdvancementEntry accept(Consumer<AdvancementEntry> consumer, String path, ItemConvertible icon, Advancement.Builder builder) {
-        return accept(consumer, path, icon, AdvancementFrame.TASK, builder);
+    private static AdvancementHolder accept(Consumer<AdvancementHolder> consumer, String path, ItemLike icon, Advancement.Builder builder) {
+        return accept(consumer, path, icon, AdvancementType.TASK, builder);
     }
 
-    private static AdvancementEntry accept(Consumer<AdvancementEntry> consumer, String path, ItemConvertible icon, AdvancementFrame frame, Advancement.Builder builder) {
+    private static AdvancementHolder accept(Consumer<AdvancementHolder> consumer, String path, ItemLike icon, AdvancementType frame, Advancement.Builder builder) {
         if (icon != null) {
             builder.display(
                     icon,
-                    Text.translatable("advancements.nucleoid_extras." + path + ".title"),
-                    Text.translatable("advancements.nucleoid_extras." + path + ".description"),
+                    Component.translatable("advancements.nucleoid_extras." + path + ".title"),
+                    Component.translatable("advancements.nucleoid_extras." + path + ".description"),
                     null,
                     frame,
                     true,
@@ -195,7 +195,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
         return advancement;
     }
 
-    private static Optional<RegistryEntry<Block>> getTaterEntry(Block block) {
+    private static Optional<Holder<Block>> getTaterEntry(Block block) {
         if (block instanceof TinyPotatoBlock tater) {
             return Optional.of(tater.getRegistryEntry());
         }

@@ -2,9 +2,9 @@ package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
@@ -82,7 +82,7 @@ public final class GameStatusIntegration {
             this.games.clear();
         }
 
-        void addGame(RegistryEntry<GameConfig<?>> game, int playerCount) {
+        void addGame(Holder<GameConfig<?>> game, int playerCount) {
             this.games.add(new GameEntry(GameConfig.name(game).getString(), game.value().type().id(), playerCount));
         }
 
@@ -105,7 +105,7 @@ public final class GameStatusIntegration {
         }
     }
 
-    record GameEntry(String name, Identifier typeId, int playerCount) {
+    record GameEntry(String name, ResourceLocation typeId, int playerCount) {
         JsonObject serialize() {
             var root = new JsonObject();
             root.addProperty("name", this.name);

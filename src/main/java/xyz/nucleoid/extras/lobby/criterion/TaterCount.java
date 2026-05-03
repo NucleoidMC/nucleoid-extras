@@ -3,13 +3,13 @@ package xyz.nucleoid.extras.lobby.criterion;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 
 import java.util.function.Function;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.util.ExtraCodecs;
 
 public sealed interface TaterCount {
     static final Codec<TaterCount> CODEC = Codec.either(Value.CODEC, All.CODEC).xmap(either -> {
@@ -18,14 +18,14 @@ public sealed interface TaterCount {
         return count instanceof Value ? Either.left((Value) count) : Either.right((All) count);
     });
 
-    int count(@Nullable RegistryWrapper.WrapperLookup registries);
+    int count(@Nullable HolderLookup.Provider registries);
 
-    default boolean matches(RegistryWrapper.WrapperLookup registries, int count) {
+    default boolean matches(HolderLookup.Provider registries, int count) {
         return this.count(registries) <= count;
     }
 
     record Value(int count) implements TaterCount {
-        private static final Codec<Value> CODEC = Codecs.NON_NEGATIVE_INT.xmap(Value::new, Value::count);
+        private static final Codec<Value> CODEC = ExtraCodecs.NON_NEGATIVE_INT.xmap(Value::new, Value::count);
 
         public Value {
             if (count < 0) {
@@ -34,7 +34,7 @@ public sealed interface TaterCount {
         }
 
         @Override
-        public int count(@Nullable RegistryWrapper.WrapperLookup registries) {
+        public int count(@Nullable HolderLookup.Provider registries) {
             return this.count;
         }
     }
@@ -52,7 +52,7 @@ public sealed interface TaterCount {
         }, string -> STRING);
 
         @Override
-        public int count(@Nullable RegistryWrapper.WrapperLookup registries) {
+        public int count(@Nullable HolderLookup.Provider registries) {
             if (registries == null) {
                 return TinyPotatoBlock.TATERS.size();
             }

@@ -3,19 +3,6 @@ package xyz.nucleoid.extras.lobby.entity;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.tracker.DisplayTrackedData;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.DisplayEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.packettweaker.PacketContext;
 
@@ -24,41 +11,50 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
-public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity implements PolymerEntity {
-    private static final Style PLACE_NUMBER = Style.EMPTY.withColor(Formatting.GRAY).withBold(true);
-    private static final Style PLACE_PLAYER = Style.EMPTY.withColor(Formatting.WHITE);
-    private static final Style PLACE_VALUE = Style.EMPTY.withColor(Formatting.BLUE);
+public class LeaderboardDisplayEntity extends Display.TextDisplay implements PolymerEntity {
+    private static final Style PLACE_NUMBER = Style.EMPTY.withColor(ChatFormatting.GRAY).withBold(true);
+    private static final Style PLACE_PLAYER = Style.EMPTY.withColor(ChatFormatting.WHITE);
+    private static final Style PLACE_VALUE = Style.EMPTY.withColor(ChatFormatting.BLUE);
 
     private static final int REGULAR_UPDATE_WAIT_TIME = 20 * 60;
     private static final int FORCED_UPDATE_WAIT_TIME = 20 * 10;
     private static final int CHANGE_DISPLAYED_TIME_TIME = 20 * 10;
-    private List<Identifier> leaderboardIds = List.of(Identifier.of("nucleoid", "games_played"));
-    private final List<Text> leaderboards = new ArrayList<>();
+    private List<ResourceLocation> leaderboardIds = List.of(ResourceLocation.fromNamespaceAndPath("nucleoid", "games_played"));
+    private final List<Component> leaderboards = new ArrayList<>();
     private int updateTimer = -1;
     private int displayTimer = CHANGE_DISPLAYED_TIME_TIME;
     private int currentId = 0;
 
-    public LeaderboardDisplayEntity(EntityType<LeaderboardDisplayEntity> entityType, World world) {
+    public LeaderboardDisplayEntity(EntityType<LeaderboardDisplayEntity> entityType, Level world) {
         super(entityType, world);
-        this.leaderboards.add(Text.empty());
+        this.leaderboards.add(Component.empty());
     }
 
     @Override
-    public void readCustomData(ReadView nbt) {
-        super.readCustomData(nbt);
+    public void readAdditionalSaveData(ValueInput nbt) {
+        super.readAdditionalSaveData(nbt);
 
-        var ids = nbt.getTypedListView("leaderboards", Identifier.CODEC).stream().toList();
+        var ids = nbt.listOrEmpty("leaderboards", ResourceLocation.CODEC).stream().toList();
         this.leaderboardIds = ids;
         this.updateTimer = FORCED_UPDATE_WAIT_TIME;
         this.leaderboards.clear();
 
         for (var id : ids) {
-            this.leaderboards.add(Text.literal("Waiting for update... [" + id + "]"));
+            this.leaderboards.add(Component.literal("Waiting for update... [" + id + "]"));
         }
 
         if (this.leaderboards.isEmpty()) {
-            this.leaderboards.add(Text.literal("EMPTY!!!"));
+            this.leaderboards.add(Component.literal("EMPTY!!!"));
         }
     }
 
@@ -71,32 +67,32 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
             for (var id : this.leaderboardIds) {
                 var ia = i++;
                 list.add(NucleoidHttpClient.getLeaderboard(id).thenApplyAsync(data -> {
-                    var text = Text.empty();
+                    var text = Component.empty();
 
                     for (var entry : data) {
-                        text.append(Text.literal(entry.ranking() + ". ").setStyle(PLACE_NUMBER));
+                        text.append(Component.literal(entry.ranking() + ". ").setStyle(PLACE_NUMBER));
                         String name;
 
-                        var profile = this.getEntityWorld().getServer().getApiServices().nameToIdCache().getByUuid(entry.playerUuid());
+                        var profile = this.level().getServer().services().nameToIdCache().get(entry.playerUuid());
                         if (profile.isPresent()) {
                             name = profile.get().name();
                         } else {
                             name = "[Unknown player]";
                         }
 
-                        text.append(Text.literal(name).setStyle(PLACE_PLAYER));
-                        text.append(Text.literal("(").append("" + entry.value()).append(")").setStyle(PLACE_VALUE));
+                        text.append(Component.literal(name).setStyle(PLACE_PLAYER));
+                        text.append(Component.literal("(").append("" + entry.value()).append(")").setStyle(PLACE_VALUE));
                         text.append("\n");
                     }
 
                     return text;
-                }).thenAcceptAsync(text -> this.leaderboards.set(ia, text), this.getEntityWorld().getServer()));
+                }).thenAcceptAsync(text -> this.leaderboards.set(ia, text), this.level().getServer()));
             }
 
             CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).handleAsync((a, b) -> {
                 this.updateTimer = REGULAR_UPDATE_WAIT_TIME;
                 return null;
-            }, this.getEntityWorld().getServer());
+            }, this.level().getServer());
         }
 
         if (this.displayTimer-- == 0) {
@@ -106,17 +102,17 @@ public class LeaderboardDisplayEntity extends DisplayEntity.TextDisplayEntity im
                 this.currentId = 0;
             }
 
-            this.dataTracker.set(DisplayTrackedData.Text.TEXT, this.leaderboards.get(this.currentId));
+            this.entityData.set(DisplayTrackedData.Text.TEXT, this.leaderboards.get(this.currentId));
         }
     }
 
 
 
     @Override
-    public void writeCustomData(WriteView nbt) {
-        super.writeCustomData(nbt);
+    public void addAdditionalSaveData(ValueOutput nbt) {
+        super.addAdditionalSaveData(nbt);
         if (this.leaderboardIds != null) {
-            var list = nbt.getListAppender("leaderboards", Identifier.CODEC);
+            var list = nbt.list("leaderboards", ResourceLocation.CODEC);
             this.leaderboardIds.forEach(list::add);
         }
     }

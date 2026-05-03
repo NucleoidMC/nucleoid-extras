@@ -23,7 +23,7 @@ public final class GameVersionResolver {
             }
         }
 
-        return SharedConstants.getGameVersion().name();
+        return SharedConstants.getCurrentVersion().name();
     }
 
     /**

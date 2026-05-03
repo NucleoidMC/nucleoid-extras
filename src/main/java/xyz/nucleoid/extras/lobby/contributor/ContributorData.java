@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.util.GsonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
@@ -74,7 +74,7 @@ public final class ContributorData {
             connection.setRequestProperty("Content-Type", "application/json");
 
             try (var reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
-                var json = JsonHelper.deserialize(reader);
+                var json = GsonHelper.parse(reader);
                 var people = json.getAsJsonObject(PEOPLE_KEY);
 
                 for (var entry : people.entrySet()) {
@@ -87,10 +87,10 @@ public final class ContributorData {
     }
 
     private static void refreshHolograms(MinecraftServer server) {
-        for (var world : server.getWorlds()) {
-            var chunkManager = world.getChunkManager();
+        for (var world : server.getAllLevels()) {
+            var chunkManager = world.getChunkSource();
 
-            chunkManager.chunkLoadingManager.forEachChunk(chunk -> {
+            chunkManager.chunkMap.forEachReadyToSendChunk(chunk -> {
                 for (var entity : chunk.getBlockEntities().values()) {
                     if (entity instanceof ContributorStatueBlockEntity statue) {
                         statue.updateModel();

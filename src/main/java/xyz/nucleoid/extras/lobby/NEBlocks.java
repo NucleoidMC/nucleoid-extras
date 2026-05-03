@@ -4,25 +4,30 @@ import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.block.SimplePolymerBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.particle.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.DyeColor;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.lobby.block.*;
 import xyz.nucleoid.extras.lobby.block.tater.*;
@@ -33,7 +38,7 @@ public class NEBlocks {
     public static final Block NUCLEOID_LOGO = registerTaterBlock("nucleoid_logo", ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
 
     public static final Block END_PORTAL = registerSimple("end_portal", Blocks.END_PORTAL);
-    public static final Block END_GATEWAY = register("end_gateway", AbstractBlock.Settings.create().pistonBehavior(PistonBehavior.BLOCK).strength(100).noCollision(), settings -> new VirtualEndGatewayBlock(settings));
+    public static final Block END_GATEWAY = register("end_gateway", BlockBehaviour.Properties.of().pushReaction(PushReaction.BLOCK).strength(100).noCollision(), settings -> new VirtualEndGatewayBlock(settings));
     public static final Block SAFE_TNT = registerSimple("safe_tnt", Blocks.TNT);
 
     public static final Block BLACK_CONCRETE_POWDER = registerSimple("black_concrete_powder", Blocks.BLACK_CONCRETE_POWDER);
@@ -53,40 +58,40 @@ public class NEBlocks {
     public static final Block WHITE_CONCRETE_POWDER = registerSimple("white_concrete_powder", Blocks.WHITE_CONCRETE_POWDER);
     public static final Block YELLOW_CONCRETE_POWDER = registerSimple("yellow_concrete_powder", Blocks.YELLOW_CONCRETE_POWDER);
 
-    public static final Block GOLD_LAUNCH_PAD = register("gold_launch_pad", AbstractBlock.Settings.copy(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), settings -> new LaunchPadBlock(settings, Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.getDefaultState()));
-    public static final Block IRON_LAUNCH_PAD = register("iron_launch_pad", AbstractBlock.Settings.copy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), settings -> new LaunchPadBlock(settings, Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE.getDefaultState()));
+    public static final Block GOLD_LAUNCH_PAD = register("gold_launch_pad", BlockBehaviour.Properties.ofFullCopy(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), settings -> new LaunchPadBlock(settings, Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.defaultBlockState()));
+    public static final Block IRON_LAUNCH_PAD = register("iron_launch_pad", BlockBehaviour.Properties.ofFullCopy(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE).strength(100).noCollision(), settings -> new LaunchPadBlock(settings, Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE.defaultBlockState()));
 
-    public static final Block CONTRIBUTOR_STATUE = register("contributor_statue", AbstractBlock.Settings.copy(Blocks.SMOOTH_STONE).strength(100), settings -> new ContributorStatueBlock(settings));
+    public static final Block CONTRIBUTOR_STATUE = register("contributor_statue", BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_STONE).strength(100), settings -> new ContributorStatueBlock(settings));
 
-    public static final Block INFINITE_DISPENSER = register("infinite_dispenser", AbstractBlock.Settings.copy(Blocks.DISPENSER).strength(100), settings -> new InfiniteDispenserBlock(settings));
-    public static final Block INFINITE_DROPPER = register("infinite_dropper", AbstractBlock.Settings.copy(Blocks.DROPPER).strength(100), settings -> new InfiniteDropperBlock(settings));
+    public static final Block INFINITE_DISPENSER = register("infinite_dispenser", BlockBehaviour.Properties.ofFullCopy(Blocks.DISPENSER).strength(100), settings -> new InfiniteDispenserBlock(settings));
+    public static final Block INFINITE_DROPPER = register("infinite_dropper", BlockBehaviour.Properties.ofFullCopy(Blocks.DROPPER).strength(100), settings -> new InfiniteDropperBlock(settings));
 
-    public static final Block SNAKE_BLOCK = register("snake_block", AbstractBlock.Settings.copy(Blocks.LIME_CONCRETE).strength(100), settings -> new SnakeBlock(settings, Blocks.LIME_CONCRETE.getDefaultState(), 8, 7));
-    public static final Block FAST_SNAKE_BLOCK = register("fast_snake_block", AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), settings -> new SnakeBlock(settings, Blocks.LIGHT_BLUE_CONCRETE.getDefaultState(), 4, 7));
+    public static final Block SNAKE_BLOCK = register("snake_block", BlockBehaviour.Properties.ofFullCopy(Blocks.LIME_CONCRETE).strength(100), settings -> new SnakeBlock(settings, Blocks.LIME_CONCRETE.defaultBlockState(), 8, 7));
+    public static final Block FAST_SNAKE_BLOCK = register("fast_snake_block", BlockBehaviour.Properties.ofFullCopy(Blocks.LIGHT_BLUE_CONCRETE).strength(100), settings -> new SnakeBlock(settings, Blocks.LIGHT_BLUE_CONCRETE.defaultBlockState(), 4, 7));
 
-    public static final Block TRANSIENT_IRON_DOOR = register("transient_iron_door", AbstractBlock.Settings.copy(Blocks.IRON_DOOR), settings -> new TransientDoorBlock(Blocks.IRON_DOOR, settings));
-    public static final Block TRANSIENT_OAK_DOOR = register("transient_oak_door", AbstractBlock.Settings.copy(Blocks.OAK_DOOR), settings -> new TransientDoorBlock(Blocks.OAK_DOOR, settings));
-    public static final Block TRANSIENT_SPRUCE_DOOR = register("transient_spruce_door", AbstractBlock.Settings.copy(Blocks.SPRUCE_DOOR), settings -> new TransientDoorBlock(Blocks.SPRUCE_DOOR, settings));
-    public static final Block TRANSIENT_BIRCH_DOOR = register("transient_birch_door", AbstractBlock.Settings.copy(Blocks.BIRCH_DOOR), settings -> new TransientDoorBlock(Blocks.BIRCH_DOOR, settings));
-    public static final Block TRANSIENT_JUNGLE_DOOR = register("transient_jungle_door", AbstractBlock.Settings.copy(Blocks.JUNGLE_DOOR), settings -> new TransientDoorBlock(Blocks.JUNGLE_DOOR, settings));
-    public static final Block TRANSIENT_ACACIA_DOOR = register("transient_acacia_door", AbstractBlock.Settings.copy(Blocks.ACACIA_DOOR), settings -> new TransientDoorBlock(Blocks.ACACIA_DOOR, settings));
-    public static final Block TRANSIENT_CHERRY_DOOR = register("transient_cherry_door", AbstractBlock.Settings.copy(Blocks.CHERRY_DOOR), settings -> new TransientDoorBlock(Blocks.CHERRY_DOOR, settings));
-    public static final Block TRANSIENT_DARK_OAK_DOOR = register("transient_dark_oak_door", AbstractBlock.Settings.copy(Blocks.DARK_OAK_DOOR), settings -> new TransientDoorBlock(Blocks.DARK_OAK_DOOR, settings));
-    public static final Block TRANSIENT_MANGROVE_DOOR = register("transient_mangrove_door", AbstractBlock.Settings.copy(Blocks.MANGROVE_DOOR), settings -> new TransientDoorBlock(Blocks.MANGROVE_DOOR, settings));
-    public static final Block TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", AbstractBlock.Settings.copy(Blocks.PALE_OAK_DOOR), settings -> new TransientDoorBlock(Blocks.PALE_OAK_DOOR, settings));
-    public static final Block TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", AbstractBlock.Settings.copy(Blocks.BAMBOO_DOOR), settings -> new TransientDoorBlock(Blocks.BAMBOO_DOOR, settings));
-    public static final Block TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", AbstractBlock.Settings.copy(Blocks.CRIMSON_DOOR), settings -> new TransientDoorBlock(Blocks.CRIMSON_DOOR, settings));
-    public static final Block TRANSIENT_WARPED_DOOR = register("transient_warped_door", AbstractBlock.Settings.copy(Blocks.WARPED_DOOR), settings -> new TransientDoorBlock(Blocks.WARPED_DOOR, settings));
-    public static final Block TRANSIENT_COPPER_DOOR = register("transient_copper_door", AbstractBlock.Settings.copy(Blocks.COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.COPPER_DOOR, settings));
-    public static final Block TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", AbstractBlock.Settings.copy(Blocks.EXPOSED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.EXPOSED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", AbstractBlock.Settings.copy(Blocks.WEATHERED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.WEATHERED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", AbstractBlock.Settings.copy(Blocks.OXIDIZED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.OXIDIZED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_EXPOSED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_EXPOSED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_WEATHERED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_WEATHERED_COPPER_DOOR, settings));
-    public static final Block TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", AbstractBlock.Settings.copy(Blocks.WAXED_OXIDIZED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_OXIDIZED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_IRON_DOOR = register("transient_iron_door", BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_DOOR), settings -> new TransientDoorBlock(Blocks.IRON_DOOR, settings));
+    public static final Block TRANSIENT_OAK_DOOR = register("transient_oak_door", BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR), settings -> new TransientDoorBlock(Blocks.OAK_DOOR, settings));
+    public static final Block TRANSIENT_SPRUCE_DOOR = register("transient_spruce_door", BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_DOOR), settings -> new TransientDoorBlock(Blocks.SPRUCE_DOOR, settings));
+    public static final Block TRANSIENT_BIRCH_DOOR = register("transient_birch_door", BlockBehaviour.Properties.ofFullCopy(Blocks.BIRCH_DOOR), settings -> new TransientDoorBlock(Blocks.BIRCH_DOOR, settings));
+    public static final Block TRANSIENT_JUNGLE_DOOR = register("transient_jungle_door", BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_DOOR), settings -> new TransientDoorBlock(Blocks.JUNGLE_DOOR, settings));
+    public static final Block TRANSIENT_ACACIA_DOOR = register("transient_acacia_door", BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_DOOR), settings -> new TransientDoorBlock(Blocks.ACACIA_DOOR, settings));
+    public static final Block TRANSIENT_CHERRY_DOOR = register("transient_cherry_door", BlockBehaviour.Properties.ofFullCopy(Blocks.CHERRY_DOOR), settings -> new TransientDoorBlock(Blocks.CHERRY_DOOR, settings));
+    public static final Block TRANSIENT_DARK_OAK_DOOR = register("transient_dark_oak_door", BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_DOOR), settings -> new TransientDoorBlock(Blocks.DARK_OAK_DOOR, settings));
+    public static final Block TRANSIENT_MANGROVE_DOOR = register("transient_mangrove_door", BlockBehaviour.Properties.ofFullCopy(Blocks.MANGROVE_DOOR), settings -> new TransientDoorBlock(Blocks.MANGROVE_DOOR, settings));
+    public static final Block TRANSIENT_PALE_OAK_DOOR = register("transient_pale_oak_door", BlockBehaviour.Properties.ofFullCopy(Blocks.PALE_OAK_DOOR), settings -> new TransientDoorBlock(Blocks.PALE_OAK_DOOR, settings));
+    public static final Block TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", BlockBehaviour.Properties.ofFullCopy(Blocks.BAMBOO_DOOR), settings -> new TransientDoorBlock(Blocks.BAMBOO_DOOR, settings));
+    public static final Block TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", BlockBehaviour.Properties.ofFullCopy(Blocks.CRIMSON_DOOR), settings -> new TransientDoorBlock(Blocks.CRIMSON_DOOR, settings));
+    public static final Block TRANSIENT_WARPED_DOOR = register("transient_warped_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WARPED_DOOR), settings -> new TransientDoorBlock(Blocks.WARPED_DOOR, settings));
+    public static final Block TRANSIENT_COPPER_DOOR = register("transient_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.COPPER_DOOR, settings));
+    public static final Block TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.EXPOSED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.EXPOSED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WEATHERED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.WEATHERED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.OXIDIZED_COPPER_DOOR), settings -> new TransientOxidizableDoorBlock(Blocks.OXIDIZED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WAXED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WAXED_EXPOSED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_EXPOSED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WAXED_WEATHERED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_WEATHERED_COPPER_DOOR, settings));
+    public static final Block TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", BlockBehaviour.Properties.ofFullCopy(Blocks.WAXED_OXIDIZED_COPPER_DOOR), settings -> new TransientDoorBlock(Blocks.WAXED_OXIDIZED_COPPER_DOOR, settings));
 
-    public static final Block NUCLE_PAST_LOGO = registerTaterBlock("nucle_past_logo", new DustParticleEffect(0x52C471, 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
+    public static final Block NUCLE_PAST_LOGO = registerTaterBlock("nucle_past_logo", new DustParticleOptions(0x52C471, 1), "65ed3e4d6ec42bd84d2b5e452087d454aac141a978540f6d200bd8aa863d4db8");
 
     public static final Block TINY_POTATO = registerTaterBlock("tiny_potato", ParticleTypes.HEART, "573514a23245f15dbad5fb4e622163020864cce4c15d56de3adb90fa5a7137fd");
     public static final Block BOTANICAL_TINY_POTATO = registerBotanicTaterBlock("botanical_potato", ParticleTypes.HEART,
@@ -179,16 +184,16 @@ public class NEBlocks {
     }, "32b7cd2c5d70cab476ce951e2c520c9b3579250ad900164d6c2321c7f43d6dc7");
 
     public static final Block WARDEN_TATER = registerWardenTaterBlock("warden_tater", "52e411aa1501c72d99d738cb38e250a395c6604b8bccc9f29d7f26e9cacd8d6f");
-    public static final Block CREAKING_TATER = registerGlowingLayerTaterBlock("creaking_tater", new BlockStateParticleEffect(ParticleTypes.BLOCK_CRUMBLE, Blocks.PALE_OAK_WOOD.getDefaultState()), "ba2adfd9b68769ba7ecd4b35d904c7756d1e232e7f2b9cbcbdf49f6a34162e54", GlowingLayerTaterBlock.Pixel.CREAKING);
+    public static final Block CREAKING_TATER = registerGlowingLayerTaterBlock("creaking_tater", new BlockParticleOption(ParticleTypes.BLOCK_CRUMBLE, Blocks.PALE_OAK_WOOD.defaultBlockState()), "ba2adfd9b68769ba7ecd4b35d904c7756d1e232e7f2b9cbcbdf49f6a34162e54", GlowingLayerTaterBlock.Pixel.CREAKING);
     public static final Block VIRAL_TATER = registerTaterBlock("viral_tater", ParticleTypes.SCRAPE, "b12f770c4542c9f26ba03aaee686e0946698d394a8e745d3eac6013383dcff29");
     public static final Block DICE_TATER = registerDiceTaterBlock("dice_tater");
-    public static final Block TATEROID = registerTateroidBlock("tateroid", SoundEvents.BLOCK_NOTE_BLOCK_BELL, -1, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
-    public static final Block RED_TATEROID = registerTateroidBlock("red_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_GUITAR, 7 / 24d, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
-    public static final Block ORANGE_TATEROID = registerTateroidBlock("orange_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_BASEDRUM, 4 / 24d, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
-    public static final Block YELLOW_TATEROID = registerTateroidBlock("yellow_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_CHIME, 2.5 / 24d, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
-    public static final Block GREEN_TATEROID = registerTateroidBlock("green_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_BIT, 21 / 24d, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
-    public static final Block BLUE_TATEROID = registerTateroidBlock("blue_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_XYLOPHONE, 17 / 24d, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
-    public static final Block PURPLE_TATEROID = registerTateroidBlock("purple_tateroid", SoundEvents.BLOCK_NOTE_BLOCK_FLUTE, 11 / 24d, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
+    public static final Block TATEROID = registerTateroidBlock("tateroid", SoundEvents.NOTE_BLOCK_BELL, -1, "8d531d40d09efd3a9a585b55e66a9a6f04c73af84d94d7c565549bf27b8b26bd");
+    public static final Block RED_TATEROID = registerTateroidBlock("red_tateroid", SoundEvents.NOTE_BLOCK_GUITAR, 7 / 24d, "2be51b227360ab65776725a91cded84b56f6920eec0d6fb5a57d5f1ada147aa6");
+    public static final Block ORANGE_TATEROID = registerTateroidBlock("orange_tateroid", SoundEvents.NOTE_BLOCK_BASEDRUM, 4 / 24d, "c5362e308822cf1c436a4ba6d0c3976139c98621c7aa2a96be99c73e97708efc");
+    public static final Block YELLOW_TATEROID = registerTateroidBlock("yellow_tateroid", SoundEvents.NOTE_BLOCK_CHIME, 2.5 / 24d, "fef74a6c7cb45d3c4bae134e6ec41fd7517f7eabe2c74dc76a51b39c63c38bc2");
+    public static final Block GREEN_TATEROID = registerTateroidBlock("green_tateroid", SoundEvents.NOTE_BLOCK_BIT, 21 / 24d, "57bb692499560f0393314a9f1ec11425b360e43c1ddb560de261cd04b8cc8e69");
+    public static final Block BLUE_TATEROID = registerTateroidBlock("blue_tateroid", SoundEvents.NOTE_BLOCK_XYLOPHONE, 17 / 24d, "89ad5aecfb9ab6f36261e0c462acecf2078e7e575d9373bacc0503224c44250e");
+    public static final Block PURPLE_TATEROID = registerTateroidBlock("purple_tateroid", SoundEvents.NOTE_BLOCK_FLUTE, 11 / 24d, "d16a37512cb7ca372af5f37f9bd95d4603c4fa44be4143fb26aaa324e681c9b0");
 
     public static final Block WHITE_TATER = registerColorTaterBlock("white_tater", DyeColor.WHITE, "73dab052d33ee467ba7fac9aa0e316db962e3e7ac6dbbff236667439e340392c");
     public static final Block ORANGE_TATER = registerColorTaterBlock("orange_tater", DyeColor.ORANGE, "75b88126dbd4e860608965c044d0060ac03c26ebea1b652643fe03734ea1b12b");
@@ -215,7 +220,7 @@ public class NEBlocks {
     public static final Block LAPIS_TATER = registerTaterBlock("lapis_tater", Blocks.LAPIS_BLOCK, "58d5cbda5c5046bf0b0f0d447c2fcc5e468707b6a4837c083af8e109aba9ce1c");
     public static final Block NETHERITE_TATER = registerTaterBlock("netherite_tater", Blocks.NETHERITE_BLOCK, "664dce4fade8e5f352001eff6900d9d4b142935ebed303106539f7ad0193621f");
     public static final Block QUARTZ_TATER = registerTaterBlock("quartz_tater", Blocks.QUARTZ_BLOCK, "7e7b4561d09d1a726fec3607706c9e3c77e8fc9b8c7e9c3637ca80ea0c86be21");
-    public static final Block REDSTONE_TATER = registerRedstoneTaterBlock("redstone_tater", new DustParticleEffect(DustParticleEffect.RED, 1), "c47dd2536f5a5eb2bdb1ea4389d3af8ca2fd9d5d2c97c660fc5bf4d970c974de");
+    public static final Block REDSTONE_TATER = registerRedstoneTaterBlock("redstone_tater", new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 1), "c47dd2536f5a5eb2bdb1ea4389d3af8ca2fd9d5d2c97c660fc5bf4d970c974de");
 
     public static final Block COPPER_TATER = registerTaterBlock("copper_tater", ParticleTypes.SCRAPE, "18207c7cf4007222691750b0783d6959261ddf72980483f7c9fcf96c2cba85b1");
     public static final Block EXPOSED_COPPER_TATER = registerTaterBlock("exposed_copper_tater", ParticleTypes.SCRAPE, "bd5020090643edb5ec25d87cb1f408aad4f6018ec4bbe83d25a031ef1e705e4d");
@@ -271,8 +276,8 @@ public class NEBlocks {
     public static final Block PODZOL_TATER = registerTaterBlock("podzol_tater", Blocks.PODZOL, "5fe3cfce7c241fdaefe8d0255a545d2c329c1283232d61eaa7324b30a8f478f2");
     public static final Block PRISMARINE_BRICK_TATER = registerTaterBlock("prismarine_brick_tater", ParticleTypes.BUBBLE_COLUMN_UP, "6fdb11b2147b36ed496639bcf8bea8d07e45de610ec08223ca3d56aefb8d81ce");
     public static final Block PRISMARINE_TATER = registerTaterBlock("prismarine_tater", ParticleTypes.NAUTILUS, "abae0abdc506014751e89fa65bb802c81fc2ee3ed0e0a06582abb5bdd088e440");
-    public static final Block RED_SAND_TATER = registerTaterBlock("red_sand_tater", new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, Blocks.RED_SAND.getDefaultState()), "7789a0f57334248b602322f57fb2ed708484bb6f7774442c7f2f2bf2ec09064f");
-    public static final Block SAND_TATER = registerTaterBlock("sand_tater", new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, Blocks.SAND.getDefaultState()), "6d5332076f20d3f1ad766f4bd83649c573d1b3bf67abfa5be26cdf5ca4a948c8");
+    public static final Block RED_SAND_TATER = registerTaterBlock("red_sand_tater", new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.RED_SAND.defaultBlockState()), "7789a0f57334248b602322f57fb2ed708484bb6f7774442c7f2f2bf2ec09064f");
+    public static final Block SAND_TATER = registerTaterBlock("sand_tater", new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.SAND.defaultBlockState()), "6d5332076f20d3f1ad766f4bd83649c573d1b3bf67abfa5be26cdf5ca4a948c8");
     public static final Block SEA_LANTERN_TATER = registerTaterBlock("sea_lantern_tater", ParticleTypes.NAUTILUS, "ccf764156bb262a3d47f4b885716aa7749077c56a31aa41248936255ed38e27");
     public static final Block SHROOMLIGHT_TATER = registerTaterBlock("shroomlight_tater", Blocks.SHROOMLIGHT, "c7aae4d5e03d8a758cdce91bd74573abc5306dfca6e44e5d0e14ca6c14085b36");
     public static final Block SHULKER_TATER = registerTaterBlock("shulker_tater", ParticleTypes.END_ROD, "e5efd875ee5f4a37ad05d392a65886c6dcaf10188c9199673b782b795a29a231");
@@ -374,7 +379,7 @@ public class NEBlocks {
     public static final Block ILLAGER_TATER = registerTaterBlock("illager_tater", ParticleTypes.ANGRY_VILLAGER, "522c1190fb561f1dfc994b281eb145955e2e439511c83aaf64fed1ab09ec1316");
     public static final Block ILLUSIONER_TATER = registerEntityEffectTaterBlock("illusioner_tater", "6c31b980a02847d5ac948663e95604e754e0b736d4593c7841332833144f2782");
     public static final Block JUKEBOX_TATER = registerTaterBlock("jukebox_tater", ParticleTypes.NOTE, "75f6f61e3a9035a758174979ca664b26e47ca9b273f324f0921b5ad58bdb5835");
-    public static final Block LANTERN_TATER = registerTaterBlock("lantern_tater", TintedParticleEffect.create(ParticleTypes.FLASH, 0xffffff), "16c275f657bac1363333abf1db0d18bfabf087fbf3df356ec7f41258bc16b76d", 20);
+    public static final Block LANTERN_TATER = registerTaterBlock("lantern_tater", ColorParticleOption.create(ParticleTypes.FLASH, 0xffffff), "16c275f657bac1363333abf1db0d18bfabf087fbf3df356ec7f41258bc16b76d", 20);
     public static final Block PIGLIN_TATER = registerTaterBlock("piglin_tater", Blocks.GOLD_BLOCK, "4df6290ac1aff8b179420f2a05baa3c721a5cf49f3bd8f9928a0a57c0cf369e");
     public static final Block PINK_WITHER_TATER = registerTaterBlock("pink_wither_tater", ParticleTypes.HEART, "93592323dbce9eec933aa915af71701b77ee478f7e1dd126501a027b1d430bc7");
     public static final Block PISTON_TATER = registerTaterBlock("piston_tater", Blocks.PISTON, "84a5081444bb13cf75bc8040020e91f39e056cf273cd8ebe528e09100a183e53");
@@ -446,18 +451,18 @@ public class NEBlocks {
     public static final BlockEntityType<BellTaterBlockEntity> BELL_TATER_ENTITY = FabricBlockEntityTypeBuilder.create(BellTaterBlockEntity::new, BELL_TATER).build();
 
     private static Block registerSimple(String id, Block virtual) {
-        return register(id, AbstractBlock.Settings.copy(virtual).strength(100), settings -> new SimplePolymerBlock(settings, virtual));
+        return register(id, BlockBehaviour.Properties.ofFullCopy(virtual).strength(100), settings -> new SimplePolymerBlock(settings, virtual));
     }
 
-    private static AbstractBlock.Settings createTaterBlockSettings() {
-        return AbstractBlock.Settings.create().mapColor(MapColor.PALE_GREEN).strength(100);
+    private static BlockBehaviour.Properties createTaterBlockSettings() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.GRASS).strength(100);
     }
 
-    private static Block registerBotanicTaterBlock(String id, ParticleEffect effect, String textureUp, String textureDown) {
+    private static Block registerBotanicTaterBlock(String id, ParticleOptions effect, String textureUp, String textureDown) {
         return register(id, createTaterBlockSettings(), settings -> new BotanicalPotatoBlock(settings, textureUp, textureDown, effect, 2));
     }
 
-    private static Block registerTaterBlock(String id, ParticleEffect effect, String texture) {
+    private static Block registerTaterBlock(String id, ParticleOptions effect, String texture) {
         return register(id, createTaterBlockSettings(), settings -> new CubicPotatoBlock(settings, effect, texture));
     }
 
@@ -469,7 +474,7 @@ public class NEBlocks {
         return register(id, createTaterBlockSettings(), settings -> new CubicPotatoBlock(settings, particleItem, texture));
     }
 
-    private static Block registerTaterBlock(String id, ParticleEffect effect, String texture, int particleRate) {
+    private static Block registerTaterBlock(String id, ParticleOptions effect, String texture, int particleRate) {
         return register(id, createTaterBlockSettings(), settings -> new CubicPotatoBlock(settings, effect, texture, particleRate));
     }
   
@@ -489,7 +494,7 @@ public class NEBlocks {
         return register(id, createTaterBlockSettings(), settings -> new WardenTaterBlock(settings, texture));
     }
 
-    private static Block registerGlowingLayerTaterBlock(String id, ParticleEffect effect, String texture, GlowingLayerTaterBlock.Pixel[] glowingPixels) {
+    private static Block registerGlowingLayerTaterBlock(String id, ParticleOptions effect, String texture, GlowingLayerTaterBlock.Pixel[] glowingPixels) {
         return register(id, createTaterBlockSettings(), settings -> new GlowingLayerTaterBlock(settings, effect, texture, glowingPixels));
     }
 
@@ -497,7 +502,7 @@ public class NEBlocks {
         return register(id, createTaterBlockSettings(), settings -> new DiceTaterBlock(settings));
     }
 
-    private static Block registerTateroidBlock(String id, RegistryEntry<SoundEvent> defaultSound, double particleColor, String texture) {
+    private static Block registerTateroidBlock(String id, Holder<SoundEvent> defaultSound, double particleColor, String texture) {
         return register(id, createTaterBlockSettings(), settings -> new TateroidBlock(settings, defaultSound, particleColor, texture));
     }
 
@@ -505,7 +510,7 @@ public class NEBlocks {
         return register(id, createTaterBlockSettings(), settings -> new ColorTaterBlock(settings, color, texture));
     }
 
-    private static Block registerRedstoneTaterBlock(String id, ParticleEffect effect, String texture) {
+    private static Block registerRedstoneTaterBlock(String id, ParticleOptions effect, String texture) {
         return register(id, createTaterBlockSettings(), settings -> new RedstoneTaterBlock(settings, effect, texture));
     }
 
@@ -557,10 +562,10 @@ public class NEBlocks {
     }
 
     private static <T extends Block> T register(String id, Block.Settings settings, Function<Block.Settings, T> factory) {
-        RegistryKey<Block> key = RegistryKey.of(RegistryKeys.BLOCK, NucleoidExtras.identifier(id));
-        T block = factory.apply(settings.registryKey(key));
+        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, NucleoidExtras.identifier(id));
+        T block = factory.apply(settings.setId(key));
 
-        return Registry.register(Registries.BLOCK, key, block);
+        return Registry.register(BuiltInRegistries.BLOCK, key, block);
     }
 
     private static void registerOxidizableBlockPair(Block less, Block more) {
@@ -568,13 +573,13 @@ public class NEBlocks {
 
         // TransientOxidizableDoorBlock#hasRandomTicks is dependent on the above registration,
         // so the cached BlockState#ticksRandomly field must be recomputed with the new result
-        for (BlockState state : less.getStateManager().getStates()) {
-            state.initShapeCache();
+        for (BlockState state : less.getStateDefinition().getPossibleStates()) {
+            state.initCache();
         }
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, BlockEntityType<T> type) {
-        Registry.register(Registries.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, NucleoidExtras.identifier(id), type);
         PolymerBlockUtils.registerBlockEntity(type);
         return type;
     }

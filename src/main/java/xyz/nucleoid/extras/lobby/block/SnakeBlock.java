@@ -3,73 +3,78 @@ package xyz.nucleoid.extras.lobby.block;
 import com.mojang.serialization.MapCodec;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.block.*;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.block.WireOrientation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import xyz.nucleoid.packettweaker.PacketContext;
 
-public class SnakeBlock extends FacingBlock implements PolymerBlock {
-    public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
+public class SnakeBlock extends DirectionalBlock implements PolymerBlock {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     private final BlockState virtualBlockState;
     private final int delay;
     private final int length;
 
-    public SnakeBlock(Settings settings, BlockState virtualBlockState, int delay, int length) {
+    public SnakeBlock(Properties settings, BlockState virtualBlockState, int delay, int length) {
         super(settings);
 
         this.virtualBlockState = virtualBlockState;
         this.delay = delay;
         this.length = length;
 
-        this.setDefaultState(this.stateManager.getDefaultState()
-            .with(FACING, Direction.NORTH)
-            .with(ACTIVE, false));
+        this.registerDefaultState(this.stateDefinition.any()
+            .setValue(FACING, Direction.NORTH)
+            .setValue(ACTIVE, false));
     }
 
     private boolean isActive(BlockState state) {
-        return state.get(ACTIVE);
+        return state.getValue(ACTIVE);
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
-        return this.isActive(state) ? this.virtualBlockState : Blocks.BROWN_MUSHROOM.getDefaultState();
+        return this.isActive(state) ? this.virtualBlockState : Blocks.BROWN_MUSHROOM.defaultBlockState();
     }
     
     @Override
-    public boolean hasComparatorOutput(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos, Direction direction) {
         return this.isActive(state) ? 15 : 0;
     }
     
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.isActive(state) ? VoxelShapes.fullCube() : VoxelShapes.empty();
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return this.isActive(state) ? Shapes.block() : Shapes.empty();
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerLookDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
-        boolean powered = world.isReceivingRedstonePower(pos);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, Orientation wireOrientation, boolean notify) {
+        boolean powered = world.hasNeighborSignal(pos);
         boolean active = this.isActive(state);
         if (powered && !active) {
             this.scheduleTick(world, pos, 1);
@@ -77,39 +82,39 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (this.isActive(state)) {
-            world.setBlockState(pos, state.with(ACTIVE, false));
+            world.setBlockAndUpdate(pos, state.setValue(ACTIVE, false));
         } else {
-            world.setBlockState(pos, state.with(ACTIVE, true));
+            world.setBlockAndUpdate(pos, state.setValue(ACTIVE, true));
 
-            this.scheduleTick(world, pos.offset(state.get(FACING)), 1);
+            this.scheduleTick(world, pos.relative(state.getValue(FACING)), 1);
             this.scheduleTick(world, pos, this.length);
         }
     }
 
-    private void scheduleTick(World world, BlockPos pos, int multiplier) {
-        world.scheduleBlockTick(pos, this, this.delay * multiplier);
+    private void scheduleTick(Level world, BlockPos pos, int multiplier) {
+        world.scheduleTick(pos, this, this.delay * multiplier);
     }
 
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.with(FACING, mirror.apply(state.get(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(ACTIVE);
     }
 
     @Override
-    protected MapCodec<? extends FacingBlock> getCodec() {
+    protected MapCodec<? extends DirectionalBlock> codec() {
         return null;
     }
 }

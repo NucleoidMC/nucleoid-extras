@@ -4,11 +4,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
 import xyz.nucleoid.plasmid.api.event.GameEvents;
 import xyz.nucleoid.plasmid.api.game.GameCloseReason;
@@ -19,7 +19,7 @@ import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 
 import java.util.ArrayList;
 
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.literal;
 
 public final class ScheduledStop {
     private static final int FORCE_STOP_MINUTES = 5;
@@ -41,34 +41,34 @@ public final class ScheduledStop {
         GameEvents.OPENED.register(ScheduledStop::openGame);
     }
 
-    private static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         // @formatter:off
         dispatcher.register(
                 literal("stop").then(literal("schedule")
-                    .requires(source -> source.hasPermissionLevel(4))
+                    .requires(source -> source.hasPermission(4))
                     .executes(ScheduledStop::scheduleRestart)
                 )
         );
         // @formatter:on
     }
 
-    private static int scheduleRestart(CommandContext<ServerCommandSource> context) {
+    private static int scheduleRestart(CommandContext<CommandSourceStack> context) {
         var source = context.getSource();
         if (!stopScheduled) {
             var server = source.getServer();
-            int time = server.getTicks();
+            int time = server.getTickCount();
 
             stopScheduled = true;
             graceTime = time + GRACE_TIME;
             stopTime = time + FORCE_STOP_TIME;
 
-            server.getPlayerManager().broadcast(
-                    Text.translatable("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
-                            .formatted(Formatting.BOLD, Formatting.RED),
+            server.getPlayerList().broadcastSystemMessage(
+                    Component.translatable("nucleoid.stop.scheduled", FORCE_STOP_MINUTES)
+                            .withStyle(ChatFormatting.BOLD, ChatFormatting.RED),
                     false
             );
         } else {
-            source.sendError(Text.translatable("nucleoid.stop.scheduled.already"));
+            source.sendFailure(Component.translatable("nucleoid.stop.scheduled.already"));
         }
 
         return Command.SINGLE_SUCCESS;
@@ -85,12 +85,12 @@ public final class ScheduledStop {
                 gameSpace.close(GameCloseReason.CANCELED);
             }
 
-            server.stop(false);
+            server.halt(false);
         }
     }
 
     private static boolean isReadyToStop(MinecraftServer server) {
-        int time = server.getTicks();
+        int time = server.getTickCount();
         if (time < graceTime) return false;
         if (time > stopTime) return true;
 
@@ -104,9 +104,9 @@ public final class ScheduledStop {
         return true;
     }
 
-    private static void openGame(RegistryEntry<GameConfig<?>> game, GameSpace gameSpace) {
+    private static void openGame(Holder<GameConfig<?>> game, GameSpace gameSpace) {
         if (stopScheduled) {
-            throw new GameOpenException(Text.translatable("nucleoid.stop.game.open"));
+            throw new GameOpenException(Component.translatable("nucleoid.stop.game.open"));
         }
     }
 }

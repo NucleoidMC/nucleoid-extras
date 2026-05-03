@@ -1,6 +1,6 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public sealed interface LuckyTaterDropPos {
     public record Allowed(BlockPos pos) implements LuckyTaterDropPos {}

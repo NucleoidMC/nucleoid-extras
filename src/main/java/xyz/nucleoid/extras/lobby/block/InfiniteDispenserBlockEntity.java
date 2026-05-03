@@ -1,9 +1,9 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.DispenserBlockEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class InfiniteDispenserBlockEntity extends DispenserBlockEntity {

@@ -3,17 +3,6 @@ package xyz.nucleoid.extras.chat_filter;
 import com.google.common.base.Splitter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.Formatting;
 import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
 
 import org.jetbrains.annotations.Nullable;
@@ -22,6 +11,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 public final class ChatFilterConfig {
     private static final Codec<String> WORD_CODEC = Codec.STRING.xmap(s -> s.toLowerCase(Locale.ROOT), s -> s.toLowerCase(Locale.ROOT));
@@ -31,17 +31,17 @@ public final class ChatFilterConfig {
         WORD_SET_CODEC.optionalFieldOf("illegal_words", Set.of()).forGetter(c -> c.illegalWords),
         WORD_CODEC.listOf().optionalFieldOf("contains_illegal_text", List.of()).forGetter(c -> c.containsIllegalText),
         PlasmidCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
-        Registries.SOUND_EVENT.getEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
+        BuiltInRegistries.SOUND_EVENT.holderByNameCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
     ).apply(i, ChatFilterConfig::new));
 
     private static final Splitter WORD_SPLITTER = Splitter.onPattern("\\W");
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;
-    private final @Nullable Text feedbackMessage;
-    private final @Nullable RegistryEntry<SoundEvent> feedbackSound;
+    private final @Nullable Component feedbackMessage;
+    private final @Nullable Holder<SoundEvent> feedbackSound;
 
-    private ChatFilterConfig(Set<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<RegistryEntry<SoundEvent>> feedbackSound) {
+    private ChatFilterConfig(Set<String> illegalWords, List<String> containsIllegalText, Optional<Component> feedbackMessage, Optional<Holder<SoundEvent>> feedbackSound) {
         this.illegalWords = illegalWords;
         this.containsIllegalText = containsIllegalText;
 
@@ -49,8 +49,8 @@ public final class ChatFilterConfig {
         this.feedbackSound = feedbackSound.orElse(null);
     }
 
-    private static MutableText formatFeedback(Text text) {
-        return Texts.setStyleIfAbsent(text.copy(), Style.EMPTY.withColor(Formatting.RED));
+    private static MutableComponent formatFeedback(Component text) {
+        return ComponentUtils.mergeStyles(text.copy(), Style.EMPTY.withColor(ChatFormatting.RED));
     }
 
     public boolean test(String message) {
@@ -72,13 +72,13 @@ public final class ChatFilterConfig {
         return false;
     }
 
-    public void sendFeedbackTo(ServerPlayerEntity player) {
+    public void sendFeedbackTo(ServerPlayer player) {
         if (this.feedbackMessage != null) {
-            player.sendMessage(this.feedbackMessage, true);
+            player.displayClientMessage(this.feedbackMessage, true);
         }
 
         if (this.feedbackSound != null) {
-            player.networkHandler.sendPacket(new PlaySoundS2CPacket(this.feedbackSound, SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f, player.getRandom().nextLong()));
+            player.connection.send(new ClientboundSoundPacket(this.feedbackSound, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f, player.getRandom().nextLong()));
         }
     }
 }

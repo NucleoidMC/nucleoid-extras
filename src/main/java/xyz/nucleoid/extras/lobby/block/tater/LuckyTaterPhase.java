@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum LuckyTaterPhase implements StringIdentifiable {
+public enum LuckyTaterPhase implements StringRepresentable {
     READY("ready", 0),
     BUILDING_COURAGE("building_courage", 1),
     COOLDOWN("cooldown", 15),
@@ -17,7 +17,7 @@ public enum LuckyTaterPhase implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 
