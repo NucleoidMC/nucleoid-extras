@@ -16,11 +16,11 @@ import java.util.stream.Stream;
 
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
-    @SuppressWarnings("unchecked")
-    @Inject(method = "lambda$load$4", at = @At("HEAD"))
+    /*@SuppressWarnings("unchecked")
+    @Inject(method = "lambda$load$1", at = @At("HEAD"))
     private static void registerNucleoidExtrasDialogs(Map loadingErrors, RegistryLoadTask task, CallbackInfoReturnable<Stream> cir) {
         if (task.createRegistryInfo().owner() instanceof WritableRegistry<?> registry && registry.key() == Registries.DIALOG) {
             NEDialogs.register((WritableRegistry<Dialog>) registry);
         }
-    }
+    }*/
 }
