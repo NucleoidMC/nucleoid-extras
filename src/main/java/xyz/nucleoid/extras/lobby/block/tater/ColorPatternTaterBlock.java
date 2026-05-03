@@ -1,8 +1,9 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import java.util.Arrays;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
+
+import java.util.Arrays;
 
 public class ColorPatternTaterBlock extends CubicPotatoBlock {
     private final ParticleOptions[] particleEffects;

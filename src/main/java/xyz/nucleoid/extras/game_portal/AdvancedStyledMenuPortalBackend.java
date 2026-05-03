@@ -1,12 +1,12 @@
 package xyz.nucleoid.extras.game_portal;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 public final class AdvancedStyledMenuPortalBackend extends StyledMenuPortalBackend {
     private final List<MenuEntryConfig> configEntries;

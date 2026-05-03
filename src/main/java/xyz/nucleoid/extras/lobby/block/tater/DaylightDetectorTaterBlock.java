@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -21,66 +22,66 @@ import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.mixin.BlockWithEntityAccessor;
 
 public class DaylightDetectorTaterBlock extends CubicPotatoBlock implements EntityBlock {
-	public static final IntegerProperty POWER = BlockStateProperties.POWER;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
-	public final boolean inverted;
+    public final boolean inverted;
 
-	public DaylightDetectorTaterBlock(Properties settings, String texture, boolean inverted) {
-		super(settings, Blocks.DAYLIGHT_DETECTOR.defaultBlockState().setValue(BlockStateProperties.INVERTED, inverted), texture);
-		this.inverted = inverted;
-		this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0));
-	}
+    public DaylightDetectorTaterBlock(Properties settings, String texture, boolean inverted) {
+        super(settings, Blocks.DAYLIGHT_DETECTOR.defaultBlockState().setValue(BlockStateProperties.INVERTED, inverted), texture);
+        this.inverted = inverted;
+        this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0));
+    }
 
-	@Override
-	public boolean isSignalSource(BlockState state) {
-		return true;
-	}
+    private static void updateState(BlockState state, Level world, BlockPos pos) {
+        int power = world.getBrightness(LightLayer.SKY, pos) - world.getSkyDarken();
+        var skyAngle = world.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, pos) * ((float) Math.PI / 180F);
+        boolean inverted = ((DaylightDetectorTaterBlock) state.getBlock()).inverted;
+        if (inverted) {
+            power = 15 - power;
+        } else if (power > 0) {
+            float g = skyAngle < (float) Math.PI ? 0.0f : (float) Math.PI * 2;
+            skyAngle += (g - skyAngle) * 0.2f;
+            power = Math.round((float) power * Mth.cos(skyAngle));
+        }
+        power = Mth.clamp(power, 0, 15);
+        if (state.getValue(POWER) != power) {
+            world.setBlock(pos, state.setValue(POWER, power), Block.UPDATE_ALL);
+        }
+    }
 
-	@Override
-	public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
-		return state.getValue(POWER);
-	}
+    private static <T extends BlockEntity> void tick(Level world, BlockPos pos, BlockState state, T blockEntity) {
+        if (world.getGameTime() % 20L == 0L) {
+            DaylightDetectorTaterBlock.updateState(state, world, pos);
+        }
+    }
 
-	private static void updateState(BlockState state, Level world, BlockPos pos) {
-		int power = world.getBrightness(LightLayer.SKY, pos) - world.getSkyDarken();
-		float skyAngle = world.getSunAngle(1.0f);
-		boolean inverted = ((DaylightDetectorTaterBlock) state.getBlock()).inverted;
-		if (inverted) {
-			power = 15 - power;
-		} else if (power > 0) {
-			float g = skyAngle < (float)Math.PI ? 0.0f : (float)Math.PI * 2;
-			skyAngle += (g - skyAngle) * 0.2f;
-			power = Math.round((float)power * Mth.cos(skyAngle));
-		}
-		power = Mth.clamp(power, 0, 15);
-		if (state.getValue(POWER) != power) {
-			world.setBlock(pos, state.setValue(POWER, power), Block.UPDATE_ALL);
-		}
-	}
+    @Override
+    public boolean isSignalSource(BlockState state) {
+        return true;
+    }
 
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new DaylightDetectorTaterBlockEntity(pos, state);
-	}
+    @Override
+    public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+        return state.getValue(POWER);
+    }
 
-	@Override
-	@Nullable
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-		if (!world.isClientSide() && world.dimensionType().hasSkyLight()) {
-			return BlockWithEntityAccessor.validateTicker(type, NEBlocks.DAYLIGHT_DETECTOR_TATER_ENTITY, DaylightDetectorTaterBlock::tick);
-		}
-		return null;
-	}
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new DaylightDetectorTaterBlockEntity(pos, state);
+    }
 
-	private static <T extends BlockEntity> void tick(Level world, BlockPos pos, BlockState state, T blockEntity) {
-		if (world.getGameTime() % 20L == 0L) {
-			DaylightDetectorTaterBlock.updateState(state, world, pos);
-		}
-	}
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        if (!world.isClientSide() && world.dimensionType().hasSkyLight()) {
+            return BlockWithEntityAccessor.validateTicker(type, NEBlocks.DAYLIGHT_DETECTOR_TATER_ENTITY, DaylightDetectorTaterBlock::tick);
+        }
+        return null;
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(POWER);
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(POWER);
+    }
 }

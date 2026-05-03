@@ -7,13 +7,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.WeatheringCopperDoorBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 public class TransientOxidizableDoorBlock extends TransientDoorBlock implements WeatheringCopper {
     private final WeatheringCopper.WeatherState oxidationLevel;
 
-    public TransientOxidizableDoorBlock(Block block, Block.Settings settings) {
+    public TransientOxidizableDoorBlock(Block block, BlockBehaviour.Properties settings) {
         super(block, settings);
         this.oxidationLevel = block instanceof WeatheringCopperDoorBlock door ? door.getAge() : WeatheringCopper.WeatherState.UNAFFECTED;
     }

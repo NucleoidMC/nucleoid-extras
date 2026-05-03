@@ -1,16 +1,11 @@
 package xyz.nucleoid.extras.util;
 
 import eu.pb4.sgui.api.elements.GuiElement;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementBuilderInterface;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.elements.GuiElementBuilderCreator;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.function.IntFunction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -18,16 +13,22 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.plasmid.api.util.PlayerUtil;
+
+import java.util.List;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 public abstract class PagedGui extends SimpleGui {
     private static final Object2IntMap<MenuType<?>> TYPE_TO_SIZE = new Object2IntOpenHashMap<>();
 
     protected int page = 0;
 
-    public static SimpleGui of(ServerPlayer player, List<GuiElementInterface> elements) {
+    public static SimpleGui of(ServerPlayer player, List<GuiElement> elements) {
         return of(player, elements, null);
     }
-    public static SimpleGui of(ServerPlayer player, List<GuiElementInterface> elements, @Nullable IntFunction<GuiElementInterface> navbar) {
+    public static SimpleGui of(ServerPlayer player, List<GuiElement> elements, @Nullable IntFunction<GuiElement> navbar) {
         return new FromList(MenuType.GENERIC_9x6, player, false, elements, navbar);
     }
 
@@ -68,9 +69,9 @@ public abstract class PagedGui extends SimpleGui {
             }
 
             if (element.element() != null) {
-                this.setSlot(i, element.element());
+                this.setSlot(i, element.element().get());
             } else if (element.slot() != null) {
-                this.setSlotRedirect(i, element.slot());
+                this.setSlot(i, element.slot());
             }
         }
 
@@ -82,9 +83,9 @@ public abstract class PagedGui extends SimpleGui {
             }
 
             if (navElement.element != null) {
-                this.setSlot(i + pageSize, navElement.element);
+                this.setSlot(i + pageSize, navElement.element.get());
             } else if (navElement.slot != null) {
-                this.setSlotRedirect(i + pageSize, navElement.slot);
+                this.setSlot(i + pageSize, navElement.slot);
             }
         }
     }
@@ -113,16 +114,19 @@ public abstract class PagedGui extends SimpleGui {
         return DisplayElement.filler();
     }
 
-    public record DisplayElement(@Nullable GuiElementInterface element, @Nullable Slot slot) {
-        private static final DisplayElement EMPTY = DisplayElement.of(new GuiElement(ItemStack.EMPTY, GuiElementInterface.EMPTY_CALLBACK));
+    public record DisplayElement(@Nullable Supplier<GuiElement> element, @Nullable Slot slot) {
+        private static final DisplayElement EMPTY = DisplayElement.of(new SimpleGuiElement(ItemStack.EMPTY, SimpleGuiElement.EMPTY_CALLBACK));
         private static final DisplayElement FILLER = DisplayElement.of(CommonGuiElements.white());
 
-        public static DisplayElement of(GuiElementInterface element) {
+        public static DisplayElement of(Supplier<GuiElement> element) {
             return new DisplayElement(element, null);
         }
+        public static DisplayElement of(GuiElement element) {
+            return new DisplayElement(() -> element, null);
+        }
 
-        public static DisplayElement of(GuiElementBuilderInterface<?> element) {
-            return new DisplayElement(element.build(), null);
+        public static DisplayElement of(GuiElementBuilderCreator<?> element) {
+            return new DisplayElement(element::build, null);
         }
 
         public static DisplayElement of(Slot slot) {
@@ -132,7 +136,7 @@ public abstract class PagedGui extends SimpleGui {
         public static DisplayElement nextPage(PagedGui gui) {
             if (gui.canNextPage()) {
                 return DisplayElement.of(
-                    CommonGuiElements.nextPage(gui.player).setCallback((x, y, z) -> {
+                    CommonGuiElements.nextPage(gui.player).setCallback(() -> {
                         playClickSound(gui.player);
                         gui.nextPage();
                     })
@@ -152,7 +156,7 @@ public abstract class PagedGui extends SimpleGui {
             if (gui.canPreviousPage()) {
                 return DisplayElement.of(
                     CommonGuiElements.previousPage(gui.player)
-                        .setCallback((x, y, z) -> {
+                        .setCallback(() -> {
                             playClickSound(gui.player);
                             gui.previousPage();
                         })
@@ -178,7 +182,7 @@ public abstract class PagedGui extends SimpleGui {
     }
 
     public static void playSound(ServerPlayer player, SoundEvent sound) {
-        player.playNotifySound(sound, SoundSource.MASTER, 1, 1);
+        PlayerUtil.playSoundToPlayer(player, sound, SoundSource.UI, 1, 1);
     }
 
     public static void playClickSound(ServerPlayer player) {
@@ -187,11 +191,11 @@ public abstract class PagedGui extends SimpleGui {
 
     public static class FromList extends PagedGui {
 
-        protected final List<GuiElementInterface> list;
+        protected final List<GuiElement> list;
         @Nullable
-        private final IntFunction<GuiElementInterface> navbar;
+        private final IntFunction<GuiElement> navbar;
 
-        public FromList(MenuType<?> type, ServerPlayer player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, IntFunction<GuiElementInterface> navbar) {
+        public FromList(MenuType<?> type, ServerPlayer player, boolean includePlayerInventorySlots, List<GuiElement> guiElementInterfaces, IntFunction<GuiElement> navbar) {
             super(type, player, includePlayerInventorySlots);
             this.list = guiElementInterfaces;
             this.navbar = navbar;
@@ -204,7 +208,7 @@ public abstract class PagedGui extends SimpleGui {
             return x != null ? DisplayElement.of(x) : super.getNavElement(id);
         }
 
-        protected List<GuiElementInterface> getList() {
+        protected List<GuiElement> getList() {
             return list;
         }
 

@@ -1,9 +1,9 @@
 package xyz.nucleoid.extras.event;
 
-import net.minecraft.server.MinecraftServer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.server.MinecraftServer;
 
 public final class NucleoidExtrasEvents {
     private NucleoidExtrasEvents() {

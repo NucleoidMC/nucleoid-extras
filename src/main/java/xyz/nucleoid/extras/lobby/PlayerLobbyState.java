@@ -4,14 +4,6 @@ import eu.pb4.playerdata.api.PlayerDataApi;
 import eu.pb4.playerdata.api.storage.JsonDataStorage;
 import eu.pb4.playerdata.api.storage.PlayerDataStorage;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
-import xyz.nucleoid.extras.component.NEDataComponentTypes;
-import xyz.nucleoid.extras.component.TaterSelectionComponent;
-import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
-import xyz.nucleoid.extras.tag.NEBlockTags;
-
-import java.util.HashSet;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +18,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import xyz.nucleoid.extras.component.NEDataComponentTypes;
+import xyz.nucleoid.extras.component.TaterSelectionComponent;
+import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
+import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+import xyz.nucleoid.extras.tag.NEBlockTags;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PlayerLobbyState {
 
@@ -91,7 +91,7 @@ public class PlayerLobbyState {
             // Update the tooltip of tater boxes in player's inventory
             PolymerUtils.reloadInventory(player);
 
-            player.displayClientMessage(Component.translatable("text.nucleoid_extras.tater_box.added", block.getName()), true);
+            player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.added", block.getName()), true);
         }
 
         triggerCollectCriterion(player, tater, this.collectedTaters.size());

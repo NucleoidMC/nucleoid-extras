@@ -1,10 +1,8 @@
 package xyz.nucleoid.extras.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.CrashReport;
-import net.minecraft.Util;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
 import net.minecraft.util.debugchart.LocalSampleLogger;
 import net.minecraft.util.debugchart.SampleStorage;
 import org.spongepowered.asm.mixin.Mixin;

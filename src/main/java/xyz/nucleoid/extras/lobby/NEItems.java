@@ -1,10 +1,10 @@
 package xyz.nucleoid.extras.lobby;
 
 import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
-import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
+import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.core.BlockPos;
@@ -22,12 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
@@ -35,20 +30,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.extras.component.GamePortalComponent;
-import xyz.nucleoid.extras.component.LauncherComponent;
-import xyz.nucleoid.extras.component.NEDataComponentTypes;
-import xyz.nucleoid.extras.component.TaterPositionsComponent;
-import xyz.nucleoid.extras.component.TaterSelectionComponent;
+import xyz.nucleoid.extras.component.*;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.extras.lobby.item.GamePortalOpenerItem;
-import xyz.nucleoid.extras.lobby.item.LaunchFeatherItem;
-import xyz.nucleoid.extras.lobby.item.LobbyBlockItem;
-import xyz.nucleoid.extras.lobby.item.LobbyHeadItem;
-import xyz.nucleoid.extras.lobby.item.LobbyTallBlockItem;
-import xyz.nucleoid.extras.lobby.item.LockSetterItem;
-import xyz.nucleoid.extras.lobby.item.QuickArmorStandItem;
-import xyz.nucleoid.extras.lobby.item.RuleBookItem;
+import xyz.nucleoid.extras.lobby.item.*;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.lobby.item.tater.TaterGuidebookItem;
@@ -63,7 +47,7 @@ import java.util.function.Function;
 public class NEItems {
     private static final List<Item> TATERS = new ArrayList<>();
 
-    public static final CreativeModeTab ITEM_GROUP = FabricItemGroup.builder()
+    public static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
         .title(Component.translatable("text.nucleoid_extras.name"))
         .icon(() -> new ItemStack(NEItems.NUCLEOID_LOGO))
         .displayItems((context, entries) -> {
@@ -524,7 +508,7 @@ public class NEItems {
     }
 
     public static void register() {
-        PolymerItemGroupUtils.registerPolymerItemGroup(NucleoidExtras.identifier("general"), ITEM_GROUP);
+        PolymerCreativeModeTabUtils.registerPolymerCreativeModeTab(NucleoidExtras.identifier("general"), ITEM_GROUP);
 
         ServerPlayConnectionEvents.JOIN.register(NEItems::onPlayerJoin);
 

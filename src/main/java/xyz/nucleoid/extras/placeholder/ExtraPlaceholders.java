@@ -11,12 +11,12 @@ import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 
 public class ExtraPlaceholders {
     public static void register() {
-        Placeholders.register(NucleoidExtras.identifier("location"), ExtraPlaceholders::locationDifference);
+        Placeholders.registerServer(NucleoidExtras.identifier("location"), ExtraPlaceholders::locationDifference);
     }
 
     private static PlaceholderResult locationDifference(PlaceholderContext context, @Nullable String s) {
-        if (context.hasWorld()) {
-            return PlaceholderResult.value(MutableComponent.create(new GameTextContent(GameSpaceManager.get().byWorld(context.world()))));
+        if (context.hasLevel()) {
+            return PlaceholderResult.value(MutableComponent.create(new GameTextContent(GameSpaceManager.get().byLevel(context.level()))));
         }
 
         return PlaceholderResult.value(Component.empty());

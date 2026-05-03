@@ -5,9 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
@@ -21,7 +22,7 @@ import java.util.List;
 public record ServerChangePortalConfig(
         Component name,
         List<Component> description,
-        ItemStack icon,
+        ItemStackTemplate icon,
         String serverId,
         CustomValuesConfig custom
 ) implements GamePortalConfig {
@@ -30,14 +31,14 @@ public record ServerChangePortalConfig(
         return instance.group(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(ServerChangePortalConfig::name),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(ServerChangePortalConfig::description),
-                MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(ServerChangePortalConfig::icon),
+                ItemStackTemplate.CODEC.optionalFieldOf("icon", new ItemStackTemplate(Items.GRASS_BLOCK)).forGetter(ServerChangePortalConfig::icon),
                 Codec.STRING.fieldOf("server_id").forGetter(ServerChangePortalConfig::serverId),
                 CustomValuesConfig.CODEC.optionalFieldOf("custom", CustomValuesConfig.empty()).forGetter(config -> config.custom)
         ).apply(instance, ServerChangePortalConfig::new);
     });
 
     @Override
-    public GamePortalBackend createBackend(MinecraftServer server, ResourceLocation id) {
+    public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
         Component name;
         if (this.name != null && this.name != CommonComponents.EMPTY) {
             name = this.name;
@@ -45,7 +46,7 @@ public record ServerChangePortalConfig(
             name = Component.literal(id.toString());
         }
 
-        return new ServerChangePortalBackend(name, description, icon, this.serverId);
+        return new ServerChangePortalBackend(name, description, icon.create(), this.serverId);
     }
 
     @Override

@@ -1,21 +1,21 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Rotations;
-import net.minecraft.item.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.math.*;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -36,9 +36,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
-import xyz.nucleoid.packettweaker.PacketContext;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class QuickArmorStandItem extends Item implements PolymerItem {
@@ -79,7 +77,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
 
                     float f = (float) Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
                     armorStandEntity.snapTo(armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), f, 0.0F);
-                    this.setRotations(armorStandEntity, world.random);
+                    this.setRotations(armorStandEntity, world.getRandom());
                     world.playSound(null, armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
                     world.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.position());
                 }
@@ -110,7 +108,7 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 

@@ -1,11 +1,20 @@
 package xyz.nucleoid.extras.game_portal;
 
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import eu.pb4.sgui.api.GuiHelpers;
-import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.SguiUtils;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.util.CommonGuiElements;
@@ -24,15 +33,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     public static final int GAMES_WIDTH = 9;
@@ -106,7 +106,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
     @Override
     public void applyTo(ServerPlayer player, boolean alt) {
-        var oldGui = GuiHelpers.getCurrentGui(player);
+        var oldGui = SguiUtils.getCurrentGui(player);
         var hasPack = PolymerResourcePackUtils.hasMainPack(player);
         var gui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
         if (hasPack) {
@@ -160,7 +160,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
         if (pages > 1) {
             if (page.getValue() == 0) {
-                gui.setSlot(9 * 2, GuiElement.EMPTY);
+                gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
@@ -170,7 +170,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
 
             if (page.getValue() == pages - 1) {
-                gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+                gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
@@ -179,8 +179,8 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 }));
             }
         } else {
-            gui.setSlot(9 * 2, GuiElement.EMPTY);
-            gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+            gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
+            gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
         }
 
         for (int y = 0; y < GAMES_HEIGHT; y++) {
@@ -217,7 +217,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
 
         if (pages > 1) {
             if (page.getValue() == 0) {
-                gui.setSlot(9 * 2, GuiElement.EMPTY);
+                gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
@@ -227,7 +227,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
 
             if (page.getValue() == pages - 1) {
-                gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+                gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
@@ -236,8 +236,8 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 }));
             }
         } else {
-            gui.setSlot(9 * 2, GuiElement.EMPTY);
-            gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+            gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
+            gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
         }
 
         int pageOffset = page.getValue() * GAMES_PER_PAGE;

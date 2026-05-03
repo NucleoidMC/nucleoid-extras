@@ -5,20 +5,24 @@ import com.google.gson.JsonObject;
 import eu.pb4.factorytools.api.virtualentity.ItemDisplayElementUtil;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import it.unimi.dsi.fastutil.chars.Char2IntOpenHashMap;
-import javax.imageio.ImageIO;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -99,7 +103,7 @@ public class UiResourceCreator {
     }
 
     public static IntFunction<GuiElementBuilder> icon16(String path, int size) {
-        var models = new ItemStack[size];
+        var models = new ItemStackTemplate[size];
 
         for (var i = 0; i < size; i++) {
             models[i] = genericIconRaw(Items.ALLIUM, path + "_" + i, BASE_MODEL, 0);
@@ -133,7 +137,7 @@ public class UiResourceCreator {
 
     public static IntFunction<GuiElementBuilder> genericProgress(String path, int start, int stop, boolean reverse, String base, List<SlicedTexture> progressType, int offset) {
 
-        var models = new ItemStack[stop - start];
+        var models = new ItemStackTemplate[stop - start];
 
         progressType.add(new SlicedTexture(path, start, stop, reverse));
 
@@ -143,16 +147,20 @@ public class UiResourceCreator {
         return (i) -> new GuiElementBuilder(models[i]).setName(Component.empty()).hideDefaultTooltip();
     }
 
-    public static ItemStack genericIconRaw(Item item, String path, String base, int offset) {
+    public static ItemStackTemplate genericIconRaw(Item item, String path, String base, int offset) {
         var extra = offset == 0 ? "" : "_offset_" + offset;
 
         var texturePath = elementPath(path);
         var modelPath = elementPath(path + extra);
         SIMPLE_MODEL.add(new SimpleModel(texturePath, modelPath, base, offset));
-        return ItemDisplayElementUtil.getModel(texturePath);
+
+
+
+        return new ItemStackTemplate(Items.MUSIC_DISC_5, DataComponentPatch.builder()
+            .set(DataComponents.ITEM_MODEL, ResourcePackExtras.bridgeModel(texturePath)).build());
     }
 
-    private static ResourceLocation elementPath(String path) {
+    private static Identifier elementPath(String path) {
         return identifier("sgui/elements/" + path);
     }
 
@@ -183,7 +191,7 @@ public class UiResourceCreator {
         return new TextBuilders(Component.literal(builder.toString()).setStyle(STYLE));
     }
 
-    public static char font(ResourceLocation path, int ascent, int height) {
+    public static char font(Identifier path, int ascent, int height) {
         var c = (character++);
         var texture = new FontTexture(path, ascent, height, new char[][] { new char[] {c} });
         FONT_TEXTURES.add(texture);
@@ -317,7 +325,7 @@ public class UiResourceCreator {
 
     public record SlicedTexture(String path, int start, int stop, boolean reverse) {};
 
-    public record FontTexture(ResourceLocation path, int ascent, int height, char[][] chars) {};
+    public record FontTexture(Identifier path, int ascent, int height, char[][] chars) {};
 
-    public record SimpleModel(ResourceLocation texturePath, ResourceLocation modelPath, String base, int offset) {}
+    public record SimpleModel(Identifier texturePath, Identifier modelPath, String base, int offset) {}
 }

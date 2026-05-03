@@ -1,8 +1,5 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
-import xyz.nucleoid.extras.lobby.NEBlocks;
-
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +11,9 @@ import net.minecraft.world.level.block.entity.BellBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import xyz.nucleoid.extras.lobby.NEBlocks;
+
+import java.util.List;
 
 public class BellTaterBlockEntity extends BlockEntity {
 	private long lastRingTime;

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import eu.pb4.polymer.common.api.PolymerCommonUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import xyz.nucleoid.extras.NucleoidExtras;
 
 import javax.imageio.ImageIO;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class ResourceUtils {
 
-    public static BufferedImage getTexture(ResourceLocation identifier) {
+    public static BufferedImage getTexture(Identifier identifier) {
         try {
             return ImageIO.read(getJarStream("assets/" + identifier.getNamespace() + "/textures/" + identifier.getPath() + ".png"));
         } catch (Throwable e) {
@@ -27,7 +27,7 @@ public class ResourceUtils {
         }
     }
 
-    public static JsonObject getModel(ResourceLocation identifier) {
+    public static JsonObject getModel(Identifier identifier) {
         try {
             return (JsonObject) JsonParser.parseString(new String(
                     Objects.requireNonNull(getJarData("assets/" + identifier.getNamespace() + "/models/" + identifier.getPath() + ".json")), StandardCharsets.UTF_8
@@ -64,10 +64,10 @@ public class ResourceUtils {
         return null;
     }
 
-    public static JsonObject getElementResolvedModel(ResourceLocation baseModel) {
+    public static JsonObject getElementResolvedModel(Identifier baseModel) {
         var model = getModel(baseModel);
         if (!model.has("elements") && model.has("parent")) {
-            var parent = getElementResolvedModel(ResourceLocation.parse(model.get("parent").getAsString()));
+            var parent = getElementResolvedModel(Identifier.parse(model.get("parent").getAsString()));
             for (var key : model.keySet()) {
                 if (parent.has(key) && parent.get(key).isJsonObject()) {
                     var out = parent.get(key).getAsJsonObject();

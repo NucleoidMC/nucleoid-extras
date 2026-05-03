@@ -7,10 +7,10 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.PermissionSet;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 
 import java.util.Map;
-import java.util.UUID;
 
 public final class CommandAliases {
     private static final CommandSource NO_FEEDBACK_OUTPUT = new CommandSource() {
@@ -48,7 +48,7 @@ public final class CommandAliases {
                 var value = entry.getValue();
                 var commands = value.commands;
                 literals[literals.length - 1].executes(context -> {
-                    var source = context.getSource().withMaximumPermission(4);
+                    var source = context.getSource().withMaximumPermission(PermissionSet.ALL_PERMISSIONS);
                     if (!value.feedback) {
                         source = source.withSource(NO_FEEDBACK_OUTPUT);
                     }

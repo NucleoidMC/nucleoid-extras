@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
     private static final int CLOSE_DELAY = SharedConstants.TICKS_PER_SECOND * 10;
@@ -23,7 +23,7 @@ public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
 
     private final Block polymerBlock;
 
-    public TransientDoorBlock(Block block, Block.Settings settings) {
+    public TransientDoorBlock(Block block, Block.Properties settings) {
         super(block instanceof DoorBlock door ? door.type() : BlockSetType.OAK, settings);
         this.polymerBlock = block;
     }

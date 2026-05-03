@@ -3,6 +3,7 @@ package xyz.nucleoid.extras.integrations.http;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.resources.Identifier;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 
 import java.net.URI;
@@ -19,25 +20,24 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
-import net.minecraft.resources.ResourceLocation;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class NucleoidHttpClient {
-    private static final Codec<Map<String, Map<ResourceLocation, Number>>> PLAYER_STATS_CODEC = Codec.unboundedMap(Codec.STRING, Codec.unboundedMap(ResourceLocation.CODEC, (Codec<Number>) (Object) Codec.DOUBLE));
+    private static final Codec<Map<String, Map<Identifier, Number>>> PLAYER_STATS_CODEC = Codec.unboundedMap(Codec.STRING, Codec.unboundedMap(Identifier.CODEC, (Codec<Number>) (Object) Codec.DOUBLE));
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     private static URI baseUri;
 
-    public static CompletableFuture<List<LeaderboardEntry>> getLeaderboard(ResourceLocation id) {
+    public static CompletableFuture<List<LeaderboardEntry>> getLeaderboard(Identifier id) {
         return sendSimple("/leaderboard/" + id.toString(), LeaderboardEntry.CODEC, List::of);
     }
 
-    public static CompletableFuture<Map<ResourceLocation, RankingsEntry>> getPlayerRankings(UUID uuid) {
+    public static CompletableFuture<Map<Identifier, RankingsEntry>> getPlayerRankings(UUID uuid) {
         return sendSimple("/player/" + uuid.toString() + "/rankings", RankingsEntry.CODEC, Map::of);
     }
 
-    public static CompletableFuture<Map<String, Map<ResourceLocation, Number>>> getPlayerStats(UUID uuid) {
+    public static CompletableFuture<Map<String, Map<Identifier, Number>>> getPlayerStats(UUID uuid) {
         return sendSimple("/stats/player/" + uuid.toString() + "/rankings", PLAYER_STATS_CODEC, Map::of);
     }
 

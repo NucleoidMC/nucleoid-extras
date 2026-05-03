@@ -1,7 +1,10 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import java.util.List;
-import java.util.function.Consumer;
+import com.mojang.serialization.MapCodec;
+import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
@@ -24,13 +27,9 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import com.mojang.serialization.MapCodec;
-import eu.pb4.polymer.core.api.block.PolymerBlock;
-import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
-import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import xyz.nucleoid.extras.lobby.NEBlocks;
-import xyz.nucleoid.extras.lobby.contributor.ContributorData;
-import xyz.nucleoid.packettweaker.PacketContext;
+
+import java.util.function.Consumer;
 
 public class ContributorStatueBlock extends BaseEntityBlock implements PolymerBlock, BlockWithElementHolder, TooltipProvider {
     protected static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;

@@ -1,20 +1,12 @@
 package xyz.nucleoid.extras.placeholder;
 
-import com.mojang.serialization.*;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.text.*;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
-import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
-
-import java.util.stream.Stream;
 
 public record GameTextContent(GameSpace gameSpace) implements ComponentContents {
     public Component toVanilla(@Nullable ServerPlayer player, Component text) {
@@ -24,7 +16,7 @@ public record GameTextContent(GameSpace gameSpace) implements ComponentContents 
             return out;
         }
 
-        var playerSpace = GameSpaceManager.get().byWorld(player.level());
+        var playerSpace = GameSpaceManager.get().byLevel(player.level());
 
         if (playerSpace == gameSpace) {
             var out = Component.empty();

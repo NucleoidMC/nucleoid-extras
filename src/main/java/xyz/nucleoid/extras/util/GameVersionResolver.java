@@ -1,12 +1,8 @@
 package xyz.nucleoid.extras.util;
 
-import org.jetbrains.annotations.Nullable;
-
-//import com.viaversion.viaversion.api.Via;
-//import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
-
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
+import org.jetbrains.annotations.Nullable;
 
 public final class GameVersionResolver {
     private static final boolean VIAVERSION = FabricLoader.getInstance().isModLoaded("viaversion");

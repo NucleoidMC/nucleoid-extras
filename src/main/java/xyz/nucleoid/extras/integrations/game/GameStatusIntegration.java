@@ -3,7 +3,7 @@ package xyz.nucleoid.extras.integrations.game;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.event.NucleoidExtrasEvents;
@@ -105,7 +105,7 @@ public final class GameStatusIntegration {
         }
     }
 
-    record GameEntry(String name, ResourceLocation typeId, int playerCount) {
+    record GameEntry(String name, Identifier typeId, int playerCount) {
         JsonObject serialize() {
             var root = new JsonObject();
             root.addProperty("name", this.name);

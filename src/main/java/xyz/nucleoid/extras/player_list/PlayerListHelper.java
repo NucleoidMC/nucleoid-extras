@@ -1,12 +1,5 @@
 package xyz.nucleoid.extras.player_list;
 
-import eu.pb4.polymer.core.mixin.entity.PlayerListS2CPacketAccessor;
-import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
-
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Optionull;
 import net.minecraft.network.chat.Component;
@@ -14,6 +7,13 @@ import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
+import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.mixin.player_list.PlayerListS2CPacketAccessor;
+import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 public class PlayerListHelper {
     public static Component getDisplayName(ServerPlayer player, boolean gray) {
@@ -62,7 +62,7 @@ public class PlayerListHelper {
 
     public static boolean shouldGray(ServerPlayer left, ServerPlayer right) {
         var manager = GameSpaceManager.get();
-        return manager.byWorld(left.level()) != manager.byWorld(right.level());
+        return manager.byLevel(left.level()) != manager.byLevel(right.level());
     }
 
     public static void updatePlayer(ServerPlayer updatedPlayer) {

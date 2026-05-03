@@ -2,6 +2,12 @@ package xyz.nucleoid.extras.game_portal.entry;
 
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 import xyz.nucleoid.plasmid.impl.portal.GamePortalBackend;
@@ -9,12 +15,6 @@ import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 
 public record QuickPortalEntry(
     GamePortal portal,

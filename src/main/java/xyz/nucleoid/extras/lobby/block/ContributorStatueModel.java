@@ -3,15 +3,15 @@ package xyz.nucleoid.extras.lobby.block;
 import com.google.common.collect.ImmutableList;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.EntityElement;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.util.List;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 public class ContributorStatueModel extends ElementHolder {
     private static final List<EntityType<?>> SPOOKY_ENTITIES = ImmutableList.of(

@@ -1,10 +1,11 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds.Ints;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds.Ints;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import xyz.nucleoid.extras.lobby.block.ContainerLockAccess;
+import xyz.nucleoid.plasmid.api.util.PlayerUtil;
 
 public class LockSetterItem extends SimplePolymerItem {
     public LockSetterItem(Properties settings) {
@@ -24,7 +26,7 @@ public class LockSetterItem extends SimplePolymerItem {
         var world = context.getLevel();
         var user = context.getPlayer();
 
-        if (!world.isClientSide() && user.canUseGameMasterBlocks()) {
+        if (!world.isClientSide() && user.canUseGameMasterBlocks() && user instanceof ServerPlayer player) {
             var stack = context.getItemInHand();
             var newLock = stack.get(DataComponents.LOCK);
 
@@ -37,13 +39,13 @@ public class LockSetterItem extends SimplePolymerItem {
 
                     if (currentLock == LockCode.NO_LOCK) {
                         access.setContainerLock(newLock);
-                        sendFeedback(user, access, "locked");
+                        sendFeedback(player, access, "locked");
                     } else if (!newLock.equals(currentLock)) {
-                        sendFeedback(user, access, "already_locked");
+                        sendFeedback(player, access, "already_locked");
                         return InteractionResult.FAIL;
                     } else {
                         access.setContainerLock(LockCode.NO_LOCK);
-                        sendFeedback(user, access, "unlocked");
+                        sendFeedback(player, access, "unlocked");
                     }
 
                     return InteractionResult.SUCCESS_SERVER;
@@ -54,11 +56,10 @@ public class LockSetterItem extends SimplePolymerItem {
         return InteractionResult.PASS;
     }
 
-    private static void sendFeedback(Player player, ContainerLockAccess access, String suffix) {
+    private static void sendFeedback(ServerPlayer player, ContainerLockAccess access, String suffix) {
         var text = Component.translatable("text.nucleoid_extras.lock_setter." + suffix, access.getContainerLockName());
-        player.displayClientMessage(text, true);
-
-        player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1, 1);
+        player.sendSystemMessage(text, true);
+        PlayerUtil.playSoundToPlayer(player, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1, 1);
     }
 
     public static LockCode createUnlockableLock() {

@@ -3,13 +3,13 @@ package xyz.nucleoid.extras.lobby.criterion;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 
 import java.util.function.Function;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.util.ExtraCodecs;
 
 public sealed interface TaterCount {
     static final Codec<TaterCount> CODEC = Codec.either(Value.CODEC, All.CODEC).xmap(either -> {

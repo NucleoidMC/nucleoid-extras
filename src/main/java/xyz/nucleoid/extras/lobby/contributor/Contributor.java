@@ -1,8 +1,5 @@
 package xyz.nucleoid.extras.lobby.contributor;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,6 +17,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.minecraft.world.level.storage.TagValueInput;
 import xyz.nucleoid.extras.mixin.lobby.ArmorStandEntityAccessor;
+
+import java.util.Optional;
+import java.util.function.Consumer;
 
 public record Contributor(String name, ContributorSocials socials, Optional<CompoundTag> statueNbt) implements Comparable<Contributor> {
     protected static final Codec<Contributor> CODEC = RecordCodecBuilder.create(instance ->

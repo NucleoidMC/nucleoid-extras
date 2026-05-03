@@ -2,15 +2,15 @@ package xyz.nucleoid.extras.data.provider;
 
 import java.util.concurrent.CompletableFuture;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 
-public class NEItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    public NEItemTagProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registries, FabricTagProvider.BlockTagProvider blockTags) {
+public class NEItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+    public NEItemTagProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registries, FabricTagsProvider.BlockTagsProvider blockTags) {
         super(dataOutput, registries, blockTags);
     }
 

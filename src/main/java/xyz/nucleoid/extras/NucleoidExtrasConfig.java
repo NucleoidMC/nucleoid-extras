@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,11 +31,10 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.resources.ResourceLocation;
 
 public record NucleoidExtrasConfig(
         boolean sidebar,
-        Optional<ResourceLocation> gamePortalOpener,
+        Optional<Identifier> gamePortalOpener,
         @Nullable LobbySpawnConfig lobbySpawn,
         @Nullable IntegrationsConfig integrations,
         @Nullable CommandAliasConfig aliases,
@@ -53,7 +53,7 @@ public record NucleoidExtrasConfig(
     private static final Codec<NucleoidExtrasConfig> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
                 Codec.BOOL.optionalFieldOf("sidebar", false).forGetter(NucleoidExtrasConfig::sidebar),
-                ResourceLocation.CODEC.optionalFieldOf("game_portal_opener").forGetter(NucleoidExtrasConfig::gamePortalOpener),
+                Identifier.CODEC.optionalFieldOf("game_portal_opener").forGetter(NucleoidExtrasConfig::gamePortalOpener),
                 LobbySpawnConfig.CODEC.optionalFieldOf("lobby_spawn").forGetter(config -> Optional.ofNullable(config.lobbySpawn())),
                 IntegrationsConfig.CODEC.optionalFieldOf("integrations").forGetter(config -> Optional.ofNullable(config.integrations())),
                 CommandAliasConfig.CODEC.optionalFieldOf("aliases").forGetter(config -> Optional.ofNullable(config.aliases())),

@@ -3,11 +3,6 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
-import xyz.nucleoid.extras.tag.NEBlockTags;
-import xyz.nucleoid.extras.util.SkinEncoder;
-
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -21,6 +16,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import xyz.nucleoid.extras.tag.NEBlockTags;
+import xyz.nucleoid.extras.util.SkinEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class TinyPotatoBlock extends Block implements PolymerBlock {
     public static final Codec<Holder<Block>> ENTRY_CODEC = BuiltInRegistries.BLOCK.holderByNameCodec().validate(block -> {

@@ -1,15 +1,15 @@
 package xyz.nucleoid.extras.dialog;
 
 import com.mojang.serialization.Lifecycle;
-import xyz.nucleoid.extras.NucleoidExtras;
-import xyz.nucleoid.extras.NucleoidExtrasConfig;
-
-import java.util.Optional;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.dialog.Dialog;
+import xyz.nucleoid.extras.NucleoidExtras;
+import xyz.nucleoid.extras.NucleoidExtrasConfig;
+
+import java.util.Optional;
 
 public class NEDialogs {
     public static final ResourceKey<Dialog> RULES = of("rules");

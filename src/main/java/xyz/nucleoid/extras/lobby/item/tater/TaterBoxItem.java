@@ -1,26 +1,27 @@
 package xyz.nucleoid.extras.lobby.item.tater;
 
+import eu.pb4.polymer.common.api.PolymerCommonUtils;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.TaterGuiElementBuilder;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
-import net.minecraft.component.type.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.item.*;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.*;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,11 +29,7 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ResolvableProfile;
@@ -49,10 +46,12 @@ import xyz.nucleoid.extras.lobby.block.tater.CorruptaterBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.gui.TaterBoxGui;
 import xyz.nucleoid.extras.tag.NEBlockTags;
-import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.server.translations.api.Localization;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -69,8 +68,8 @@ public class TaterBoxItem extends Item implements PolymerItem {
                 .build()));
     }
 
-    private MutableComponent getTitle(ServerPlayer player) {
-        Component name = this.getName();
+    private MutableComponent getTitle(ServerPlayer player, ItemStack stack) {
+        Component name = this.getName(stack);
         int count = PlayerLobbyState.get(player).collectedTaters.size();
         long max = getCollectableTaterCount(player.registryAccess());
 
@@ -117,7 +116,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
 
                     for (var e : nbt.getListOrEmpty(LEGACY_TATERS_KEY)) {
                         if (e instanceof StringTag entry) {
-                            var block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.tryParse(entry.value()));
+                            var block = BuiltInRegistries.BLOCK.getValue(Identifier.tryParse(entry.value()));
 
                             if (block instanceof TinyPotatoBlock tinyPotatoBlock) {
                                 data.collectedTaters.add(tinyPotatoBlock);
@@ -135,7 +134,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     private void openTaterBoxUi(ServerPlayer user, ItemStack stack, InteractionHand hand) {
         if (stack.has(NEDataComponentTypes.TATER_SELECTION)) {
             var state = PlayerLobbyState.get(user);
-            List<GuiElementInterface> taters = new ArrayList<>();
+            List<GuiElement> taters = new ArrayList<>();
 
             taters.add(createGuiElement(stack, user, hand, Items.BARRIER, NONE_TEXT, null, true, true));
 
@@ -149,7 +148,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
 
             var ui = TaterBoxGui.of(user, taters, this.isCreative());
             ui.setHideUnfound(true);
-            ui.setTitle(this.getTitle(user));
+            ui.setTitle(this.getTitle(user, stack));
             ui.open();
 
             Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
@@ -161,7 +160,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     }
 
     private TaterBoxGui.TaterGuiElement createGuiElement(ItemStack stack, Player user, InteractionHand hand, ItemLike icon, Component text, Holder<Block> tater, boolean found, boolean collectable) {
-        var guiElementBuilder = new TaterBoxGui.TaterGuiElementBuilder(icon.asItem());
+        var guiElementBuilder = new TaterGuiElementBuilder(icon.asItem());
         guiElementBuilder.setName(text);
         guiElementBuilder.setRarity(Rarity.COMMON);
         guiElementBuilder.setFound(found);
@@ -205,8 +204,8 @@ public class TaterBoxItem extends Item implements PolymerItem {
     }
 
     @Override
-    public void modifyBasePolymerItemStack(ItemStack out, ItemStack itemStack, PacketContext context) {
-        PolymerItem.super.modifyBasePolymerItemStack(out, itemStack, context);
+    public void modifyBasePolymerItemStack(ItemStack out, ItemStack itemStack, PacketContext context, HolderLookup.Provider provider) {
+        PolymerItem.super.modifyBasePolymerItemStack(out, itemStack, context, provider);
         Optional<Holder<Block>> selectedTater = itemStack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
         if (selectedTater.isPresent() && selectedTater.get().value() instanceof TinyPotatoBlock potatoBlock) {
             ResolvableProfile profile = PolymerUtils.createProfileComponent(potatoBlock.getItemTexture());
@@ -219,7 +218,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 
@@ -227,7 +226,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
         super.appendHoverText(stack, context, displayComponent, textConsumer, type);
 
-        var owner = PacketContext.get();
+        var owner = PolymerCommonUtils.getPlayer(PacketContext.get());
 
         Optional<Holder<Block>> selectedBlock = stack.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT).tater();
         Component selectedName;
@@ -240,7 +239,9 @@ public class TaterBoxItem extends Item implements PolymerItem {
 
         textConsumer.accept(Component.translatable("text.nucleoid_extras.tater_box.selected", selectedName).withStyle(ChatFormatting.GRAY));
 
-        int count = owner != null && owner.getPlayer() != null ? PlayerLobbyState.get(owner.getPlayer()).collectedTaters.size() : 0;
+        int count;
+        if (owner != null) count = PlayerLobbyState.get(owner).collectedTaters.size();
+        else count = 0;
         long max = getCollectableTaterCount(context.registries());
         String percent = String.format("%.2f", max == 0 ? 0 : count / (double) max * 100);
 
@@ -269,7 +270,7 @@ public class TaterBoxItem extends Item implements PolymerItem {
                     var name = tater.getName();
 
                     if (name != null) {
-                        return Localization.text(name, player).getString();
+                        return Localization.component(name, player).getString();
                     }
                 }
 

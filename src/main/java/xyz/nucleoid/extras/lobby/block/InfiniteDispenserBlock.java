@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
@@ -15,10 +16,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import xyz.nucleoid.extras.lobby.NEBlocks;
-import xyz.nucleoid.packettweaker.PacketContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class InfiniteDispenserBlock extends DispenserBlock implements PolymerBlock {
     private static final Logger LOGGER = LogManager.getLogger(InfiniteDispenserBlock.class);

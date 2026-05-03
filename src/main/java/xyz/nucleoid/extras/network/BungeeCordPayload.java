@@ -1,14 +1,12 @@
 package xyz.nucleoid.extras.network;
 
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import java.nio.charset.StandardCharsets;
+import net.minecraft.resources.Identifier;
 
 public record BungeeCordPayload(byte[] data) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<BungeeCordPayload> ID = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("bungeecord", "main"));
+    public static final CustomPacketPayload.Type<BungeeCordPayload> ID = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("bungeecord", "main"));
 
     public static final StreamCodec<ByteBuf, BungeeCordPayload> PACKET_CODEC = StreamCodec.ofMember(BungeeCordPayload::write, BungeeCordPayload::read);
 

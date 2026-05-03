@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -11,15 +12,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import xyz.nucleoid.extras.component.LauncherComponent;
-import xyz.nucleoid.packettweaker.PacketContext;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.component.LauncherComponent;
+import xyz.nucleoid.plasmid.api.util.PlayerUtil;
 
 public class LaunchPadBlock extends Block implements EntityBlock, PolymerBlock {
     private final BlockState virtualBlockState;
@@ -65,7 +67,7 @@ public class LaunchPadBlock extends Block implements EntityBlock, PolymerBlock {
     }
 
     public static void playLaunchSound(ServerPlayer player, SoundEvent sound, SoundSource category) {
-        player.playNotifySound(sound, category, 0.5f, 1);
+        PlayerUtil.playSoundToPlayer(player, sound, category, 0.5f, 1);
     }
 
     private static Vec3 getVector(float pitch, float yaw) {

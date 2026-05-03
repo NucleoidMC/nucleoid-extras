@@ -2,12 +2,6 @@ package xyz.nucleoid.extras.dialog;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import xyz.nucleoid.codecs.MoreCodecs;
-import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -17,6 +11,12 @@ import net.minecraft.server.dialog.DialogAction;
 import net.minecraft.server.dialog.NoticeDialog;
 import net.minecraft.server.dialog.body.DialogBody;
 import net.minecraft.server.dialog.body.PlainMessage;
+import xyz.nucleoid.codecs.MoreCodecs;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public record RulesConfig(
     List<List<Component>> pages

@@ -4,9 +4,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import xyz.nucleoid.codecs.MoreCodecs;
 import xyz.nucleoid.plasmid.api.game.config.CustomValuesConfig;
@@ -23,7 +24,7 @@ public record AdvancedStyledMenuPortalConfig(
         Component name,
         Optional<Component> uiTitle,
         List<Component> description,
-        ItemStack icon,
+        ItemStackTemplate icon,
         List<MenuEntryConfig> entries,
         CustomValuesConfig custom
 ) implements GamePortalConfig {
@@ -33,14 +34,14 @@ public record AdvancedStyledMenuPortalConfig(
                 PlasmidCodecs.TEXT.optionalFieldOf("name", CommonComponents.EMPTY).forGetter(AdvancedStyledMenuPortalConfig::name),
                 PlasmidCodecs.TEXT.optionalFieldOf("ui_title").forGetter(AdvancedStyledMenuPortalConfig::uiTitle),
                 MoreCodecs.listOrUnit(PlasmidCodecs.TEXT).optionalFieldOf("description", Collections.emptyList()).forGetter(AdvancedStyledMenuPortalConfig::description),
-                MoreCodecs.ITEM_STACK.optionalFieldOf("icon", new ItemStack(Items.GRASS_BLOCK)).forGetter(AdvancedStyledMenuPortalConfig::icon),
+                ItemStackTemplate.CODEC.optionalFieldOf("icon", new ItemStackTemplate(Items.GRASS_BLOCK)).forGetter(AdvancedStyledMenuPortalConfig::icon),
                 MenuEntryConfig.CODEC.listOf().fieldOf("entries").forGetter(AdvancedStyledMenuPortalConfig::entries),
                 CustomValuesConfig.CODEC.optionalFieldOf("custom", CustomValuesConfig.empty()).forGetter(config -> config.custom)
         ).apply(instance, AdvancedStyledMenuPortalConfig::new);
     });
 
     @Override
-    public GamePortalBackend createBackend(MinecraftServer server, ResourceLocation id) {
+    public GamePortalBackend createBackend(MinecraftServer server, Identifier id) {
         Component name;
         if (this.name != null && this.name != CommonComponents.EMPTY) {
             name = this.name;
@@ -48,7 +49,7 @@ public record AdvancedStyledMenuPortalConfig(
             name = Component.literal(id.toString());
         }
 
-        return new AdvancedStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon, this.entries);
+        return new AdvancedStyledMenuPortalBackend(name, uiTitle.orElse(name), description, icon.create(), this.entries);
     }
 
     @Override

@@ -1,24 +1,19 @@
 package xyz.nucleoid.extras.lobby.item.tater;
 
-import java.util.Set;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
-
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.sgui.api.elements.BookElementBuilder;
 import eu.pb4.sgui.api.gui.BookGui;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,7 +26,8 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.component.TaterPositionsComponent;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
-import xyz.nucleoid.packettweaker.PacketContext;
+
+import java.util.Set;
 
 public class TaterGuidebookItem extends Item implements PolymerItem {
     private static final Component MISSING_SYMBOL = Component.literal("❌").withStyle(ChatFormatting.RED);
@@ -72,7 +68,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 
@@ -89,7 +85,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
         player.getCooldowns().addCooldown(stack, RECORD_COOLDOWN);
 
         int difference = taterPositions.size() - initialCount;
-        player.displayClientMessage(Component.translatable("text.nucleoid_extras.tater_guidebook.recorded", difference), true);
+        player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_guidebook.recorded", difference), true);
     }
 
     private static void recordChunk(ChunkAccess chunk, SetMultimap<Holder<Item>, BlockPos> taterPositions) {
@@ -156,7 +152,7 @@ public class TaterGuidebookItem extends Item implements PolymerItem {
     }
 
     private static HoverEvent getHoverEvent(Holder<Item> tater, Set<BlockPos> positions) {
-        var hoverText = tater.value().getName().copy();
+        var hoverText = tater.components().get(DataComponents.ITEM_NAME).copy();
 
         for (var pos : positions) {
             hoverText.append(CommonComponents.NEW_LINE);

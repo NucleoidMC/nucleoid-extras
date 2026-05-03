@@ -6,12 +6,13 @@ import com.google.common.collect.SetMultimap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
+
+import java.util.List;
+import java.util.Map;
 
 public record TaterPositionsComponent(SetMultimap<Holder<Item>, BlockPos> positions) implements PolymerComponent {
     private static final Codec<Map<Holder<Item>, List<BlockPos>>> MAP_CODEC = Codec.unboundedMap(BuiltInRegistries.ITEM.holderByNameCodec(), BlockPos.CODEC.listOf());

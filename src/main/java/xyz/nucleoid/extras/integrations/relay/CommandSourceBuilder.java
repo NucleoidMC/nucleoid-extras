@@ -12,6 +12,8 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +32,7 @@ public interface CommandSourceBuilder {
 
         @Override
         public CommandSourceStack buildCommandSource(CommandSource output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
-            return new CommandSourceStack(output, Vec3.ZERO, Vec2.ZERO, server.overworld(), permissionLevel, name, Component.literal(name), server, null);
+            return new CommandSourceStack(output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), name, Component.literal(name), server, null);
         }
     }
 
@@ -87,7 +89,7 @@ public interface CommandSourceBuilder {
                     return overrideReader;
                 }
             };
-            return new VirtualServerCommandSource(roleReader, output, Vec3.ZERO, Vec2.ZERO, server.overworld(), permissionLevel, name, Component.literal(name), server, null);
+            return new VirtualServerCommandSource(roleReader, output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), name, Component.literal(name), server, null);
         }
     }
 }

@@ -1,5 +1,6 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import xyz.nucleoid.extras.util.SkinEncoder;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class DiceTaterBlock extends CubicPotatoBlock {
     private static final int ROLLING_FACE = 0;

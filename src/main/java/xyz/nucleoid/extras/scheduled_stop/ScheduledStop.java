@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -45,7 +46,7 @@ public final class ScheduledStop {
         // @formatter:off
         dispatcher.register(
                 literal("stop").then(literal("schedule")
-                    .requires(source -> source.hasPermission(4))
+                    .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                     .executes(ScheduledStop::scheduleRestart)
                 )
         );

@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
@@ -14,7 +14,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import xyz.nucleoid.extras.NucleoidExtras;
@@ -27,7 +27,7 @@ import xyz.nucleoid.extras.lobby.criterion.TaterCount;
 import xyz.nucleoid.extras.lobby.criterion.WearTaterCriterion;
 
 public class NEAdvancementProvider extends FabricAdvancementProvider {
-    public NEAdvancementProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public NEAdvancementProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
@@ -38,13 +38,13 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
                         NEItems.NUCLEOID_LOGO,
                         Component.translatable("advancements.nucleoid_extras.root.title"),
                         Component.translatable("advancements.nucleoid_extras.root.description"),
-                        ResourceLocation.withDefaultNamespace("block/lime_concrete"),
+                        Identifier.withDefaultNamespace("block/lime_concrete"),
                         AdvancementType.TASK,
                         false,
                         false,
                         false
                 )
-                .criterion("get_tater", NECriteria.TATER_COLLECTED.create(
+                .addCriterion("get_tater", NECriteria.TATER_COLLECTED.createCriterion(
                         new TaterCollectedCriterion.Conditions(Optional.empty(), Optional.of(new TaterCount.Value(1)))
                 ))
         );
@@ -101,16 +101,16 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true
                 )
-                .criterion("wear_cold_frog_tater", NECriteria.WEAR_TATER.create(
+                .addCriterion("wear_cold_frog_tater", NECriteria.WEAR_TATER.createCriterion(
                         new WearTaterCriterion.Conditions(getTaterEntry(NEBlocks.COLD_FROG_TATER), Optional.of(4))
                 ))
-                .criterion("wear_temperate_frog_tater", NECriteria.WEAR_TATER.create(
+                .addCriterion("wear_temperate_frog_tater", NECriteria.WEAR_TATER.createCriterion(
                         new WearTaterCriterion.Conditions(getTaterEntry(NEBlocks.TEMPERATE_FROG_TATER), Optional.of(4))
                 ))
-                .criterion("wear_warm_frog_tater", NECriteria.WEAR_TATER.create(
+                .addCriterion("wear_warm_frog_tater", NECriteria.WEAR_TATER.createCriterion(
                         new WearTaterCriterion.Conditions(getTaterEntry(NEBlocks.WARM_FROG_TATER), Optional.of(4))
                 ))
-                .criteriaMerger(Strategy.OR)
+                .requirements(Strategy.OR)
                 .parent(frogTaters)
         );
 
@@ -150,7 +150,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
         var name = "get_" + count.count(null) + "_tater" + (count.count(null) == 1 ? "" : "s");
         var conditions = new TaterCollectedCriterion.Conditions(Optional.empty(), Optional.of(count));
 
-        builder.addCriterion(name, NECriteria.TATER_COLLECTED.create(conditions));
+        builder.addCriterion(name, NECriteria.TATER_COLLECTED.createCriterion(conditions));
 
         return builder;
     }
@@ -164,7 +164,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
 
             var conditions = new TaterCollectedCriterion.Conditions(getTaterEntry(tater), Optional.empty());
 
-            builder.addCriterion(name, NECriteria.TATER_COLLECTED.create(conditions));
+            builder.addCriterion(name, NECriteria.TATER_COLLECTED.createCriterion(conditions));
         }
 
         return builder;
@@ -197,7 +197,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
 
     private static Optional<Holder<Block>> getTaterEntry(Block block) {
         if (block instanceof TinyPotatoBlock tater) {
-            return Optional.of(tater.getRegistryEntry());
+            return Optional.of(tater.builtInRegistryHolder());
         }
 
         throw new IllegalArgumentException("Not a tater: " + block);

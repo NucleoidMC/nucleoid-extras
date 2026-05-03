@@ -1,8 +1,6 @@
 package xyz.nucleoid.extras.game_portal;
 
 import com.google.common.io.ByteStreams;
-import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -19,8 +17,6 @@ import xyz.nucleoid.plasmid.impl.portal.GamePortalDisplay;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

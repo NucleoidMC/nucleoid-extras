@@ -1,7 +1,8 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
+import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -14,14 +15,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
-import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 import xyz.nucleoid.extras.lobby.contributor.Contributor;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
 import xyz.nucleoid.extras.util.PagedGui;
+import xyz.nucleoid.plasmid.api.util.PlayerUtil;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ContributorStatueBlockEntity extends BlockEntity {
     protected static final String CONTRIBUTOR_ID_KEY = "contributor_id";
@@ -57,7 +59,7 @@ public class ContributorStatueBlockEntity extends BlockEntity {
         if (this.contributorId.equals(id)) return;
 
         this.contributorId = id;
-        player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 1, 1);
+        PlayerUtil.playSoundToPlayer(player, SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.UI, 1, 1);
 
         this.updateModel();
         this.setChanged();
@@ -66,7 +68,7 @@ public class ContributorStatueBlockEntity extends BlockEntity {
     protected void openEditScreen(ServerPlayer player) {
         var server = player.level().getServer();
 
-        List<GuiElementInterface> elements = ContributorData.getContributors()
+        List<GuiElement> elements = ContributorData.getContributors()
                 .stream()
                 .sorted((a, b) -> {
                     return a.getValue().compareTo(b.getValue());

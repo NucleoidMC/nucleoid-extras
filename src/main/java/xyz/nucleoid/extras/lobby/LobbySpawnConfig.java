@@ -1,13 +1,14 @@
 package xyz.nucleoid.extras.lobby;
 
-import java.util.Collections;
-import java.util.Optional;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import java.util.Collections;
+import java.util.Optional;
 
 public record LobbySpawnConfig(
     Vec3 pos,

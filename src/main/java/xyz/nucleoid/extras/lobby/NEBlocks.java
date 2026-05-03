@@ -6,14 +6,9 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ColorParticleOption;
-import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.particle.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -547,10 +542,10 @@ public class NEBlocks {
         registerOxidizableBlockPair(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR);
         registerOxidizableBlockPair(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR);
 
-        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_COPPER_DOOR);
-        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
-        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
-        OxidizableBlocksRegistry.registerWaxableBlockPair(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxable(NEBlocks.TRANSIENT_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxable(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxable(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
+        OxidizableBlocksRegistry.registerWaxable(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
 
         registerBlockEntity("launch_pad", LAUNCH_PAD_ENTITY);
         registerBlockEntity("contributor_statue", CONTRIBUTOR_STATUE_ENTITY);
@@ -561,7 +556,7 @@ public class NEBlocks {
         registerBlockEntity("bell_tater", BELL_TATER_ENTITY);
     }
 
-    private static <T extends Block> T register(String id, Block.Settings settings, Function<Block.Settings, T> factory) {
+    private static <T extends Block> T register(String id, Block.Properties settings, Function<Block.Properties, T> factory) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, NucleoidExtras.identifier(id));
         T block = factory.apply(settings.setId(key));
 
@@ -569,7 +564,7 @@ public class NEBlocks {
     }
 
     private static void registerOxidizableBlockPair(Block less, Block more) {
-        OxidizableBlocksRegistry.registerOxidizableBlockPair(less, more);
+        OxidizableBlocksRegistry.registerNextStage(less, more);
 
         // TransientOxidizableDoorBlock#hasRandomTicks is dependent on the above registration,
         // so the cached BlockState#ticksRandomly field must be recomputed with the new result

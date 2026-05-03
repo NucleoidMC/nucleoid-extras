@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.logging.log4j.LogManager;
@@ -138,7 +138,7 @@ public final class NucleoidExtras implements ModInitializer {
         ServerChangePortalBackend.tick(server);
     }
 
-    public static ResourceLocation identifier(String path) {
-        return ResourceLocation.fromNamespaceAndPath(ID, path);
+    public static Identifier identifier(String path) {
+        return Identifier.fromNamespaceAndPath(ID, path);
     }
 }

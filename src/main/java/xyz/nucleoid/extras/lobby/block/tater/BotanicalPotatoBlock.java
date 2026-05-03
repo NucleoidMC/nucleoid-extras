@@ -1,12 +1,14 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
 import com.mojang.math.Axis;
+import eu.pb4.factorytools.api.util.LazyItemStack;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -27,16 +29,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import xyz.nucleoid.extras.util.SkinEncoder;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithElementHolder {
-    private final ItemStack upStack;
-    private final ItemStack downStack;
+    private final LazyItemStack upStack;
+    private final LazyItemStack downStack;
 
     public BotanicalPotatoBlock(Properties settings, String upperTexture, String lowerTexture, ParticleOptions particleEffect, int particleRate) {
         super(settings.noOcclusion(), upperTexture, particleEffect, particleRate);
-        this.upStack = PolymerUtils.createPlayerHead(this.getItemTexture());
-        this.downStack = PolymerUtils.createPlayerHead(SkinEncoder.encode(lowerTexture));
+        this.upStack = new LazyItemStack(() -> PolymerUtils.createPlayerHead(this.getItemTexture()));
+        this.downStack = new LazyItemStack(() -> PolymerUtils.createPlayerHead(SkinEncoder.encode(lowerTexture)));
     }
 
     @Override
@@ -84,8 +85,8 @@ public class BotanicalPotatoBlock extends TinyPotatoBlock implements BlockWithEl
         private final Matrix4f mat = new Matrix4f();
 
         Model(BlockState state) {
-            this.upPart = new ItemDisplayElement(BotanicalPotatoBlock.this.upStack);
-            this.downPart = new ItemDisplayElement(BotanicalPotatoBlock.this.downStack);
+            this.upPart = new ItemDisplayElement(BotanicalPotatoBlock.this.upStack.get());
+            this.downPart = new ItemDisplayElement(BotanicalPotatoBlock.this.downStack.get());
 
             this.upPart.setItemDisplayContext(ItemDisplayContext.FIXED);
             this.downPart.setItemDisplayContext(ItemDisplayContext.FIXED);

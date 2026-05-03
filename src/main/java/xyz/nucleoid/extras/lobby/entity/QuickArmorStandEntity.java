@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.entity;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.NEItems;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class QuickArmorStandEntity extends ArmorStand implements PolymerEntity {
     public QuickArmorStandEntity(EntityType<? extends ArmorStand> entityType, Level world) {

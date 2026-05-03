@@ -1,7 +1,9 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -14,7 +16,6 @@ import net.minecraft.world.item.Items;
 import xyz.nucleoid.extras.component.LauncherComponent;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.lobby.block.LaunchPadBlock;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LaunchFeatherItem extends Item implements PolymerItem {
     public LaunchFeatherItem(Properties settings) {
@@ -38,7 +39,7 @@ public class LaunchFeatherItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 }

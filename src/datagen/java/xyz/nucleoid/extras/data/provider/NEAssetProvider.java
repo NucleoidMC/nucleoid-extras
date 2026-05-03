@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.data.provider;
 
 import com.google.common.hash.HashCode;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.Util;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.util.Util;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 public class NEAssetProvider implements DataProvider {
     private final PackOutput output;
 
-    public NEAssetProvider(FabricDataOutput output) {
+    public NEAssetProvider(FabricPackOutput output) {
         this.output = output;
     }
 

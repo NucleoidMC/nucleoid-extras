@@ -4,7 +4,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -84,7 +83,7 @@ public class TateroidBlockEntity extends BlockEntity {
         double x = this.worldPosition.getX() + 0.5;
         double y = this.worldPosition.getY() + 0.9;
         double z = this.worldPosition.getZ() + 0.5;
-        this.level.playSeededSound(null, x, y, z, sound, SoundSource.RECORDS, 3, this.pitch / 24f, this.level.random.nextLong());
+        this.level.playSeededSound(null, x, y, z, sound, SoundSource.RECORDS, 3, this.pitch / 24f, this.level.getRandom().nextLong());
 
         if (this.level instanceof ServerLevel serverWorld) {
             serverWorld.sendParticles(ParticleTypes.NOTE, x, y, z, 0, 1, 0, 0, this.getParticleSpeed());

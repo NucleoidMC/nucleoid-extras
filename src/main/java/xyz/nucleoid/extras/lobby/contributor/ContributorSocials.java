@@ -1,9 +1,10 @@
 package xyz.nucleoid.extras.lobby.contributor;
 
-import java.util.UUID;
-import net.minecraft.core.UUIDUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.UUIDUtil;
+
+import java.util.UUID;
 
 public record ContributorSocials(UUID minecraft) {
     protected static final Codec<ContributorSocials> CODEC = RecordCodecBuilder.create(instance ->

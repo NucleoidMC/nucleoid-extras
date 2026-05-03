@@ -3,9 +3,10 @@ package xyz.nucleoid.extras.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
-import java.util.Optional;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
+
+import java.util.Optional;
 
 public record LauncherComponent(float pitch, float power, Optional<Holder<SoundEvent>> sound) implements PolymerComponent {
     public static final LauncherComponent DEFAULT = new LauncherComponent(10, 4, Optional.empty());

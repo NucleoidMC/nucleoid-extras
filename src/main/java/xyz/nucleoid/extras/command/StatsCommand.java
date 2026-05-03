@@ -3,10 +3,17 @@ package xyz.nucleoid.extras.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import eu.pb4.sgui.api.GuiHelpers;
+import eu.pb4.sgui.api.SguiUtils;
+import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Items;
 import xyz.nucleoid.extras.integrations.game.StatisticsIntegration;
 import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
 import xyz.nucleoid.extras.util.CommonGuiElements;
@@ -16,15 +23,6 @@ import xyz.nucleoid.plasmid.api.game.stats.GameStatisticBundle;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Map;
-import net.minecraft.Util;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Items;
-
-import static net.minecraft.commands.Commands.literal;
 
 public class StatsCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -61,8 +59,8 @@ public class StatsCommand {
         return 0;
     }
 
-    private static void openMain(Map<String, Map<ResourceLocation, Number>> stats, ServerPlayer player) {
-        var list = new ArrayList<GuiElementInterface>();
+    private static void openMain(Map<String, Map<Identifier, Number>> stats, ServerPlayer player) {
+        var list = new ArrayList<GuiElement>();
         for (var entry : stats.entrySet()) {
             var builder = new GuiElementBuilder(Items.PAPER);
             builder.setItemName(Component.translatable(GameStatisticBundle.getTranslationKey(entry.getKey()))).hideDefaultTooltip();
@@ -78,9 +76,9 @@ public class StatsCommand {
         gui.open();
     }
 
-    private static void openTargetStats(String key, Map<ResourceLocation, Number> value, ServerPlayer player) {
-        var cGui = GuiHelpers.getCurrentGui(player);
-        var list = new ArrayList<GuiElementInterface>();
+    private static void openTargetStats(String key, Map<Identifier, Number> value, ServerPlayer player) {
+        var cGui = SguiUtils.getCurrentGui(player);
+        var list = new ArrayList<GuiElement>();
         for (var entry : value.entrySet()) {
             var builder = new GuiElementBuilder(Items.NAME_TAG);
             builder.setItemName(Component.empty().append(Util.makeDescriptionId("statistic", entry.getKey())).append(": ").append(StatisticsIntegration.convertForDisplay(entry.getKey(), entry.getValue()))).hideDefaultTooltip();

@@ -1,11 +1,13 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +21,6 @@ import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import xyz.nucleoid.extras.dialog.NEDialogs;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class RuleBookItem extends Item implements PolymerItem {
     public RuleBookItem(Properties settings) {
@@ -48,10 +49,10 @@ public class RuleBookItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext context) {
+    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext context, HolderLookup.Provider provider) {
         String translationKey = getDescriptionId();
 
-        ItemStack book = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context);
+        ItemStack book = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context, provider);
 
         book.update(DataComponents.LORE, ItemLore.EMPTY, lore -> {
             return lore
@@ -67,7 +68,7 @@ public class RuleBookItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 

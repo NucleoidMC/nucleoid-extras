@@ -3,14 +3,6 @@ package xyz.nucleoid.extras.chat_filter;
 import com.google.common.base.Splitter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
-
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,6 +14,13 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.plasmid.api.util.PlasmidCodecs;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
 
 public final class ChatFilterConfig {
     private static final Codec<String> WORD_CODEC = Codec.STRING.xmap(s -> s.toLowerCase(Locale.ROOT), s -> s.toLowerCase(Locale.ROOT));
@@ -74,7 +73,7 @@ public final class ChatFilterConfig {
 
     public void sendFeedbackTo(ServerPlayer player) {
         if (this.feedbackMessage != null) {
-            player.displayClientMessage(this.feedbackMessage, true);
+            player.sendSystemMessage(this.feedbackMessage, true);
         }
 
         if (this.feedbackSound != null) {

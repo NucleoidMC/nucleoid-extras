@@ -1,8 +1,10 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -13,7 +15,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import xyz.nucleoid.extras.component.GamePortalComponent;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
-import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 
 public class GamePortalOpenerItem extends Item implements PolymerItem {
@@ -44,7 +45,7 @@ public class GamePortalOpenerItem extends Item implements PolymerItem {
     }
 
     @Override
-    public ResourceLocation getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 

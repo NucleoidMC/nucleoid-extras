@@ -1,6 +1,9 @@
 package xyz.nucleoid.extras.game_portal;
 
 import eu.pb4.sgui.api.gui.SimpleGui;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
@@ -8,9 +11,6 @@ import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 
 public class HandmadeStyledMenuPortalBackend extends StyledMenuPortalBackend {
     private final Map<HandmadeStyledMenuPortalConfig.Point, MenuEntryConfig> configEntries;

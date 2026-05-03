@@ -1,25 +1,22 @@
 package xyz.nucleoid.extras.lobby.entity;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
-import eu.pb4.polymer.virtualentity.api.tracker.DisplayTrackedData;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
-import xyz.nucleoid.packettweaker.PacketContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import eu.pb4.polymer.virtualentity.api.data.DisplayEntityData;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import xyz.nucleoid.extras.integrations.http.NucleoidHttpClient;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class LeaderboardDisplayEntity extends Display.TextDisplay implements PolymerEntity {
     private static final Style PLACE_NUMBER = Style.EMPTY.withColor(ChatFormatting.GRAY).withBold(true);
@@ -29,7 +26,7 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
     private static final int REGULAR_UPDATE_WAIT_TIME = 20 * 60;
     private static final int FORCED_UPDATE_WAIT_TIME = 20 * 10;
     private static final int CHANGE_DISPLAYED_TIME_TIME = 20 * 10;
-    private List<ResourceLocation> leaderboardIds = List.of(ResourceLocation.fromNamespaceAndPath("nucleoid", "games_played"));
+    private List<Identifier> leaderboardIds = List.of(Identifier.fromNamespaceAndPath("nucleoid", "games_played"));
     private final List<Component> leaderboards = new ArrayList<>();
     private int updateTimer = -1;
     private int displayTimer = CHANGE_DISPLAYED_TIME_TIME;
@@ -44,7 +41,7 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
     public void readAdditionalSaveData(ValueInput nbt) {
         super.readAdditionalSaveData(nbt);
 
-        var ids = nbt.listOrEmpty("leaderboards", ResourceLocation.CODEC).stream().toList();
+        var ids = nbt.listOrEmpty("leaderboards", Identifier.CODEC).stream().toList();
         this.leaderboardIds = ids;
         this.updateTimer = FORCED_UPDATE_WAIT_TIME;
         this.leaderboards.clear();
@@ -102,7 +99,7 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
                 this.currentId = 0;
             }
 
-            this.entityData.set(DisplayTrackedData.Text.TEXT, this.leaderboards.get(this.currentId));
+            this.entityData.set(DisplayEntityData.Text.TEXT, this.leaderboards.get(this.currentId));
         }
     }
 
@@ -112,7 +109,7 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
     public void addAdditionalSaveData(ValueOutput nbt) {
         super.addAdditionalSaveData(nbt);
         if (this.leaderboardIds != null) {
-            var list = nbt.list("leaderboards", ResourceLocation.CODEC);
+            var list = nbt.list("leaderboards", Identifier.CODEC);
             this.leaderboardIds.forEach(list::add);
         }
     }

@@ -1,6 +1,12 @@
 package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonObject;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
@@ -16,12 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 
 public class StatisticsIntegration {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -38,22 +38,22 @@ public class StatisticsIntegration {
         for (ServerPlayer player : space.getPlayers()) {
             var stats = bundle.forPlayer(player);
             if (!stats.isEmpty()) {
-                player.displayClientMessage(Component.literal("+--------------------------------------+")
+                player.sendSystemMessage(Component.literal("+--------------------------------------+")
                         .withStyle(ChatFormatting.DARK_GRAY), false);
 
                 var bundleName = Component.translatable(GameStatisticBundle.getTranslationKey(namespace));
 
-                player.displayClientMessage(Component.translatable("text.nucleoid_extras.statistics.bundle_header", bundleName)
+                player.sendSystemMessage(Component.translatable("text.nucleoid_extras.statistics.bundle_header", bundleName)
                         .withStyle(ChatFormatting.GREEN), false);
 
                 stats.visitAllStatistics((key, value) -> {
                     if (!key.hidden()) {
-                        player.displayClientMessage(Component.translatable("text.nucleoid_extras.statistics.stat",
+                        player.sendSystemMessage(Component.translatable("text.nucleoid_extras.statistics.stat",
                                 Component.translatable(key.getTranslationKey()), convertForDisplay(key.id(), value)), false);
                     }
                 });
 
-                player.displayClientMessage(Component.literal("+--------------------------------------+")
+                player.sendSystemMessage(Component.literal("+--------------------------------------+")
                         .withStyle(ChatFormatting.DARK_GRAY), false);
             }
         }
@@ -93,7 +93,7 @@ public class StatisticsIntegration {
         }
     }
 
-    public static Component convertForDisplay(ResourceLocation key, Number number) {
+    public static Component convertForDisplay(Identifier key, Number number) {
         String base;
 
         if (key.getPath().endsWith("_time")) {

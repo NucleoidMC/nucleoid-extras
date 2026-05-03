@@ -3,10 +3,11 @@ package xyz.nucleoid.extras.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
-import java.util.Optional;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
+
+import java.util.Optional;
 
 public record TaterSelectionComponent(Optional<Holder<Block>> tater, boolean allowViralCollection) implements PolymerComponent {
     public static final TaterSelectionComponent DEFAULT = new TaterSelectionComponent(Optional.empty(), true);

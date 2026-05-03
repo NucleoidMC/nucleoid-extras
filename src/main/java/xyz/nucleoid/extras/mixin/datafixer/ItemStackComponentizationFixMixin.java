@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.mixin.datafixer;
 
 import com.mojang.serialization.Dynamic;
+import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Set;
-import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix;
 
 @Mixin(ItemStackComponentizationFix.class)
 public class ItemStackComponentizationFixMixin {
