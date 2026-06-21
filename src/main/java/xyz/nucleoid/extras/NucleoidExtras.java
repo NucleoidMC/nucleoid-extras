@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 import xyz.nucleoid.extras.chat_filter.ChatFilter;
 import xyz.nucleoid.extras.command.CommandAliases;
 import xyz.nucleoid.extras.command.ExtraCommands;

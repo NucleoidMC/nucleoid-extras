@@ -10,8 +10,8 @@ import net.minecraft.world.item.Items;
 import xyz.nucleoid.extras.resourcepack.GuiTextures;
 
 public class CommonGuiElements {
-    private static final GuiElement PURPLE_PLATE = new GuiElementBuilder(Items.PURPLE_STAINED_GLASS_PANE).hideTooltip().build();
-    private static final GuiElement WHITE_PLATE = new GuiElementBuilder(Items.WHITE_STAINED_GLASS_PANE).hideTooltip().build();
+    private static final GuiElement PURPLE_PLATE = new GuiElementBuilder(Items.STAINED_GLASS_PANE.purple()).hideTooltip().build();
+    private static final GuiElement WHITE_PLATE = new GuiElementBuilder(Items.STAINED_GLASS_PANE.white()).hideTooltip().build();
     public static GuiElementBuilder nextPage(ServerPlayer player) {
         if (PolymerResourcePackUtils.hasMainPack(player)) {
             return GuiTextures.NEXT_BUTTON.get().setName(Component.translatable("spectatorMenu.next_page"));

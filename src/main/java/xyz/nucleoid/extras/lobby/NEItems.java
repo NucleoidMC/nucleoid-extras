@@ -25,12 +25,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ColorCollection;
+import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.component.*;
+import xyz.nucleoid.extras.lobby.block.TransientDoorBlock;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.*;
 import xyz.nucleoid.extras.lobby.item.tater.CreativeTaterBoxItem;
@@ -77,30 +80,8 @@ public class NEItems {
             entries.accept(NEItems.TRANSIENT_BAMBOO_DOOR);
             entries.accept(NEItems.TRANSIENT_CRIMSON_DOOR);
             entries.accept(NEItems.TRANSIENT_WARPED_DOOR);
-            entries.accept(NEItems.TRANSIENT_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_EXPOSED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_WEATHERED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_OXIDIZED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_WAXED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR);
-            entries.accept(NEItems.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR);
-            entries.accept(NEItems.BLACK_CONCRETE_POWDER);
-            entries.accept(NEItems.BLUE_CONCRETE_POWDER);
-            entries.accept(NEItems.BROWN_CONCRETE_POWDER);
-            entries.accept(NEItems.CYAN_CONCRETE_POWDER);
-            entries.accept(NEItems.GREEN_CONCRETE_POWDER);
-            entries.accept(NEItems.GRAY_CONCRETE_POWDER);
-            entries.accept(NEItems.LIGHT_BLUE_CONCRETE_POWDER);
-            entries.accept(NEItems.LIGHT_GRAY_CONCRETE_POWDER);
-            entries.accept(NEItems.LIME_CONCRETE_POWDER);
-            entries.accept(NEItems.MAGENTA_CONCRETE_POWDER);
-            entries.accept(NEItems.ORANGE_CONCRETE_POWDER);
-            entries.accept(NEItems.PINK_CONCRETE_POWDER);
-            entries.accept(NEItems.PURPLE_CONCRETE_POWDER);
-            entries.accept(NEItems.RED_CONCRETE_POWDER);
-            entries.accept(NEItems.WHITE_CONCRETE_POWDER);
-            entries.accept(NEItems.YELLOW_CONCRETE_POWDER);
+            NEItems.TRANSIENT_COPPER_DOOR.forEach(entries::accept);
+            NEItems.CONCRETE_POWDER.forEach(entries::accept);
             entries.accept(NEItems.GAME_PORTAL_OPENER);
             entries.accept(NEItems.TATER_BOX);
             entries.accept(NEItems.CREATIVE_TATER_BOX);
@@ -112,8 +93,8 @@ public class NEItems {
     public static final Item NUCLEOID_LOGO = registerHead("nucleoid_logo", NEBlocks.NUCLEOID_LOGO);
     public static final Item NUCLE_PAST_LOGO = registerHead("nucle_past_logo", NEBlocks.NUCLE_PAST_LOGO);
 
-    public static final Item END_PORTAL = registerSimple("end_portal", NEBlocks.END_PORTAL, Items.BLACK_CARPET);
-    public static final Item END_GATEWAY = registerSimple("end_gateway", NEBlocks.END_GATEWAY, Items.BLACK_WOOL);
+    public static final Item END_PORTAL = registerSimple("end_portal", NEBlocks.END_PORTAL, Items.CARPET.black());
+    public static final Item END_GATEWAY = registerSimple("end_gateway", NEBlocks.END_GATEWAY, Items.WOOL.black());
     public static final Item SAFE_TNT = registerSimple("safe_tnt", NEBlocks.SAFE_TNT, Items.TNT);
 
     public static final Item GOLD_LAUNCH_PAD = registerSimple("gold_launch_pad", NEBlocks.GOLD_LAUNCH_PAD, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
@@ -123,8 +104,8 @@ public class NEItems {
 
     public static final Item INFINITE_DISPENSER = registerSimple("infinite_dispenser", NEBlocks.INFINITE_DISPENSER, Items.DISPENSER);
     public static final Item INFINITE_DROPPER = registerSimple("infinite_dropper", NEBlocks.INFINITE_DROPPER, Items.DROPPER);
-    public static final Item SNAKE_BLOCK = registerSimple("snake_block", NEBlocks.SNAKE_BLOCK, Items.LIME_CONCRETE);
-    public static final Item FAST_SNAKE_BLOCK = registerSimple("fast_snake_block", NEBlocks.FAST_SNAKE_BLOCK, Items.LIGHT_BLUE_CONCRETE);
+    public static final Item SNAKE_BLOCK = registerSimple("snake_block", NEBlocks.SNAKE_BLOCK, Items.CONCRETE.lime());
+    public static final Item FAST_SNAKE_BLOCK = registerSimple("fast_snake_block", NEBlocks.FAST_SNAKE_BLOCK, Items.CONCRETE.lightBlue());
 
     public static final Item TRANSIENT_IRON_DOOR = register("transient_iron_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_IRON_DOOR, settings, Items.IRON_DOOR));
     public static final Item TRANSIENT_OAK_DOOR = register("transient_oak_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OAK_DOOR, settings, Items.OAK_DOOR));
@@ -139,31 +120,12 @@ public class NEItems {
     public static final Item TRANSIENT_BAMBOO_DOOR = register("transient_bamboo_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_BAMBOO_DOOR, settings, Items.BAMBOO_DOOR));
     public static final Item TRANSIENT_CRIMSON_DOOR = register("transient_crimson_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_CRIMSON_DOOR, settings, Items.CRIMSON_DOOR));
     public static final Item TRANSIENT_WARPED_DOOR = register("transient_warped_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WARPED_DOOR, settings, Items.WARPED_DOOR));
-    public static final Item TRANSIENT_COPPER_DOOR = register("transient_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_COPPER_DOOR, settings, Items.COPPER_DOOR));
-    public static final Item TRANSIENT_EXPOSED_COPPER_DOOR = register("transient_exposed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_EXPOSED_COPPER_DOOR, settings, Items.EXPOSED_COPPER_DOOR));
-    public static final Item TRANSIENT_WEATHERED_COPPER_DOOR = register("transient_weathered_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WEATHERED_COPPER_DOOR, settings, Items.WEATHERED_COPPER_DOOR));
-    public static final Item TRANSIENT_OXIDIZED_COPPER_DOOR = register("transient_oxidized_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_OXIDIZED_COPPER_DOOR, settings, Items.OXIDIZED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_COPPER_DOOR = register("transient_waxed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_COPPER_DOOR, settings, Items.WAXED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_EXPOSED_COPPER_DOOR = register("transient_waxed_exposed_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_EXPOSED_COPPER_DOOR, settings, Items.WAXED_EXPOSED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_WEATHERED_COPPER_DOOR = register("transient_waxed_weathered_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_WEATHERED_COPPER_DOOR, settings, Items.WAXED_WEATHERED_COPPER_DOOR));
-    public static final Item TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR = register("transient_waxed_oxidized_copper_door", new Item.Properties().useBlockDescriptionPrefix(), settings -> new LobbyTallBlockItem(NEBlocks.TRANSIENT_WAXED_OXIDIZED_COPPER_DOOR, settings, Items.WAXED_OXIDIZED_COPPER_DOOR));
+    public static final WeatheringCopperCollection<Item> TRANSIENT_COPPER_DOOR = NEBlocks.TRANSIENT_COPPER_DOOR.map(block -> register(
+        block.builtInRegistryHolder().key().identifier().getPath(), new Item.Properties().useBlockDescriptionPrefix(),
+        settings -> new LobbyTallBlockItem(block, settings, block.base().asItem())));
 
-    public static final Item BLACK_CONCRETE_POWDER = registerSimple("black_concrete_powder", NEBlocks.BLACK_CONCRETE_POWDER, Items.BLACK_CONCRETE_POWDER);
-    public static final Item BLUE_CONCRETE_POWDER = registerSimple("blue_concrete_powder", NEBlocks.BLUE_CONCRETE_POWDER, Items.BLUE_CONCRETE_POWDER);
-    public static final Item BROWN_CONCRETE_POWDER = registerSimple("brown_concrete_powder", NEBlocks.BROWN_CONCRETE_POWDER, Items.BROWN_CONCRETE_POWDER);
-    public static final Item CYAN_CONCRETE_POWDER = registerSimple("cyan_concrete_powder", NEBlocks.CYAN_CONCRETE_POWDER, Items.CYAN_CONCRETE_POWDER);
-    public static final Item GREEN_CONCRETE_POWDER = registerSimple("green_concrete_powder", NEBlocks.GREEN_CONCRETE_POWDER, Items.GREEN_CONCRETE_POWDER);
-    public static final Item GRAY_CONCRETE_POWDER = registerSimple("gray_concrete_powder", NEBlocks.GRAY_CONCRETE_POWDER, Items.GRAY_CONCRETE_POWDER);
-    public static final Item LIGHT_BLUE_CONCRETE_POWDER = registerSimple("light_blue_concrete_powder", NEBlocks.LIGHT_BLUE_CONCRETE_POWDER, Items.LIGHT_BLUE_CONCRETE_POWDER);
-    public static final Item LIGHT_GRAY_CONCRETE_POWDER = registerSimple("light_gray_concrete_powder", NEBlocks.LIGHT_GRAY_CONCRETE_POWDER, Items.LIGHT_GRAY_CONCRETE_POWDER);
-    public static final Item LIME_CONCRETE_POWDER = registerSimple("lime_concrete_powder", NEBlocks.LIME_CONCRETE_POWDER, Items.LIME_CONCRETE_POWDER);
-    public static final Item MAGENTA_CONCRETE_POWDER = registerSimple("magenta_concrete_powder", NEBlocks.MAGENTA_CONCRETE_POWDER, Items.MAGENTA_CONCRETE_POWDER);
-    public static final Item ORANGE_CONCRETE_POWDER = registerSimple("orange_concrete_powder", NEBlocks.ORANGE_CONCRETE_POWDER, Items.ORANGE_CONCRETE_POWDER);
-    public static final Item PINK_CONCRETE_POWDER = registerSimple("pink_concrete_powder", NEBlocks.PINK_CONCRETE_POWDER, Items.PINK_CONCRETE_POWDER);
-    public static final Item PURPLE_CONCRETE_POWDER = registerSimple("purple_concrete_powder", NEBlocks.PURPLE_CONCRETE_POWDER, Items.PURPLE_CONCRETE_POWDER);
-    public static final Item RED_CONCRETE_POWDER = registerSimple("red_concrete_powder", NEBlocks.RED_CONCRETE_POWDER, Items.RED_CONCRETE_POWDER);
-    public static final Item WHITE_CONCRETE_POWDER = registerSimple("white_concrete_powder", NEBlocks.WHITE_CONCRETE_POWDER, Items.WHITE_CONCRETE_POWDER);
-    public static final Item YELLOW_CONCRETE_POWDER = registerSimple("yellow_concrete_powder", NEBlocks.YELLOW_CONCRETE_POWDER, Items.YELLOW_CONCRETE_POWDER);
+    public static final ColorCollection<Item> CONCRETE_POWDER = NEBlocks.CONCRETE_POWDER.map(block -> registerSimple(
+        block.builtInRegistryHolder().key().identifier().getPath(), block, block.getPolymerBlockState(null, null).getBlock().asItem()));
 
     public static final Item TINY_POTATO = registerHead("tiny_potato", NEBlocks.TINY_POTATO);
     public static final Item BOTANICAL_TINY_POTATO = registerHead("botanical_potato", NEBlocks.BOTANICAL_TINY_POTATO);

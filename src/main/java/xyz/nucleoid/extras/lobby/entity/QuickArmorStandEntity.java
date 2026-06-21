@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ public class QuickArmorStandEntity extends ArmorStand implements PolymerEntity {
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext context) {
-        return EntityType.ARMOR_STAND;
+        return EntityTypes.ARMOR_STAND;
     }
 
     @Override

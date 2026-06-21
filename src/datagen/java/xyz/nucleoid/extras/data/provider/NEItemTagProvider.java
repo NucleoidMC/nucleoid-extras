@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 
@@ -16,7 +17,7 @@ public class NEItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
 
     @Override
     protected void addTags(Provider lookup) {
-        this.copy(BlockTags.DOORS, ItemTags.DOORS);
+        this.copy(BlockTags.DOORS, BlockItemTags.DOORS.item());
         this.copy(BlockTags.WOODEN_DOORS, ItemTags.WOODEN_DOORS);
     }
 }

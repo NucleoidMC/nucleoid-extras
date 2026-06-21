@@ -12,7 +12,7 @@ public class StatusEffectMixin {
     /*
      * This fixes healing potions killing creative (and survival) players
      */
-    @ModifyVariable(method = "applyInstantenousEffect", at = @At("HEAD"), ordinal = 0)
+    @ModifyVariable(method = "applyInstantaneousEffect", at = @At("HEAD"), ordinal = 0)
     private int extras$patchAmplifier(int amplifier) {
         return Mth.clamp(amplifier, 0, 124);
     }

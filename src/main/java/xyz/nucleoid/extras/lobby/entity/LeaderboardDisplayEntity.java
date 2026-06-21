@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -116,6 +117,6 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext context) {
-        return EntityType.TEXT_DISPLAY;
+        return EntityTypes.TEXT_DISPLAY;
     }
 }

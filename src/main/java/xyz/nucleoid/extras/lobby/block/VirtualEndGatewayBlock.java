@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
@@ -30,6 +31,6 @@ public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
         main.putInt("z", pos.getZ());
         main.putLong("Age", Long.MIN_VALUE);
 
-        player.connection.send(PolymerBlockUtils.createBlockEntityPacket(pos, BlockEntityType.END_GATEWAY, main));
+        player.connection.send(PolymerBlockUtils.createBlockEntityPacket(pos, BlockEntityTypes.END_GATEWAY, main));
     }
 }

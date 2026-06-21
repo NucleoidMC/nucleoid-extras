@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
@@ -54,5 +55,9 @@ public class TransientDoorBlock extends DoorBlock implements PolymerBlock {
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
         return this.polymerBlock.withPropertiesOf(state);
+    }
+
+    public ItemLike base() {
+        return this.polymerBlock;
     }
 }

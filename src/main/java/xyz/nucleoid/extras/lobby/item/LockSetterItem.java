@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.SimplePolymerItem;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds.Ints;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds.Ints;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
