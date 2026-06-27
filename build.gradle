@@ -37,14 +37,13 @@ dependencies {
 
 	implementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
 	implementation "eu.pb4:factorytools:${project.factorytools_version}"
-    runtimeOnly "eu.pb4:polymer-autohost:${project.polymer_version}"
+  runtimeOnly "eu.pb4:polymer-autohost:${project.polymer_version}"
 
 
 	//compileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
 	compileOnly "dev.gegy:player-roles-api:${project.player_roles_version}"
 
-    implementation "eu.pb4:polymer-resource-pack-extras:${project.rp_extras_version}"
-    implementation "eu.pb4:polymer-autohost:${project.autohost_version}"
+  implementation "eu.pb4:polymer-resource-pack-extras:${project.polymer_version}"
 }
 
 test {

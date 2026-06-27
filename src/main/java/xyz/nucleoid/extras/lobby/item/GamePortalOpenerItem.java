@@ -1,6 +1,7 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.Level;
 import xyz.nucleoid.extras.component.GamePortalComponent;
 import xyz.nucleoid.extras.component.NEDataComponentTypes;
 import xyz.nucleoid.extras.model.NEModels;
-import xyz.nucleoid.packettweaker.PacketContext;
 import xyz.nucleoid.plasmid.impl.portal.GamePortal;
 
 public class GamePortalOpenerItem extends Item implements PolymerItem {

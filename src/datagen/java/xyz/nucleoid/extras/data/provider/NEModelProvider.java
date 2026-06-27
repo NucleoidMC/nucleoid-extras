@@ -6,14 +6,15 @@ import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.BasicItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelTransformation;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.data.DataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelDispatcher;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.util.Identifier;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.NucleoidExtras;
 import xyz.nucleoid.extras.model.NEModels;
 
@@ -25,20 +26,14 @@ import java.util.function.BiConsumer;
 public class NEModelProvider implements DataProvider {
     private static final String NAME = NucleoidExtras.identifier("model_provider").toString();
 
-    private final DataOutput output;
+    private final PackOutput output;
     private final HashMap<Identifier, ItemAsset> assetMap;
     private final HashMap<Identifier, ModelAsset> modelMap;
 
-    public NEModelProvider(FabricDataOutput output) {
+    public NEModelProvider(FabricPackOutput output) {
         this.output = output;
         this.assetMap = new HashMap<>();
         this.modelMap = new HashMap<>();
-    }
-
-    public void runWriters(BiConsumer<String, byte[]> assetWriter) {
-        createItems();
-        this.assetMap.forEach((id, asset) -> assetWriter.accept(AssetPaths.itemAsset(id), asset.toBytes()));
-        this.modelMap.forEach((id, asset) -> assetWriter.accept(AssetPaths.itemModel(id), asset.toBytes()));
     }
 
     private void createItems() {
@@ -46,23 +41,23 @@ public class NEModelProvider implements DataProvider {
     }
 
     private void spriteItem(Identifier id) {
-        this.assetMap.put(id, new ItemAsset(new BasicItemModel(id.withPrefixedPath("item/")), ItemAsset.Properties.DEFAULT));
+        this.assetMap.put(id, new ItemAsset(new BasicItemModel(id.withPrefix("item/")), ItemAsset.Properties.DEFAULT));
         this.modelMap.put(id, ModelAsset.builder()
-                .parent(Identifier.of("item/generated"))
-                .texture("layer0", id.withPrefixedPath("item/").toString())
+                .parent(Identifier.withDefaultNamespace("item/generated"))
+                .texture("layer0", id.withPrefix("item/"))
                         .transformation(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, new ModelTransformation(
-                                new Vec3d(-15, 0, 0),
-                                new Vec3d(-9, 3.2, 1.13),
-                                new Vec3d(0.68, 0.68, 0.68)
+                                new Vec3(-15, 0, 0),
+                                new Vec3(-9, 3.2, 1.13),
+                                new Vec3(0.68, 0.68, 0.68)
                         ))
                 .build());
     }
 
     @Override
-    public CompletableFuture<?> run(DataWriter writer) {
+    public CompletableFuture<?> run(CachedOutput cache) {
         BiConsumer<String, byte[]> assetWriter = (path, data) -> {
             try {
-                writer.write(this.output.getPath().resolve(path), data, HashCode.fromBytes(data));
+                cache.writeIfNeeded(this.output.getOutputFolder().resolve(path), data, HashCode.fromBytes(data));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,7 +65,13 @@ public class NEModelProvider implements DataProvider {
         return CompletableFuture.runAsync(() -> {
             this.
                 runWriters(assetWriter);
-        }, Util.getMainWorkerExecutor());
+        }, Util.ioPool());
+    }
+
+    public void runWriters(BiConsumer<String, byte[]> assetWriter) {
+        createItems();
+        this.assetMap.forEach((id, asset) -> assetWriter.accept(AssetPaths.itemAsset(id), asset.toBytes()));
+        this.modelMap.forEach((id, asset) -> assetWriter.accept(AssetPaths.itemModel(id), asset.toBytes()));
     }
 
     @Override
