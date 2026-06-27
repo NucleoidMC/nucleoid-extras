@@ -71,7 +71,11 @@ public final class NucleoidExtras implements ModInitializer {
         NucleoidExtrasNetworking.register();
 
         GuiTextures.register();
-        PolymerResourcePackUtils.addModAssets(ID);
+        if (PolymerResourcePackUtils.addModAssets(ID)) {
+            LOGGER.info("Successfully added mod assets for " + ID);
+        } else {
+            LOGGER.error("Failed to add mod assets for " + ID);
+        }
 
         //new DuckFixerUpper().onInitialize();
     }
