@@ -1,46 +1,47 @@
 package xyz.nucleoid.extras.lobby.gui;
 
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.sgui.api.elements.GuiElement;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
-import eu.pb4.sgui.api.elements.GuiElementInterface;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 import xyz.nucleoid.extras.lobby.item.tater.TaterBoxItem;
+import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.util.PagedGui;
 
 import java.util.List;
 
 public class TaterBoxGui extends PagedGui.FromList {
-	protected static final Text SHOW_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.show_unfound");
-	protected static final Text HIDE_UNFOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.hide_unfound");
+	protected static final Component SHOW_UNFOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.show_unfound");
+	protected static final Component HIDE_UNFOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_unfound");
 	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
-	protected static final Text COLLECT_ALL_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.collect_all");
+	protected static final Component COLLECT_ALL_TEXT = Component.translatable("text.nucleoid_extras.creative_tater_box.collect_all");
     protected static final Item COLLECT_ALL_ICON = Items.EMERALD;
 
-	protected static final Text RESET_TEXT = Text.translatable("text.nucleoid_extras.creative_tater_box.reset");
+	protected static final Component RESET_TEXT = Component.translatable("text.nucleoid_extras.creative_tater_box.reset");
     protected static final Item RESET_ICON = Items.CAMPFIRE;
 
 	private final boolean creative;
 
 	protected boolean hideUnfound = true;
 
-	public TaterBoxGui(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces, boolean creative) {
+	public TaterBoxGui(MenuType<?> type, ServerPlayer player, boolean includePlayerInventorySlots, List<GuiElement> guiElementInterfaces, boolean creative) {
 		super(type, player, includePlayerInventorySlots, guiElementInterfaces, null);
 
 		this.creative = creative;
 	}
 
-	public static TaterBoxGui of(ServerPlayerEntity player, List<GuiElementInterface> elements, boolean creative) {
-		return new TaterBoxGui(ScreenHandlerType.GENERIC_9X6, player, false, elements, creative);
+	public static TaterBoxGui of(ServerPlayer player, List<GuiElement> elements, boolean creative) {
+		return new TaterBoxGui(MenuType.GENERIC_9x6, player, false, elements, creative);
 	}
 
 	public boolean shouldHideUnfound() {
@@ -72,8 +73,8 @@ public class TaterBoxGui extends PagedGui.FromList {
 	}
 
 	@Override
-	public List<GuiElementInterface> getList() {
-		List<GuiElementInterface> all = super.getList();
+	public List<GuiElement> getList() {
+		List<GuiElement> all = super.getList();
 
 		return all.stream().filter(element -> {
 			if (element instanceof TaterGuiElement taterGuiElement) {
@@ -90,7 +91,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 		GuiElementBuilder builder = new GuiElementBuilder(UNFOUND_BUTTON_ICON)
 				.setItemName(hideUnfound ? SHOW_UNFOUND_TEXT : HIDE_UNFOUND_TEXT)
 				.hideDefaultTooltip()
-				.setCallback((x, y, z) -> {
+				.setCallback(() -> {
 					playClickSound(gui.player);
 					gui.toggleHideUnfound();
 				});
@@ -110,10 +111,10 @@ public class TaterBoxGui extends PagedGui.FromList {
                 if (clickType.shift) {
                     state.collectedTaters.addAll(TinyPotatoBlock.TATERS);
                 } else {
-                    TaterBoxItem.getCollectableTaters(player.getRegistryManager()).forEach(state.collectedTaters::add);
+                    TaterBoxItem.getCollectableTaters(player.registryAccess()).forEach(state.collectedTaters::add);
                 }
 
-                playSound(gui.player, SoundEvents.ENTITY_PLAYER_LEVELUP);
+                playSound(gui.player, SoundEvents.PLAYER_LEVELUP);
                 gui.close();
             });
 
@@ -128,14 +129,27 @@ public class TaterBoxGui extends PagedGui.FromList {
                 var state = PlayerLobbyState.get(gui.getPlayer());
                 state.collectedTaters.clear();
 
-                playSound(gui.player, SoundEvents.ITEM_FIRECHARGE_USE);
+                playSound(gui.player, SoundEvents.FIRECHARGE_USE);
                 gui.close();
             });
 
         return DisplayElement.of(builder);
     }
 
-	public static class TaterGuiElement extends GuiElement {
+    @Override
+    public void setTitle(Component title) {
+        super.setTitle(PolymerResourcePackUtils.hasMainPack(this.player) ? GuiTextures.TATERBOX.apply(title) : title);
+    }
+
+    @Override
+    protected DisplayElement filler() {
+        if (PolymerResourcePackUtils.hasMainPack(this.player)) {
+            return DisplayElement.empty();
+        }
+        return super.filler();
+    }
+
+    public static class TaterGuiElement extends SimpleGuiElement {
 		protected final boolean found;
 		protected final boolean collectable;
 
@@ -151,37 +165,6 @@ public class TaterBoxGui extends PagedGui.FromList {
 			}
 
 			return !hideUnfound && this.collectable;
-		}
-	}
-
-	public static class TaterGuiElementBuilder extends GuiElementBuilder {
-		protected static final Text NOT_FOUND_TEXT = Text.translatable("text.nucleoid_extras.tater_box.not_found").formatted(Formatting.RED);
-		protected static final Item UNFOUND_ICON = Items.POTATO;
-
-		protected boolean found;
-		protected boolean collectable;
-
-		public TaterGuiElementBuilder(Item item) {
-			super(item);
-		}
-
-		public TaterGuiElementBuilder setFound(boolean found) {
-			this.found = found;
-			if(!found) {
-				setItemName(NOT_FOUND_TEXT);
-				setItem(UNFOUND_ICON);
-			}
-			return this;
-		}
-
-		public TaterGuiElementBuilder setCollectable(boolean collectable) {
-			this.collectable = collectable;
-			return this;
-		}
-
-		@Override
-		public TaterGuiElement build() {
-			return new TaterGuiElement(asStack(), callback, found, collectable);
 		}
 	}
 }

@@ -1,5 +1,21 @@
 package xyz.nucleoid.extras;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.References;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -10,24 +26,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.internal.Streams;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
-
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.datafixer.Schemas;
-import net.minecraft.datafixer.TypeReferences;
 
 public class DuckFixerUpper implements ModInitializer {
 	private static final int DATA_VERSION_1_20_4 = 3700;
@@ -136,7 +134,7 @@ public class DuckFixerUpper implements ModInitializer {
 			JsonObject output = input.deepCopy().getAsJsonObject();
 
 			if (output.has("id") && output.has("Count")) {
-				Dynamic<JsonElement> upgradedOutput = Schemas.getFixer().update(TypeReferences.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
+				Dynamic<JsonElement> upgradedOutput = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
 				return upgradedOutput.getValue();
 			} else {
 				for (String key : output.keySet()) {

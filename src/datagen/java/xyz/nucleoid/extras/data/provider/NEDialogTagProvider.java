@@ -1,23 +1,23 @@
 package xyz.nucleoid.extras.data.provider;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.dialog.type.Dialog;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.registry.tag.DialogTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.dialog.Dialog;
+import net.minecraft.tags.DialogTags;
 import xyz.nucleoid.extras.dialog.NEDialogs;
 
 import java.util.concurrent.CompletableFuture;
 
-public class NEDialogTagProvider extends FabricTagProvider<Dialog> {
-    public NEDialogTagProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registries) {
-        super(dataOutput, RegistryKeys.DIALOG, registries);
+public class NEDialogTagProvider extends FabricTagsProvider<Dialog> {
+    public NEDialogTagProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registries) {
+        super(dataOutput, Registries.DIALOG, registries);
     }
 
     @Override
-    protected void configure(WrapperLookup lookup) {
+    protected void addTags(Provider lookup) {
         this.builder(DialogTags.PAUSE_SCREEN_ADDITIONS)
             .addOptional(NEDialogs.RULES);
     }

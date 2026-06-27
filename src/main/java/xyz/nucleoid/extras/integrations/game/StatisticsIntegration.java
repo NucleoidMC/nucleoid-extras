@@ -1,13 +1,12 @@
 package xyz.nucleoid.extras.integrations.game;
 
 import com.google.gson.JsonObject;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.nucleoid.extras.integrations.IntegrationSender;
@@ -36,31 +35,31 @@ public class StatisticsIntegration {
     }
 
     private void handleStatisticsBundle(GameSpace space, String namespace, GameStatisticBundle bundle) {
-        for (ServerPlayerEntity player : space.getPlayers()) {
+        for (ServerPlayer player : space.getPlayers()) {
             var stats = bundle.forPlayer(player);
             if (!stats.isEmpty()) {
-                player.sendMessage(Text.literal("+--------------------------------------+")
-                        .formatted(Formatting.DARK_GRAY), false);
+                player.sendSystemMessage(Component.literal("+--------------------------------------+")
+                        .withStyle(ChatFormatting.DARK_GRAY), false);
 
-                var bundleName = Text.translatable(GameStatisticBundle.getTranslationKey(namespace));
+                var bundleName = Component.translatable(GameStatisticBundle.getTranslationKey(namespace));
 
-                player.sendMessage(Text.translatable("text.nucleoid_extras.statistics.bundle_header", bundleName)
-                        .formatted(Formatting.GREEN), false);
+                player.sendSystemMessage(Component.translatable("text.nucleoid_extras.statistics.bundle_header", bundleName)
+                        .withStyle(ChatFormatting.GREEN), false);
 
                 stats.visitAllStatistics((key, value) -> {
                     if (!key.hidden()) {
-                        player.sendMessage(Text.translatable("text.nucleoid_extras.statistics.stat",
-                                Text.translatable(key.getTranslationKey()), convertForDisplay(key.id(), value)), false);
+                        player.sendSystemMessage(Component.translatable("text.nucleoid_extras.statistics.stat",
+                                Component.translatable(key.getTranslationKey()), convertForDisplay(key.id(), value)), false);
                     }
                 });
 
-                player.sendMessage(Text.literal("+--------------------------------------+")
-                        .formatted(Formatting.DARK_GRAY), false);
+                player.sendSystemMessage(Component.literal("+--------------------------------------+")
+                        .withStyle(ChatFormatting.DARK_GRAY), false);
             }
         }
 
         // Do not send statistics for anonymous games to the backend
-        if (!space.getMetadata().sourceConfig().getKey().isPresent()) return;
+        if (!space.getMetadata().sourceConfig().unwrapKey().isPresent()) return;
 
         UUID gameId = space.getMetadata().id();
 
@@ -73,9 +72,9 @@ public class StatisticsIntegration {
         body.add("bundle", bundleObject);
         body.addProperty("game_id", gameId.toString());
         this.sendBundle(body);
-        space.getPlayers().sendMessage(Text.translatable("text.nucleoid_extras.statistics.web_url")
-                .formatted(Formatting.GRAY, Formatting.ITALIC)
-                .styled(style -> style.withClickEvent(new ClickEvent.OpenUrl(
+        space.getPlayers().sendMessage(Component.translatable("text.nucleoid_extras.statistics.web_url")
+                .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)
+                .withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(
                         URI.create("https://stats.nucleoid.xyz/games/" + gameId)))));
     }
 
@@ -94,21 +93,21 @@ public class StatisticsIntegration {
         }
     }
 
-    public static Text convertForDisplay(Identifier key, Number number) {
+    public static Component convertForDisplay(Identifier key, Number number) {
         String base;
 
         if (key.getPath().endsWith("_time")) {
             var seconds = number.doubleValue() / 20;
-            var text = Text.empty();
+            var text = Component.empty();
             if (seconds > 60) {
-               text.append(Text.stringifiedTranslatable("gui.minutes", MathHelper.floor(seconds / 60)));
+               text.append(Component.translatableEscape("gui.minutes", Mth.floor(seconds / 60)));
             }
 
             if (seconds % 60 > 0.01 || text.getSiblings().isEmpty()) {
                 if (!text.getSiblings().isEmpty()) {
                     text.append(" ");
                 }
-                text.append(Text.stringifiedTranslatable("text.nucleoid_extras.seconds", Text.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
+                text.append(Component.translatableEscape("text.nucleoid_extras.seconds", Component.literal((seconds - (int) seconds >= 0.005) ? String.format("%.2f", seconds % 60) : ("" + ((int)seconds) % 60))));
             }
             return text;
         }
@@ -121,7 +120,7 @@ public class StatisticsIntegration {
             base = Integer.toString(number.intValue());
         }
 
-        return Text.literal(base);
+        return Component.literal(base);
     }
 
     public static void bind(NucleoidIntegrations integrations, IntegrationsConfig config) {

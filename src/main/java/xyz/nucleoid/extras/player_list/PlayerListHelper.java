@@ -1,14 +1,14 @@
 package xyz.nucleoid.extras.player_list;
 
-import eu.pb4.polymer.core.mixin.entity.PlayerListS2CPacketAccessor;
-import net.minecraft.network.encryption.PublicPlayerSession;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Nullables;
-import net.minecraft.world.GameMode;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Optionull;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.RemoteChatSession;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.extras.mixin.player_list.PlayerListS2CPacketAccessor;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 
 import java.util.ArrayList;
@@ -16,23 +16,23 @@ import java.util.EnumSet;
 import java.util.List;
 
 public class PlayerListHelper {
-    public static Text getDisplayName(ServerPlayerEntity player, boolean gray) {
-        return gray ? player.getName().copy().formatted(Formatting.DARK_GRAY, Formatting.ITALIC) : player.getDisplayName();
+    public static Component getDisplayName(ServerPlayer player, boolean gray) {
+        return gray ? player.getName().copy().withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC) : player.getDisplayName();
     }
 
     @Nullable
-    private static PublicPlayerSession.Serialized getSession(ServerPlayerEntity player) {
-        return Nullables.map(player.getSession(), PublicPlayerSession::toSerialized);
+    private static RemoteChatSession.Data getSession(ServerPlayer player) {
+        return Optionull.map(player.getChatSession(), RemoteChatSession::asData);
     }
 
-    public static GameMode getGameMode(PlayerListS2CPacket.Entry examplar, boolean gray) {
-        return gray ? GameMode.SPECTATOR : examplar.gameMode();
+    public static GameType getGameMode(ClientboundPlayerInfoUpdatePacket.Entry examplar, boolean gray) {
+        return gray ? GameType.SPECTATOR : examplar.gameMode();
     }
 
-    public static PlayerListS2CPacket.Entry createEntry(ServerPlayerEntity player,  boolean gray) {
-        var examplar = new PlayerListS2CPacket.Entry(player);
+    public static ClientboundPlayerInfoUpdatePacket.Entry createEntry(ServerPlayer player,  boolean gray) {
+        var examplar = new ClientboundPlayerInfoUpdatePacket.Entry(player);
 
-        return new PlayerListS2CPacket.Entry(
+        return new ClientboundPlayerInfoUpdatePacket.Entry(
             examplar.profileId(),
             examplar.profile(),
             examplar.listed(),
@@ -45,45 +45,45 @@ public class PlayerListHelper {
         );
     }
 
-    private static PlayerListS2CPacket createPacket(EnumSet<PlayerListS2CPacket.Action> actions, List<PlayerListS2CPacket.Entry> entries) {
-        PlayerListS2CPacket packet = new PlayerListS2CPacket(actions, List.of());
+    private static ClientboundPlayerInfoUpdatePacket createPacket(EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions, List<ClientboundPlayerInfoUpdatePacket.Entry> entries) {
+        ClientboundPlayerInfoUpdatePacket packet = new ClientboundPlayerInfoUpdatePacket(actions, List.of());
         ((PlayerListS2CPacketAccessor) packet).setEntries(entries);
         return packet;
     }
 
-    public static PlayerListS2CPacket createPacket(ServerPlayerEntity player, EnumSet<PlayerListS2CPacket.Action> actions, boolean gray) {
+    public static ClientboundPlayerInfoUpdatePacket createPacket(ServerPlayer player, EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions, boolean gray) {
         return createPacket(actions, List.of(createEntry(player, gray)));
     }
 
-    public static PlayerListS2CPacket createAddPacket(ServerPlayerEntity player, boolean gray) {
-        final EnumSet<PlayerListS2CPacket.Action> actions = EnumSet.of(PlayerListS2CPacket.Action.ADD_PLAYER, PlayerListS2CPacket.Action.INITIALIZE_CHAT, PlayerListS2CPacket.Action.UPDATE_GAME_MODE, PlayerListS2CPacket.Action.UPDATE_LISTED, PlayerListS2CPacket.Action.UPDATE_LATENCY, PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME);
+    public static ClientboundPlayerInfoUpdatePacket createAddPacket(ServerPlayer player, boolean gray) {
+        final EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, ClientboundPlayerInfoUpdatePacket.Action.INITIALIZE_CHAT, ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE, ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LATENCY, ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
         return createPacket(player, actions, gray);
     }
 
-    public static boolean shouldGray(ServerPlayerEntity left, ServerPlayerEntity right) {
+    public static boolean shouldGray(ServerPlayer left, ServerPlayer right) {
         var manager = GameSpaceManager.get();
-        return manager.byWorld(left.getWorld()) != manager.byWorld(right.getWorld());
+        return manager.byLevel(left.level()) != manager.byLevel(right.level());
     }
 
-    public static void updatePlayer(ServerPlayerEntity updatedPlayer) {
-        updatePlayer(updatedPlayer, EnumSet.of(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, PlayerListS2CPacket.Action.UPDATE_GAME_MODE));
+    public static void updatePlayer(ServerPlayer updatedPlayer) {
+        updatePlayer(updatedPlayer, EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE));
     }
 
-    private static void updatePlayer(ServerPlayerEntity updatedPlayer, EnumSet<PlayerListS2CPacket.Action> actions) {
-        var server = updatedPlayer.getServer();
+    private static void updatePlayer(ServerPlayer updatedPlayer, EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions) {
+        var server = updatedPlayer.level().getServer();
 
         var normalPacket = PlayerListHelper.createPacket(updatedPlayer, actions, false);
         var grayPacket = PlayerListHelper.createPacket(updatedPlayer, actions, true);
 
-        var updateJoined = new ArrayList<PlayerListS2CPacket.Entry>();
+        var updateJoined = new ArrayList<ClientboundPlayerInfoUpdatePacket.Entry>();
 
-        for (var player : server.getPlayerManager().getPlayerList()) {
+        for (var player : server.getPlayerList().getPlayers()) {
             boolean gray = PlayerListHelper.shouldGray(player, updatedPlayer);
 
-            player.networkHandler.sendPacket(gray ? grayPacket : normalPacket);
+            player.connection.send(gray ? grayPacket : normalPacket);
             updateJoined.add(createEntry(player, gray));
         }
 
-        updatedPlayer.networkHandler.sendPacket(createPacket(actions, updateJoined));
+        updatedPlayer.connection.send(createPacket(actions, updateJoined));
     }
 }

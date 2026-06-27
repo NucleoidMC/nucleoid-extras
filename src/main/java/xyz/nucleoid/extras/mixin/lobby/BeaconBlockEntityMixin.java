@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.mixin.lobby;
 
-import net.minecraft.block.entity.BeaconBlockEntity;
-import net.minecraft.inventory.ContainerLock;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.LockCode;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import xyz.nucleoid.extras.lobby.block.ContainerLockAccess;
@@ -10,23 +10,23 @@ import xyz.nucleoid.extras.lobby.block.ContainerLockAccess;
 @Mixin(BeaconBlockEntity.class)
 public abstract class BeaconBlockEntityMixin implements ContainerLockAccess {
     @Shadow
-    private ContainerLock lock;
+    private LockCode lockKey;
 
     @Shadow
-    public abstract Text getDisplayName();
+    public abstract Component getDisplayName();
 
     @Override
-    public ContainerLock getContainerLock() {
-        return this.lock;
+    public LockCode getContainerLock() {
+        return this.lockKey;
     }
 
     @Override
-    public void setContainerLock(ContainerLock lock) {
-        this.lock = lock;
+    public void setContainerLock(LockCode lock) {
+        this.lockKey = lock;
     }
 
     @Override
-    public Text getContainerLockName() {
+    public Component getContainerLockName() {
         return this.getDisplayName();
     }
 }

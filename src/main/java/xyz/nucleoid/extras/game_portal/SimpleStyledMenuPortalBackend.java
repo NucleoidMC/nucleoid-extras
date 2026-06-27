@@ -1,10 +1,14 @@
 package xyz.nucleoid.extras.game_portal;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
 import xyz.nucleoid.plasmid.impl.portal.game.ConcurrentGamePortalBackend;
-import xyz.nucleoid.plasmid.impl.portal.menu.*;
+import xyz.nucleoid.plasmid.impl.portal.menu.GameMenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.InvalidMenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
+import xyz.nucleoid.plasmid.impl.portal.menu.MenuPortalConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,7 @@ public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend
     private final List<MenuPortalConfig.Entry> configEntries;
     private List<MenuEntry> entries;
 
-    public SimpleStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
+    public SimpleStyledMenuPortalBackend(Component name, Component uiTitle, List<Component> description, ItemStack icon, List<MenuPortalConfig.Entry> config) {
         super(name, uiTitle, description, icon);
         this.configEntries = config;
     }
@@ -31,7 +35,7 @@ public final class SimpleStyledMenuPortalBackend extends StyledMenuPortalBackend
                         game,
                         configEntry.name().orElse(GameConfig.name(gameConfig)),
                         configEntry.description().orElse(gameConfig.value().description()),
-                        configEntry.icon().orElse(gameConfig.value().icon())
+                        configEntry.icon().map(ItemStackTemplate::create).orElse(gameConfig.value().icon())
                     ));
                 } else if (ExtrasGamePortals.SHOW_INVALID) {
                     this.entries.add(new InvalidMenuEntry(game.getName()));

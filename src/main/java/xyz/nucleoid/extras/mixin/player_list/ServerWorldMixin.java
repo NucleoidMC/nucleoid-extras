@@ -1,33 +1,33 @@
 package xyz.nucleoid.extras.mixin.player_list;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.WritableLevelData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.nucleoid.extras.player_list.PlayerListHelper;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World {
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimension, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+@Mixin(ServerLevel.class)
+public abstract class ServerWorldMixin extends Level {
+    protected ServerWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimension, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimension, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "addPlayer", at = @At("RETURN"))
-    private void extras$addPlayer(ServerPlayerEntity player, CallbackInfo ci) {
+    private void extras$addPlayer(ServerPlayer player, CallbackInfo ci) {
         PlayerListHelper.updatePlayer(player);
     }
 
-    @Inject(method = "removePlayer", at = @At("RETURN"))
-    private void extras$removePlayer(ServerPlayerEntity player, Entity.RemovalReason reason, CallbackInfo ci) {
+    @Inject(method = "removePlayerImmediately", at = @At("RETURN"))
+    private void extras$removePlayer(ServerPlayer player, Entity.RemovalReason reason, CallbackInfo ci) {
         PlayerListHelper.updatePlayer(player);
     }
 }

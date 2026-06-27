@@ -1,12 +1,12 @@
 plugins {
-	id 'fabric-loom' version '1.11.+'
+	id 'net.fabricmc.fabric-loom' version '1.16.+'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
 
-archivesBaseName = project.archives_base_name
+base {
+  archivesName = project.archives_base_name
+}
 version = project.mod_version
 group = project.maven_group
 
@@ -30,21 +30,21 @@ fabricApi {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
-	modImplementation "eu.pb4:factorytools:${project.factorytools_version}"
+	implementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
+	implementation "eu.pb4:factorytools:${project.factorytools_version}"
+    runtimeOnly "eu.pb4:polymer-autohost:${project.polymer_version}"
 
 
-	//modCompileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
-	modCompileOnly "dev.gegy:player-roles-api:${project.player_roles_version}"
+	//compileOnly "com.viaversion:viaversion-api:4.7.0-SNAPSHOT"
+	compileOnly "dev.gegy:player-roles-api:${project.player_roles_version}"
 
-  modImplementation "eu.pb4:polymer-resource-pack-extras:${project.rp_extras_version}"
-  modImplementation "eu.pb4:polymer-autohost:${project.autohost_version}"
+    implementation "eu.pb4:polymer-resource-pack-extras:${project.rp_extras_version}"
+    implementation "eu.pb4:polymer-autohost:${project.autohost_version}"
 }
 
 test {
@@ -61,7 +61,7 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -70,6 +70,6 @@ java {
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${project.archives_base_name}"}
 	}
 }

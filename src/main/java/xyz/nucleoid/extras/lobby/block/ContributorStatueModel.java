@@ -3,10 +3,11 @@ package xyz.nucleoid.extras.lobby.block;
 import com.google.common.collect.ImmutableList;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.EntityElement;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.lobby.contributor.ContributorData;
 
 import java.time.LocalDate;
@@ -15,12 +16,12 @@ import java.util.List;
 
 public class ContributorStatueModel extends ElementHolder {
     private static final List<EntityType<?>> SPOOKY_ENTITIES = ImmutableList.of(
-        EntityType.ZOMBIE,
-        EntityType.DROWNED,
-        EntityType.HUSK,
-        EntityType.SKELETON,
-        EntityType.STRAY,
-        EntityType.BOGGED
+        EntityTypes.ZOMBIE,
+        EntityTypes.DROWNED,
+        EntityTypes.HUSK,
+        EntityTypes.SKELETON,
+        EntityTypes.STRAY,
+        EntityTypes.BOGGED
     );
 
     private EntityElement<?> entityElement;
@@ -36,10 +37,10 @@ public class ContributorStatueModel extends ElementHolder {
             return SPOOKY_ENTITIES.get(index);
         }
 
-        return EntityType.ARMOR_STAND;
+        return EntityTypes.ARMOR_STAND;
     }
 
-    public void update(String contributorId, ServerWorld world, BlockState state) {
+    public void update(String contributorId, ServerLevel world, BlockState state) {
         this.removeElement(this.entityElement);
 
         var contributor = ContributorData.getContributor(contributorId);
@@ -48,14 +49,14 @@ public class ContributorStatueModel extends ElementHolder {
         var entityType = this.getEntityType(contributorId);
 
         this.entityElement = new EntityElement<>(entityType, world);
-        this.entityElement.setOffset(new Vec3d(0, 1, 0));
+        this.entityElement.setOffset(new Vec3(0, 1, 0));
 
         var entity = this.entityElement.entity();
         contributor.fillEntity(world.getServer(), entity);
 
-        entity.setYaw(entity.getYaw() + state.get(ContributorStatueBlock.FACING).getPositiveHorizontalDegrees());
-        entity.setHeadYaw(entity.getYaw());
-        entity.setBodyYaw(entity.getYaw());
+        entity.setYRot(entity.getYRot() + state.getValue(ContributorStatueBlock.FACING).toYRot());
+        entity.setYHeadRot(entity.getYRot());
+        entity.setYBodyRot(entity.getYRot());
 
         this.addElement(this.entityElement);
     }

@@ -1,32 +1,26 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.core.api.block.PolymerHeadBlock;
-import eu.pb4.polymer.core.api.item.PolymerHeadBlockItem;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.utils.PolymerUtils;
-import net.minecraft.block.Block;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import xyz.nucleoid.packettweaker.PacketContext;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.block.Block;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class LobbyHeadItem extends BlockItem implements PolymerItem {
     private final String texture;
 
     @SuppressWarnings("unchecked")
-    public LobbyHeadItem(Block block, Settings settings, String texture) {
+    public LobbyHeadItem(Block block, Properties settings, String texture) {
         super(block, settings);
         this.texture = texture;
     }
@@ -37,27 +31,27 @@ public class LobbyHeadItem extends BlockItem implements PolymerItem {
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipType tooltipType, PacketContext context) {
-        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context);
+    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext context, HolderLookup.Provider provider) {
+        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context, provider);
         if (this.texture != null) {
-            out.set(DataComponentTypes.PROFILE, PolymerUtils.createProfileComponent(this.texture));
+            out.set(DataComponents.PROFILE, PolymerUtils.createProfileComponent(this.texture));
         }
         return out;
     }
 
     @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 
     @Override
-    public Text getName(ItemStack stack) {
-        return Text.empty().append(super.getName()).append(ScreenTexts.SPACE).append(Text.translatable("text.nucleoid_extras.lobby_only"));
+    public Component getName(ItemStack stack) {
+        return Component.empty().append(super.getName(stack)).append(CommonComponents.SPACE).append(Component.translatable("text.nucleoid_extras.lobby_only"));
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
-        textConsumer.accept(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
+        textConsumer.accept(Component.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false)));
     }
 }

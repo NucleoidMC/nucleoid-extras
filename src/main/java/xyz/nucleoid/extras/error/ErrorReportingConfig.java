@@ -2,10 +2,11 @@ package xyz.nucleoid.extras.error;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.codecs.MoreCodecs;
+
 import java.net.URL;
 import java.util.Optional;
-import org.jetbrains.annotations.Nullable;
 
 public record ErrorReportingConfig(
         Optional<URL> discordWebhookUrl

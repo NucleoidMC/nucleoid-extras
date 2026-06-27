@@ -1,5 +1,17 @@
 package xyz.nucleoid.extras.lobby.contributor;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.GsonHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import xyz.nucleoid.extras.NucleoidExtrasConfig;
+import xyz.nucleoid.extras.lobby.block.ContributorStatueBlockEntity;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -10,29 +22,13 @@ import java.util.Map.Entry;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
-
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.JsonHelper;
-import xyz.nucleoid.extras.NucleoidExtrasConfig;
-import xyz.nucleoid.extras.lobby.block.ContributorStatueBlockEntity;
-import xyz.nucleoid.extras.mixin.lobby.ServerChunkLoadingManagerAccessor;
-
 public final class ContributorData {
     private static final Logger LOGGER = LogManager.getLogger(ContributorData.class);
 
     private static final Executor EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
-            .setNameFormat("contributor-data-fetcher")
-            .setDaemon(true)
-            .build()
+        .setNameFormat("contributor-data-fetcher")
+        .setDaemon(true)
+        .build()
     );
 
     private static final String PEOPLE_KEY = "people";
@@ -78,7 +74,7 @@ public final class ContributorData {
             connection.setRequestProperty("Content-Type", "application/json");
 
             try (var reader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
-                var json = JsonHelper.deserialize(reader);
+                var json = GsonHelper.parse(reader);
                 var people = json.getAsJsonObject(PEOPLE_KEY);
 
                 for (var entry : people.entrySet()) {
@@ -91,23 +87,17 @@ public final class ContributorData {
     }
 
     private static void refreshHolograms(MinecraftServer server) {
-        for (var world : server.getWorlds()) {
-            var chunkManager = world.getChunkManager();
+        for (var world : server.getAllLevels()) {
+            var chunkManager = world.getChunkSource();
 
-            var chunkStorage = chunkManager.chunkLoadingManager;
-            var accessor = (ServerChunkLoadingManagerAccessor) (Object) chunkStorage;
-
-            for (var holder : accessor.callEntryIterator()) {
-                var chunk = holder.getWorldChunk();
-
-                if (chunk != null) {
-                    for (var entity : chunk.getBlockEntities().values()) {
-                        if (entity instanceof ContributorStatueBlockEntity statue) {
-                            statue.updateModel();
-                        }
+            chunkManager.chunkMap.forEachReadyToSendChunk(chunk -> {
+                for (var entity : chunk.getBlockEntities().values()) {
+                    if (entity instanceof ContributorStatueBlockEntity statue) {
+                        statue.updateModel();
                     }
                 }
-            }
+            });
+
         }
     }
 
@@ -121,7 +111,7 @@ public final class ContributorData {
                 });
             }
         });
-        
+
     }
 
     public static void register() {

@@ -1,12 +1,11 @@
 package xyz.nucleoid.extras.mixin.lobby;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,26 +16,26 @@ import xyz.nucleoid.extras.lobby.NECriteria;
 import xyz.nucleoid.extras.lobby.PlayerLobbyState;
 import xyz.nucleoid.extras.lobby.block.tater.CubicPotatoBlock;
 
-@Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity {
-    public ServerPlayerEntityMixin(World world, GameProfile gameProfile) {
+@Mixin(ServerPlayer.class)
+public abstract class ServerPlayerEntityMixin extends Player {
+    public ServerPlayerEntityMixin(Level world, GameProfile gameProfile) {
         super(world,  gameProfile);
     }
 
-    @Inject(method = "playerTick", at = @At("TAIL"))
+    @Inject(method = "doTick", at = @At("TAIL"))
     private void extras$playerTick(CallbackInfo ci) {
-        ItemStack helmet = this.getEquippedStack(EquipmentSlot.HEAD);
+        ItemStack helmet = this.getItemBySlot(EquipmentSlot.HEAD);
         TaterSelectionComponent taterSelection = helmet.getOrDefault(NEDataComponentTypes.TATER_SELECTION, TaterSelectionComponent.DEFAULT);
 
         taterSelection.tater().ifPresent(tater -> {
             if (tater.value() instanceof CubicPotatoBlock tinyPotatoBlock) {
-                ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+                ServerPlayer player = (ServerPlayer) (Object) this;
                 PlayerLobbyState state = PlayerLobbyState.get(player);
 
                 if (state.collectedTaters.contains(tinyPotatoBlock)) {
                     NECriteria.WEAR_TATER.trigger(player, tinyPotatoBlock);
                     NECriteria.TATER_COLLECTED.trigger(player, tinyPotatoBlock, state.collectedTaters.size());
-                    if (this.age % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
+                    if (this.tickCount % tinyPotatoBlock.getPlayerParticleRate(player) == 0) {
                         tinyPotatoBlock.spawnPlayerParticles(player);
                     }
                 } else {

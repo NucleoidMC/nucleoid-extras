@@ -1,7 +1,7 @@
 package xyz.nucleoid.extras.game_portal;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntry;
 import xyz.nucleoid.plasmid.impl.portal.menu.MenuEntryConfig;
 
@@ -12,7 +12,7 @@ public final class AdvancedStyledMenuPortalBackend extends StyledMenuPortalBacke
     private final List<MenuEntryConfig> configEntries;
     private List<MenuEntry> entries;
 
-    public AdvancedStyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon, List<MenuEntryConfig> config) {
+    public AdvancedStyledMenuPortalBackend(Component name, Component uiTitle, List<Component> description, ItemStack icon, List<MenuEntryConfig> config) {
         super(name, uiTitle, description, icon);
         this.configEntries = config;
     }

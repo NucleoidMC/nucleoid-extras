@@ -2,11 +2,11 @@ package xyz.nucleoid.extras.lobby.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.block.Block;
-import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Calendar;
@@ -14,10 +14,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
-public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Conditions> {
+public class WearTaterCriterion extends SimpleCriterionTrigger<WearTaterCriterion.Conditions> {
 	public static final Calendar CALENDAR = Calendar.getInstance();
 
-	public void trigger(ServerPlayerEntity player, TinyPotatoBlock tater) {
+	public void trigger(ServerPlayer player, TinyPotatoBlock tater) {
 		CALENDAR.setTime(new Date());
 		this.trigger(player, conditions -> conditions.matches(tater, CALENDAR.get(Calendar.DAY_OF_WEEK)));
 	}
@@ -49,11 +49,11 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
     }
 
     @Override
-    public Codec<Conditions> getConditionsCodec() {
+    public Codec<Conditions> codec() {
         return Conditions.CODEC;
     }
 
-    public record Conditions(Optional<RegistryEntry<Block>> tater, Optional<Integer> dayOfWeek) implements AbstractCriterion.Conditions {
+    public record Conditions(Optional<Holder<Block>> tater, Optional<Integer> dayOfWeek) implements SimpleCriterionTrigger.SimpleInstance {
         private static final Codec<Integer> DAY_OF_WEEK_CODEC = Codec.STRING.xmap(WearTaterCriterion::dayOfWeekToInt, WearTaterCriterion::dayOfWeekToString);
 
         public static final Codec<Conditions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -68,7 +68,7 @@ public class WearTaterCriterion extends AbstractCriterion<WearTaterCriterion.Con
         }
 
         @Override
-        public Optional<LootContextPredicate> player() {
+        public Optional<ContextAwarePredicate> player() {
             return Optional.empty();
         }
     }

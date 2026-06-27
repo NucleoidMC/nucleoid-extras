@@ -10,7 +10,7 @@ public final class IntegrationsProxy implements IntegrationsConnection {
     private static final long RECONNECT_INTERVAL_MS = 30 * 1000;
 
     private final SocketAddress address;
-    private final Handler receiver;
+    private final xyz.nucleoid.extras.integrations.connection.IntegrationsProxy.Handler receiver;
 
     private IntegrationsConnection connection;
     private boolean connecting;
@@ -19,7 +19,7 @@ public final class IntegrationsProxy implements IntegrationsConnection {
 
     public IntegrationsProxy(InetSocketAddress address, IntegrationsConnection.Handler handler) {
         this.address = address;
-        this.receiver = new Handler(handler);
+        this.receiver = new xyz.nucleoid.extras.integrations.connection.IntegrationsProxy.Handler(handler);
         this.initiateConnection();
     }
 

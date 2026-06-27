@@ -1,12 +1,10 @@
 package xyz.nucleoid.extras.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.CrashReport;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Util;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.profiler.MultiValueDebugSampleLogImpl;
-import net.minecraft.util.profiler.log.MultiValueDebugSampleLog;
+import net.minecraft.util.debugchart.LocalSampleLogger;
+import net.minecraft.util.debugchart.SampleStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +21,11 @@ import java.util.function.BooleanSupplier;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements HasTickPerformanceLog {
     @Unique
-    private final MultiValueDebugSampleLogImpl extras$tickPerformanceLog = new MultiValueDebugSampleLogImpl(1);
+    private final LocalSampleLogger extras$tickPerformanceLog = new LocalSampleLogger(1);
 
     @ModifyArg(
             method = "runServer",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setCrashReport(Lnet/minecraft/util/crash/CrashReport;)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;onServerCrash(Lnet/minecraft/CrashReport;)V")
     )
     private CrashReport extras$onServerCrash(CrashReport report) {
         if (report != null) {
@@ -38,7 +36,7 @@ public class MinecraftServerMixin implements HasTickPerformanceLog {
     }
 
     @Inject(
-            method = "tick",
+            method = "tickServer",
             at = @At("RETURN")
     )
     private void onEndTickIncludingPaused(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
@@ -46,15 +44,15 @@ public class MinecraftServerMixin implements HasTickPerformanceLog {
     }
 
     @Inject(
-            method = "pushTickLog",
+            method = "logTickMethodTime",
             at = @At(value = "HEAD")
     )
     public void pushTickPerformanceLog(long tickStartTime, CallbackInfo ci) {
-        this.extras$tickPerformanceLog.push(Util.getMeasuringTimeNano() - tickStartTime);
+        this.extras$tickPerformanceLog.logSample(Util.getNanos() - tickStartTime);
     }
 
     @Override
-    public MultiValueDebugSampleLog getTickPerformanceLog() {
+    public SampleStorage getTickPerformanceLog() {
         return this.extras$tickPerformanceLog;
     }
 }

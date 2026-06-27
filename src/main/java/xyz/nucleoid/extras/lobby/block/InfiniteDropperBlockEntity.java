@@ -1,8 +1,8 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.state.BlockState;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
 public class InfiniteDropperBlockEntity extends InfiniteDispenserBlockEntity {
@@ -11,7 +11,7 @@ public class InfiniteDropperBlockEntity extends InfiniteDispenserBlockEntity {
     }
 
     @Override
-    protected Text getContainerName() {
-        return Text.translatable("container.dropper");
+    protected Component getDefaultName() {
+        return Component.translatable("container.dropper");
     }
 }

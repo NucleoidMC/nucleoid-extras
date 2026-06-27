@@ -1,16 +1,12 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import xyz.nucleoid.extras.component.LauncherComponent;
 import xyz.nucleoid.extras.lobby.NEBlocks;
 
@@ -24,7 +20,7 @@ public class LaunchPadBlockEntity extends BlockEntity {
     private float pitch = LauncherComponent.DEFAULT.pitch();
     private float power = LauncherComponent.DEFAULT.power();
 
-    private Optional<RegistryEntry<SoundEvent>> sound = LauncherComponent.DEFAULT.sound();
+    private Optional<Holder<SoundEvent>> sound = LauncherComponent.DEFAULT.sound();
 
     public LaunchPadBlockEntity(BlockPos pos, BlockState state) {
         super(NEBlocks.LAUNCH_PAD_ENTITY, pos, state);
@@ -38,28 +34,28 @@ public class LaunchPadBlockEntity extends BlockEntity {
         return this.power;
     }
 
-    public Optional<RegistryEntry<SoundEvent>> getSound() {
+    public Optional<Holder<SoundEvent>> getSound() {
         return this.sound;
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
 
         view.putFloat(PITCH_KEY, this.pitch);
         view.putFloat(POWER_KEY, this.power);
 
         if (this.sound.isPresent()) {
-            view.put(SOUND_KEY, SoundEvent.ENTRY_CODEC, this.sound.get());
+            view.store(SOUND_KEY, SoundEvent.CODEC, this.sound.get());
         }
     }
 
     @Override
-    public void readData(ReadView view) {
-        super.readData(view);
-        this.pitch = view.getFloat(PITCH_KEY, 0);
-        this.power = view.getFloat(POWER_KEY, 0);
+    public void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.pitch = view.getFloatOr(PITCH_KEY, 0);
+        this.power = view.getFloatOr(POWER_KEY, 0);
 
-        this.sound = view.read(SOUND_KEY, SoundEvent.ENTRY_CODEC);
+        this.sound = view.read(SOUND_KEY, SoundEvent.CODEC);
     }
 }

@@ -1,20 +1,20 @@
 package xyz.nucleoid.extras.game_portal;
 
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import eu.pb4.sgui.api.GuiHelpers;
-import eu.pb4.sgui.api.elements.GuiElement;
+import eu.pb4.sgui.api.SguiUtils;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.elements.SimpleGuiElement;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.extras.resourcepack.GuiTextures;
 import xyz.nucleoid.extras.util.CommonGuiElements;
@@ -35,26 +35,26 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class StyledMenuPortalBackend implements GamePortalBackend {
-    public static final int GAMES_WIDTH = 7;
+    public static final int GAMES_WIDTH = 9;
     public static final int GAMES_HEIGHT = 5;
-    public static final int GAMES_X = 1;
+    public static final int GAMES_X = 0;
     public static final int GAMES_Y = 0;
     public static final int GAMES_PER_PAGE = GAMES_HEIGHT * GAMES_WIDTH;
 
-    private final Text name;
-    private final MutableText hologramName;
+    private final Component name;
+    private final MutableComponent hologramName;
 
-    private final List<Text> description;
+    private final List<Component> description;
     private final ItemStack icon;
-    private final Text uiTitle;
+    private final Component uiTitle;
 
-    public StyledMenuPortalBackend(Text name, Text uiTitle, List<Text> description, ItemStack icon) {
+    public StyledMenuPortalBackend(Component name, Component uiTitle, List<Component> description, ItemStack icon) {
         this.name = name;
         this.uiTitle = uiTitle;
         var hologramName = name.copy();
 
         if (hologramName.getStyle().getColor() == null) {
-            hologramName.setStyle(hologramName.getStyle().withColor(Formatting.AQUA));
+            hologramName.setStyle(hologramName.getStyle().withColor(ChatFormatting.AQUA));
         }
 
         this.hologramName = hologramName;
@@ -64,12 +64,12 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public Text getName() {
+    public Component getName() {
         return this.name;
     }
 
     @Override
-    public List<Text> getDescription() {
+    public List<Component> getDescription() {
         return this.description;
     }
 
@@ -105,10 +105,10 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
     }
 
     @Override
-    public void applyTo(ServerPlayerEntity player, boolean alt) {
-        var oldGui = GuiHelpers.getCurrentGui(player);
+    public void applyTo(ServerPlayer player, boolean alt) {
+        var oldGui = SguiUtils.getCurrentGui(player);
         var hasPack = PolymerResourcePackUtils.hasMainPack(player);
-        var gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, player, false);
+        var gui = new SimpleGui(MenuType.GENERIC_9x6, player, false);
         if (hasPack) {
             gui.setTitle(GuiTextures.GAME_PORTAL_9X6.apply(this.uiTitle));
         } else {
@@ -129,7 +129,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         gui.open();
     }
 
-    private void fill(ServerPlayerEntity player, SimpleGui gui, boolean viewOpen) {
+    private void fill(ServerPlayer player, SimpleGui gui, boolean viewOpen) {
         var page = new MutableInt();
         var filter = new GuiElementBuilder(viewOpen ? Items.SOUL_LANTERN : Items.LANTERN);
         filter.setCallback(() -> {
@@ -140,27 +140,27 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         var hasPack = PolymerResourcePackUtils.hasMainPack(player);
         if (viewOpen) {
             filter.glow();
-            var title = this.uiTitle.copy().append(Text.of(" ")).append(Text.translatable("nucleoid.navigator.open_only"));
+            var title = this.uiTitle.copy().append(Component.nullToEmpty(" ")).append(Component.translatable("nucleoid.navigator.open_only"));
             gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(title) : title);
             this.fillOpen(player, gui, page);
         } else {
             gui.setTitle(hasPack ? GuiTextures.GAME_PORTAL_9X6.apply(this.uiTitle) : this.uiTitle);
             this.fillInterface(player, gui, page);
         }
-        gui.setSlot(5 * 9 + 4, filter.setItemName(Text.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")).hideDefaultTooltip());
+        gui.setSlot(5 * 9 + 4, filter.setItemName(Component.translatable(viewOpen ? "nucleoid.navigator.open_games" : "nucleoid.navigator.all_games")).hideDefaultTooltip());
     }
 
-    private void fillOpen(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
+    private void fillOpen(ServerPlayer player, SimpleGui gui, MutableInt page) {
         var gamesTemp = new ReferenceOpenHashSet<GameSpace>();
         this.provideGameSpaces(gamesTemp::add);
         var games = new ArrayList<>(gamesTemp);
         games.sort(Comparator.comparingInt(space -> -space.getPlayers().size()));
 
-        var pages = MathHelper.ceilDiv(games.size(), GAMES_PER_PAGE);
+        var pages = Mth.positiveCeilDiv(games.size(), GAMES_PER_PAGE);
 
         if (pages > 1) {
             if (page.getValue() == 0) {
-                gui.setSlot(9 * 2, GuiElement.EMPTY);
+                gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
@@ -170,7 +170,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
 
             if (page.getValue() == pages - 1) {
-                gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+                gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
@@ -179,8 +179,8 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 }));
             }
         } else {
-            gui.setSlot(9 * 2, GuiElement.EMPTY);
-            gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+            gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
+            gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
         }
 
         for (int y = 0; y < GAMES_HEIGHT; y++) {
@@ -202,22 +202,22 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         }
     }
 
-    private static void tryJoinGame(ServerPlayerEntity player, GameSpace gameSpace, JoinIntent intent) {
-        player.getServer().submit(() -> {
+    private static void tryJoinGame(ServerPlayer player, GameSpace gameSpace, JoinIntent intent) {
+        player.level().getServer().submit(() -> {
             var result = GamePlayerJoiner.tryJoin(player, gameSpace, intent);
             if (result.isError()) {
-                player.sendMessage(result.errorCopy().formatted(Formatting.RED));
+                player.sendSystemMessage(result.errorCopy().withStyle(ChatFormatting.RED));
             }
         });
     }
 
-    protected void fillInterface(ServerPlayerEntity player, SimpleGui gui, MutableInt page) {
+    protected void fillInterface(ServerPlayer player, SimpleGui gui, MutableInt page) {
         var entries = this.getEntries();
-        var pages = MathHelper.ceilDiv(entries.size(), GAMES_PER_PAGE);
+        var pages = Mth.positiveCeilDiv(entries.size(), GAMES_PER_PAGE);
 
         if (pages > 1) {
             if (page.getValue() == 0) {
-                gui.setSlot(9 * 2, GuiElement.EMPTY);
+                gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2, CommonGuiElements.previousPage(player).setCallback(() -> {
                     page.decrement();
@@ -227,7 +227,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
 
             if (page.getValue() == pages - 1) {
-                gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+                gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
             } else {
                 gui.setSlot(9 * 2 + 8, CommonGuiElements.nextPage(player).setCallback(() -> {
                     page.increment();
@@ -236,8 +236,8 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
                 }));
             }
         } else {
-            gui.setSlot(9 * 2, GuiElement.EMPTY);
-            gui.setSlot(9 * 2 + 8, GuiElement.EMPTY);
+            gui.setSlot(9 * 2, SimpleGuiElement.EMPTY);
+            gui.setSlot(9 * 2 + 8, SimpleGuiElement.EMPTY);
         }
 
         int pageOffset = page.getValue() * GAMES_PER_PAGE;
@@ -252,7 +252,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             }
         }
         var lastPage = pages - 1 == page.getValue();
-        var starterY = lastPage ? Math.floorDiv(GAMES_HEIGHT - MathHelper.ceilDiv(size - ((size / GAMES_PER_PAGE) * GAMES_PER_PAGE), GAMES_WIDTH), 2) : 0;
+        var starterY = lastPage ? Math.floorDiv(GAMES_HEIGHT - Mth.positiveCeilDiv(size - ((size / GAMES_PER_PAGE) * GAMES_PER_PAGE), GAMES_WIDTH), 2) : 0;
 
         for (int y = starterY; y < GAMES_HEIGHT; y++) {
             for (int x = 0; x < GAMES_WIDTH; x++) {
@@ -270,7 +270,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         }
     }
 
-    protected GuiElementBuilder createIconFor(ItemStack icon, Text name, List<Text> description, GameSpaceState state, Consumer<ServerPlayerEntity> click) {
+    protected GuiElementBuilder createIconFor(ItemStack icon, Component name, List<Component> description, GameSpaceState state, Consumer<ServerPlayer> click) {
             var element = GuiElementBuilder.from(icon)
                 .setItemName(name)
                 .hideDefaultTooltip();
@@ -279,7 +279,7 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
             var text = line.copy();
 
             if (line.getStyle().getColor() == null) {
-                text.setStyle(line.getStyle().withColor(Formatting.GRAY));
+                text.setStyle(line.getStyle().withColor(ChatFormatting.GRAY));
             }
 
             element.addLoreLine(text);
@@ -291,27 +291,27 @@ public abstract class StyledMenuPortalBackend implements GamePortalBackend {
         boolean allowSpace = true;
         var stateText = state.state().display();
         if (stateText != null) {
-            element.addLoreLine(ScreenTexts.EMPTY);
-            element.addLoreLine(Text.literal(" ").append(stateText).formatted(Formatting.WHITE));
+            element.addLoreLine(CommonComponents.EMPTY);
+            element.addLoreLine(Component.literal(" ").append(stateText).withStyle(ChatFormatting.WHITE));
             allowSpace = false;
         }
 
         if (playerCount > -1) {
             if (allowSpace) {
-                element.addLoreLine(ScreenTexts.EMPTY);
+                element.addLoreLine(CommonComponents.EMPTY);
                 allowSpace = false;
             }
 
-            element.addLoreLine(Text.empty().append(Text.literal("» ").formatted(Formatting.DARK_GRAY)).append(Text.translatable("text.plasmid.ui.game_join.players", new Object[]{Text.literal("" + playerCount + (maxPlayerCount > 0 ? " / " + maxPlayerCount : "")).formatted(Formatting.YELLOW)}).formatted(Formatting.GOLD)));
+            element.addLoreLine(Component.empty().append(Component.literal("» ").withStyle(ChatFormatting.DARK_GRAY)).append(Component.translatable("text.plasmid.ui.game_join.players", new Object[]{Component.literal("" + playerCount + (maxPlayerCount > 0 ? " / " + maxPlayerCount : "")).withStyle(ChatFormatting.YELLOW)}).withStyle(ChatFormatting.GOLD)));
         }
 
         if (spectatorCount > 0) {
             if (allowSpace) {
-                element.addLoreLine(ScreenTexts.EMPTY);
+                element.addLoreLine(CommonComponents.EMPTY);
                 allowSpace = false;
             }
 
-            element.addLoreLine(Text.empty().append(Text.literal("» ").formatted(Formatting.DARK_GRAY)).append(Text.translatable("text.plasmid.ui.game_join.spectators", new Object[]{Text.literal("" + spectatorCount).formatted(Formatting.YELLOW)}).formatted(Formatting.GOLD)));
+            element.addLoreLine(Component.empty().append(Component.literal("» ").withStyle(ChatFormatting.DARK_GRAY)).append(Component.translatable("text.plasmid.ui.game_join.spectators", new Object[]{Component.literal("" + spectatorCount).withStyle(ChatFormatting.YELLOW)}).withStyle(ChatFormatting.GOLD)));
         }
 
 

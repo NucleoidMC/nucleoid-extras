@@ -4,14 +4,14 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.dialog.NEDialogs;
 
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.literal;
 
 public class RulesCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var config = NucleoidExtrasConfig.get();
 
         if (config.rules() != null) {
@@ -19,11 +19,11 @@ public class RulesCommand {
         }
     }
 
-    private static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var source = context.getSource();
-        var player = source.getPlayerOrThrow();
+        var player = source.getPlayerOrException();
 
-        var dialog = player.getRegistryManager().getOptionalEntry(NEDialogs.RULES);
+        var dialog = player.registryAccess().get(NEDialogs.RULES);
 
         if (dialog.isPresent()) {
             player.openDialog(dialog.get());

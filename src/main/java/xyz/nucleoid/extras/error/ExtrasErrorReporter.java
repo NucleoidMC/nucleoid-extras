@@ -1,11 +1,11 @@
 package xyz.nucleoid.extras.error;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.ReportType;
+import net.minecraft.CrashReport;
+import net.minecraft.ReportType;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.api.event.GameEvents;
@@ -14,7 +14,7 @@ import xyz.nucleoid.plasmid.api.game.GameLifecycle;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.GameType;
 import xyz.nucleoid.plasmid.api.game.config.GameConfig;
-import xyz.nucleoid.plasmid.api.game.config.GameConfigs;
+import xyz.nucleoid.plasmid.api.registry.PlasmidRegistryKeys;
 import xyz.nucleoid.plasmid.impl.Plasmid;
 
 import java.io.IOException;
@@ -35,11 +35,11 @@ public final class ExtrasErrorReporter {
 
     public static void register() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            var invalidType = GameType.get(Identifier.of(Plasmid.ID, "invalid"));
+            var invalidType = GameType.get(Identifier.fromNamespaceAndPath(Plasmid.ID, "invalid"));
 
-            var invalidGames = server.getRegistryManager()
-                    .getOrThrow(GameConfigs.REGISTRY_KEY)
-                    .streamEntries()
+            var invalidGames = server.registryAccess()
+                    .lookupOrThrow(PlasmidRegistryKeys.GAME_CONFIG)
+                    .listElements()
                     .filter(entry -> entry.value().type() == invalidType)
                     .map(ExtrasErrorReporter::sourceName)
                     .map(entry -> " - " + entry)
@@ -71,14 +71,14 @@ public final class ExtrasErrorReporter {
                 }
 
                 @Override
-                public void onClosed(GameSpace gameSpace, List<ServerPlayerEntity> players, GameCloseReason reason) {
+                public void onClosed(GameSpace gameSpace, List<ServerPlayer> players, GameCloseReason reason) {
                     errorHandler.close();
                 }
             });
         });
     }
 
-    private static String sourceName(RegistryEntry<GameConfig<?>> game) {
+    private static String sourceName(Holder<GameConfig<?>> game) {
         var name = GameConfig.name(game).getString();
         return name + " (" + GameConfig.sourceName(game) + ")";
     }
@@ -87,7 +87,7 @@ public final class ExtrasErrorReporter {
         var webhook = openWebhook();
         if (webhook != null) {
             var message = new DiscordWebhook.Message("The server has crashed!");
-            message.addFile("report.txt", report.asString(ReportType.MINECRAFT_CRASH_REPORT));
+            message.addFile("report.txt", report.getFriendlyReport(ReportType.CRASH));
             webhook.post(message);
         }
     }

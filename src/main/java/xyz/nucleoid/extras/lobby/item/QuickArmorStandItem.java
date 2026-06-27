@@ -1,97 +1,105 @@
 package xyz.nucleoid.extras.lobby.item;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.storage.NbtReadView;
-import net.minecraft.storage.NbtWriteView;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ErrorReporter;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Rotations;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.extras.lobby.NEEntities;
 import xyz.nucleoid.extras.lobby.entity.QuickArmorStandEntity;
-import xyz.nucleoid.packettweaker.PacketContext;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class QuickArmorStandItem extends Item implements PolymerItem {
-    public QuickArmorStandItem(Settings settings) {
+    public QuickArmorStandItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (target instanceof ArmorStandEntity armorStandEntity) {
-            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.getWorld());
-            var view = NbtWriteView.create(ErrorReporter.EMPTY, target.getRegistryManager());
-            armorStandEntity.writeData(view);
-            quickArmorStand.readData(NbtReadView.create(ErrorReporter.EMPTY, target.getRegistryManager(), view.getNbt()));
+    public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (target instanceof ArmorStand armorStandEntity) {
+            var quickArmorStand = new QuickArmorStandEntity(armorStandEntity.level());
+            var view = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, target.registryAccess());
+            armorStandEntity.saveWithoutId(view);
+            quickArmorStand.load(TagValueInput.create(ProblemReporter.DISCARDING, target.registryAccess(), view.buildResult()));
             armorStandEntity.remove(Entity.RemovalReason.DISCARDED);
-            quickArmorStand.getWorld().spawnEntity(quickArmorStand);
+            quickArmorStand.level().addFreshEntity(quickArmorStand);
         }
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        Direction direction = context.getSide();
+    public InteractionResult useOn(UseOnContext context) {
+        Direction direction = context.getClickedFace();
         if (direction == Direction.DOWN) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         } else {
-            World world = context.getWorld();
-            ItemPlacementContext itemPlacementContext = new ItemPlacementContext(context);
-            BlockPos blockPos = itemPlacementContext.getBlockPos();
-            ItemStack itemStack = context.getStack();
-            Vec3d vec3d = Vec3d.ofBottomCenter(blockPos);
-            Box box = NEEntities.QUICK_ARMOR_STAND.getDimensions().getBoxAt(vec3d.getX(), vec3d.getY(), vec3d.getZ());
-            if (world.isSpaceEmpty(box) && world.getOtherEntities(null, box).isEmpty()) {
-                if (world instanceof ServerWorld serverWorld) {
-                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND.spawnFromItemStack(serverWorld, itemStack, context.getPlayer(), blockPos, SpawnReason.SPAWN_ITEM_USE, true, true);
+            Level world = context.getLevel();
+            BlockPlaceContext itemPlacementContext = new BlockPlaceContext(context);
+            BlockPos blockPos = itemPlacementContext.getClickedPos();
+            ItemStack itemStack = context.getItemInHand();
+            Vec3 vec3d = Vec3.atBottomCenterOf(blockPos);
+            AABB box = NEEntities.QUICK_ARMOR_STAND.getDimensions().makeBoundingBox(vec3d.x(), vec3d.y(), vec3d.z());
+            if (world.noCollision(box) && world.getEntities(null, box).isEmpty()) {
+                if (world instanceof ServerLevel serverWorld) {
+                    var armorStandEntity = NEEntities.QUICK_ARMOR_STAND.spawn(serverWorld, itemStack, context.getPlayer(), blockPos, EntitySpawnReason.SPAWN_ITEM_USE, true, true);
                     if (armorStandEntity == null) {
-                        return ActionResult.FAIL;
+                        return InteractionResult.FAIL;
                     }
 
-                    float f = (float) MathHelper.floor((MathHelper.wrapDegrees(context.getPlayerYaw() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
-                    armorStandEntity.refreshPositionAndAngles(armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), f, 0.0F);
-                    this.setRotations(armorStandEntity, world.random);
-                    world.playSound(null, armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), SoundEvents.ENTITY_ARMOR_STAND_PLACE, SoundCategory.BLOCKS, 0.75F, 0.8F);
-                    world.emitGameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.getPos());
+                    float f = (float) Mth.floor((Mth.wrapDegrees(context.getRotation() - 180.0F) + 22.5F) / 45.0F) * 45.0F;
+                    armorStandEntity.snapTo(armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), f, 0.0F);
+                    this.setRotations(armorStandEntity, world.getRandom());
+                    world.playSound(null, armorStandEntity.getX(), armorStandEntity.getY(), armorStandEntity.getZ(), SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
+                    world.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, armorStandEntity.position());
                 }
 
-                itemStack.decrement(1);
-                return ActionResult.SUCCESS_SERVER;
+                itemStack.shrink(1);
+                return InteractionResult.SUCCESS_SERVER;
             } else {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
         }
     }
 
-    private void setRotations(ArmorStandEntity stand, Random random) {
-        EulerAngle eulerAngle = stand.getHeadRotation();
+    private void setRotations(ArmorStand stand, RandomSource random) {
+        Rotations eulerAngle = stand.getHeadPose();
         float f = random.nextFloat() * 5.0F;
         float g = random.nextFloat() * 20.0F - 10.0F;
-        EulerAngle eulerAngle2 = new EulerAngle(eulerAngle.pitch() + f, eulerAngle.yaw() + g, eulerAngle.roll());
-        stand.setHeadRotation(eulerAngle2);
-        eulerAngle = stand.getBodyRotation();
+        Rotations eulerAngle2 = new Rotations(eulerAngle.x() + f, eulerAngle.y() + g, eulerAngle.z());
+        stand.setHeadPose(eulerAngle2);
+        eulerAngle = stand.getBodyPose();
         f = random.nextFloat() * 10.0F - 5.0F;
-        eulerAngle2 = new EulerAngle(eulerAngle.pitch(), eulerAngle.yaw() + f, eulerAngle.roll());
-        stand.setBodyRotation(eulerAngle2);
+        eulerAngle2 = new Rotations(eulerAngle.x(), eulerAngle.y() + f, eulerAngle.z());
+        stand.setBodyPose(eulerAngle2);
     }
 
     @Override
@@ -100,13 +108,13 @@ public class QuickArmorStandItem extends Item implements PolymerItem {
     }
 
     @Override
-    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+    public Identifier getPolymerItemModel(ItemStack stack, PacketContext context, HolderLookup.Provider provider) {
         return null;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
-        textConsumer.accept(Text.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(Formatting.RED).withItalic(false)));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
+        textConsumer.accept(Component.translatable("text.nucleoid_extras.lobby_items").setStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(false)));
     }
 }

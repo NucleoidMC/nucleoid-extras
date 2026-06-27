@@ -4,15 +4,15 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.extras.lobby.NEItems;
 import xyz.nucleoid.plasmid.api.game.GameSpaceManager;
 
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.commands.Commands.literal;
 
 public class SpawnCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var config = NucleoidExtrasConfig.get();
 
         if (config.lobbySpawn() != null) {
@@ -24,10 +24,10 @@ public class SpawnCommand {
         }
     }
 
-    private static int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    private static int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var source = context.getSource();
 
-        var player = source.getPlayerOrThrow();
+        var player = source.getPlayerOrException();
         var server = source.getServer();
 
         var gameSpace = GameSpaceManager.get().byPlayer(player);
@@ -38,8 +38,8 @@ public class SpawnCommand {
 
         var config = NucleoidExtrasConfig.get().lobbySpawn();
 
-        config.teleport(player, server.getOverworld());
-        config.changeGameMode(player, server.getDefaultGameMode());
+        config.teleport(player, server.overworld());
+        config.changeGameMode(player, server.getDefaultGameType());
 
         NEItems.giveLobbyItems(player);
 

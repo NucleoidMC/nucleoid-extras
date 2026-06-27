@@ -66,8 +66,8 @@ public final class PlayerStatusIntegration {
     }
 
     private void buildStatus(MinecraftServer server, Status status) {
-        var playerManager = server.getPlayerManager();
-        for (var player : playerManager.getPlayerList()) {
+        var playerManager = server.getPlayerList();
+        for (var player : playerManager.getPlayers()) {
             status.addPlayer(player.getGameProfile());
         }
     }
@@ -89,8 +89,8 @@ public final class PlayerStatusIntegration {
             var playerArray = new JsonArray();
             for (var player : this.players) {
                 var playerRoot = new JsonObject();
-                playerRoot.addProperty("id", player.getId().toString());
-                playerRoot.addProperty("name", player.getName());
+                playerRoot.addProperty("id", player.id().toString());
+                playerRoot.addProperty("name", player.name());
                 playerArray.add(playerRoot);
             }
 

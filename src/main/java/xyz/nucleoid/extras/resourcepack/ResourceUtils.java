@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import eu.pb4.polymer.common.api.PolymerCommonUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import xyz.nucleoid.extras.NucleoidExtras;
 
 import javax.imageio.ImageIO;
@@ -67,7 +67,7 @@ public class ResourceUtils {
     public static JsonObject getElementResolvedModel(Identifier baseModel) {
         var model = getModel(baseModel);
         if (!model.has("elements") && model.has("parent")) {
-            var parent = getElementResolvedModel(Identifier.of(model.get("parent").getAsString()));
+            var parent = getElementResolvedModel(Identifier.parse(model.get("parent").getAsString()));
             for (var key : model.keySet()) {
                 if (parent.has(key) && parent.get(key).isJsonObject()) {
                     var out = parent.get(key).getAsJsonObject();

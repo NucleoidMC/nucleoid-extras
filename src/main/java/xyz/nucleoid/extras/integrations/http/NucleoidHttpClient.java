@@ -3,7 +3,7 @@ package xyz.nucleoid.extras.integrations.http;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 
 import java.net.URI;

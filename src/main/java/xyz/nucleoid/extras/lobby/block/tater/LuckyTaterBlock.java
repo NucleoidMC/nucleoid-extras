@@ -1,110 +1,110 @@
 package xyz.nucleoid.extras.lobby.block.tater;
 
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.DustColorTransitionParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.DustColorTransitionOptions;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 import xyz.nucleoid.extras.util.SkinEncoder;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 public class LuckyTaterBlock extends CubicPotatoBlock {
-    private static final EnumProperty<LuckyTaterPhase> PHASE = EnumProperty.of("phase", LuckyTaterPhase.class);
+    private static final EnumProperty<LuckyTaterPhase> PHASE = EnumProperty.create("phase", LuckyTaterPhase.class);
 
     private static final int COURAGE_TICKS = 5;
     private static final int COOLDOWN_TICKS = SharedConstants.TICKS_PER_MINUTE * 30;
 
     private final String cooldownTexture;
 
-    public LuckyTaterBlock(Settings settings, String texture, String cooldownTexture) {
-        super(settings, (ParticleEffect) null, texture);
+    public LuckyTaterBlock(Properties settings, String texture, String cooldownTexture) {
+        super(settings, (ParticleOptions) null, texture);
         this.cooldownTexture = SkinEncoder.encode(cooldownTexture);
 
-        this.setDefaultState(this.stateManager.getDefaultState().with(PHASE, LuckyTaterPhase.READY));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PHASE, LuckyTaterPhase.READY));
     }
 
     @Override
-    public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
+    public ParticleOptions getPlayerParticleEffect(ServerPlayer player) {
         int fromColor = LuckyTaterBlock.getRandomColor(player.getRandom());
         int toColor = LuckyTaterBlock.getRandomColor(player.getRandom());
 
         int scale = player.getRandom().nextInt(3);
-        return new DustColorTransitionParticleEffect(fromColor, toColor, scale);
+        return new DustColorTransitionOptions(fromColor, toColor, scale);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        LuckyTaterPhase phase = state.get(PHASE);
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        LuckyTaterPhase phase = state.getValue(PHASE);
 
         if (phase != LuckyTaterPhase.READY) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
-        if (world instanceof ServerWorld serverWorld) {
+        if (world instanceof ServerLevel serverWorld) {
             LuckyTaterDropPos dropPos = this.getDropPos(serverWorld, state, pos);
 
             if (dropPos instanceof LuckyTaterDropPos.Blocked) {
-                world.setBlockState(pos, state.with(PHASE, LuckyTaterPhase.BUILDING_COURAGE));
-                world.scheduleBlockTick(pos, this, COURAGE_TICKS);
+                world.setBlockAndUpdate(pos, state.setValue(PHASE, LuckyTaterPhase.BUILDING_COURAGE));
+                world.scheduleTick(pos, this, COURAGE_TICKS);
             } else {
                 Block drop = this.getDrop(serverWorld);
 
                 if (drop instanceof CubicPotatoBlock taterDrop && dropPos instanceof LuckyTaterDropPos.Allowed allowed) {
-                    BlockState dropState = drop.getDefaultState();
-                    if (dropState.contains(Properties.ROTATION)) {
-                        dropState = dropState.with(Properties.ROTATION, state.get(Properties.ROTATION));
+                    BlockState dropState = drop.defaultBlockState();
+                    if (dropState.hasProperty(BlockStateProperties.ROTATION_16)) {
+                        dropState = dropState.setValue(BlockStateProperties.ROTATION_16, state.getValue(BlockStateProperties.ROTATION_16));
                     }
 
-                    world.setBlockState(allowed.pos(), dropState);
+                    world.setBlockAndUpdate(allowed.pos(), dropState);
 
                     // Spawn particles
-                    ParticleEffect particleEffect = taterDrop.getBlockParticleEffect(taterDrop.getDefaultState(), serverWorld, pos, player, hit);
+                    ParticleOptions particleEffect = taterDrop.getBlockParticleEffect(taterDrop.defaultBlockState(), serverWorld, pos, player, hit);
                     this.spawnBlockParticles(serverWorld, pos, particleEffect);
 
                     // Play sound
                     float pitch = 0.5f + world.getRandom().nextFloat() * 0.4f;
-                    world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1, pitch);
+                    world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1, pitch);
 
                     // Start cooldown
-                    world.setBlockState(pos, state.with(PHASE, LuckyTaterPhase.COOLDOWN));
-                    world.scheduleBlockTick(pos, this, COOLDOWN_TICKS);
+                    world.setBlockAndUpdate(pos, state.setValue(PHASE, LuckyTaterPhase.COOLDOWN));
+                    world.scheduleTick(pos, this, COOLDOWN_TICKS);
                 }
             }
         }
 
-        return ActionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
-    private Block getDrop(ServerWorld world) {
-        var drops = world.getRegistryManager()
-                .getOrThrow(RegistryKeys.BLOCK)
-                .getOptional(NEBlockTags.LUCKY_TATER_DROPS);
+    private Block getDrop(ServerLevel world) {
+        var drops = world.registryAccess()
+                .lookupOrThrow(Registries.BLOCK)
+                .get(NEBlockTags.LUCKY_TATER_DROPS);
 
         if (drops.isEmpty()) {
             return null;
         }
 
-        var builder = Pool.<Block>builder();
+        var builder = WeightedList.<Block>builder();
 
-        for (RegistryEntry<Block> entry : drops.get()) {
+        for (Holder<Block> entry : drops.get()) {
             Block block = entry.value();
             int weight = block instanceof LuckyTaterDrop drop ? drop.getWeight() : 1;
 
@@ -113,16 +113,16 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
 
         return builder
             .build()
-            .getOrEmpty(world.getRandom())
+            .getRandom(world.getRandom())
             .orElse(null);
     }
 
-    private LuckyTaterDropPos getDropPos(ServerWorld world, BlockState state, BlockPos pos) {
-        BlockPos.Mutable dropPos = pos.mutableCopy();
+    private LuckyTaterDropPos getDropPos(ServerLevel world, BlockState state, BlockPos pos) {
+        BlockPos.MutableBlockPos dropPos = pos.mutable();
         dropPos.move(Direction.DOWN);
 
-        int rotation = state.get(Properties.ROTATION);
-        dropPos.move(Direction.fromHorizontalDegrees(rotation * 22.5).getOpposite());
+        int rotation = state.getValue(BlockStateProperties.ROTATION_16);
+        dropPos.move(Direction.fromYRot(rotation * 22.5).getOpposite());
 
         for (int i = 0; i < 3; i++) {
             BlockState dropState = world.getBlockState(dropPos);
@@ -139,44 +139,44 @@ public class LuckyTaterBlock extends CubicPotatoBlock {
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        LuckyTaterPhase phase = state.get(PHASE);
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        LuckyTaterPhase phase = state.getValue(PHASE);
 
         if (phase == LuckyTaterPhase.BUILDING_COURAGE || phase == LuckyTaterPhase.COOLDOWN) {
             if (phase == LuckyTaterPhase.BUILDING_COURAGE) {
                 LuckyTaterDropPos dropPos = this.getDropPos(world, state, pos);
 
                 if (dropPos instanceof LuckyTaterDropPos.Blocked blocked) {
-                    world.breakBlock(blocked.pos(), false);
+                    world.destroyBlock(blocked.pos(), false);
                 }
             }
 
-            world.setBlockState(pos, state.with(PHASE, LuckyTaterPhase.READY));
+            world.setBlockAndUpdate(pos, state.setValue(PHASE, LuckyTaterPhase.READY));
         }
     }
 
     @Override
-    public boolean hasComparatorOutput(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return state.get(PHASE).getComparatorOutput();
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos, Direction direction) {
+        return state.getValue(PHASE).getComparatorOutput();
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(PHASE);
     }
 
     @Override
     public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext context) {
-        return state.get(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, context);
+        return state.getValue(PHASE) == LuckyTaterPhase.COOLDOWN ? this.cooldownTexture : super.getPolymerSkinValue(state, pos, context);
     }
 
-    private static int getRandomColor(Random random) {
+    private static int getRandomColor(RandomSource random) {
         return random.nextInt() * 0xFFFFFF;
     }
 }

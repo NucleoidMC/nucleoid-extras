@@ -1,18 +1,17 @@
 package xyz.nucleoid.extras.mixin.lobby;
 
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.util.math.Vec3d;
-
-@Mixin(ArmorStandEntity.class)
+@Mixin(ArmorStand.class)
 public interface ArmorStandEntityAccessor {
-    @Invoker("getSlotFromPosition")
-    EquipmentSlot callSlotFromPosition(Vec3d hitPos);
+    @Invoker("getClickedSlot")
+    EquipmentSlot callSlotFromPosition(Vec3 hitPos);
 
-    @Invoker("setHideBasePlate")
+    @Invoker("setNoBasePlate")
     void callSetHideBasePlate(boolean hideBasePlate);
 
     @Invoker("setShowArms")

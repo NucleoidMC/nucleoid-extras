@@ -3,64 +3,64 @@ package xyz.nucleoid.extras.lobby.block.tater;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.VibrationParticleEffect;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.event.BlockPositionSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.VibrationParticleOption;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.phys.BlockHitResult;
 import xyz.nucleoid.extras.tag.NEBlockTags;
 
 public class WardenTaterBlock extends CubicPotatoBlock {
     private static final int BOX_SIZE = 16;
     private static final int ARRIVAL_TICKS = SharedConstants.TICKS_PER_SECOND;
 
-    public WardenTaterBlock(Settings settings, String texture) {
-        super(settings, (ParticleEffect) null, texture);
+    public WardenTaterBlock(Properties settings, String texture) {
+        super(settings, (ParticleOptions) null, texture);
     }
 
     @Override
-    public ParticleEffect getBlockParticleEffect(BlockState state, ServerWorld world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    public ParticleOptions getBlockParticleEffect(BlockState state, ServerLevel world, BlockPos pos, Player player, BlockHitResult hit) {
         return getTaterVibrationParticleEffect(pos, world);
     }
 
-    public void spawnBlockParticles(ServerWorld world, BlockPos pos, ParticleEffect particleEffect) {
+    public void spawnBlockParticles(ServerLevel world, BlockPos pos, ParticleOptions particleEffect) {
         if (particleEffect != null && world.getRandom().nextInt(getBlockParticleChance()) == 0) {
-            world.spawnParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
+            world.sendParticles(particleEffect, pos.getX() + 0.5, pos.getY() + 0.25, pos.getZ() + 0.5, 1, 0, 0, 0, 0);
         }
     }
 
     @Override
-    public ParticleEffect getPlayerParticleEffect(ServerPlayerEntity player) {
-        BlockPos pos = BlockPos.ofFloored(player.getX(), player.getEyeY() - 0.2, player.getZ());
-        return getTaterVibrationParticleEffect(pos, player.getWorld());
+    public ParticleOptions getPlayerParticleEffect(ServerPlayer player) {
+        BlockPos pos = BlockPos.containing(player.getX(), player.getEyeY() - 0.2, player.getZ());
+        return getTaterVibrationParticleEffect(pos, player.level());
     }
 
     @Override
-    public int getPlayerParticleRate(ServerPlayerEntity player) {
+    public int getPlayerParticleRate(ServerPlayer player) {
         return ARRIVAL_TICKS;
     }
 
     @Override
-    public void spawnPlayerParticles(ServerPlayerEntity player) {;
+    public void spawnPlayerParticles(ServerPlayer player) {;
         double x = player.getX();
         double y = player.getEyeY() - 0.2;
         double z = player.getZ();
 
-        ParticleEffect particleEffect = this.getPlayerParticleEffect(player);
+        ParticleOptions particleEffect = this.getPlayerParticleEffect(player);
         if (particleEffect != null) {
-            player.getWorld().spawnParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
+            player.level().sendParticles(particleEffect, x, y, z, 1, 0, 0, 0, 0);
         }
     }
 
-    private static ParticleEffect getTaterVibrationParticleEffect(BlockPos pos, ServerWorld world) {
+    private static ParticleOptions getTaterVibrationParticleEffect(BlockPos pos, ServerLevel world) {
         LongList taters = new LongArrayList();
 
         int range = (int) (BOX_SIZE / 2d);
-        for (BlockPos taterPos : BlockPos.iterateOutwards(pos, range, range, range)) {
+        for (BlockPos taterPos : BlockPos.withinManhattan(pos, range, range, range)) {
             BlockState state = world.getBlockState(taterPos);
             if (isVibrationTater(state)) {
                 taters.add(taterPos.asLong());
@@ -72,12 +72,12 @@ public class WardenTaterBlock extends CubicPotatoBlock {
         }
 
         int index = world.getRandom().nextInt(taters.size());
-        BlockPos taterPos = BlockPos.fromLong(taters.getLong(index));
+        BlockPos taterPos = BlockPos.of(taters.getLong(index));
 
-        return new VibrationParticleEffect(new BlockPositionSource(taterPos), (int) Math.floor(Math.sqrt(pos.getSquaredDistance(taterPos))));
+        return new VibrationParticleOption(new BlockPositionSource(taterPos), (int) Math.floor(Math.sqrt(pos.distSqr(taterPos))));
     }
 
     private static boolean isVibrationTater(BlockState state) {
-        return state.getBlock() instanceof TinyPotatoBlock && !state.isIn(NEBlockTags.NON_VIBRATING_TATERS);
+        return state.getBlock() instanceof TinyPotatoBlock && !state.is(NEBlockTags.NON_VIBRATING_TATERS);
     }
 }
