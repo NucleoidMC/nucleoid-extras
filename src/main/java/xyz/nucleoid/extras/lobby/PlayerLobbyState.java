@@ -92,6 +92,8 @@ public class PlayerLobbyState {
             PolymerUtils.reloadInventory(player);
 
             player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.added", block.getName()), true);
+        } else {
+            player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()), true);
         }
 
         triggerCollectCriterion(player, tater, this.collectedTaters.size());
