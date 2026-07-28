@@ -24,6 +24,9 @@ public class TaterBoxGui extends PagedGui.FromList {
 	protected static final Component HIDE_UNFOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_unfound");
 	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
+    protected static final Component SHOW_FOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_found_text");
+    protected static final Component HIDE_FOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.show_found_text");
+
 	protected static final Component COLLECT_ALL_TEXT = Component.translatable("text.nucleoid_extras.creative_tater_box.collect_all");
     protected static final Item COLLECT_ALL_ICON = Items.EMERALD;
 
@@ -67,9 +70,11 @@ public class TaterBoxGui extends PagedGui.FromList {
             if (id == 8) return TaterBoxGui.resetButton(this);
         }
 
-		if(id == 4) {
+		if(id == 3) {
 			return TaterBoxGui.hideUnfoundButton(this);
-		} else return super.getNavElement(id);
+		} else if (id == 5) {
+            return TaterBoxGui.showAlreadyCollectedTextButton(this);
+        } else return super.getNavElement(id);
 	}
 
 	@Override
@@ -99,6 +104,38 @@ public class TaterBoxGui extends PagedGui.FromList {
 
 		return DisplayElement.of(builder);
 	}
+
+    public static DisplayElement showAlreadyCollectedTextButton(TaterBoxGui gui) {
+        ServerPlayer player = gui.getPlayer();
+        PlayerLobbyState lobbyState = PlayerLobbyState.get(player);
+        boolean shouldShowAlreadyCollectedText = lobbyState.shouldShowAlreadyCollectedText;
+        GuiElementBuilder builder;
+        if (PolymerResourcePackUtils.hasMainPack(player)) {
+            if (shouldShowAlreadyCollectedText) {
+                builder = GuiTextures.CHECKMARK.get();
+            } else {
+                builder = GuiTextures.CROSSMARK.get();
+            }
+        } else {
+            Item item;
+            if (shouldShowAlreadyCollectedText) {
+                item = Items.WOOL.green();
+            } else {
+                item = Items.WOOL.red();
+            }
+            builder = new GuiElementBuilder(item);
+        }
+
+        builder.setName(shouldShowAlreadyCollectedText ? HIDE_FOUND_TEXT : SHOW_FOUND_TEXT)
+            .hideDefaultTooltip()
+            .setCallback(() -> {
+                playClickSound(player);
+                lobbyState.shouldShowAlreadyCollectedText = !lobbyState.shouldShowAlreadyCollectedText;
+                gui.updateDisplay();
+            });
+
+        return DisplayElement.of(builder);
+    }
 
 	public static DisplayElement collectAllButton(TaterBoxGui gui) {
         GuiElementBuilder builder = new GuiElementBuilder(COLLECT_ALL_ICON)

@@ -389,6 +389,8 @@
   "text.nucleoid_extras.tater_box.not_found": "Not Found Yet!",
   "text.nucleoid_extras.tater_box.hide_unfound": "Hide Unfound",
   "text.nucleoid_extras.tater_box.show_unfound": "Show Unfound",
+  "text.nucleoid_extras.tater_box.hide_found_text": "Hide Tater Duplicate Tooltip",
+  "text.nucleoid_extras.tater_box.show_found_text": "Show Tater Duplicate Tooltip",
   "text.nucleoid_extras.tater_box.updated": "Your Tater Box has been updated to new format! It will be safer than ever!",
 
   "text.nucleoid_extras.creative_tater_box.collect_all": "Collect All",

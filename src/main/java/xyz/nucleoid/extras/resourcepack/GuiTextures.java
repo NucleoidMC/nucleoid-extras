@@ -16,6 +16,8 @@ import static xyz.nucleoid.extras.resourcepack.UiResourceCreator.icon16;
 public class GuiTextures {
     public static final Function<Component, Component> GAME_PORTAL_9X6 = background("game_portal_9x6");
     public static final Function<Component, Component> TATERBOX = background("taterbox", 16);
+    public static final Supplier<GuiElementBuilder> CHECKMARK = icon16("checkmark");
+    public static final Supplier<GuiElementBuilder> CROSSMARK = icon16("crossmark");
     public static final Supplier<GuiElementBuilder> EMPTY_BUILDER = icon16("empty");
     public static final Supplier<GuiElementBuilder> NEXT_BUTTON = icon16("next_page");
     public static final Supplier<GuiElementBuilder> PREVIOUS_BUTTON = icon16("previous_page");
