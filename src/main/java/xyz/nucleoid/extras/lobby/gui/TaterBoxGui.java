@@ -24,8 +24,8 @@ public class TaterBoxGui extends PagedGui.FromList {
 	protected static final Component HIDE_UNFOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_unfound");
 	protected static final Item UNFOUND_BUTTON_ICON = Items.POISONOUS_POTATO;
 
-    protected static final Component SHOW_FOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_found_text");
-    protected static final Component HIDE_FOUND_TEXT = Component.translatable("text.nucleoid_extras.tater_box.show_found_text");
+    protected static final Component SHOW_DUPLICATE_TEXT = Component.translatable("text.nucleoid_extras.tater_box.hide_duplicate_text");
+    protected static final Component HIDE_DUPLICATE_TEXT = Component.translatable("text.nucleoid_extras.tater_box.show_duplicate_text");
 
 	protected static final Component COLLECT_ALL_TEXT = Component.translatable("text.nucleoid_extras.creative_tater_box.collect_all");
     protected static final Item COLLECT_ALL_ICON = Items.EMERALD;
@@ -113,6 +113,7 @@ public class TaterBoxGui extends PagedGui.FromList {
         if (PolymerResourcePackUtils.hasMainPack(player)) {
             if (shouldShowAlreadyCollectedText) {
                 builder = GuiTextures.CHECKMARK.get();
+                builder.glow();
             } else {
                 builder = GuiTextures.CROSSMARK.get();
             }
@@ -126,7 +127,7 @@ public class TaterBoxGui extends PagedGui.FromList {
             builder = new GuiElementBuilder(item);
         }
 
-        builder.setName(shouldShowAlreadyCollectedText ? HIDE_FOUND_TEXT : SHOW_FOUND_TEXT)
+        builder.setName(shouldShowAlreadyCollectedText ? SHOW_DUPLICATE_TEXT : HIDE_DUPLICATE_TEXT)
             .hideDefaultTooltip()
             .setCallback(() -> {
                 playClickSound(player);
