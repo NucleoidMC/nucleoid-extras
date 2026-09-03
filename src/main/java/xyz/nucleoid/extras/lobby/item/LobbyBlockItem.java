@@ -1,7 +1,6 @@
 package xyz.nucleoid.extras.lobby.item;
 
-import eu.pb4.polymer.api.item.PolymerBlockItem;
-
+import eu.pb4.polymer.core.api.item.PolymerBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantments;
@@ -28,8 +27,8 @@ public class LobbyBlockItem extends PolymerBlockItem {
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, ServerPlayerEntity player) {
-        var out = super.getPolymerItemStack(itemStack, player);
+    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipContext context, @Nullable ServerPlayerEntity player) {
+        var out = super.getPolymerItemStack(itemStack, context, player);
         out.addEnchantment(Enchantments.INFINITY, 1);
         return out;
     }

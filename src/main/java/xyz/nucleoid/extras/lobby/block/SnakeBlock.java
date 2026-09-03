@@ -1,11 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import eu.pb4.polymer.api.block.PolymerBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FacingBlock;
-import net.minecraft.block.ShapeContext;
+import eu.pb4.polymer.core.api.block.PolymerBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager.Builder;
@@ -90,7 +86,7 @@ public class SnakeBlock extends FacingBlock implements PolymerBlock {
     }
 
     private void scheduleTick(World world, BlockPos pos, int multiplier) {
-        world.createAndScheduleBlockTick(pos, this, this.delay * multiplier);
+        world.scheduleBlockTick(pos, this, this.delay * multiplier);
     }
 
     @Override

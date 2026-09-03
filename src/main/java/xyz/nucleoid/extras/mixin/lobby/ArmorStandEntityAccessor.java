@@ -11,4 +11,10 @@ import net.minecraft.util.math.Vec3d;
 public interface ArmorStandEntityAccessor {
     @Invoker("getSlotFromPosition")
     EquipmentSlot callSlotFromPosition(Vec3d hitPos);
+
+    @Invoker("setHideBasePlate")
+    void callSetHideBasePlate(boolean hideBasePlate);
+
+    @Invoker("setShowArms")
+    void callSetShowArms(boolean showArms);
 }

@@ -1,7 +1,6 @@
 package xyz.nucleoid.extras.lobby.entity;
 
-import eu.pb4.polymer.api.entity.PolymerEntity;
-
+import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -15,11 +14,11 @@ public class QuickArmorStandEntity extends ArmorStandEntity implements PolymerEn
     }
 
     public QuickArmorStandEntity(World world) {
-        super(NEEntities.QUICK_ARMOR_STAND_ENTITY_TYPE, world);
+        super(NEEntities.QUICK_ARMOR_STAND, world);
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType() {
+    public EntityType<?> getPolymerEntityType(ServerPlayerEntity player) {
         return EntityType.ARMOR_STAND;
     }
 

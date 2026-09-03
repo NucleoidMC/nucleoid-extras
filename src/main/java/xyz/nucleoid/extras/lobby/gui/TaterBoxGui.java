@@ -22,7 +22,7 @@ public class TaterBoxGui extends PagedGui.FromList {
 	protected boolean hideUnfound = true;
 
 	public TaterBoxGui(ScreenHandlerType<?> type, ServerPlayerEntity player, boolean includePlayerInventorySlots, List<GuiElementInterface> guiElementInterfaces) {
-		super(type, player, includePlayerInventorySlots, guiElementInterfaces);
+		super(type, player, includePlayerInventorySlots, guiElementInterfaces, null);
 	}
 
 	public static TaterBoxGui of(ServerPlayerEntity player, List<GuiElementInterface> elements) {

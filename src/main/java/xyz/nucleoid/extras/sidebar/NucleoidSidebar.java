@@ -2,12 +2,12 @@ package xyz.nucleoid.extras.sidebar;
 
 import eu.pb4.sidebars.api.Sidebar;
 import eu.pb4.sidebars.api.lines.LineBuilder;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import xyz.nucleoid.extras.NucleoidExtrasConfig;
 import xyz.nucleoid.plasmid.game.manager.GameSpaceManager;

@@ -3,15 +3,17 @@ package xyz.nucleoid.extras.chat_filter;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.codecs.MoreCodecs;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,17 +23,17 @@ public final class ChatFilterConfig {
         instance.group(
                 Codec.STRING.listOf().optionalFieldOf("illegal_words", ImmutableList.of()).forGetter(c -> new ArrayList<>(c.illegalWords)),
                 Codec.STRING.listOf().optionalFieldOf("contains_illegal_text", ImmutableList.of()).forGetter(c -> c.containsIllegalText),
-                MoreCodecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
-                Registry.SOUND_EVENT.getCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
+                Codecs.TEXT.optionalFieldOf("feedback_message").forGetter(c -> Optional.ofNullable(c.feedbackMessage)),
+                Registries.SOUND_EVENT.createEntryCodec().optionalFieldOf("feedback_sound").forGetter(c -> Optional.ofNullable(c.feedbackSound))
         ).apply(instance, ChatFilterConfig::new)
     );
 
     private final Set<String> illegalWords;
     private final List<String> containsIllegalText;
     private final @Nullable Text feedbackMessage;
-    private final @Nullable SoundEvent feedbackSound;
+    private final @Nullable RegistryEntry<SoundEvent> feedbackSound;
 
-    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<SoundEvent> feedbackSound) {
+    private ChatFilterConfig(List<String> illegalWords, List<String> containsIllegalText, Optional<Text> feedbackMessage, Optional<RegistryEntry<SoundEvent>> feedbackSound) {
         this.illegalWords = illegalWords.stream()
                 .map(s -> s.toLowerCase(Locale.ROOT))
                 .collect(Collectors.toSet());
@@ -80,7 +82,7 @@ public final class ChatFilterConfig {
         }
 
         if (this.feedbackSound != null) {
-            player.playSound(this.feedbackSound, SoundCategory.MASTER, 1.0F, 1.0F);
+            player.networkHandler.sendPacket(new PlaySoundS2CPacket(this.feedbackSound, SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1.0f, 1.0f, player.getRandom().nextLong()));
         }
     }
 }

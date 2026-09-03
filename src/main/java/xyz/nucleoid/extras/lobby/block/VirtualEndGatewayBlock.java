@@ -1,8 +1,7 @@
 package xyz.nucleoid.extras.lobby.block;
 
-import eu.pb4.polymer.api.block.PolymerBlock;
-import eu.pb4.polymer.api.block.PolymerBlockUtils;
-
+import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,7 +21,7 @@ public class VirtualEndGatewayBlock extends Block implements PolymerBlock {
     }
 
     @Override
-    public void onPolymerBlockSend(ServerPlayerEntity player, BlockPos.Mutable pos, BlockState blockState) {
+    public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, ServerPlayerEntity player) {
         var main = new NbtCompound();
         main.putString("id", "minecraft:end_gateway");
         main.putInt("x", pos.getX());
