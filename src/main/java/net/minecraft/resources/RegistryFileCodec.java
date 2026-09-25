@@ -11,7 +11,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
 
-@Deprecated
+@Deprecated(forRemoval = true)
 public final class RegistryFileCodec<E> implements Codec<Holder<E>> {
    private final Codec<Holder<E>> codec;
 
