@@ -32,7 +32,7 @@ public class NEBlocks {
     public static final Block NUCLEOID_LOGO = registerTaterBlock("nucleoid_logo", ParticleTypes.GLOW_SQUID_INK, "bac7400dfcb9a387361a3ad7c296943eb841a9bda13ad89558e2d6efebf167bc");
 
     public static final Block END_PORTAL = registerSimple("end_portal", Blocks.END_PORTAL);
-    public static final Block END_GATEWAY = register("end_gateway", BlockBehaviour.Properties.of().pushReaction(PushReaction.BLOCK).strength(100).noCollision(), settings -> new VirtualEndGatewayBlock(settings));
+    public static final Block END_GATEWAY = register("end_gateway", BlockBehaviour.Properties.of().pushReaction(PushReaction.IMMOVEABLE).strength(100).noCollision(), settings -> new VirtualEndGatewayBlock(settings));
     public static final Block SAFE_TNT = registerSimple("safe_tnt", Blocks.TNT);
 
     public static final ColorCollection<SimplePolymerBlock> CONCRETE_POWDER = Blocks.CONCRETE_POWDER.map(block -> registerSimple(block.builtInRegistryHolder().key().identifier().getPath(), block));

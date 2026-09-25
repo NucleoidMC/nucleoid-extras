@@ -34,7 +34,7 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
     @Override
     public void generateAdvancement(HolderLookup.Provider registries, Consumer<AdvancementHolder> consumer) {
         var root = accept(consumer, "root", null, Advancement.Builder.recipeAdvancement()
-                .display(
+                .rootDisplay(
                         NEItems.NUCLEOID_LOGO,
                         Component.translatable("advancements.nucleoid_extras.root.title"),
                         Component.translatable("advancements.nucleoid_extras.root.description"),
@@ -59,10 +59,9 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
 
         accept(consumer, "all_taters", null, requiringTatersCollected(new TaterCount.All())
                 .display(
-                        NEBlocks.TATER_OF_UNDYING,
+                        NEBlocks.TATER_OF_UNDYING.asItem(),
                         Component.translatable("advancements.nucleoid_extras.all_taters.title"),
                         Component.translatable("advancements.nucleoid_extras.all_taters.description"),
-                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -92,10 +91,9 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
         // Special conditions
         accept(consumer, "wednesday_my_dudes", null, Advancement.Builder.recipeAdvancement()
                 .display(
-                        NEBlocks.WARM_FROG_TATER,
+                        NEBlocks.WARM_FROG_TATER.asItem(),
                         Component.translatable("advancements.nucleoid_extras.wednesday_my_dudes.title"),
                         Component.translatable("advancements.nucleoid_extras.wednesday_my_dudes.description"),
-                        null,
                         AdvancementType.CHALLENGE,
                         true,
                         true,
@@ -177,10 +175,9 @@ public class NEAdvancementProvider extends FabricAdvancementProvider {
     private static AdvancementHolder accept(Consumer<AdvancementHolder> consumer, String path, ItemLike icon, AdvancementType frame, Advancement.Builder builder) {
         if (icon != null) {
             builder.display(
-                    icon,
+                    icon.asItem(),
                     Component.translatable("advancements.nucleoid_extras." + path + ".title"),
                     Component.translatable("advancements.nucleoid_extras." + path + ".description"),
-                    null,
                     frame,
                     true,
                     true,

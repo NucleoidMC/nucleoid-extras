@@ -60,7 +60,7 @@ public class WardenTaterBlock extends CubicPotatoBlock {
         LongList taters = new LongArrayList();
 
         int range = (int) (BOX_SIZE / 2d);
-        for (BlockPos taterPos : BlockPos.withinManhattan(pos, range, range, range)) {
+        for (BlockPos taterPos : BlockPos.withinBoxByManhattanDistance(pos, range, range, range)) {
             BlockState state = world.getBlockState(taterPos);
             if (isVibrationTater(state)) {
                 taters.add(taterPos.asLong());
