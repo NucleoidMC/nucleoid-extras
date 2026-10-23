@@ -36,7 +36,7 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	implementation "xyz.nucleoid:plasmid:${project.plasmid_version}"
-	implementation "eu.pb4:factorytools:${project.factorytools_version}"
+	implementation include("eu.pb4:factorytools:${project.factorytools_version}")
   runtimeOnly "eu.pb4:polymer-autohost:${project.polymer_version}"
 
 

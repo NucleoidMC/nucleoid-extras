@@ -43,6 +43,7 @@ public final class NucleoidExtras implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        //new DuckFixerUpper().onInitialize();
         NEBlocks.register();
         NEDataComponentTypes.register();
         NEItems.register();
