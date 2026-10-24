@@ -97,7 +97,7 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
             }
 
             CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).handleAsync((a, b) -> {
-                this.updateTimer = REGULAR_UPDATE_WAIT_TIME / 10;
+                this.updateTimer = REGULAR_UPDATE_WAIT_TIME;
                 return null;
             }, this.level().getServer());
         }
