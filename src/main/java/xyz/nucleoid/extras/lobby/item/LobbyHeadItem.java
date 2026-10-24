@@ -30,13 +30,11 @@ public class LobbyHeadItem extends BlockItem implements PolymerItem {
         return Items.PLAYER_HEAD;
     }
 
+
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext context, HolderLookup.Provider provider) {
-        ItemStack out = PolymerItem.super.getPolymerItemStack(itemStack, tooltipType, context, provider);
-        if (this.texture != null) {
-            out.set(DataComponents.PROFILE, PolymerUtils.createProfileComponent(this.texture));
-        }
-        return out;
+    public void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context, HolderLookup.Provider lookup) {
+        PolymerItem.super.modifyBasePolymerItemStack(out, stack, context, lookup);
+        out.set(DataComponents.PROFILE, PolymerUtils.createProfileComponent(this.texture));
     }
 
     @Override
