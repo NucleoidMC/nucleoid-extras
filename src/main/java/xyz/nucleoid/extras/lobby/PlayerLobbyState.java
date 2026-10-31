@@ -31,6 +31,7 @@ public class PlayerLobbyState {
 
     public static final PlayerDataStorage<PlayerLobbyState> STORAGE = new JsonDataStorage<>("nucleoid_extras", PlayerLobbyState.class);
     public final Set<TinyPotatoBlock> collectedTaters = new HashSet<>();
+    public boolean shouldShowAlreadyCollectedText = false;
 
     public InteractionResult collectTaterFromBlock(Level world, BlockPos pos, ItemStack stack, ServerPlayer player) {
         BlockState state = world.getBlockState(pos);
@@ -92,6 +93,8 @@ public class PlayerLobbyState {
             PolymerUtils.reloadInventory(player);
 
             player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.added", block.getName()), true);
+        } else if (shouldShowAlreadyCollectedText) {
+            player.sendSystemMessage(Component.translatable("text.nucleoid_extras.tater_box.already_added", block.getName()), true);
         }
 
         triggerCollectCriterion(player, tater, this.collectedTaters.size());

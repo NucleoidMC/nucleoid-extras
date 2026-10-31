@@ -101,6 +101,7 @@ public class NEBlocks {
     public static final Block CREEPER_TATER = registerTaterBlock("creeper_tater", ParticleTypes.EXPLOSION, "81428b1867a1b25cfce24ae821986653b1eb9dc253630ab82b695c2cbb6d1e52", 10);
     public static final Block STEVE_TATER = registerTaterBlock("steve_tater", ParticleTypes.HAPPY_VILLAGER, "ce7cc05bee993cd701a742415b09156381a54aaa7ad5971941722e32dd6ef3f2");
     public static final Block ALEX_TATER = registerTaterBlock("alex_tater", ParticleTypes.HAPPY_VILLAGER, "e1f7dc909b2d6c679ffb4c69c8d7c8ed39cf47a83330113f8fe45ac4b0a483c8");
+    public static final Block SULFUR_CUBE_TATER = registerTaterBlock("sulfur_cube_tater", ParticleTypes.SULFUR_CUBE_GOO, "2f41b85a85edfbfab16e1af8afe161a475501460dfd0c6b8d9c660232ec12644");
 
     public static final Block TRANS_TATER = registerColorPatternTaterBlock("trans_tater", new int[]{
         0xEE90AD, // pink
@@ -201,6 +202,10 @@ public class NEBlocks {
     public static final Block EXPOSED_COPPER_TATER = registerTaterBlock("exposed_copper_tater", ParticleTypes.SCRAPE, "bd5020090643edb5ec25d87cb1f408aad4f6018ec4bbe83d25a031ef1e705e4d");
     public static final Block WEATHERED_COPPER_TATER = registerTaterBlock("weathered_copper_tater", ParticleTypes.SCRAPE, "7d9c61d68241667f8e462d18a84c1413ce3db13f93223912201c21327b4adb25");
     public static final Block OXIDIZED_COPPER_TATER = registerTaterBlock("oxidized_copper_tater", ParticleTypes.SCRAPE, "c7e9172d0ec2d20588bf5596ea79403e3da26975cdc5b6d0624e31857774298c");
+    public static final Block COPPER_LANTERN_TATER = registerTaterBlock("copper_lantern_tater", ParticleTypes.SCRAPE, "5a3450f95c091cb65b9512452893285bfae8a45419737a164e27e24ec1958284");
+    public static final Block EXPOSED_COPPER_LANTERN_TATER = registerTaterBlock("exposed_copper_lantern_tater", ParticleTypes.SCRAPE, "b2bd2d7d99ffc8bf352448e9d0aac5e2251813e46ffa8f6361de39b087964e63");
+    public static final Block WEATHERED_COPPER_LANTERN_TATER = registerTaterBlock("weathered_copper_lantern_tater", ParticleTypes.SCRAPE, "23197b31315b3011de724df705b91a7abb34124bf0c615114970b5eb7b230d58");
+    public static final Block OXIDIZED_COPPER_LANTERN_TATER = registerTaterBlock("oxidized_copper_lantern_tater", ParticleTypes.SCRAPE, "f8d336a89d33a5c2f4272c6a6e53b9c84f47225fa34427d8078fe80e4aca445f");
 
     public static final Block CAKE_TATER = registerTaterBlock("cake_tater", Blocks.CAKE, "6d46fd58fd566bc0a90f8bc921daf0d9920591a5b153e64a80bb6d54dfb415b9");
     public static final Block ENDERTATER = registerTaterBlock("endertater", ParticleTypes.PORTAL, "1f4f68547ec0d04a1a5c52ce8bb84847cd07674d50cf0740bf6f9c505826892d");
@@ -249,6 +254,8 @@ public class NEBlocks {
     public static final Block OAK_TATER = registerTaterBlock("oak_tater", Blocks.OAK_PLANKS, "28cfc208966e2f5206b1aba0489e5fdb3f05e6d94befbc618ad80e74eb1016d2");
     public static final Block OBSIDIAN_TATER = registerTaterBlock("obsidian_tater", Blocks.OBSIDIAN, "38adea8f484dba5baf67ace3ee7675758e2318868b2d72542ed3fff0d009f21");
     public static final Block PODZOL_TATER = registerTaterBlock("podzol_tater", Blocks.PODZOL, "5fe3cfce7c241fdaefe8d0255a545d2c329c1283232d61eaa7324b30a8f478f2");
+    public static final Block POLISHED_CINNABAR_TATER = registerTaterBlock("polished_cinnabar_tater", Blocks.POLISHED_CINNABAR, "e968d8d169b9d83bfb9987a37459c0b1ffe18896fd34c18672b16de3a01ed603");
+    public static final Block POLISHED_SULFUR_TATER = registerTaterBlock("polished_sulfur_tater", Blocks.POLISHED_SULFUR, "70c2cf7640d132e7203ed105c158935b3afd451ea52c2d2add043f2d5b2fa1c1");
     public static final Block PRISMARINE_BRICK_TATER = registerTaterBlock("prismarine_brick_tater", ParticleTypes.BUBBLE_COLUMN_UP, "6fdb11b2147b36ed496639bcf8bea8d07e45de610ec08223ca3d56aefb8d81ce");
     public static final Block PRISMARINE_TATER = registerTaterBlock("prismarine_tater", ParticleTypes.NAUTILUS, "abae0abdc506014751e89fa65bb802c81fc2ee3ed0e0a06582abb5bdd088e440");
     public static final Block RED_SAND_TATER = registerTaterBlock("red_sand_tater", new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.RED_SAND.defaultBlockState()), "7789a0f57334248b602322f57fb2ed708484bb6f7774442c7f2f2bf2ec09064f");
@@ -262,6 +269,8 @@ public class NEBlocks {
     public static final Block SPRUCE_TATER = registerTaterBlock("spruce_tater", Blocks.SPRUCE_PLANKS, "fe400308900536545f886084d9f465f17311a41b7410cfaba323a5ac3b1b9a9c");
     public static final Block STONE_BRICK_TATER = registerTaterBlock("stone_brick_tater", Blocks.STONE_BRICKS, "bdf3cdb5266539c34485d439c6a07baa3fbe5556d980ef14483cd6f5271b089b");
     public static final Block STRUCTURE_VOID_TATER = registerMarkerTaterBlock("structure_void_tater", Blocks.STRUCTURE_VOID, "94903af59c0a5529ac3c9135683f7671090a403c641e5cbde8b21abe4a1e114c");
+    public static final Block SULFUR_TATER = registerTaterBlock("sulfur_tater", Blocks.SULFUR, "cb1c2c09ae0e262d0f30abd52eab31c3a8fe47777f3fafe34ac76eed60275caa");
+    public static final Block SULFUR_BRICK_TATER = registerTaterBlock("sulfur_brick_tater", Blocks.SULFUR_BRICKS, "e455a00af0dba111b6c2fba0121d5e77815e6a157ba7614179201c5c435fab05");
     public static final Block TARGET_TATER = registerTargetTaterBlock("target_tater", "386b52ed3d2b2a682b4c6f1d40a9ceabf72e7c5b60b8d92d2dcee97a8799450f");
     public static final Block TERRACOTTA_TATER = registerTaterBlock("terracotta_tater", Blocks.TERRACOTTA, "57f120d92f3f076352b682345fdb82204b920e59d226c4c6d2c64d5abc6860e1");
     public static final Block TNTATER = registerTaterBlock("tntater", ParticleTypes.EXPLOSION, "440d175ded62ff7b3cf9de979196e7b95da8a25e9e888c4bed06f5c011dc54a8", 10);
@@ -283,6 +292,8 @@ public class NEBlocks {
     public static final Block BROWN_MOOSHROOM_TATER = registerTaterBlock("brown_mooshroom_tater", ParticleTypes.HEART, "12b92975d95348d7cb94133afcb11b56fc0b4b1c373647dda83876442eee2d41");
     public static final Block BROWN_MUSHROOM_TATER = registerTaterBlock("brown_mushroom_tater", Blocks.BROWN_MUSHROOM_BLOCK, "d5268b990a497d6608f82ba664a8c7c981c28055aac34895f230cbdb284b67b8");
     public static final Block CAVE_SPIDER_TATER = registerTaterBlock("cave_spider_tater", ParticleTypes.SPORE_BLOSSOM_AIR, "9499105f458b25a1e85b7312d00b4f1e1d71d5fd08e2165d77693ac2cab2f2a8");
+    public static final Block CINNABAR_TATER = registerTaterBlock("cinnabar_tater", Blocks.CINNABAR, "c8e85740b5429771738d65d224c370b03b5827e7b5542b201c34ab219265d523");
+    public static final Block CINNABAR_BRICK_TATER = registerTaterBlock("cinnabar_brick_tater", Blocks.CINNABAR_BRICKS, "8059fb8721a09144e12a5e28fc7fccf1a7df97bb7f4a9556113f5eb0da5ecda9");
     public static final Block COBBLED_DEEPSLATE_TATER = registerTaterBlock("cobbled_deepslate_tater", Blocks.COBBLED_DEEPSLATE, "2b378b15b46b469b36da1fb0ac41f2d61df66dd315d5b00714cf7564d6a1eea2");
     public static final Block COBBLESTONE_TATER = registerTaterBlock("cobblestone_tater", Blocks.COBBLESTONE, "7effa3c069da9199503f2fecc1db83fe843491200ba5776d6e799cd24a771c44");
     public static final Block COCOA_TATER = registerTaterBlock("cocoa_tater", Blocks.COCOA, "c4f61e517ea2118d00fc68d3d88abd50b59f3c6f36a63b51793c8699c0a52440");
@@ -322,6 +333,7 @@ public class NEBlocks {
     public static final Block OAK_LOG_TATER = registerTaterBlock("oak_log_tater", Blocks.OAK_LOG, "13d4a4903b8374b799549775e0f9d45bbd9b2b219edff4d1ddb268472ca47a29");
     public static final Block PIG_TATER = registerTaterBlock("pig_tater", ParticleTypes.HEART, "530a64b89a9a46c58300eae437817789afab264c0be187b6f2733ab24adc8480");
     public static final Block POLAR_BEAR_TATER = registerTaterBlock("polar_bear_tater", Blocks.SNOW_BLOCK, "92a9da572909635f119bdaa54162991f44c99812fa3e504fe2305e2c8210ddf2");
+    public static final Block POPLAR_LOG_TATER = registerTaterBlock("poplar_log_tater", Blocks.POPLAR_LOG, "d4bfeedeff145536ed0dd07f2e8ef63b7d1891ecf354ed8c131895e51846a2cf");
     public static final Block PUFFERTATER = registerTaterBlock("puffertater", ParticleTypes.DRIPPING_WATER, "4d777aa416424b7bb713c158117f7392a74ebd1fe49eff6fa2c4b1192720eb48");
     public static final Block RED_MOOSHROOM_TATER = registerTaterBlock("red_mooshroom_tater", ParticleTypes.HEART, "3f41d3f6948a08ca1388b31cde2d629364ccb2a21a4b20bfec618ec37637e803");
     public static final Block RED_MUSHROOM_TATER = registerTaterBlock("red_mushroom_tater", Blocks.RED_MUSHROOM_BLOCK, "2730185a1933b6e90c1d4ab439aeac51259f428732b4cb38fcfe4988cb0994d1");
@@ -385,6 +397,7 @@ public class NEBlocks {
     public static final Block STRIPPED_DARK_OAK_LOG_TATER = registerTaterBlock("stripped_dark_oak_log_tater", Blocks.STRIPPED_DARK_OAK_LOG, "439b09449076c58a911d464256c29dd5d634852287630c05f1c3c82a4368ce62");
     public static final Block STRIPPED_JUNGLE_LOG_TATER = registerTaterBlock("stripped_jungle_log_tater", Blocks.STRIPPED_JUNGLE_LOG, "1e811034ee1631e7f560ff35b6bdb5e0b460b559d799740ac59d0e2d2c0bb9e9");
     public static final Block STRIPPED_OAK_LOG_TATER = registerTaterBlock("stripped_oak_log_tater", Blocks.STRIPPED_OAK_LOG, "7cf7cfc6763ba87781f1de7f76ec5a26436c14a74b1292f7d2409f399dd72773");
+    public static final Block STRIPPED_POPLAR_LOG_TATER = registerTaterBlock("stripped_poplar_log_tater", Blocks.STRIPPED_POPLAR_LOG, "577b2cc180c63abcb8d12668746d97854bf9b275da0cde4a2e05ccd5d1904fcc");
     public static final Block STRIPPED_SPRUCE_LOG_TATER = registerTaterBlock("stripped_spruce_log_tater", Blocks.STRIPPED_SPRUCE_LOG, "7a1f047b2d61b14e717f6c42f67af5da1d101d0a37340c6e497f3e3af1d62691");
     public static final Block STRIPPED_WARPED_STEM_TATER = registerTaterBlock("stripped_warped_stem_tater", Blocks.STRIPPED_WARPED_STEM, "54453447dfc628793e1c704509fd24dd3effcaff9ce6aba16efbee3a1001d65f");
     public static final Block TROPICAL_SLIME_TATER = registerTaterBlock("tropical_slime_tater", ParticleTypes.FISHING, "473d7ffeeb9562e1c0fe59ac45dbec370750793cd6acbd01e26c3a02cea77fea");
