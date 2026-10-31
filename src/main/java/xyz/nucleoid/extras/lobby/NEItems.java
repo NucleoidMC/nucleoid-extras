@@ -178,6 +178,7 @@ public class NEItems {
     public static final Item CREEPER_TATER = registerHead("creeper_tater", NEBlocks.CREEPER_TATER);
     public static final Item STEVE_TATER = registerHead("steve_tater", NEBlocks.STEVE_TATER);
     public static final Item ALEX_TATER = registerHead("alex_tater", NEBlocks.ALEX_TATER);
+    public static final Item SULFUR_CUBE_TATER = registerHead("sulfur_cube_tater", NEBlocks.SULFUR_CUBE_TATER);
 
     public static final Item WHITE_TATER = registerHead("white_tater", NEBlocks.WHITE_TATER);
     public static final Item ORANGE_TATER = registerHead("orange_tater", NEBlocks.ORANGE_TATER);
@@ -210,6 +211,10 @@ public class NEItems {
     public static final Item EXPOSED_COPPER_TATER = registerHead("exposed_copper_tater", NEBlocks.EXPOSED_COPPER_TATER);
     public static final Item WEATHERED_COPPER_TATER = registerHead("weathered_copper_tater", NEBlocks.WEATHERED_COPPER_TATER);
     public static final Item OXIDIZED_COPPER_TATER = registerHead("oxidized_copper_tater", NEBlocks.OXIDIZED_COPPER_TATER);
+    public static final Item COPPER_LANTERN_TATER = registerHead("copper_lantern_tater", NEBlocks.COPPER_LANTERN_TATER);
+    public static final Item EXPOSED_COPPER_LANTERN_TATER = registerHead("exposed_copper_lantern_tater", NEBlocks.EXPOSED_COPPER_LANTERN_TATER);
+    public static final Item WEATHERED_COPPER_LANTERN_TATER = registerHead("weathered_copper_lantern_tater", NEBlocks.WEATHERED_COPPER_LANTERN_TATER);
+    public static final Item OXIDIZED_COPPER_LANTERN_TATER = registerHead("oxidized_copper_lantern_tater", NEBlocks.OXIDIZED_COPPER_LANTERN_TATER);
 
     public static final Item CAKE_TATER = registerHead("cake_tater", NEBlocks.CAKE_TATER);
     public static final Item ENDERTATER = registerHead("endertater", NEBlocks.ENDERTATER);
@@ -258,6 +263,9 @@ public class NEItems {
     public static final Item OAK_TATER = registerHead("oak_tater", NEBlocks.OAK_TATER);
     public static final Item OBSIDIAN_TATER = registerHead("obsidian_tater", NEBlocks.OBSIDIAN_TATER);
     public static final Item PODZOL_TATER = registerHead("podzol_tater", NEBlocks.PODZOL_TATER);
+    public static final Item POLISHED_CINNABAR_TATER = registerHead("polished_cinnabar_tater", NEBlocks.POLISHED_CINNABAR_TATER);
+    public static final Item POLISHED_SULFUR_TATER = registerHead("polished_sulfur_tater", NEBlocks.POLISHED_SULFUR_TATER);
+    public static final Item POPLAR_TATER = registerHead("poplar_log_tater", NEBlocks.POPLAR_LOG_TATER);
     public static final Item PRISMARINE_BRICK_TATER = registerHead("prismarine_brick_tater", NEBlocks.PRISMARINE_BRICK_TATER);
     public static final Item PRISMARINE_TATER = registerHead("prismarine_tater", NEBlocks.PRISMARINE_TATER);
     public static final Item RED_SAND_TATER = registerHead("red_sand_tater", NEBlocks.RED_SAND_TATER);
@@ -271,6 +279,8 @@ public class NEItems {
     public static final Item SPRUCE_TATER = registerHead("spruce_tater", NEBlocks.SPRUCE_TATER);
     public static final Item STONE_BRICK_TATER = registerHead("stone_brick_tater", NEBlocks.STONE_BRICK_TATER);
     public static final Item STRUCTURE_VOID_TATER = registerHead("structure_void_tater", NEBlocks.STRUCTURE_VOID_TATER);
+    public static final Item SULFUR_TATER = registerHead("sulfur_tater", NEBlocks.SULFUR_TATER);
+    public static final Item SULFUR_BRICK_TATER = registerHead("sulfur_brick_tater", NEBlocks.SULFUR_BRICK_TATER);
     public static final Item TARGET_TATER = registerHead("target_tater", NEBlocks.TARGET_TATER);
     public static final Item TERRACOTTA_TATER = registerHead("terracotta_tater", NEBlocks.TERRACOTTA_TATER);
     public static final Item TNTATER = registerHead("tntater", NEBlocks.TNTATER);
@@ -292,6 +302,8 @@ public class NEItems {
     public static final Item BROWN_MOOSHROOM_TATER = registerHead("brown_mooshroom_tater", NEBlocks.BROWN_MOOSHROOM_TATER);
     public static final Item BROWN_MUSHROOM_TATER = registerHead("brown_mushroom_tater", NEBlocks.BROWN_MUSHROOM_TATER);
     public static final Item CAVE_SPIDER_TATER = registerHead("cave_spider_tater", NEBlocks.CAVE_SPIDER_TATER);
+    public static final Item CINNABAR_TATER = registerHead("cinnabar_tater", NEBlocks.CINNABAR_TATER);
+    public static final Item CINNABAR_BRICK_TATER = registerHead("cinnabar_brick_tater", NEBlocks.CINNABAR_BRICK_TATER);
     public static final Item COBBLED_DEEPSLATE_TATER = registerHead("cobbled_deepslate_tater", NEBlocks.COBBLED_DEEPSLATE_TATER);
     public static final Item COBBLESTONE_TATER = registerHead("cobblestone_tater", NEBlocks.COBBLESTONE_TATER);
     public static final Item COCOA_TATER = registerHead("cocoa_tater", NEBlocks.COCOA_TATER);
@@ -394,6 +406,7 @@ public class NEItems {
     public static final Item STRIPPED_DARK_OAK_LOG_TATER = registerHead("stripped_dark_oak_log_tater", NEBlocks.STRIPPED_DARK_OAK_LOG_TATER);
     public static final Item STRIPPED_JUNGLE_LOG_TATER = registerHead("stripped_jungle_log_tater", NEBlocks.STRIPPED_JUNGLE_LOG_TATER);
     public static final Item STRIPPED_OAK_LOG_TATER = registerHead("stripped_oak_log_tater", NEBlocks.STRIPPED_OAK_LOG_TATER);
+    public static final Item STRIPPED_POPLAR_LOG_TATER = registerHead("stripped_poplar_log_tater", NEBlocks.STRIPPED_POPLAR_LOG_TATER);
     public static final Item STRIPPED_SPRUCE_LOG_TATER = registerHead("stripped_spruce_log_tater", NEBlocks.STRIPPED_SPRUCE_LOG_TATER);
     public static final Item STRIPPED_WARPED_STEM_TATER = registerHead("stripped_warped_stem_tater", NEBlocks.STRIPPED_WARPED_STEM_TATER);
     public static final Item TROPICAL_SLIME_TATER = registerHead("tropical_slime_tater", NEBlocks.TROPICAL_SLIME_TATER);
