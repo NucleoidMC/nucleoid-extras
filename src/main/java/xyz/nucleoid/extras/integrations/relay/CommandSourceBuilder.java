@@ -32,7 +32,7 @@ public interface CommandSourceBuilder {
 
         @Override
         public CommandSourceStack buildCommandSource(CommandSource output, MinecraftServer server, String name, int permissionLevel, List<String> roles) {
-            return new CommandSourceStack(output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), name, Component.literal(name), server, null);
+            return new CommandSourceStack(output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), Component.literal(name), server);
         }
     }
 
@@ -89,7 +89,7 @@ public interface CommandSourceBuilder {
                     return overrideReader;
                 }
             };
-            return new VirtualServerCommandSource(roleReader, output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), name, Component.literal(name), server, null);
+            return new VirtualServerCommandSource(roleReader, output, Vec3.ZERO, Vec2.ZERO, server.overworld(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(permissionLevel)), Component.literal(name), server);
         }
     }
 }

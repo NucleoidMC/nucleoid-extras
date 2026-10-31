@@ -10,6 +10,7 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 import org.apache.commons.io.FileUtils;
@@ -28,8 +29,10 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 
 public class DuckFixerUpper implements ModInitializer {
-	private static final int DATA_VERSION_1_20_4 = 3700;
-	private static final int DATA_VERSION_1_21_3 = 4082;
+    //private static final int DATA_VERSION_1_20_4 = 3700;
+    //private static final int DATA_VERSION_1_21_3 = 4082;
+    private static final int DATA_VERSION_FROM = 4903;
+	private static final int DATA_VERSION_TO = SharedConstants.WORLD_VERSION;
 
 	private static final IndentDetector[] INDENT_DETECTORS = {
 		new IndentDetector("^  \\S", "  "),
@@ -133,10 +136,13 @@ public class DuckFixerUpper implements ModInitializer {
 		if (input.isJsonObject()) {
 			JsonObject output = input.deepCopy().getAsJsonObject();
 
-			if (output.has("id") && output.has("Count")) {
-				Dynamic<JsonElement> upgradedOutput = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_1_20_4, DATA_VERSION_1_21_3);
+			if (output.has("id") && output.has("count")) {
+				Dynamic<JsonElement> upgradedOutput = DataFixers.getDataFixer().update(References.ITEM_STACK, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_FROM, DATA_VERSION_TO);
 				return upgradedOutput.getValue();
-			} else {
+			} else if (output.has("Name")) {
+                Dynamic<JsonElement> upgradedOutput = DataFixers.getDataFixer().update(References.BLOCK_STATE, new Dynamic<>(JsonOps.INSTANCE, output), DATA_VERSION_FROM, DATA_VERSION_TO);
+                return upgradedOutput.getValue();
+            } else {
 				for (String key : output.keySet()) {
 					JsonElement value = output.get(key);
 					output.add(key, upgrade(value));

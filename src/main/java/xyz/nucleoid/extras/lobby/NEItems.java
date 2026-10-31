@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -488,7 +489,7 @@ public class NEItems {
         var stack = new ItemStack(item);
         consumer.accept(stack);
 
-        player.getInventory().placeItemBackInInventory(stack, true);
+        player.getInventory().placeItemBackInInventory(stack, Prediction.SERVER_ONLY);
         return true;
     }
 

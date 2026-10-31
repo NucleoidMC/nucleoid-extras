@@ -2,11 +2,11 @@ package xyz.nucleoid.extras.lobby.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import xyz.nucleoid.extras.lobby.block.tater.TinyPotatoBlock;
 
 import java.util.Optional;
@@ -43,7 +43,7 @@ public class TaterCollectedCriterion extends SimpleCriterionTrigger<TaterCollect
         }
 
         @Override
-        public Optional<ContextAwarePredicate> player() {
+        public Optional<Holder<LootItemCondition>> player() {
             return Optional.empty();
         }
     }

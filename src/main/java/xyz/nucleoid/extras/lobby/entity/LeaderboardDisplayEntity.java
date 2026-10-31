@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
@@ -20,9 +21,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LeaderboardDisplayEntity extends Display.TextDisplay implements PolymerEntity {
-    private static final Style PLACE_NUMBER = Style.EMPTY.withColor(ChatFormatting.GRAY).withBold(true);
+    private static final Style PLACE_NUMBER = Style.EMPTY.withColor(ChatFormatting.YELLOW).withBold(true);
     private static final Style PLACE_PLAYER = Style.EMPTY.withColor(ChatFormatting.WHITE);
-    private static final Style PLACE_VALUE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+    private static final Style PLACE_VALUE = Style.EMPTY.withColor(ChatFormatting.GOLD);
 
     private static final int REGULAR_UPDATE_WAIT_TIME = 20 * 60;
     private static final int FORCED_UPDATE_WAIT_TIME = 20 * 10;
@@ -67,7 +68,9 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
                 list.add(NucleoidHttpClient.getLeaderboard(id).thenApplyAsync(data -> {
                     var text = Component.empty();
 
-                    for (var entry : data) {
+                    for (int x = 0; x < data.size(); x++) {
+                        var entry = data.get(x);
+
                         text.append(Component.literal(entry.ranking() + ". ").setStyle(PLACE_NUMBER));
                         String name;
 
@@ -76,11 +79,17 @@ public class LeaderboardDisplayEntity extends Display.TextDisplay implements Pol
                             name = profile.get().name();
                         } else {
                             name = "[Unknown player]";
+
+                            CompletableFuture.supplyAsync(() -> this.level().getServer().services().profileResolver().fetchById(entry.playerUuid())).thenAccept( opt -> {
+                                opt.ifPresent(p -> this.level().getServer().services().nameToIdCache().add(new NameAndId(p)));
+                            });
                         }
 
-                        text.append(Component.literal(name).setStyle(PLACE_PLAYER));
+                        text.append(Component.literal(name).setStyle(PLACE_PLAYER)).append(" ");
                         text.append(Component.literal("(").append("" + entry.value()).append(")").setStyle(PLACE_VALUE));
-                        text.append("\n");
+                        if (x != data.size() - 1) {
+                            text.append("\n");
+                        }
                     }
 
                     return text;

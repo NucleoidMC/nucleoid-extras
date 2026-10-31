@@ -41,11 +41,6 @@ public class ContributorStatueBlock extends BaseEntityBlock implements PolymerBl
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
-    }
-
-    @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
         if (!world.isClientSide() && player.canUseGameMasterBlocks()) {
             var blockEntity = world.getBlockEntity(pos, NEBlocks.CONTRIBUTOR_STATUE_ENTITY);

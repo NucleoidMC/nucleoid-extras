@@ -107,9 +107,4 @@ public class SnakeBlock extends DirectionalBlock implements PolymerBlock {
         builder.add(FACING);
         builder.add(ACTIVE);
     }
-
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return null;
-    }
 }
